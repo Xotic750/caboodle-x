@@ -23,7 +23,8 @@
     "report:dev": "npm run build:dev -- --env.report",
     "security": "nsp check",
     "start": "nodemon --exec \"npm run build\" --watch src",
-    "test": "rimraf __tests__/coverage && jest"
+    "test": "jest",
+    "test:coverage": "rimraf __tests__/coverage && npm run test -- --coverage"
   },
   "author": {
     "name": "Graham Fairweather",
@@ -32,13 +33,19 @@
   "copyright": "Copyright (c) 2018-present",
   "license": "MIT",
   "keywords": [
-    "vue",
-    "click",
-    "outside",
-    "directive"
+    "modern",
+    "utils",
+    "library",
+    "module",
+    "node",
+    "browser"
   ],
   "dependencies": {
-    "es-abstract": "^1.10.0"
+    "es-abstract": "^1.10.0",
+    "is-date-object": "^1.0.1",
+    "is-primitive": "^3.0.0",
+    "is-symbol": "^1.0.1",
+    "white-space-x": "^3.0.1"
   },
   "devDependencies": {
     "ajv": "^6.2.1",
@@ -46,7 +53,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.4.1",
-    "babel-loader": "^7.1.3",
+    "babel-loader": "^7.1.4",
     "babel-polyfill": "^6.26.0",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-dynamic-import-node": "^1.2.0",
@@ -73,7 +80,7 @@
     "eslint-plugin-eslint-comments": "^2.0.2",
     "eslint-plugin-html": "^4.0.2",
     "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-jest": "^21.12.3",
+    "eslint-plugin-jest": "^21.13.0",
     "eslint-plugin-jsdoc": "^3.5.0",
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-lodash": "^2.6.1",

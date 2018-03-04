@@ -32,6 +32,6 @@ describe('assertIs', () => {
   it('should throw if not initiated with a function', () => {
     expect(() => {
       assertIs([]);
-    }).toThrow(/isFn argument must be a function\./);
+    }).toThrow(/Predicate must be a function\./);
   });
 });

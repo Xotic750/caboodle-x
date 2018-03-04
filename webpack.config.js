@@ -226,7 +226,7 @@ module.exports = function generateConfig(env) {
         }
 
         return undefined;
-      }),
+      }()),
     ]),
 
     /**
@@ -241,7 +241,7 @@ module.exports = function generateConfig(env) {
        * @see {@link https://webpack.js.org/configuration/resolve/#resolve-alias}
        */
       alias: {
-        RootDir: path.resolve(__dirname, '.'),
+        // RootDir: path.resolve(__dirname, '.'),
         src: path.resolve(__dirname, 'src'),
       },
       extensions: ['.js', '.json'],

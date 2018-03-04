@@ -43,7 +43,7 @@ module.exports = {
    */
   overrides: [
     {
-      files: ['webpack.*.js', '__tests__/*.js'],
+      files: ['webpack.*.js', '__tests__/**/*.js'],
       rules: {
         'compat/compat': 'off',
         'global-require': 'off',
@@ -54,6 +54,16 @@ module.exports = {
       },
     },
     {
+      files: ['__tests__/**/*.js'],
+      rules: {
+        'func-names': 'off',
+        'no-array-constructor': 'off',
+        'no-empty': 'off',
+        'no-sparse-arrays': 'off',
+        'prefer-rest-params': 'off',
+      },
+    },
+    {
       files: ['src/es*Rx.js'],
       rules: {
         'max-len': 'off',
@@ -61,24 +71,10 @@ module.exports = {
       },
     },
     {
-      files: ['src/defineDataProperty.js'],
+      files: ['src/delayPromise.js'],
       rules: {
-        'no-console': {allow: ['warn']},
-      },
-    },
-    {
-      files: ['src/utils.js'],
-      rules: {
-        'babel/new-cap': 'off',
-      },
-    },
-    {
-      files: ['__tests__/*.js'],
-      rules: {
-        'func-names': 'off',
-        'no-empty': 'off',
-        'no-sparse-arrays': 'off',
-        'prefer-rest-params': 'off',
+        'compat/compat': 'off',
+        'promise/avoid-new': 'off',
       },
     },
   ],
@@ -147,7 +143,7 @@ module.exports = {
      * An ESlint rule plugin companion to babel-eslint.
      * @see {@link https://github.com/babel/eslint-plugin-babel}
      */
-    'babel/new-cap': 'error',
+    'babel/new-cap': 'off',
     'babel/no-invalid-this': 'off',
     'babel/object-curly-spacing': 'error',
     'babel/semi': 'error',
