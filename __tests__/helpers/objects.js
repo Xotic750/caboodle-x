@@ -12,8 +12,7 @@ export default Object.freeze([
   new Map(),
   /hej/,
   Object(),
-  Array(),
-  String(),
-  Boolean(),
-  Number(),
+  Object(1),
+  Object(''),
+  Object(true),
 ]);

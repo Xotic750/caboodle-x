@@ -1,4 +1,5 @@
 import 'babel-polyfill';
+import primitives from './helpers/primitives';
 import {assertIs} from '../dist/caboodle-x';
 
 describe('assertIs', () => {
@@ -16,9 +17,11 @@ describe('assertIs', () => {
   it('should throw with default message', () => {
     const assertIsArray = assertIs(Array.isArray);
 
-    expect(() => {
-      assertIsArray({});
-    }).toThrow(/Not a valid value\./);
+    primitives.forEach((primitive) => {
+      expect(() => {
+        assertIsArray(primitive);
+      }).toThrow(/Not a valid value\./);
+    });
   });
 
   it('should throw with custom message', () => {

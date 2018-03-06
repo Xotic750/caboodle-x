@@ -19,6 +19,7 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
     nilable: false,
     validator: stubTrue,
     value: undefined,
+    writable: true,
   };
 
   if (Reflect.has(object, 'enumerable')) {
@@ -41,6 +42,10 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
     descriptor.configurable = object.validator;
   }
 
+  if (Reflect.has(object, 'writable')) {
+    descriptor.writable = ES.ToBoolean(object.writable);
+  }
+
   return descriptor;
 };
 
@@ -54,6 +59,7 @@ export default function defineValidatorProperty(object, property, descriptor) {
     nilable,
     validator,
     value,
+    writable,
   } = toPropertyDescriptor(descriptor);
 
   assertIsCallable(validator);
@@ -73,6 +79,10 @@ export default function defineValidatorProperty(object, property, descriptor) {
       return currentValue;
     },
     set(newValue) {
+      if (!writable) {
+        throw new TypeError(`Cannot assign to read only property "${propKey}" of object "#<Object>"`);
+      }
+
       currentValue = isValidValue(newValue);
 
       return currentValue;

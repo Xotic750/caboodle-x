@@ -16,5 +16,5 @@ import isOneOf from 'src/isOneOf';
  * @returns {*} - The comparate upon a match; otherwise the fallback value.
  */
 export default function defaultToOneOf(comparate, comparates, fallback) {
-  return isOneOf(comparates, comparate) ? comparate : fallback;
+  return isOneOf(comparate, comparates) ? comparate : fallback;
 }
