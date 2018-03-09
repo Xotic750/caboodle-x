@@ -4,7 +4,7 @@
  * @module callFunctionOrIdentity
  */
 
-import ES from 'es-abstract';
+import isFunctionType from 'src/isFunctionType';
 import arrayOrWrapInArray from 'src/arrayOrWrapInArray';
 
 /**
@@ -19,7 +19,7 @@ import arrayOrWrapInArray from 'src/arrayOrWrapInArray';
 export default function callFunctionOrIdentity(...args) {
   const [fnOrValue, argsArray, thisArg] = args;
 
-  if (ES.IsCallable(fnOrValue)) {
+  if (isFunctionType(fnOrValue)) {
     const {
       length,
     } = args;

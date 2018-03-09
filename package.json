@@ -1,6 +1,6 @@
 {
   "name": "caboodle-x",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A collection of modern utils.",
   "homepage": "https://github.com/Xotic750/caboodle-x.git",
   "repository": {
@@ -42,11 +42,9 @@
     "browser"
   ],
   "dependencies": {
-    "es-abstract": "^1.10.0",
     "is-date-object": "^1.0.1",
     "is-primitive": "^3.0.0",
-    "is-symbol": "^1.0.1",
-    "white-space-x": "^3.0.1"
+    "is-symbol": "^1.0.1"
   },
   "devDependencies": {
     "ajv": "^6.2.1",

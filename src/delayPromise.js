@@ -4,8 +4,8 @@
  * @module delayPromise
  */
 
-import ES from 'es-abstract';
 import clamp from 'src/clamp';
+import constant from 'src/constant';
 
 /**
  * Create a delayed promise.
@@ -17,18 +17,23 @@ import clamp from 'src/clamp';
  */
 export default function delayPromise(...args) {
   const [milliseconds, value] = args;
-  const ms = clamp(ES.ToNumber(milliseconds), Number.MAX_SAFE_INTEGER);
-  const afterValue = arg => delayPromise(ms).then(() => arg);
+  const ms = clamp(+milliseconds, Number.MAX_SAFE_INTEGER);
 
   if (args.length > 1) {
+    const afterValue = function _afterValue(arg) {
+      return delayPromise(ms).then(constant(arg));
+    };
+
     return Promise.resolve(value).then(afterValue);
   }
 
-  return new Promise((resolve, reject) => {
+  const delay = function _delay(resolve, reject) {
     try {
       setTimeout(resolve, ms);
     } catch (error) {
       reject(error);
     }
-  });
+  };
+
+  return new Promise(delay);
 }

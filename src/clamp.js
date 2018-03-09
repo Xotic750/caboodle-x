@@ -4,8 +4,6 @@
  * @module clamp
  */
 
-import ES from 'es-abstract';
-
 /**
  * This method clamp a number to min and max limits inclusive.
  *
@@ -24,19 +22,19 @@ import ES from 'es-abstract';
 export default function clamp(...args) {
   const [value, lower, upper] = args;
 
-  const number = ES.ToNumber(value);
+  const number = +value;
   const argsLength = args.length;
   if (argsLength < 2) {
     return number;
   }
 
-  let min = ES.ToNumber(lower);
+  let min = +lower;
   let max;
   if (argsLength < 3) {
     max = min;
     min = 0;
   } else {
-    max = ES.ToNumber(upper);
+    max = +upper;
   }
 
   if (Number.isNaN(min) || Number.isNaN(max)) {

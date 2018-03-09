@@ -4,10 +4,8 @@
  * @module capitalize
  */
 
-import ES from 'es-abstract';
-
 export default function capitalize(property) {
-  const str = ES.ToString(property);
+  const str = `${property}`;
 
   return str.charAt(0).toUpperCase() + str.slice(1).toLocaleLowerCase();
 }

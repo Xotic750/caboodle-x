@@ -4,10 +4,10 @@
  * @module includesNonWhitespace
  */
 
-import {string} from 'white-space-x';
+import isStringType from 'src/isStringType';
 
-const nonWSregex = new RegExp(`[^${string}]`);
+const nonWSregex = /[^\s]/;
 
 export default function includesNonWhitespace(value) {
-  return nonWSregex.test(value);
+  return isStringType(value) && nonWSregex.test(value);
 }

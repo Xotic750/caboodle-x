@@ -4,8 +4,10 @@
  * @module isInvalidHexLiteral
  */
 
+import isStringType from 'src/isStringType';
+
 const invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
 
 export default function isInvalidHexLiteral(value) {
-  return invalidHexLiteral.test(value);
+  return isStringType(value) && invalidHexLiteral.test(value);
 }

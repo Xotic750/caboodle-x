@@ -4,15 +4,15 @@
  * @module index
  */
 
-export {default as ES} from 'es-abstract';
 export {default as arrayOrWrapInArray} from 'src/arrayOrWrapInArray';
-export {default as assertIsCallable} from 'src/assertIsCallable';
+export {default as assertIsFunctionType} from 'src/assertIsFunctionType';
 export {default as assertIsObject} from 'src/assertIsObject';
 export {default as assertIs} from 'src/assertIs';
 export {default as callFunctionOrIdentity} from 'src/callFunctionOrIdentity';
 export {default as capitalizeFirst} from 'src/capitalizeFirst';
 export {default as capitalize} from 'src/capitalize';
 export {default as clamp} from 'src/clamp';
+export {default as constant} from 'src/constant';
 export {default as defaultToOneOf} from 'src/defaultToOneOf';
 export {default as defineValidatorProperties} from 'src/defineValidatorProperties';
 export {default as defineValidatorProperty} from 'src/defineValidatorProperty';
@@ -67,6 +67,7 @@ export {default as kebabJoin} from 'src/kebabJoin';
 export {default as nilifyIs} from 'src/nilifyIs';
 export {default as noop} from 'src/noop';
 export {default as parseDecimal} from 'src/parseDecimal';
+export {default as sameValueZero} from 'src/sameValueZero';
 export {default as stubArray} from 'src/stubArray';
 export {default as stubFalse} from 'src/stubFalse';
 export {default as stubObject} from 'src/stubObject';
@@ -74,4 +75,3 @@ export {default as stubString} from 'src/stubString';
 export {default as stubTrue} from 'src/stubTrue';
 export {default as toStringTag} from 'src/toStringTag';
 export {default as uniq} from 'src/uniq';
-export {default as whiteSpace} from 'white-space-x';

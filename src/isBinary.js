@@ -4,8 +4,10 @@
  * @module isBinary
  */
 
+import isStringType from 'src/isStringType';
+
 const binaryRegex = /^0b[01]+$/i;
 
 export default function isBinary(value) {
-  return binaryRegex.test(value);
+  return isStringType(value) && binaryRegex.test(value);
 }

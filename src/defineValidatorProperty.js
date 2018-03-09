@@ -4,15 +4,14 @@
  * @module defineValidatorProperty
  */
 
-import ES from 'es-abstract';
 import stubTrue from 'src/stubTrue';
 import assertIs from 'src/assertIs';
 import nilifyIs from 'src/nilifyIs';
-import assertIsCallable from 'src/assertIsCallable';
+import assertIsFunctionType from 'src/assertIsFunctionType';
 import assertIsObject from 'src/assertIsObject';
 
 const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
-  const object = ES.ToObject(desc);
+  const object = Object(desc);
   const descriptor = {
     configurable: true,
     enumerable: true,
@@ -22,28 +21,28 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
     writable: true,
   };
 
-  if (Reflect.has(object, 'enumerable')) {
-    descriptor.enumerable = ES.ToBoolean(object.enumerable);
+  if ('enumerable' in object) {
+    descriptor.enumerable = !!object.enumerable;
   }
 
-  if (Reflect.has(object, 'configurable')) {
-    descriptor.configurable = ES.ToBoolean(object.configurable);
+  if ('configurable' in object) {
+    descriptor.configurable = !!object.configurable;
   }
 
-  if (Reflect.has(object, 'nilable')) {
-    descriptor.configurable = ES.ToBoolean(object.nilable);
+  if ('nilable' in object) {
+    descriptor.configurable = !!object.nilable;
   }
 
-  if (Reflect.has(object, 'value')) {
+  if ('value' in object) {
     descriptor.value = object.value;
   }
 
-  if (Reflect.has(object, 'validator')) {
+  if ('validator' in object) {
     descriptor.configurable = object.validator;
   }
 
-  if (Reflect.has(object, 'writable')) {
-    descriptor.writable = ES.ToBoolean(object.writable);
+  if ('writable' in object) {
+    descriptor.writable = !!object.writable;
   }
 
   return descriptor;
@@ -52,35 +51,27 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
 export default function defineValidatorProperty(object, property, descriptor) {
   assertIsObject(object);
 
-  const propKey = ES.ToPropertyKey(property);
-  const {
-    configurable,
-    enumerable,
-    nilable,
-    validator,
-    value,
-    writable,
-  } = toPropertyDescriptor(descriptor);
+  const propDesc = toPropertyDescriptor(descriptor);
 
-  assertIsCallable(validator);
+  assertIsFunctionType(propDesc.validator);
 
-  const isValidInitialValue = nilable ? nilifyIs(validator) : validator;
+  const isValidInitialValue = propDesc.nilable ? nilifyIs(propDesc.validator) : propDesc.validator;
 
-  assertIs(isValidInitialValue, `Not a valid initial value for "${propKey}".`)(value);
+  assertIs(isValidInitialValue, `Not a valid initial value for "${property}".`)(propDesc.value);
 
-  const isValidValue = assertIs(validator, `Not a valid value for "${propKey}".`);
+  const isValidValue = assertIs(propDesc.validator, `Not a valid value for "${property}".`);
 
-  let currentValue = value;
+  let currentValue = propDesc.value;
 
-  return Object.defineProperty(object, propKey, {
-    configurable,
-    enumerable,
+  return Object.defineProperty(object, property, {
+    configurable: propDesc.configurable,
+    enumerable: propDesc.enumerable,
     get() {
       return currentValue;
     },
     set(newValue) {
-      if (!writable) {
-        throw new TypeError(`Cannot assign to read only property "${propKey}" of object "#<Object>"`);
+      if (!propDesc.writable) {
+        throw new TypeError(`Cannot assign to read only property "${property}" of object "#<Object>"`);
       }
 
       currentValue = isValidValue(newValue);

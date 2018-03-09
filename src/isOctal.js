@@ -4,8 +4,10 @@
  * @module isOctal
  */
 
+import isStringType from 'src/isStringType';
+
 const octalRegex = /^0o[0-7]+$/i;
 
 export default function isOctal(value) {
-  return octalRegex.test(value);
+  return isStringType(value) && octalRegex.test(value);
 }

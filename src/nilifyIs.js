@@ -4,11 +4,11 @@
  * @module nilifyIs
  */
 
-import assertIsCallable from 'src/assertIsCallable';
+import assertIsFunctionType from 'src/assertIsFunctionType';
 import isNil from 'src/isNil';
 
 export default function nilifyIs(predicate) {
-  assertIsCallable(predicate);
+  assertIsFunctionType(predicate);
 
   return function nulifiedBound(...args) {
     const [value] = args;
