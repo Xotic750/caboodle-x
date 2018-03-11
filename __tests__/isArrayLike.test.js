@@ -8,15 +8,15 @@ describe('isArrayLike', () => {
     expect(isArrayLike).toBeInstanceOf(Function);
   });
 
+  it('should return `false` with no args', () => {
+    expect(isArrayLike()).toBe(false);
+  });
+
   it('should return `true` for array-like values', () => {
     (function () {
       const values = [
         arguments,
-        [
-          1,
-          2,
-          3,
-        ],
+        [1, 2, 3],
         {0: 1, length: 1},
         'a',
       ];

@@ -6,7 +6,7 @@ describe('constant', () => {
     expect(constant).toBeInstanceOf(Function);
   });
 
-  it('should return ac onstant value', () => {
+  it('should return a constant value', () => {
     const array = [];
     const object = {};
     const ARRAY = constant(array);

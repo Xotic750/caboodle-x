@@ -50,13 +50,11 @@ describe('defineValidatorProperty', () => {
   it('should throw error for non object', () => {
     expect(() => {
       defineValidatorProperty(42, 'name', {});
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('should not throw error for empty descriptor', () => {
-    expect(() => {
-      defineValidatorProperty({}, 'name', {});
-    }).not.toThrow();
+    defineValidatorProperty({}, 'name', {});
   });
 
   itHasDoc('works with DOM elements', () => {

@@ -4,15 +4,17 @@
  * @see {@link https://webpack.js.org/} for further information.
  */
 
+require('babel-polyfill');
 const path = require('path');
-const webpack = require('webpack');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const merge = require('webpack-merge');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const {
   BundleAnalyzerPlugin,
 } = require('webpack-bundle-analyzer');
-const assign = require('lodash/assign');
-const compact = require('lodash/compact');
+
+const filename = 'caboodle-x';
+const library = 'Caboodle';
+const dist = path.resolve(__dirname, 'dist');
 
 /**
  * The NODE_ENV environment variable.
@@ -47,63 +49,61 @@ const DEFAULT_EXCLUDE_RX = /node_modules/;
  * @see {@link https://webpack.js.org/guides/environment-variables/}
  */
 module.exports = function generateConfig(env) {
-  const ENV = assign({}, {
+  const ENV = merge({
     report: false,
   }, env);
 
-  return {
-    context: path.resolve(__dirname, '.'),
-
+  const base = {
     /**
-     * This option controls if and how source maps are generated.
-     *
-     * nosources-source-map - A SourceMap is created without the sourcesContent in it.
-     * It can be used to map stack traces on the client without exposing all of the
-     * source code. You can deploy the Source Map file to the web-server.
-     *
-     * eval-source-map - Each module is executed with eval() and a SourceMap is added as
-     * a DataUrl to the eval(). Initially it is slow, but it provides fast rebuild speed
-     * and yields real files. Line numbers are correctly mapped since it gets mapped to
-     * the original code. It yields the best quality SourceMaps for development.
-     *
-     * source-map - A full SourceMap is emitted as a separate file. It adds a reference
-     * comment to the bundle so development tools know where to find it.
-     *
-     * @type {string}
-     * @see {@link https://webpack.js.org/configuration/devtool/}
-     */
+       * This option controls if and how source maps are generated.
+       *
+       * nosources-source-map - A SourceMap is created without the sourcesContent in it.
+       * It can be used to map stack traces on the client without exposing all of the
+       * source code. You can deploy the Source Map file to the web-server.
+       *
+       * eval-source-map - Each module is executed with eval() and a SourceMap is added as
+       * a DataUrl to the eval(). Initially it is slow, but it provides fast rebuild speed
+       * and yields real files. Line numbers are correctly mapped since it gets mapped to
+       * the original code. It yields the best quality SourceMaps for development.
+       *
+       * source-map - A full SourceMap is emitted as a separate file. It adds a reference
+       * comment to the bundle so development tools know where to find it.
+       *
+       * @type {string}
+       * @see {@link https://webpack.js.org/configuration/devtool/}
+       */
     devtool: NODE_ENV === PRODUCTION ? 'source-map' : 'eval-source-map',
 
     /**
-     * Define the entry points for the application.
-     * @type {array.<string>}
-     * @see {@link https://webpack.js.org/concepts/entry-points/}
-     */
-    entry: [path.join(__dirname, 'src/index.js')],
+       * Define the entry points for the application.
+       * @type {array.<string>}
+       * @see {@link https://webpack.js.org/concepts/entry-points/}
+       */
+    entry: './index.js',
 
-    // mode: NODE_ENV === PRODUCTION ? PRODUCTION : DEVELOPMENT,
+    mode: NODE_ENV === PRODUCTION ? PRODUCTION : DEVELOPMENT,
 
     /**
-     * In modular programming, developers break programs up into discrete chunks of functionality
-     * called a module. Each module has a smaller surface area than a full program, making verification,
-     * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
-     * boundaries, so that each module has a coherent design and a clear purpose within the overall
-     * application.
-     *
-     * webpack supports modules written in a variety of languages and preprocessors, via loaders.
-     * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
-     * into your bundles.
-     *
-     * @type {array.<!Object>}
-     * @see {@link https://webpack.js.org/configuration/module/#module-rules}
-     */
+       * In modular programming, developers break programs up into discrete chunks of functionality
+       * called a module. Each module has a smaller surface area than a full program, making verification,
+       * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
+       * boundaries, so that each module has a coherent design and a clear purpose within the overall
+       * application.
+       *
+       * webpack supports modules written in a variety of languages and preprocessors, via loaders.
+       * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
+       * into your bundles.
+       *
+       * @type {array.<!Object>}
+       * @see {@link https://webpack.js.org/configuration/module/#module-rules}
+       */
     module: {
       rules: [
-      /**
-         * eslint-loader options.
-         * @type {!Object}
-         * @see {@link https://github.com/MoOx/eslint-loader}
-         */
+        /**
+           * eslint-loader options.
+           * @type {!Object}
+           * @see {@link https://github.com/MoOx/eslint-loader}
+           */
         {
           enforce: 'pre',
           exclude: DEFAULT_EXCLUDE_RX,
@@ -120,22 +120,13 @@ module.exports = function generateConfig(env) {
         },
 
         /**
-         * This package allows transpiling JavaScript files using Babel and webpack.
-         * @type {!Object}
-         * @see {@link https://webpack.js.org/loaders/babel-loader/}
-         */
+           * This package allows transpiling JavaScript files using Babel and webpack.
+           *
+           * @see {@link https://webpack.js.org/loaders/babel-loader/}
+           */
         {
           exclude: DEFAULT_EXCLUDE_RX,
           loader: 'babel-loader',
-          options: {
-            plugins: ['lodash'],
-            presets: [['env', {
-              modules: false,
-              targets: {
-                node: 8,
-              },
-            }]],
-          },
           test: /\.js$/,
         },
       ],
@@ -160,10 +151,9 @@ module.exports = function generateConfig(env) {
      * @see {@link https://webpack.js.org/configuration/output/}
      */
     output: {
-      filename: 'caboodle-x.js',
-      library: 'Caboodle',
+      library,
       libraryTarget: 'umd',
-      path: path.resolve(__dirname, 'dist'),
+      path: dist,
     },
 
     /**
@@ -173,78 +163,48 @@ module.exports = function generateConfig(env) {
      * A webpack plugin is a JavaScript object that has an apply property. This apply property
      * is called by the webpack compiler, giving access to the entire compilation lifecycle.
      *
-     * @type {array.<!Object>}
      */
-    plugins: compact([
-    /**
-       * Use the shorthand version.
-       * @type {!Object}
-       * @see {@link https://webpack.js.org/plugins/environment-plugin/}
-       */
-      new webpack.EnvironmentPlugin({
-        DEBUG: false, // use 'false' unless process.env.DEBUG is defined.
-        NODE_ENV: DEVELOPMENT, // use 'development' unless process.env.NODE_ENV is defined.
-      }),
-
-      /**
-       * Smaller lodash builds. We are not opting in to path feature.
-       * @type {!Object}
-       * @see {@link https://github.com/lodash/lodash-webpack-plugin}
-       */
-      new LodashModuleReplacementPlugin({
-        paths: true,
-      }),
-
-      /**
-       * This plugin uses UglifyJS v3 (uglify-es) to minify your JavaScript.
-       * @type {!Object}
-       * @see {@link https://webpack.js.org/plugins/uglifyjs-webpack-plugin/}
-       */
-      (function uglifyJs() {
-        if (NODE_ENV === PRODUCTION) {
-          return new webpack.optimize.UglifyJsPlugin({
-            parallel: true,
-            sourceMap: true,
-            uglifyOptions: {
-              ecma: 8,
-            },
-          });
-        }
-
-        return undefined;
-      }()),
-
-      /**
-       * Webpack plugin and CLI utility that represents bundle content as convenient
-       * interactive zoomable treemap.
-       * @type {!Object}
-       * @see {@link https://github.com/webpack-contrib/webpack-bundle-analyzer}
-       */
-      (function bundleAnalyzer() {
-        if (ENV.report) {
-          return new BundleAnalyzerPlugin();
-        }
-
-        return undefined;
-      }()),
-    ]),
+    plugins: [],
 
     /**
-     * These options change how modules are resolved.
-     * @type {!Object}
-     * @see {@link https://webpack.js.org/configuration/resolve/}
-     */
+       * These options change how modules are resolved.
+       * @type {!Object}
+       * @see {@link https://webpack.js.org/configuration/resolve/}
+       */
     resolve: {
-    /**
+      /**
        * Create aliases to import or require certain modules more easily.
        * @type {!Object}
        * @see {@link https://webpack.js.org/configuration/resolve/#resolve-alias}
        */
-      alias: {
-        // RootDir: path.resolve(__dirname, '.'),
-        src: path.resolve(__dirname, 'src'),
-      },
+      alias: {},
       extensions: ['.js', '.json'],
     },
   };
+
+  const packed = merge(base, {
+    optimization: {
+      minimize: false,
+    },
+
+    output: {
+      filename: `${filename}.js`,
+    },
+  });
+
+  const minified = merge(base, {
+    output: {
+      filename: `${filename}.min.js`,
+    },
+
+    /**
+     * Webpack plugin and CLI utility that represents bundle content as convenient
+     * interactive zoomable treemap.
+     *
+     * @see {@link https://github.com/webpack-contrib/webpack-bundle-analyzer}
+     */
+    plugins: ENV.report ? [new BundleAnalyzerPlugin()] : [],
+  });
+
+  return [packed, minified];
 };

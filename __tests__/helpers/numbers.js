@@ -5,17 +5,15 @@
  * @module GlobalAssets/tests/helpers/numbers
  */
 
+import numberConstants from './numberConstants';
+import infinities from './infinities';
+import nonNaNNumbers from './nonNaNNumbers';
+
 export default Object.freeze([
-  -Infinity,
-  Number.MIN_VALUE,
-  Number.MIN_SAFE_INTEGER,
   -1.1,
   -1,
   0,
   1,
   1.1,
-  Number.MAX_SAFE_INTEGER,
-  Number.MAX_VALUE,
-  Infinity,
   NaN,
-]);
+].concat(numberConstants, infinities, nonNaNNumbers));

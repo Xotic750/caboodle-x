@@ -54,6 +54,12 @@ module.exports = {
       },
     },
     {
+      files: ['webpack.*.js'],
+      rules: {
+        'prefer-arrow-callback': 'off',
+      },
+    },
+    {
       files: ['__tests__/**/*.js'],
       rules: {
         'func-names': 'off',
@@ -64,17 +70,20 @@ module.exports = {
       },
     },
     {
-      files: ['src/es*Rx.js'],
+      files: ['es*Rx.js'],
       rules: {
         'max-len': 'off',
         'no-useless-escape': 'off',
       },
     },
     {
-      files: ['src/delayPromise.js'],
+      files: ['delayPromise.js', '__tests__/delayPromise.test.js'],
       rules: {
         'compat/compat': 'off',
         'promise/avoid-new': 'off',
+        'promise/always-return': 'off',
+        'promise/catch-or-return': 'off',
+        'promise/no-nesting': 'off',
       },
     },
   ],

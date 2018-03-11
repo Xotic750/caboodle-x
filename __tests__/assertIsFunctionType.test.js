@@ -18,13 +18,13 @@ describe('assertIsFunctionType', () => {
     primitives.forEach((primitive) => {
       expect(() => {
         assertIsFunctionType(primitive);
-      }).toThrow(/Not a function\./);
+      }).toThrowErrorMatchingSnapshot();
     });
   });
 
   it('should throw with custom message', () => {
     expect(() => {
       assertIsFunctionType({}, 'Custom message');
-    }).toThrow(/Custom message/);
+    }).toThrowErrorMatchingSnapshot();
   });
 });

@@ -1,0 +1,97 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`assertIs should throw if not initiated with a function 1`] = `"Predicate must be a function."`;
+
+exports[`assertIs should throw with custom message 1`] = `"Custom message"`;
+
+exports[`assertIs should throw with default message 1`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 2`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 3`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 4`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 5`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 6`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 7`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 8`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 9`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 10`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 11`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 12`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 13`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 14`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 15`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 16`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 17`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 18`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 19`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 20`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 21`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 22`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 23`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 24`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 25`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 26`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 27`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 28`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 29`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 30`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 31`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 32`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 33`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 34`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 35`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 36`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 37`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 38`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 39`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 40`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 41`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 42`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 43`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 44`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 45`] = `"Not a valid value."`;
+
+exports[`assertIs should throw with default message 46`] = `"Not a valid value."`;

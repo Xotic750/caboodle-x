@@ -5,11 +5,11 @@
  * @module GlobalAssets/tests/helpers/falsey
  */
 
+import nils from './nils';
+
 export default Object.freeze([
-  undefined,
-  null,
   false,
   '',
   0,
   NaN,
-]);
+].concat(nils));

@@ -20,7 +20,7 @@ describe('assertIs', () => {
     primitives.forEach((primitive) => {
       expect(() => {
         assertIsArray(primitive);
-      }).toThrow(/Not a valid value\./);
+      }).toThrowErrorMatchingSnapshot();
     });
   });
 
@@ -29,12 +29,12 @@ describe('assertIs', () => {
 
     expect(() => {
       assertIsArray({});
-    }).toThrow(/Custom message/);
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('should throw if not initiated with a function', () => {
     expect(() => {
       assertIs([]);
-    }).toThrow(/Predicate must be a function\./);
+    }).toThrowErrorMatchingSnapshot();
   });
 });

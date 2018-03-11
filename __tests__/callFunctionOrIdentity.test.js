@@ -1,3 +1,4 @@
+import 'babel-polyfill';
 import {callFunctionOrIdentity} from '../dist/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
@@ -83,27 +84,27 @@ describe('callFunctionOrIdentity', () => {
       expect(actual).toBe(hi);
     });
 
-    it('With non-array args argument', () => {
+    it('With non-arrayLike args argument', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, hej);
+      const actual = callFunctionOrIdentity(mockFn, 1);
 
       expect(mockFn.mock.instances).toHaveLength(1);
       expect(mockFn.mock.instances[0]).toBe(undefined);
       expect(mockFn.mock.calls).toHaveLength(1);
-      expect(mockFn.mock.calls[0]).toHaveLength(1);
-      expect(mockFn.mock.calls[0][0]).toBe(hej);
+      expect(mockFn.mock.calls[0]).toHaveLength(0);
+      expect(mockFn.mock.calls[0][0]).toBe(undefined);
       expect(actual).toBe(hi);
     });
 
-    it('With non-array args argument and context', () => {
+    it('With non-arrayLike args argument and context', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, hej, context);
+      const actual = callFunctionOrIdentity(mockFn, true, context);
 
       expect(mockFn.mock.instances).toHaveLength(1);
       expect(mockFn.mock.instances[0]).toBe(context);
       expect(mockFn.mock.calls).toHaveLength(1);
-      expect(mockFn.mock.calls[0]).toHaveLength(1);
-      expect(mockFn.mock.calls[0][0]).toBe(hej);
+      expect(mockFn.mock.calls[0]).toHaveLength(0);
+      expect(mockFn.mock.calls[0][0]).toBe(undefined);
       expect(actual).toBe(hi);
     });
 
@@ -120,6 +121,18 @@ describe('callFunctionOrIdentity', () => {
       expect(actual).toBe(hi);
     });
 
+    it('With arrayLike args argument', () => {
+      const mockFn = jest.fn().mockReturnValue(hi);
+      const actual = callFunctionOrIdentity(mockFn, hej);
+
+      expect(mockFn.mock.instances).toHaveLength(1);
+      expect(mockFn.mock.instances[0]).toBe(undefined);
+      expect(mockFn.mock.calls).toHaveLength(1);
+      expect(mockFn.mock.calls[0]).toHaveLength(hej.length);
+      expect(mockFn.mock.calls[0]).toEqual(hej.split(''));
+      expect(actual).toBe(hi);
+    });
+
     it('With array args argument and context', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
       const actual = callFunctionOrIdentity(mockFn, [hej, hello], context);
@@ -130,6 +143,18 @@ describe('callFunctionOrIdentity', () => {
       expect(mockFn.mock.calls[0]).toHaveLength(2);
       expect(mockFn.mock.calls[0][0]).toBe(hej);
       expect(mockFn.mock.calls[0][1]).toBe(hello);
+      expect(actual).toBe(hi);
+    });
+
+    it('With arrayLike args argument and context', () => {
+      const mockFn = jest.fn().mockReturnValue(hi);
+      const actual = callFunctionOrIdentity(mockFn, hej, context);
+
+      expect(mockFn.mock.instances).toHaveLength(1);
+      expect(mockFn.mock.instances[0]).toBe(context);
+      expect(mockFn.mock.calls).toHaveLength(1);
+      expect(mockFn.mock.calls[0]).toHaveLength(hej.length);
+      expect(mockFn.mock.calls[0]).toEqual(hej.split(''));
       expect(actual).toBe(hi);
     });
   });

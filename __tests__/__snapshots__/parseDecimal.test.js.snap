@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseDecimal parseDecimal should throw if target is not coercible 1`] = `"Cannot convert object to primitive value"`;

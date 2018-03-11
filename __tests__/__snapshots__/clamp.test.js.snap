@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`clamp should throw RangeError if \`min\` > \`max\` 1`] = `"\\"min\\" > \\"max\\""`;
+
+exports[`clamp should throw RangeError if min > max 1`] = `"\\"min\\" > \\"max\\""`;
+
+exports[`clamp should throw RangeError if min > max 2`] = `"\\"min\\" > \\"max\\""`;
+
+exports[`clamp should throw RangeError if min > max 3`] = `"\\"min\\" > \\"max\\""`;
+
+exports[`clamp should throw RangeError if min > max 4`] = `"\\"min\\" > \\"max\\""`;

@@ -38,19 +38,19 @@ describe('clamp', () => {
   it('should throw RangeError if min > max', () => {
     expect(() => {
       clamp(5, 0, -1);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       clamp(NaN, 0, -1);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       clamp(5, -1, -2);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       clamp(5, 2, 1);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('if min === max should return min', () => {
@@ -118,6 +118,6 @@ describe('clamp', () => {
   it('should throw RangeError if `min` > `max`', () => {
     expect(() => {
       clamp(1, 5, -1);
-    }).toThrow(/"lower" must be less than "upper"/);
+    }).toThrowErrorMatchingSnapshot();
   });
 });

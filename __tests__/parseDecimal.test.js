@@ -34,7 +34,7 @@ describe('parseDecimal', () => {
     it('should throw if target is not coercible', () => {
       expect(() => {
         parseDecimal(Object.create(null));
-      }).toThrow();
+      }).toThrowErrorMatchingSnapshot();
     });
   });
 });

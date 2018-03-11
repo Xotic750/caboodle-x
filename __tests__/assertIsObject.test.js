@@ -17,12 +17,12 @@ describe('assertIsObject', () => {
   it('should throw with default message', () => {
     expect(() => {
       assertIsObject(0);
-    }).toThrow(/Not an object\./);
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('should throw with custom message', () => {
     expect(() => {
       assertIsObject(true, 'Custom message');
-    }).toThrow(/Custom message/);
+    }).toThrowErrorMatchingSnapshot();
   });
 });
