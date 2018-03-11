@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isArrayLikeObject} from '../dist/caboodle-x';
 
 const falsey = Object.freeze([false, 0, NaN, '']);

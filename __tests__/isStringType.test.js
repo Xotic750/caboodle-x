@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isStringType} from '../dist/caboodle-x';
 
 describe('isStringType', () => {

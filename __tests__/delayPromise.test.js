@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {delayPromise} from '../dist/caboodle-x';
 
 describe('delayPromise', () => {

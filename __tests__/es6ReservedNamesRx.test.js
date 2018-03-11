@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {es6ReservedNamesRx} from '../dist/caboodle-x';
 
 describe('es6ReservedNamesRx', () => {

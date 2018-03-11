@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {kebabJoin} from '../dist/caboodle-x';
 
 describe('kebabJoin', () => {

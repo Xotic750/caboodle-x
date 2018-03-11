@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isUniq} from '../dist/caboodle-x';
 
 describe('isUniq', () => {

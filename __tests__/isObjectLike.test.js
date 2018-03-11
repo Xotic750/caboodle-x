@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isObjectLike} from '../dist/caboodle-x';
 
 describe('isObjectLike', () => {

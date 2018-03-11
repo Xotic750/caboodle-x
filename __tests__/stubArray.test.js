@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {stubArray} from '../dist/caboodle-x';
 
 describe('stubArray', () => {

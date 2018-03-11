@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {clamp} from '../dist/caboodle-x';
 
 describe('clamp', () => {

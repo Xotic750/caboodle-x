@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {defineValidatorProperties} from '../dist/caboodle-x';
 
 const has = Object.prototype.hasOwnProperty;

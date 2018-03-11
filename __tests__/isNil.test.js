@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isNil} from '../dist/caboodle-x';
 
 describe('isNil', () => {

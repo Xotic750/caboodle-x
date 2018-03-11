@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {identity} from '../dist/caboodle-x';
 
 describe('identity', () => {

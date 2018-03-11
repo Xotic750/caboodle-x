@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {stubFalse} from '../dist/caboodle-x';
 
 describe('stubFalse', () => {

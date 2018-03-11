@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {constant} from '../dist/caboodle-x';
 
 describe('constant', () => {

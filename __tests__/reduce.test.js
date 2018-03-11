@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {reduce} from '../dist/caboodle-x';
 
 const createArrayLike = function (arr) {

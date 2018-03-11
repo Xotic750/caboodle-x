@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {parseDecimal} from '../dist/caboodle-x';
 
 describe('parseDecimal', () => {

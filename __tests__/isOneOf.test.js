@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isOneOf} from '../dist/caboodle-x';
 
 describe('isOneOf', () => {

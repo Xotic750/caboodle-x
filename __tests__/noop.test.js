@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import empties from './helpers/empties';
 import {noop} from '../dist/caboodle-x';
 

@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isSearchIndex} from '../dist/caboodle-x';
 
 describe('isSearchIndex', () => {

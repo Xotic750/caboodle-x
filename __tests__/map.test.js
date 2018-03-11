@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {map} from '../dist/caboodle-x';
 
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;

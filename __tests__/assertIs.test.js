@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import primitives from './helpers/primitives';
 import {assertIs} from '../dist/caboodle-x';
 

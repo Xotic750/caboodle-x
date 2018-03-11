@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {es5IdentifierRx} from '../dist/caboodle-x';
 
 describe('es5IdentifierRx', () => {

@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {defaultToOneOf} from '../dist/caboodle-x';
 
 describe('defaultToOneOf', () => {

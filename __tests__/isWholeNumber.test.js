@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isWholeNumber} from '../dist/caboodle-x';
 
 describe('isWholeNumber', () => {

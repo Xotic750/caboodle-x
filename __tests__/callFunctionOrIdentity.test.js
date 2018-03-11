@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {callFunctionOrIdentity} from '../dist/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';

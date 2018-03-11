@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isCountingNumber} from '../dist/caboodle-x';
 
 describe('isCountingNumber', () => {

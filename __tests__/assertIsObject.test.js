@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import objects from './helpers/objects';
 import {assertIsObject} from '../dist/caboodle-x';
 

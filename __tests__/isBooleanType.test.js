@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {isBooleanType} from '../dist/caboodle-x';
 
 describe('isBooleanType', () => {

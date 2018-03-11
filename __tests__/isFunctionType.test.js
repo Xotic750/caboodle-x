@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import primitives from './helpers/primitives';
 import {isFunctionType} from '../dist/caboodle-x';
 

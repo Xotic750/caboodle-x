@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {sameValueZero} from '../dist/caboodle-x';
 import nonNullPrimitives from './helpers/nonNullPrimitives';
 import nils from './helpers/nils';

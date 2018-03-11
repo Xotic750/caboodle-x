@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {nilifyIs} from '../dist/caboodle-x';
 
 describe('nilifyIs', () => {

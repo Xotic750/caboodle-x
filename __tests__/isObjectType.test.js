@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import objects from './helpers/objects';
 import truthy from './helpers/truthy';
 import numbers from './helpers/numbers';

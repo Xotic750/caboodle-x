@@ -1,4 +1,3 @@
-import 'babel-polyfill';
 import {requireObjectCoercible} from '../dist/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
