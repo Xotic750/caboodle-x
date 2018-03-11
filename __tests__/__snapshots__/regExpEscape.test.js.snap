@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`regexpEscape should throw for Object Symbol 1`] = `"Cannot convert a Symbol value to a string"`;
+
+exports[`regexpEscape should throw for Object.create(null) 1`] = `"Cannot convert object to primitive value"`;

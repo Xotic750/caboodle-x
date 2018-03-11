@@ -80,6 +80,8 @@ export {default as noop} from './noop';
 export {default as parseDecimal} from './parseDecimal';
 export {default as reduce} from './reduce';
 export {default as reduceOwn} from './reduceOwn';
+export {default as regexpEscape} from './regexpEscape';
+export {default as requireObjectCoercible} from './requireObjectCoercible';
 export {default as sameValueZero} from './sameValueZero';
 export {default as some} from './some';
 export {default as someOwn} from './someOwn';
