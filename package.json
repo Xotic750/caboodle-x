@@ -14,7 +14,8 @@
   "scripts": {
     "build": "NODE_ENV=production webpack --bail --config webpack.config.js --progress --profile --colors",
     "build:dev": "webpack --bail --config webpack.config.js --progress --profile --colors",
-    "clean": "rimraf dist __tests__/coverage",
+    "clean": "rimraf dist && npm run clean:coverage",
+    "clean:coverage": "rimraf __tests__/coverage",
     "lint": "eslint --ext .js .",
     "lint-fix": "npm run lint -- --fix",
     "precommit": "npm run security && npm run build",
@@ -23,9 +24,9 @@
     "report:dev": "npm run build:dev -- --env.report",
     "security": "nsp check",
     "start": "nodemon --exec \"npm run build\" --watch src",
-    "test": "jest",
+    "test": "npm run clean:coverage && jest",
     "test:ci": "npm run test -- --ci --maxWorkers=2",
-    "test:coverage": "rimraf __tests__/coverage && npm run test -- --coverage"
+    "test:coverage": "npm run test -- --coverage"
   },
   "author": {
     "name": "Graham Fairweather",
