@@ -5,10 +5,10 @@
  */
 
 import isString from 'is-string';
-import stringIncludes from './stringTest';
+import _stringTest from './.internal/_stringTest';
 
-const invalidHexLiteral = /^0x[0-9a-f]+$/i;
+const hexPattern = /^0x[0-9a-f]+$/i;
 
 export default function isHex(string) {
-  return isString(string) && stringIncludes(string, invalidHexLiteral);
+  return isString(string) && _stringTest(string, hexPattern);
 }

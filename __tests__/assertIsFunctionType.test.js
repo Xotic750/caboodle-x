@@ -1,29 +1,29 @@
 import primitives from './helpers/primitives';
-import {assertIsFunctionType} from '../dist/caboodle-x';
+import {assertIsFunction} from '../dist/caboodle-x';
+import noop from './helpers/noop';
 
-describe('assertIsFunctionType', () => {
+describe('assertIsFunction', () => {
   it('should be a function', () => {
-    expect(assertIsFunctionType).toBeInstanceOf(Function);
+    expect(assertIsFunction).toBeInstanceOf(Function);
   });
 
   it('should return function', () => {
-    const fn = () => {};
-    const actual = assertIsFunctionType(fn);
+    const actual = assertIsFunction(noop);
 
-    expect(actual).toBe(fn);
+    expect(actual).toBe(noop);
   });
 
   it('should throw with default message', () => {
     primitives.forEach((primitive) => {
       expect(() => {
-        assertIsFunctionType(primitive);
+        assertIsFunction(primitive);
       }).toThrowErrorMatchingSnapshot();
     });
   });
 
   it('should throw with custom message', () => {
     expect(() => {
-      assertIsFunctionType({}, 'Custom message');
+      assertIsFunction({}, 'Custom message');
     }).toThrowErrorMatchingSnapshot();
   });
 });

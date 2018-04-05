@@ -100,10 +100,10 @@ module.exports = function generateConfig(env) {
     module: {
       rules: [
         /**
-           * eslint-loader options.
-           * @type {!Object}
-           * @see {@link https://github.com/MoOx/eslint-loader}
-           */
+         * eslint-loader options.
+         * @type {!Object}
+         * @see {@link https://github.com/MoOx/eslint-loader}
+         */
         {
           enforce: 'pre',
           exclude: DEFAULT_EXCLUDE_RX,
@@ -116,7 +116,7 @@ module.exports = function generateConfig(env) {
             formatter: eslintFriendlyFormatter,
             quiet: true,
           },
-          test: /\.(js|json)$/,
+          test: /\.(js)$/,
         },
 
         /**

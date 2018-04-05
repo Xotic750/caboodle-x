@@ -4,10 +4,10 @@
  * @module surround
  */
 
-import toString from './.internal/toString';
+import _toString from './.internal/_toString';
 
 export default function surround(string, wrapper) {
-  const wrap = toString(wrapper);
+  const wrap = _toString(wrapper);
 
-  return wrap + toString(string) + wrap;
+  return wrap + _toString(string) + wrap;
 }

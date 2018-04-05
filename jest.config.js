@@ -2,6 +2,15 @@
 
 module.exports = {
   coverageDirectory: '__tests__/coverage/',
+  collectCoverageFrom: [
+    'dist/caboodle-x.js',
+    '!<rootDir>/node_modules/',
+    '!<rootDir>/__tests__/helpers/',
+  ],
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/__tests__/helpers/',
+  ],
   moduleFileExtensions: [
     'js',
     'json',

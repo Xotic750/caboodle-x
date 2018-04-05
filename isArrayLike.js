@@ -5,9 +5,9 @@
  */
 
 import isNil from './isNil';
-import isFunctionType from './isFunctionType';
+import _isFunction from './.internal/_isFunction';
 import isWholeNumber from './isWholeNumber';
 
 export default function isArrayLike(value) {
-  return !isNil(value) && !isFunctionType(value) && isWholeNumber(value.length);
+  return !isNil(value) && isWholeNumber(value.length) && !_isFunction(value);
 }

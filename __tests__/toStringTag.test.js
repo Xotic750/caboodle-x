@@ -1,6 +1,9 @@
 import {toStringTag} from '../dist/caboodle-x';
 
-const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+/* istanbul ignore next */
+const hasSymbol =
+  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+/* istanbul ignore next */
 const symbolIt = hasSymbol ? it : xit;
 
 describe('toStringTag', () => {

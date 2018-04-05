@@ -5,8 +5,4 @@
  * @module GlobalAssets/tests/helpers/truthy
  */
 
-export default Object.freeze([
-  true,
-  't',
-  1,
-]);
+export default Object.freeze([true, 't', 1]);

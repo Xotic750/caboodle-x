@@ -4,7 +4,7 @@
  * @module isWholeNumber
  */
 
-import isSafeInteger from './.internal/isSafeInteger';
+import isSafeInteger from './isSafeInteger';
 
 export default function isWholeNumber(value) {
   return isSafeInteger(value) && value >= 0;

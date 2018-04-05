@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`toPropertyKey should throw if not coercible 1`] = `"No default value"`;

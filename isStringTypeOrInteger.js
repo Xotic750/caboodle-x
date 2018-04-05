@@ -4,8 +4,8 @@
  * @module isStringTypeOrInteger
  */
 
-import isSafeInteger from './.internal/isSafeInteger';
-import isStringType from './isNil';
+import isSafeInteger from './isSafeInteger';
+import isStringType from './isStringType';
 
 export default function isStringTypeOrInteger(value) {
   return isStringType(value) || isSafeInteger(value);

@@ -5,8 +5,8 @@
  */
 
 import isString from 'is-string';
-import stringIncludes from './stringTest';
+import _stringTest from './.internal/_stringTest';
 
 export default function isUnderscored(string) {
-  return isString(string) && stringIncludes(string, '_');
+  return isString(string) && _stringTest(string, '_');
 }

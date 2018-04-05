@@ -4,8 +4,9 @@
  * @module isUniq
  */
 
-import uniq from './uniq';
+import isArrayLike from './isArrayLike';
+import _uniq from './.internal/_uniq';
 
 export default function isUniq(array) {
-  return uniq(array).length === array.length;
+  return isArrayLike(array) && _uniq(array).length === array.length;
 }

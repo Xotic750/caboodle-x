@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parseInteger parseInteger should throw for Symbol 1`] = `"Cannot convert a Symbol value to a string"`;
+
+exports[`parseInteger parseInteger should throw for Symbol 2`] = `"Cannot convert a Symbol value to a string"`;
+
+exports[`parseInteger parseInteger should throw if target is not coercible 1`] = `"Cannot convert object to primitive value"`;

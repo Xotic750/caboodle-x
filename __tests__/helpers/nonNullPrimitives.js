@@ -4,4 +4,6 @@ import booleanPrimitives from './booleanPrimitives';
 export default Object.freeze([
   'foo',
   '',
-].concat(nonNaNNumbers, booleanPrimitives));
+  ...nonNaNNumbers,
+  ...booleanPrimitives,
+]);

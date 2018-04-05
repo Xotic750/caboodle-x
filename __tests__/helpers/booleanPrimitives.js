@@ -1,4 +1,1 @@
-export default Object.freeze([
-  true,
-  false,
-]);
+export default Object.freeze([true, false]);

@@ -5,10 +5,10 @@
  */
 
 import isString from 'is-string';
-import stringIncludes from './stringTest';
+import _stringTest from './.internal/_stringTest';
 
-const binaryRegex = /^0b[01]+$/i;
+const binaryPattern = /^0b[01]+$/i;
 
 export default function isBinary(string) {
-  return isString(string) && stringIncludes(string, binaryRegex);
+  return isString(string) && _stringTest(string, binaryPattern);
 }

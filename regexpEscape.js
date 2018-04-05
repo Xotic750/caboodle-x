@@ -4,12 +4,10 @@
  * @module regExpEscape
  */
 
-import stringReplace from './.internal/stringReplace';
-import toString from './.internal/toString';
-import requireCoercibleToString from './requireObjectCoercible';
+import _replace from './.internal/_replace';
+import requireCoercibleToString from './requireCoercibleToString';
 
-const syntaxChars = /[\^$\\.*+?()[\]{}|]/g;
-
+const pattern = /[\^$\\.*+?()[\]{}|]/g;
 
 /**
  * Method to safely escape `RegExp` special tokens for use in `new RegExp`.
@@ -25,5 +23,5 @@ const syntaxChars = /[\^$\\.*+?()[\]{}|]/g;
  * String(regex); // '/hello\. how are you\?/g'
  */
 export default function regExpEscape(string) {
-  return stringReplace(toString(requireCoercibleToString(string)), syntaxChars, '\\$&');
+  return _replace(requireCoercibleToString(string), pattern, '\\$&');
 }

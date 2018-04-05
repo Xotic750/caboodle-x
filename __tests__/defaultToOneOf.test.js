@@ -8,12 +8,15 @@ describe('defaultToOneOf', () => {
   });
 
   it('should return a match', () => {
-    expect(defaultToOneOf(3, array)).toBe(3);
-    expect(defaultToOneOf(3, array, 5)).toBe(3);
+    expect(defaultToOneOf(array, 3)).toBe(3);
+    expect(defaultToOneOf(array, 3, 5)).toBe(3);
   });
 
-  it('should return the default for no match', () => {
-    expect(defaultToOneOf(6, array)).toBe(undefined);
-    expect(defaultToOneOf(6, array, 5)).toBe(5);
+  it('should return the last value for no match', () => {
+    expect(defaultToOneOf(array, 6)).toBe(4);
+  });
+
+  it('should return the fallback for no match', () => {
+    expect(defaultToOneOf(array, 6, 5)).toBe(5);
   });
 });

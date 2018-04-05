@@ -5,10 +5,10 @@
  */
 
 import isString from 'is-string';
-import stringIncludes from './stringTest';
+import _stringTest from './.internal/_stringTest';
 
-const octalRegex = /^0o[0-7]+$/i;
+const octalPattern = /^0o[0-7]+$/i;
 
 export default function isOctal(string) {
-  return isString(string) && stringIncludes(string, octalRegex);
+  return isString(string) && _stringTest(string, octalPattern);
 }

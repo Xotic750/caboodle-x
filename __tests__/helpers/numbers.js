@@ -16,4 +16,7 @@ export default Object.freeze([
   1,
   1.1,
   NaN,
-].concat(numberConstants, infinities, nonNaNNumbers));
+  ...numberConstants,
+  ...infinities,
+  ...nonNaNNumbers,
+]);

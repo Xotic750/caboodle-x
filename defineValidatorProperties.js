@@ -4,17 +4,22 @@
  * @module defineValidatorProperties
  */
 
-import toObject from './.internal/toObject';
+import assertIsObject from './assertIsObjectLike';
 import defineValidatorProperty from './defineValidatorProperty';
-import assertIsObject from './assertIsObject';
-import forOwn from './forOwn';
+import toObject from './toObject';
+import _all from './.internal/_all';
+import _keys from './.internal/_keys';
+import toPropertyKey from './toPropertyKey';
 
 export default function defineValidatorProperties(object, properties) {
   assertIsObject(object);
 
   const props = toObject(properties);
+  const callback = function _callback(currentValue) {
+    defineValidatorProperty(object, toPropertyKey(currentValue), props[currentValue]);
+  };
 
-  forOwn(props, property => defineValidatorProperty(object, property, props[property]));
+  _all(_keys(props), callback);
 
   return object;
 }

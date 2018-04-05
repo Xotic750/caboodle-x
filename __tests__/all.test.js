@@ -1,0 +1,214 @@
+import {all} from '../dist/caboodle-x';
+
+/* istanbul ignore next */
+const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
+
+/* istanbul ignore next */
+const isStrict = (function () {
+  return Boolean(this) === false;
+}());
+
+/* istanbul ignore next */
+const itStrict = isStrict ? it : xit;
+
+const createArrayLike = function (arr) {
+  const o = {};
+  arr.forEach((e, i) => {
+    o[i] = e;
+  });
+
+  o.length = arr.length;
+  return o;
+};
+
+describe('each', () => {
+  let actual;
+  let expected;
+  let testSubject;
+
+  beforeEach(() => {
+    expected = {
+      0: 2,
+      2: undefined,
+      3: true,
+      4: 'hej',
+      5: null,
+      6: false,
+      7: 0,
+    };
+
+    actual = {};
+    testSubject = [2, 3, undefined, true, 'hej', null, false, 0];
+
+    delete testSubject[1];
+  });
+
+  it('is a function', () => {
+    expect(typeof all).toBe('function');
+  });
+
+  it('should throw when array is null or undefined', () => {
+    expect(() => {
+      all();
+    }).toThrowErrorMatchingSnapshot();
+
+    expect(() => {
+      all(undefined);
+    }).toThrowErrorMatchingSnapshot();
+
+    expect(() => {
+      all(null);
+    }).toThrowErrorMatchingSnapshot();
+  });
+
+  it('should pass the right parameters', () => {
+    const callback = jest.fn();
+    const array = ['1'];
+    all(array, callback);
+    expect(callback).toHaveBeenCalledWith('1', 0, array);
+  });
+
+  it('should not affect elements added to the array after it has begun', () => {
+    const arr = [1, 2, 3];
+    let i = 0;
+    all(arr, (a) => {
+      i += 1;
+      arr.push(a + 3);
+    });
+
+    expect(arr).toEqual([1, 2, 3, 4, 5, 6]);
+
+    expect(i).toBe(3);
+  });
+
+  it('should set the right context when given none', () => {
+    let context;
+    all([1], function () {
+      context = this;
+    });
+
+    expect(context).toBe(function () {
+      return this;
+    }.call());
+  });
+
+  it('should iterate all', () => {
+    all(testSubject, (obj, index) => {
+      actual[index] = obj;
+
+      return true;
+    });
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should iterate all using a context', () => {
+    const o = {a: actual};
+
+    all(
+      testSubject,
+      function (obj, index) {
+        this.a[index] = obj;
+      }.bind(o),
+    );
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should iterate all in an array-like object', () => {
+    const ts = createArrayLike(testSubject);
+    all(ts, (obj, index) => {
+      actual[index] = obj;
+    });
+
+    expect(actual).toEqual(expected);
+  });
+
+  it('should iterate all in an array-like object using a context', () => {
+    const ts = createArrayLike(testSubject);
+    const o = {a: actual};
+
+    all(
+      ts,
+      function (obj, index) {
+        this.a[index] = obj;
+      }.bind(o),
+    );
+
+    expect(actual).toEqual(expected);
+  });
+
+  describe('strings', () => {
+    const str = 'Hello, World!';
+
+    it('should iterate all in a string', () => {
+      actual = [];
+      all(str, (item, index) => {
+        actual[index] = item;
+      });
+
+      expect(actual).toEqual(str.split(''));
+    });
+
+    it('should iterate all in a string using a context', () => {
+      actual = [];
+      const o = {a: actual};
+      all(
+        str,
+        function (item, index) {
+          this.a[index] = item;
+        }.bind(o),
+      );
+
+      expect(actual).toEqual(str.split(''));
+    });
+  });
+
+  it('should have a boxed object as list argument of callback', () => {
+    let listArg;
+    all('foo', (item, index, list) => {
+      listArg = list;
+    });
+
+    expect(typeof listArg).toBe('object');
+    expect(Object.prototype.toString.call(listArg)).toBe('[object String]');
+  });
+
+  itStrict('does not autobox the content in strict mode', () => {
+    let context;
+    all(
+      [1],
+      function () {
+        context = this;
+      }.bind('x'),
+    );
+
+    expect(typeof context).toBe('string');
+  });
+
+  it('should work with arguments', () => {
+    const argObj = (function () {
+      return arguments;
+    }('1'));
+
+    const callback = jest.fn();
+    all(argObj, callback);
+    expect(callback).toHaveBeenCalledWith('1', 0, argObj);
+  });
+
+  it('should work with strings', () => {
+    const callback = jest.fn();
+    const string = '1';
+    all(string, callback);
+    expect(callback).toHaveBeenCalledWith('1', 0, string);
+  });
+
+  itHasDoc('should work wih DOM elements', () => {
+    const fragment = document.createDocumentFragment();
+    const div = document.createElement('div');
+    fragment.appendChild(div);
+    const callback = jest.fn();
+    all(fragment.childNodes, callback);
+    expect(callback).toHaveBeenCalledWith(div, 0, fragment.childNodes);
+  });
+});

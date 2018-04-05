@@ -9,7 +9,7 @@ export default Object.freeze([
   {},
   [],
   new Date(),
-  new Map(),
+  // new Map(),
   /hej/,
   Object(),
   Object(1),

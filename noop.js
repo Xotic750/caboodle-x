@@ -4,6 +4,4 @@
  * @module noop
  */
 
-export default function noop(...args) {
-  return args && undefined;
-}
+export default function noop() {}

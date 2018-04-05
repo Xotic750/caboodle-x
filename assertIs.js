@@ -4,23 +4,13 @@
  * @module assertIs
  */
 
-import call from './.internal/call';
-import toString from './.internal/toString';
-
-import isFunctionType from './isFunctionType';
+import _assertIs from './.internal/_assertIs';
+import _isFunction from './.internal/_isFunction';
 
 export default function assertIs(predicate, defaultMessage) {
-  if (!isFunctionType(predicate)) {
-    throw new TypeError('Predicate must be a function.');
+  if (!_isFunction(predicate)) {
+    throw new TypeError('Predicate must be a function');
   }
 
-  const defMsg = defaultMessage ? toString(defaultMessage) : 'Not a valid value.';
-
-  return function assertIsBound(value, customMessage) {
-    if (!call(predicate, this, value)) {
-      throw new TypeError(customMessage ? toString(customMessage) : defMsg);
-    }
-
-    return value;
-  };
+  return _assertIs(predicate, defaultMessage);
 }

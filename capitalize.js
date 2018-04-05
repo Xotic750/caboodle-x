@@ -4,14 +4,14 @@
  * @module capitalize
  */
 
-import toUpperCase from './.internal/toUpperCase';
-import toLowerCase from './.internal/toLowerCase';
-import charAt from './.internal/charAt';
-import stringSlice from './.internal/stringSlice';
-import toString from './.internal/toString';
+import _charAt from './.internal/_charAt';
+import _stringSlice from './.internal/_stringSlice';
+import _toString from './.internal/_toString';
+import _toLowerCase from './.internal/_toLowerCase';
+import _toUpperCase from './.internal/_toUpperCase';
 
 export default function capitalize(string) {
-  const str = toString(string);
+  const str = _toString(string);
 
-  return toUpperCase(charAt(str, 0)) + toLowerCase(stringSlice(str, 1));
+  return _toUpperCase(_charAt(str, 0)) + _toLowerCase(_stringSlice(str, 1));
 }

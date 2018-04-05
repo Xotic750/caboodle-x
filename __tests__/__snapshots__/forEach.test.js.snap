@@ -1,7 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`forEach should throw when callback is not a function 1`] = `"undefined is not a function"`;
-
-exports[`forEach should throw when callback is not a function 2`] = `"undefined is not a function"`;
-
-exports[`forEach should throw when callback is not a function 3`] = `"undefined is not a function"`;

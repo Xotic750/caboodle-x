@@ -7,9 +7,4 @@
 
 import nils from './nils';
 
-export default Object.freeze([
-  false,
-  '',
-  0,
-  NaN,
-].concat(nils));
+export default Object.freeze([false, '', 0, NaN, ...nils]);

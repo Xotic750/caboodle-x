@@ -1,4 +1,5 @@
 import {clamp} from '../dist/caboodle-x';
+import noop from './helpers/noop';
 
 describe('clamp', () => {
   it('should be a function', () => {
@@ -17,7 +18,7 @@ describe('clamp', () => {
       '1',
       [],
       {},
-      function () {},
+      noop,
       NaN,
       Infinity,
     ];

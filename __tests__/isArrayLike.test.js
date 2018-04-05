@@ -13,12 +13,7 @@ describe('isArrayLike', () => {
 
   it('should return `true` for array-like values', () => {
     (function () {
-      const values = [
-        arguments,
-        [1, 2, 3],
-        {0: 1, length: 1},
-        'a',
-      ];
+      const values = [arguments, [1, 2, 3], {0: 1, length: 1}, 'a'];
       const expected = values.map(() => true);
       const actual = values.map(isArrayLike);
       expect(actual).toEqual(expected);
