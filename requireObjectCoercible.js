@@ -4,10 +4,9 @@
  * @module requireObjectCoercible
  */
 
-import toString from './.internal/toString';
+import _assertIs from './.internal/_assertIs';
+import _negate from './.internal/_negate';
 import isNil from './isNil';
-
-const MSG1 = 'Cannot call method on ';
 
 /**
  * The abstract operation RequireObjectCoercible throws an error if argument
@@ -25,10 +24,4 @@ const MSG1 = 'Cannot call method on ';
  * RequireObjectCoercible(true); // true
  * RequireObjectCoercible(Symbol('foo')); // Symbol('foo')
  */
-export default function requireObjectCoercible(value) {
-  if (isNil(value)) {
-    throw new TypeError(MSG1 + toString(value));
-  }
-
-  return value;
-}
+export default _assertIs(_negate(isNil), 'Cannot call method on null or undefined');

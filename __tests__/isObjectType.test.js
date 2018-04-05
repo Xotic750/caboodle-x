@@ -6,11 +6,7 @@ import strings from './helpers/strings';
 import {isObjectType} from '../dist/caboodle-x';
 
 describe('isObjectType', () => {
-  const primitives = Object.freeze([
-    ...truthy,
-    ...numbers,
-    ...strings,
-  ]);
+  const primitives = Object.freeze([...truthy, ...numbers, ...strings]);
 
   it('should be a function', () => {
     expect(isObjectType).toBeInstanceOf(Function);

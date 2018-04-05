@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`stringTest should throw when search element is null or undefined 1`] = `"Cannot call method on null or undefined"`;
+
+exports[`stringTest should throw when search element is null or undefined 2`] = `"Cannot call method on null or undefined"`;
+
+exports[`stringTest should throw when search element is null or undefined 3`] = `"Cannot call method on null or undefined"`;
+
+exports[`stringTest should throw when target is null or undefined 1`] = `"Cannot call method on null or undefined"`;
+
+exports[`stringTest should throw when target is null or undefined 2`] = `"Cannot call method on null or undefined"`;
+
+exports[`stringTest should throw when target is null or undefined 3`] = `"Cannot call method on null or undefined"`;

@@ -10,6 +10,5 @@
  */
 
 import isSymbolType from './isSymbolType';
-import constant from './constant';
 
-export default constant(typeof Symbol === 'function' && isSymbolType(Symbol('x')));
+export default typeof Symbol === 'function' && isSymbolType(Symbol('x'));

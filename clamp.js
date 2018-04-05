@@ -1,14 +1,14 @@
 /**
- * @file Utility that needs description.
+ * @file Utility that clamps a number to min and max limits inclusive.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module clamp
  */
 
-import toNumber from './.internal/toNumber';
-import numberIsNaN from './.internal/numberIsNaN';
+import _clamp from './.internal/_clamp';
+import _toNumber from './.internal/_toNumber';
 
 /**
- * This method clamp a number to min and max limits inclusive.
+ * This method clamps a number to min and max limits inclusive.
  *
  * @param {number} value - The number to be clamped.
  * @param {Array} rest - The remaining arguments array.
@@ -19,38 +19,26 @@ import numberIsNaN from './.internal/numberIsNaN';
  * @example
  *
  * clamp(-10, -5, 5); // -5
- *
  * clamp(10, -5, 5); // 5
  */
 export default function clamp(value, ...rest) {
-  const number = toNumber(value);
+  const number = _toNumber(value);
   const restLength = rest.length;
+
   if (restLength < 1) {
     return number;
   }
 
-  let min = toNumber(rest[0]);
-  let max = toNumber(rest[1]);
+  let min = _toNumber(rest[0]);
+  let max = _toNumber(rest[1]);
   if (restLength < 2) {
     max = min;
     min = 0;
-  }
-
-  if (numberIsNaN(min) || numberIsNaN(max)) {
-    return NaN;
   }
 
   if (min > max) {
     throw new RangeError('"min" > "max"');
   }
 
-  if (number < min) {
-    return min;
-  }
-
-  if (number > max) {
-    return max;
-  }
-
-  return number;
+  return _clamp(number, min, max);
 }

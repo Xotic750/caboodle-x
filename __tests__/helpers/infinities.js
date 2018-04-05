@@ -1,4 +1,1 @@
-export default Object.freeze([
-  Infinity,
-  -Infinity,
-]);
+export default Object.freeze([Infinity, -Infinity]);

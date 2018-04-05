@@ -1,6 +1,7 @@
 import {callFunctionOrIdentity} from '../dist/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
+import noop from './helpers/noop';
 
 describe('callFunctionOrIdentity', () => {
   it('No arguments', () => {
@@ -10,19 +11,22 @@ describe('callFunctionOrIdentity', () => {
   describe('Non-arrays', () => {
     describe('Primitives', () => {
       it('Single argument', () => {
-        const actual = primitives.map(primitive => callFunctionOrIdentity(primitive));
+        const actual = primitives.map(primitive =>
+          callFunctionOrIdentity(primitive));
 
         expect(actual).toEqual(primitives);
       });
 
       it('Two arguments', () => {
-        const actual = primitives.map(primitive => callFunctionOrIdentity(primitive, objects));
+        const actual = primitives.map(primitive =>
+          callFunctionOrIdentity(primitive, objects));
 
         expect(actual).toEqual(primitives);
       });
 
       it('Three arguments', () => {
-        const actual = primitives.map(primitive => callFunctionOrIdentity(primitive, objects, {}));
+        const actual = primitives.map(primitive =>
+          callFunctionOrIdentity(primitive, objects, {}));
 
         expect(actual).toEqual(primitives);
       });
@@ -36,13 +40,15 @@ describe('callFunctionOrIdentity', () => {
       });
 
       it('Two arguments', () => {
-        const actual = objects.map(object => callFunctionOrIdentity(object, primitives));
+        const actual = objects.map(object =>
+          callFunctionOrIdentity(object, primitives));
 
         expect(actual).toEqual(objects);
       });
 
       it('Three arguments', () => {
-        const actual = objects.map(object => callFunctionOrIdentity(object, primitives, {}));
+        const actual = objects.map(object =>
+          callFunctionOrIdentity(object, primitives, {}));
 
         expect(actual).toEqual(objects);
       });
@@ -83,28 +89,38 @@ describe('callFunctionOrIdentity', () => {
       expect(actual).toBe(hi);
     });
 
-    it('With non-arrayLike args argument', () => {
+    it('With undefined', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, 1);
+      const actual = callFunctionOrIdentity(mockFn, undefined);
 
       expect(mockFn.mock.instances).toHaveLength(1);
       expect(mockFn.mock.instances[0]).toBe(undefined);
       expect(mockFn.mock.calls).toHaveLength(1);
       expect(mockFn.mock.calls[0]).toHaveLength(0);
-      expect(mockFn.mock.calls[0][0]).toBe(undefined);
       expect(actual).toBe(hi);
     });
 
-    it('With non-arrayLike args argument and context', () => {
+    it('with null', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, true, context);
+      const actual = callFunctionOrIdentity(mockFn, null);
 
       expect(mockFn.mock.instances).toHaveLength(1);
-      expect(mockFn.mock.instances[0]).toBe(context);
+      expect(mockFn.mock.instances[0]).toBe(undefined);
       expect(mockFn.mock.calls).toHaveLength(1);
       expect(mockFn.mock.calls[0]).toHaveLength(0);
-      expect(mockFn.mock.calls[0][0]).toBe(undefined);
       expect(actual).toBe(hi);
+    });
+
+    it('With non-arrayLike args argument', () => {
+      expect(() => {
+        callFunctionOrIdentity(noop, 1);
+      }).toThrowErrorMatchingSnapshot();
+    });
+
+    it('With non-arrayLike args argument and context', () => {
+      expect(() => {
+        callFunctionOrIdentity(noop, true, context);
+      }).toThrowErrorMatchingSnapshot();
     });
 
     it('With array args argument', () => {
@@ -122,7 +138,7 @@ describe('callFunctionOrIdentity', () => {
 
     it('With arrayLike args argument', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, hej);
+      const actual = callFunctionOrIdentity(mockFn, Object(hej));
 
       expect(mockFn.mock.instances).toHaveLength(1);
       expect(mockFn.mock.instances[0]).toBe(undefined);
@@ -147,7 +163,7 @@ describe('callFunctionOrIdentity', () => {
 
     it('With arrayLike args argument and context', () => {
       const mockFn = jest.fn().mockReturnValue(hi);
-      const actual = callFunctionOrIdentity(mockFn, hej, context);
+      const actual = callFunctionOrIdentity(mockFn, Object(hej), context);
 
       expect(mockFn.mock.instances).toHaveLength(1);
       expect(mockFn.mock.instances[0]).toBe(context);

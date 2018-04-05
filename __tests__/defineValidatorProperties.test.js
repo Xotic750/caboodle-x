@@ -1,14 +1,21 @@
 import {defineValidatorProperties} from '../dist/caboodle-x';
 
 const has = Object.prototype.hasOwnProperty;
+/* istanbul ignore next */
 const doc = typeof document !== 'undefined' && document;
+/* istanbul ignore next */
 const itHasDoc = doc ? it : xit;
+
+const stubTrue = () => true;
 
 const testObj = Object.defineProperty({}, 'foo', {
   value: true,
 });
 
-const hasNonEnumerable = Object.keys(testObj).length === 0 && testObj.foo === true;
+/* istanbul ignore next */
+const hasNonEnumerable =
+  Object.keys(testObj).length === 0 && testObj.foo === true;
+/* istanbul ignore next */
 const itHasNonEnumerable = hasNonEnumerable ? it : xit;
 
 describe('defineValidatorProperties', () => {
@@ -22,7 +29,7 @@ describe('defineValidatorProperties', () => {
         configurable: true,
         enumerable: true,
         nilable: false,
-        validator: () => true,
+        validator: stubTrue,
         value: 'Testing',
         writable: true,
       },
@@ -30,7 +37,7 @@ describe('defineValidatorProperties', () => {
         configurable: true,
         enumerable: true,
         nilable: false,
-        validator: () => true,
+        validator: stubTrue,
         value: 1234,
         writable: true,
       },
@@ -99,9 +106,12 @@ describe('defineValidatorProperties', () => {
   });
 
   it('should not throw error for empty descriptor', () => {
-    defineValidatorProperties({}, {
-      name: {},
-    });
+    defineValidatorProperties(
+      {},
+      {
+        name: {},
+      },
+    );
   });
 
   itHasDoc('works with DOM elements', () => {

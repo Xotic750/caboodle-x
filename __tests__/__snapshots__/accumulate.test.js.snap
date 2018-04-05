@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`accumulate Array should throw correctly if no callback is given 1`] = `"Not a function"`;
+
+exports[`accumulate Array should work as expected for empty arrays 1`] = `"accumulate of empty array with no initial value"`;
+
+exports[`accumulate Array-like objects should throw correctly if no callback is given 1`] = `"Not a function"`;
+
+exports[`accumulate Array-like objects should work as expected for empty arrays 1`] = `"accumulate of empty array with no initial value"`;
+
+exports[`accumulate should throw when array is null or undefined 1`] = `"Cannot call method on null or undefined"`;
+
+exports[`accumulate should throw when array is null or undefined 2`] = `"Cannot call method on null or undefined"`;
+
+exports[`accumulate should throw when array is null or undefined 3`] = `"Cannot call method on null or undefined"`;

@@ -50,6 +50,7 @@ module.exports = {
           devDependencies: true,
         }],
         'no-console': 'off',
+        'max-len': 'off',
       },
     },
     {
@@ -64,25 +65,57 @@ module.exports = {
         'func-names': 'off',
         'no-array-constructor': 'off',
         'no-empty': 'off',
+        'no-param-reassign': 'off',
         'no-sparse-arrays': 'off',
         'prefer-rest-params': 'off',
       },
     },
     {
-      files: ['es*Rx.js'],
-      rules: {
-        'max-len': 'off',
-        'no-useless-escape': 'off',
-      },
-    },
-    {
-      files: ['delayPromise.js', '__tests__/delayPromise.test.js'],
+      files: ['delayPromise.js', 'delayPromise.test.js'],
       rules: {
         'compat/compat': 'off',
         'promise/avoid-new': 'off',
         'promise/always-return': 'off',
         'promise/catch-or-return': 'off',
         'promise/no-nesting': 'off',
+      },
+    },
+    {
+      files: ['_isNaN.js'],
+      rules: {
+        'no-self-compare': 'off',
+      },
+    },
+    {
+      files: ['defineValidatorProperty.js', 'assign.js', 'isRegex.js'],
+      rules: {
+        'no-param-reassign': 'off',
+      },
+    },
+    {
+      files: ['_*.js'],
+      rules: {
+        'no-underscore-dangle': 'off',
+      },
+    },
+    {
+      files: [
+        'toPrimitive.js',
+        'padStart.js',
+        'drop.js',
+        '_getAt.js',
+        '_find.js',
+        'getFunctionName.js',
+      ],
+      rules: {
+        'no-void': 'off',
+      },
+    },
+    {
+      files: ['getFunctionName.js'],
+      rules: {
+        'func-names': 'off',
+        'no-new-func': 'off',
       },
     },
   ],
@@ -95,7 +128,7 @@ module.exports = {
       es6: true,
       impliedStrict: true,
     },
-    ecmaVersion: 2017,
+    ecmaVersion: 2018,
     parser: 'babel-eslint',
     sourceType: 'module',
   },

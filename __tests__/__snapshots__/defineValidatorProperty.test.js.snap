@@ -1,3 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`defineValidatorProperty should throw error for non object 1`] = `"Not an object."`;
+exports[`defineValidatorProperty as normal non-writable defineProperty 1`] = `"Cannot assign to read only property 'name' of object '#<Object>'"`;
+
+exports[`defineValidatorProperty getters and no setter should work 1`] = `"Cannot set property name of #<Object> which has only a getter"`;
+
+exports[`defineValidatorProperty should throw error for non object 1`] = `"Not an object"`;
+
+exports[`defineValidatorProperty should throw error if getter and value defined 1`] = `"Invalid property descriptor. Cannot both specify accessors and a value or writable attribute"`;
+
+exports[`defineValidatorProperty should throw error if getter and writeable is truthy 1`] = `"Invalid property descriptor. Cannot both specify accessors and a value or writable attribute"`;
+
+exports[`defineValidatorProperty should throw error if getter is not a function 1`] = `"getter must be a function"`;
+
+exports[`defineValidatorProperty should throw error if setter and value defined 1`] = `"Invalid property descriptor. Cannot both specify accessors and a value or writable attribute"`;
+
+exports[`defineValidatorProperty should throw error if setter and writeable is truthy 1`] = `"Invalid property descriptor. Cannot both specify accessors and a value or writable attribute"`;
+
+exports[`defineValidatorProperty should throw error if setter is not a function 1`] = `"setter must be a function"`;
+
+exports[`defineValidatorProperty should throw if nilable and further values fail validator 1`] = `"Not a valid value for  \\"name\\""`;
+
+exports[`defineValidatorProperty should throw if validator fails test 1`] = `"Not a valid initial value for \\"name\\""`;

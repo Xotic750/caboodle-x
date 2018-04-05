@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`methodize should throw if not initiated with a function 1`] = `"Not a function"`;

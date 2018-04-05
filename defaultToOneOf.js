@@ -1,20 +1,27 @@
 /**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @file Utility to set a default value from an array.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module defaultToOneOf
  */
 
-import isOneOf from './isOneOf';
+import _includes from './.internal/_includes';
+import _last from './.internal/_last';
+import requireObjectCoercible from './requireObjectCoercible';
 
 /**
  * Tests if a comparate exists in a list of comparates an then returns the comparate if there
- * is a match; otherwise returns the fallback value.
+ * is a match; otherwise returns the last comparates value or fallback value if supplied.
  *
+ * @param {Array|} [comparates=[]] - An array of values.
  * @param {*} comparate - The value to compare against the supplied list of comparates.
- * @param {Array|*} [comparates=[]] - An array of values or a single value for comparison.
- * @param {*} [fallback=undefined] - The returned value if no match exists.
+ * @param {Array} fallbackArg - The rest of the arguments array.
+ * @param {*} [fallbackArg.fallback=comparates[last]] - The returned value if no match exists.
  * @returns {*} - The comparate upon a match; otherwise the fallback value.
  */
-export default function defaultToOneOf(comparate, comparates, fallback) {
-  return isOneOf(comparate, comparates) ? comparate : fallback;
+export default function defaultToOneOf(comparates, comparate, ...fallbackArg) {
+  requireObjectCoercible(comparates);
+
+  const fallback = fallbackArg.length ? fallbackArg[0] : _last(comparates);
+
+  return _includes(comparates, comparate) ? comparate : fallback;
 }

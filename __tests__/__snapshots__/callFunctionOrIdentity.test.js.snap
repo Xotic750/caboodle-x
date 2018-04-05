@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`callFunctionOrIdentity Functions With non-arrayLike args argument 1`] = `"CreateListFromArrayLike called on non-object"`;
+
+exports[`callFunctionOrIdentity Functions With non-arrayLike args argument and context 1`] = `"CreateListFromArrayLike called on non-object"`;

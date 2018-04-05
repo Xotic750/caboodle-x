@@ -4,6 +4,8 @@
  * @module parseDecimal
  */
 
+import _parseInt from './.internal/_parseInt';
+
 /**
  * Parse a string to a decimal value.
  *
@@ -11,5 +13,5 @@
  * @returns {number} The parsed decimal value.
  */
 export default function parseDecimal(value) {
-  return Number.parseInt(value, 10);
+  return _parseInt(value, 10);
 }

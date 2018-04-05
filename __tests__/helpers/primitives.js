@@ -10,9 +10,4 @@ import truthy from './truthy';
 import numbers from './numbers';
 import strings from './strings';
 
-export default Object.freeze([
-  ...falsey,
-  ...truthy,
-  ...numbers,
-  ...strings,
-]);
+export default Object.freeze([...falsey, ...truthy, ...numbers, ...strings]);

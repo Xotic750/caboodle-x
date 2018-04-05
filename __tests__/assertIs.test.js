@@ -31,6 +31,14 @@ describe('assertIs', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
+  it('should throw with override message', () => {
+    const assertIsArray = assertIs(Array.isArray, 'Custom message');
+
+    expect(() => {
+      assertIsArray({}, 'override message');
+    }).toThrowErrorMatchingSnapshot();
+  });
+
   it('should throw if not initiated with a function', () => {
     expect(() => {
       assertIs([]);

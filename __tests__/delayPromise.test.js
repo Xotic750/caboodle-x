@@ -12,15 +12,15 @@ describe('delayPromise', () => {
 
     it("should resolve follower promise's value", () => {
       let resolveF;
-      const f = new Promise(((resolve) => {
+      const f = new Promise((resolve) => {
         resolveF = resolve;
-      }));
+      });
 
-      const v = new Promise(((resolve) => {
+      const v = new Promise((resolve) => {
         setTimeout(() => {
           resolve(3);
         }, 1);
-      }));
+      });
 
       resolveF(v);
 

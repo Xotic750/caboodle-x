@@ -1,6 +1,9 @@
 import {regexpEscape} from '../dist/caboodle-x';
 
-const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+/* istanbul ignore next */
+const hasSymbol =
+  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+/* istanbul ignore next */
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('regexpEscape', () => {
@@ -11,26 +14,25 @@ describe('regexpEscape', () => {
   it('should throw when target is null or undefined', () => {
     expect(() => {
       regexpEscape();
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       regexpEscape(undefined);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       regexpEscape(null);
-    }).toThrow();
+    }).toThrowErrorMatchingSnapshot();
   });
 
   it('simple strings', () => {
-    const strings = [
-      'The Quick Brown Fox',
-      'hello there',
-      '',
-    ];
+    const strings = ['The Quick Brown Fox', 'hello there', ''];
 
     strings.forEach((str) => {
-      expect(regexpEscape(str)).toBe(str, `${JSON.stringify(str)} regexpEscapes to itself.`);
+      expect(regexpEscape(str)).toBe(
+        str,
+        `${JSON.stringify(str)} regexpEscapes to itself.`,
+      );
     });
   });
 
@@ -42,11 +44,7 @@ describe('regexpEscape', () => {
   });
 
   it('non-strings', () => {
-    const strings = [
-      'hello there',
-      '^$\\.*+?()[]{}|',
-      '\uD834\uDF06.',
-    ];
+    const strings = ['hello there', '^$\\.*+?()[]{}|', '\uD834\uDF06.'];
 
     strings.forEach((str) => {
       expect(regexpEscape({
@@ -58,13 +56,7 @@ describe('regexpEscape', () => {
   });
 
   it('should return a string for everything', () => {
-    const values = [
-      true,
-      'abc',
-      1,
-      [],
-      /r/,
-    ];
+    const values = [true, 'abc', 1, [], /r/];
 
     const expected = values.map(String);
     const actual = values.map(regexpEscape);
@@ -77,14 +69,12 @@ describe('regexpEscape', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
-  ifSymbolIt('should work for primitive Symbol', () => {
+  ifSymbolIt('should throw for Symbols', () => {
     const symbol = Symbol('foo');
 
-    expect(regexpEscape(symbol)).toBe('Symbol\\(foo\\)');
-  });
-
-  ifSymbolIt('should throw for Object Symbol', () => {
-    const symbol = Symbol('foo');
+    expect(() => {
+      regexpEscape(symbol);
+    }).toThrowErrorMatchingSnapshot();
 
     expect(() => {
       regexpEscape(Object(symbol));

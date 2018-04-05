@@ -23,7 +23,8 @@ describe('capitalize', () => {
 
     it('Multiple arguments', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map(primitive => capitalize(primitive, primitive));
+      const actual = primitives.map(primitive =>
+        capitalize(primitive, primitive));
 
       expect(actual).toEqual(expected);
     });

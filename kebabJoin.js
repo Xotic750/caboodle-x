@@ -4,10 +4,10 @@
  * @module kebabJoin
  */
 
-import arrayMap from './.internal/arrayMap';
-import toString from './.internal/toString';
-import join from './.internal/join';
+import _toString from './.internal/_toString';
+import _map from './.internal/_map';
+import _join from './.internal/_join';
 
 export default function kebabJoin(...strings) {
-  return join(arrayMap(strings, toString), '-');
+  return _join(_map(strings, _toString), '-');
 }

@@ -4,10 +4,9 @@
  * @module delayPromise
  */
 
-import MAX_SAFE_INTEGER from './.internal/maxSafeInteger';
-import toNumber from './.internal/toNumber';
-import clamp from './clamp';
+import _setTimeout from './.internal/_setTimeout';
 import constant from './constant';
+import toWholeNumber from './toWholeNumber';
 
 /**
  * Create a delayed promise.
@@ -17,17 +16,23 @@ import constant from './constant';
  * @returns {Promise} The delayed promise.
  */
 export default function delayPromise(milliseconds, ...value) {
-  const ms = clamp(toNumber(milliseconds), MAX_SAFE_INTEGER);
+  const ms = toWholeNumber(milliseconds);
 
-  if (value.length > 0) {
-    return Promise.resolve(value[0]).then(arg => delayPromise(ms).then(constant(arg)));
+  if (value.length) {
+    const valueExecutor = function _valueExecutor(arg) {
+      return delayPromise(ms).then(constant(arg));
+    };
+
+    return Promise.resolve(value[0]).then(valueExecutor);
   }
 
-  return new Promise(((resolve, reject) => {
+  const timeoutExecutor = function _timeoutExecutor(resolve, reject) {
     try {
-      setTimeout(resolve, ms);
+      _setTimeout(resolve, ms);
     } catch (error) {
       reject(error);
     }
-  }));
+  };
+
+  return new Promise(timeoutExecutor);
 }

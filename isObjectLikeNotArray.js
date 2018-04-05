@@ -4,9 +4,9 @@
  * @module isObjectLikeNotArray
  */
 
-import isArray from './.internal/isArray';
+import _isArray from './.internal/_isArray';
 import isObjectLike from './isObjectLike';
 
 export default function isObjectLikeNotArray(value) {
-  return !isArray(value) && isObjectLike(value);
+  return !_isArray(value) && isObjectLike(value);
 }

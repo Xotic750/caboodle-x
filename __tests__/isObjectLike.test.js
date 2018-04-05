@@ -7,11 +7,7 @@ describe('isObjectLike', () => {
 
   it('should return `true` for objects', () => {
     expect(isObjectLike(arguments)).toBe(true);
-    expect(isObjectLike([
-      1,
-      2,
-      3,
-    ])).toBe(true);
+    expect(isObjectLike([1, 2, 3])).toBe(true);
     expect(isObjectLike(Object(false))).toBe(true);
     expect(isObjectLike(new Date())).toBe(true);
     expect(isObjectLike(new Error())).toBe(true);
@@ -22,20 +18,10 @@ describe('isObjectLike', () => {
   });
 
   it('should return `false` for non-objects', () => {
-    const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+    const hasSymbol =
+      typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
     const symbol = hasSymbol && Symbol('');
-    const values = [
-      '',
-      0,
-      false,
-      NaN,
-      null,
-      undefined,
-      true,
-      1,
-      'a',
-      symbol,
-    ];
+    const values = ['', 0, false, NaN, null, undefined, true, 1, 'a', symbol];
     const expected = values.map(() => false);
 
     const actual = values.map((value, index) => (index ? isObjectLike(value) : isObjectLike()));

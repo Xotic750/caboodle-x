@@ -7,8 +7,7 @@ describe('isFunctionType', () => {
   });
 
   it('should return true', () => {
-    expect(isFunctionType(() => {})).toBe(true);
-    expect(isFunctionType(() => {})).toBe(true);
+    expect(isFunctionType(isFunctionType)).toBe(true);
   });
 
   it('should return false', () => {

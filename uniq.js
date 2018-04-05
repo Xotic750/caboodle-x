@@ -4,16 +4,9 @@
  * @module uniq
  */
 
-import push from './.internal/push';
-import includes from './.internal/arrayIncludes';
-import reduce from './reduce';
+import _uniq from './.internal/_uniq';
+import requireObjectCoercible from './requireObjectCoercible';
 
 export default function uniq(array) {
-  return reduce(array, (acc, item) => {
-    if (!includes(acc, item)) {
-      push(acc, item);
-    }
-
-    return acc;
-  }, []);
+  return _uniq(requireObjectCoercible(array));
 }

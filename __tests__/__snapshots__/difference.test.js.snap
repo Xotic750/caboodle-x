@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`difference should throw when array is null or undefined 1`] = `"Cannot call method on null or undefined"`;
+
+exports[`difference should throw when array is null or undefined 2`] = `"Cannot call method on null or undefined"`;
+
+exports[`difference should throw when array is null or undefined 3`] = `"Cannot call method on null or undefined"`;
+
+exports[`difference should throw when exclude is null or undefined 1`] = `"0"`;
+
+exports[`difference should throw when exclude is null or undefined 2`] = `"0"`;

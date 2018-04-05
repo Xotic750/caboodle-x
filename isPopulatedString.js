@@ -5,8 +5,8 @@
  */
 
 import isString from 'is-string';
-import trim from './.internal/trim';
+import _trim from './.internal/_trim';
 
 export default function isPopulatedString(string) {
-  return isString(string) && trim(string).length > 0;
+  return isString(string) && _trim(string).length > 0;
 }

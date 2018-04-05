@@ -2,3 +2,4 @@
 !jest.config.js
 dist/
 __tests__/coverage/
+!.internal
