@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import {intToRGB} from '../dist/caboodle-x';
 
 describe('intToRGB', () => {
