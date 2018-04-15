@@ -12,21 +12,24 @@ describe('callFunctionOrIdentity', () => {
     describe('Primitives', () => {
       it('Single argument', () => {
         const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive));
+          callFunctionOrIdentity(primitive),
+        );
 
         expect(actual).toEqual(primitives);
       });
 
       it('Two arguments', () => {
         const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive, objects));
+          callFunctionOrIdentity(primitive, objects),
+        );
 
         expect(actual).toEqual(primitives);
       });
 
       it('Three arguments', () => {
         const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive, objects, {}));
+          callFunctionOrIdentity(primitive, objects, {}),
+        );
 
         expect(actual).toEqual(primitives);
       });
@@ -41,14 +44,16 @@ describe('callFunctionOrIdentity', () => {
 
       it('Two arguments', () => {
         const actual = objects.map(object =>
-          callFunctionOrIdentity(object, primitives));
+          callFunctionOrIdentity(object, primitives),
+        );
 
         expect(actual).toEqual(objects);
       });
 
       it('Three arguments', () => {
         const actual = objects.map(object =>
-          callFunctionOrIdentity(object, primitives, {}));
+          callFunctionOrIdentity(object, primitives, {}),
+        );
 
         expect(actual).toEqual(objects);
       });

@@ -62,7 +62,10 @@ export default function numberFormat(value, ...rest) {
 
   return _replace(
     decimalDelimiter === '.' ? fixed : _replace(fixed, '.', decimalDelimiter),
-    new _RegExp(`\\d(?=(\\d{${sectionLength}})+${digits > 0 ? '\\D' : '$'})`, 'g'),
+    new _RegExp(
+      `\\d(?=(\\d{${sectionLength}})+${digits > 0 ? '\\D' : '$'})`,
+      'g',
+    ),
     `$&${sectionDelimiter}`,
   );
 }

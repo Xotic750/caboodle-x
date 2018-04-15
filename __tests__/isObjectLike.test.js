@@ -24,7 +24,9 @@ describe('isObjectLike', () => {
     const values = ['', 0, false, NaN, null, undefined, true, 1, 'a', symbol];
     const expected = values.map(() => false);
 
-    const actual = values.map((value, index) => (index ? isObjectLike(value) : isObjectLike()));
+    const actual = values.map(
+      (value, index) => (index ? isObjectLike(value) : isObjectLike()),
+    );
 
     expect(actual).toEqual(expected);
   });

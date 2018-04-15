@@ -9,13 +9,16 @@ import _push from './_push';
 
 export default function _sift(array, callback, ...fromIndex) {
   const result = [];
-  const iteratee = function _iteratee(value, ...args) {
-    if (callback(value, ...args)) {
-      _push(result, value);
-    }
-  };
 
-  _any(array, iteratee, ...fromIndex);
+  _any(
+    array,
+    function _iteratee(value, ...args) {
+      if (callback(value, ...args)) {
+        _push(result, value);
+      }
+    },
+    ...fromIndex,
+  );
 
   return result;
 }

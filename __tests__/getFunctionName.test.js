@@ -2,7 +2,6 @@ import {getFunctionName} from '../dist/caboodle-x';
 
 const getFat = function getFatFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return () => {return this;};')();
   } catch (ignore) {}
   return false;
@@ -12,7 +11,6 @@ const ifSupportsFatit = getFat() ? it : xit;
 
 const getGF = function getGeneratoFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return function* idMaker(){};')();
   } catch (ignore) {}
   return false;
@@ -22,7 +20,6 @@ const ifSupportsGFit = getGF() ? it : xit;
 
 const getC = function getClassFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('"use strict"; return class My {};')();
   } catch (ignore) {}
   return false;
@@ -32,7 +29,6 @@ const ifSupportsCit = getC() ? it : xit;
 
 const getAF = function getAsyncFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return async function wait() {}')();
   } catch (ignore) {}
   return false;
@@ -55,7 +51,7 @@ describe('Basic tests', () => {
       {name: 'blah'},
     ];
 
-    const cb = function () {};
+    const cb = function() {};
     const expected = values.map(cb);
     const actual = values.map(getFunctionName);
     expect(actual).toEqual(expected);
@@ -69,9 +65,8 @@ describe('Basic tests', () => {
       Number,
       Array,
       Function,
-      function () {},
+      function() {},
       function test() {},
-      // eslint-disable-next-line no-new-func
       new Function(),
       function test1() {},
       function test2() {},

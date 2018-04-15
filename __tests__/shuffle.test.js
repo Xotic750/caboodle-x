@@ -41,9 +41,11 @@ describe('shuffle', () => {
   it('should contain the same elements after a collection is shuffled', () => {
     expect(shuffle(array).sort()).toEqual(array);
     expect(shuffle(object).sort()).toEqual(array);
-    expect(shuffle(string)
-      .map(item => Number(item))
-      .sort()).toEqual(array);
+    expect(
+      shuffle(string)
+        .map(item => Number(item))
+        .sort(),
+    ).toEqual(array);
   });
 
   it('should shuffle small collections', () => {

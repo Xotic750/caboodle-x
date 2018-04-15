@@ -3,7 +3,7 @@ import {sift} from '../dist/caboodle-x';
 /* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
-const createArrayLike = function (arr) {
+const createArrayLike = function(arr) {
   const o = {};
   const {length} = arr;
   for (let i = 0; i < length; i += 1) {
@@ -18,7 +18,7 @@ describe('sift', () => {
   let filteredArray;
   let testSubject;
 
-  const callBack = function (o, i) {
+  const callBack = function(o, i) {
     return i !== 3 && i !== 5;
   };
 
@@ -59,7 +59,7 @@ describe('sift', () => {
       const arr = [1, 2, 3];
 
       let i = 0;
-      sift(arr, (a) => {
+      sift(arr, a => {
         i += 1;
         if (i <= 4) {
           arr.push(a + 3);
@@ -93,7 +93,7 @@ describe('sift', () => {
       delete testSubject[1];
       sift(
         testSubject,
-        function (o, i) {
+        function(o, i) {
           this[i] = o;
           return true;
         }.bind(passedValues),
@@ -104,13 +104,15 @@ describe('sift', () => {
 
     it('should set the right context when given none', () => {
       let context;
-      sift([1], function () {
+      sift([1], function() {
         context = this;
       });
 
-      expect(context).toBe(function () {
-        return this;
-      }.call());
+      expect(context).toBe(
+        function() {
+          return this;
+        }.call(),
+      );
     });
 
     it('should remove only the values for which the callBack returns false', () => {
@@ -152,7 +154,7 @@ describe('sift', () => {
       const arr = createArrayLike([1, 2, 3]);
 
       let i = 0;
-      sift(arr, (a) => {
+      sift(arr, a => {
         i += 1;
         if (i <= 4) {
           arr[i + 2] = a + 3;
@@ -185,15 +187,17 @@ describe('sift', () => {
       let context;
       sift(
         createArrayLike([1]),
-        function () {
+        function() {
           context = this;
         },
         undefined,
       );
 
-      expect(context).toBe(function () {
-        return this;
-      }.call());
+      expect(context).toBe(
+        function() {
+          return this;
+        }.call(),
+      );
     });
 
     it('should pass the right context to the sift', () => {
@@ -203,7 +207,7 @@ describe('sift', () => {
       delete testObject[1];
       sift(
         testObject,
-        function (o, i) {
+        function(o, i) {
           this[i] = o;
           this.length = i + 1;
           return true;
@@ -236,9 +240,9 @@ describe('sift', () => {
   });
 
   it('should work with arguments', () => {
-    const argObj = (function () {
+    const argObj = (function() {
       return arguments;
-    }('1'));
+    })('1');
 
     const callback = jest.fn();
     sift(argObj, callback);

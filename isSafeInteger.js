@@ -5,8 +5,10 @@
  */
 
 import isInteger from './isInteger';
-import MAX_SAFE_INTEGER from './MAX_SAFE_INTEGER';
+import MAX_SAFE_INTEGER from './maxSafeInteger';
 
 export default function isSafeInteger(value) {
-  return isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER;
+  return (
+    isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER
+  );
 }

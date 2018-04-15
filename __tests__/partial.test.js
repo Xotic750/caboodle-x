@@ -37,7 +37,9 @@ describe('partial', () => {
       context = this;
     };
 
+    expect(fn).toHaveLength(0);
     testSubject.func = partial(fn, 1, 2, 3);
+    expect(testSubject.func).toHaveLength(0);
     testSubject.func(4, 5, 6);
     expect(a).toEqual([1, 2, 3, 4, 5, 6]);
 
@@ -60,12 +62,14 @@ describe('partial', () => {
 
   it('returns properly and supplies bound arguments', () => {
     let context;
-    const fn = function _fn() {
+    const fn = function _fn(a, b, c, d) {
       context = this;
       return Array.prototype.slice.call(arguments);
     };
 
+    expect(fn).toHaveLength(4);
     testSubject.func = partial(fn, 1, 2, 3);
+    expect(testSubject.func).toHaveLength(1);
     actual = testSubject.func(4, 5, 6);
 
     expect(context).toBe(testSubject);
@@ -87,12 +91,14 @@ describe('partial', () => {
 
   it('passes the correct arguments as a constructor', () => {
     const expected = {name: 'Correct'};
-    const fn = function _fn(arg) {
+    const fn = function _fn(arg, a, b) {
       expect(Object.prototype.hasOwnProperty.call(this, 'name')).toBe(false);
       return arg;
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.Func = partial(fn);
+    expect(testSubject.Func).toHaveLength(3);
     const ret = new testSubject.Func(expected);
     expect(ret).toBe(expected);
   });
@@ -117,18 +123,18 @@ describe('partial', () => {
 
     const Subject = partial(fn);
 
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(new Subject(primitive)).not.toBe(primitive);
     });
 
-    objects.forEach((object) => {
+    objects.forEach(object => {
       expect(new Subject(object)).toBe(object);
     });
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
     /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 

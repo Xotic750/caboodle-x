@@ -15,11 +15,14 @@ export default function defineValidatorProperties(object, properties) {
   assertIsObject(object);
 
   const props = toObject(properties);
-  const callback = function _callback(currentValue) {
-    defineValidatorProperty(object, toPropertyKey(currentValue), props[currentValue]);
-  };
 
-  _all(_keys(props), callback);
+  _all(_keys(props), function _callback(currentValue) {
+    defineValidatorProperty(
+      object,
+      toPropertyKey(currentValue),
+      props[currentValue],
+    );
+  });
 
   return object;
 }

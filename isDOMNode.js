@@ -58,13 +58,17 @@ export default function isDOMNode(value) {
 
     try {
       return isBooleanType(hasChildNodes(value));
-    } catch (ignore) { /* ignore */ }
+    } catch (ignore) {
+      /* ignore */
+    }
 
     /* istanbul ignore if */
     if (!documentInheritsNode) {
       try {
         return _Boolean(tryAppendChild(value));
-      } catch (ignore) { /* ignore */ }
+      } catch (ignore) {
+        /* ignore */
+      }
     }
   }
 

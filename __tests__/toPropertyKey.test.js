@@ -58,11 +58,11 @@ describe('toPropertyKey', () => {
   });
 
   it('should return the matching value', () => {
-    objects.concat(nonSymbolPrimitives).forEach((value) => {
+    objects.concat(nonSymbolPrimitives).forEach(value => {
       expect(toPropertyKey(value)).toBe(String(value));
     });
 
-    symbols.forEach((symbol) => {
+    symbols.forEach(symbol => {
       expect(toPropertyKey(symbol)).toBe(symbol);
     });
 

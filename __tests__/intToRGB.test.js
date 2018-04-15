@@ -16,14 +16,16 @@ describe('intToRGB', () => {
       {},
       [],
       /* istanbul ignore next */
-      function () {},
+      function() {},
     ];
 
-    const expected = nonNumbers.map(item =>
-      `#${(Number(item) || 0)
-        .toString(16)
-        .padStart(6, '0')
-        .toUpperCase()}`);
+    const expected = nonNumbers.map(
+      item =>
+        `#${(Number(item) || 0)
+          .toString(16)
+          .padStart(6, '0')
+          .toUpperCase()}`,
+    );
 
     const actual = nonNumbers.map(item => intToRGB(item));
 

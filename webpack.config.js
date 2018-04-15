@@ -7,10 +7,9 @@
 require('@babel/polyfill');
 const path = require('path');
 const merge = require('webpack-merge');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
-const {
-  BundleAnalyzerPlugin,
-} = require('webpack-bundle-analyzer');
+const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
 
 const filename = 'caboodle-x';
 const library = 'Caboodle';
@@ -20,9 +19,7 @@ const dist = path.resolve(__dirname, 'dist');
  * The NODE_ENV environment variable.
  * @type {!Object}
  */
-const {
-  NODE_ENV,
-} = process.env;
+const {NODE_ENV} = process.env;
 
 /**
  * The production string.
@@ -49,54 +46,57 @@ const DEFAULT_EXCLUDE_RX = /node_modules/;
  * @see {@link https://webpack.js.org/guides/environment-variables/}
  */
 module.exports = function generateConfig(env) {
-  const ENV = merge({
-    report: false,
-  }, env);
+  const ENV = merge(
+    {
+      report: false,
+    },
+    env,
+  );
 
   const base = {
     /**
-       * This option controls if and how source maps are generated.
-       *
-       * nosources-source-map - A SourceMap is created without the sourcesContent in it.
-       * It can be used to map stack traces on the client without exposing all of the
-       * source code. You can deploy the Source Map file to the web-server.
-       *
-       * eval-source-map - Each module is executed with eval() and a SourceMap is added as
-       * a DataUrl to the eval(). Initially it is slow, but it provides fast rebuild speed
-       * and yields real files. Line numbers are correctly mapped since it gets mapped to
-       * the original code. It yields the best quality SourceMaps for development.
-       *
-       * source-map - A full SourceMap is emitted as a separate file. It adds a reference
-       * comment to the bundle so development tools know where to find it.
-       *
-       * @type {string}
-       * @see {@link https://webpack.js.org/configuration/devtool/}
-       */
-    devtool: NODE_ENV === PRODUCTION ? 'source-map' : 'eval-source-map',
+     * This option controls if and how source maps are generated.
+     *
+     * nosources-source-map - A SourceMap is created without the sourcesContent in it.
+     * It can be used to map stack traces on the client without exposing all of the
+     * source code. You can deploy the Source Map file to the web-server.
+     *
+     * eval-source-map - Each module is executed with eval() and a SourceMap is added as
+     * a DataUrl to the eval(). Initially it is slow, but it provides fast rebuild speed
+     * and yields real files. Line numbers are correctly mapped since it gets mapped to
+     * the original code. It yields the best quality SourceMaps for development.
+     *
+     * source-map - A full SourceMap is emitted as a separate file. It adds a reference
+     * comment to the bundle so development tools know where to find it.
+     *
+     * @type {string}
+     * @see {@link https://webpack.js.org/configuration/devtool/}
+     */
+    devtool: 'source-map',
 
     /**
-       * Define the entry points for the application.
-       * @type {array.<string>}
-       * @see {@link https://webpack.js.org/concepts/entry-points/}
-       */
+     * Define the entry points for the application.
+     * @type {array.<string>}
+     * @see {@link https://webpack.js.org/concepts/entry-points/}
+     */
     entry: './index.js',
 
     mode: NODE_ENV === PRODUCTION ? PRODUCTION : DEVELOPMENT,
 
     /**
-       * In modular programming, developers break programs up into discrete chunks of functionality
-       * called a module. Each module has a smaller surface area than a full program, making verification,
-       * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
-       * boundaries, so that each module has a coherent design and a clear purpose within the overall
-       * application.
-       *
-       * webpack supports modules written in a variety of languages and preprocessors, via loaders.
-       * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
-       * into your bundles.
-       *
-       * @type {array.<!Object>}
-       * @see {@link https://webpack.js.org/configuration/module/#module-rules}
-       */
+     * In modular programming, developers break programs up into discrete chunks of functionality
+     * called a module. Each module has a smaller surface area than a full program, making verification,
+     * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
+     * boundaries, so that each module has a coherent design and a clear purpose within the overall
+     * application.
+     *
+     * webpack supports modules written in a variety of languages and preprocessors, via loaders.
+     * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
+     * into your bundles.
+     *
+     * @type {array.<!Object>}
+     * @see {@link https://webpack.js.org/configuration/module/#module-rules}
+     */
     module: {
       rules: [
         /**
@@ -120,10 +120,10 @@ module.exports = function generateConfig(env) {
         },
 
         /**
-           * This package allows transpiling JavaScript files using Babel and webpack.
-           *
-           * @see {@link https://webpack.js.org/loaders/babel-loader/}
-           */
+         * This package allows transpiling JavaScript files using Babel and webpack.
+         *
+         * @see {@link https://webpack.js.org/loaders/babel-loader/}
+         */
         {
           exclude: DEFAULT_EXCLUDE_RX,
           loader: 'babel-loader',
@@ -164,13 +164,29 @@ module.exports = function generateConfig(env) {
      * is called by the webpack compiler, giving access to the entire compilation lifecycle.
      *
      */
-    plugins: [],
+    plugins: [
+      /**
+       * This plugin uses UglifyJS v3 (uglify-es) to minify your JavaScript.
+       * @type {!Object}
+       * @see {@link https://webpack.js.org/plugins/uglifyjs-webpack-plugin/}
+       */
+      NODE_ENV === PRODUCTION
+        ? new UglifyJsPlugin({
+            parallel: true,
+            sourceMap: true,
+            uglifyOptions: {
+              ecma: 5,
+              keep_fnames: true,
+            },
+          })
+        : null,
+    ].filter(Boolean),
 
     /**
-       * These options change how modules are resolved.
-       * @type {!Object}
-       * @see {@link https://webpack.js.org/configuration/resolve/}
-       */
+     * These options change how modules are resolved.
+     * @type {!Object}
+     * @see {@link https://webpack.js.org/configuration/resolve/}
+     */
     resolve: {
       /**
        * Create aliases to import or require certain modules more easily.

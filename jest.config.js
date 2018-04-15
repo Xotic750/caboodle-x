@@ -11,10 +11,7 @@ module.exports = {
     '<rootDir>/node_modules/',
     '<rootDir>/__tests__/helpers/',
   ],
-  moduleFileExtensions: [
-    'js',
-    'json',
-  ],
+  moduleFileExtensions: ['js', 'json'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },

@@ -35,7 +35,11 @@ describe('normalizeSpace', () => {
 
     it('Basic tests', () => {
       expect(normalizeSpace('a')).toBe('a', 'noop when no whitespace');
-      expect(normalizeSpace(`${allWhitespaceChars}a${allWhitespaceChars}b${allWhitespaceChars}`)).toBe('a b', 'all expected whitespace chars are trimmed and normalized');
+      expect(
+        normalizeSpace(
+          `${allWhitespaceChars}a${allWhitespaceChars}b${allWhitespaceChars}`,
+        ),
+      ).toBe('a b', 'all expected whitespace chars are trimmed and normalized');
 
       const zeroWidth = '\u200b';
       expect(normalizeSpace(zeroWidth)).toBe(
@@ -50,14 +54,15 @@ describe('normalizeSpace', () => {
         'abc',
         1,
         /* istanbul ignore next */
-        function () {},
+        function() {},
         [],
         /r/,
       ];
 
       const reNormalize = new RegExp(`[${allWhitespaceChars}]+`, 'g');
       const expected = values.map(value =>
-        String(value).replace(reNormalize, ' '));
+        String(value).replace(reNormalize, ' '),
+      );
 
       const actual = values.map(normalizeSpace);
       expect(actual).toEqual(expected);

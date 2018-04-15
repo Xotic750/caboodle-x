@@ -3,7 +3,7 @@ import {any} from '../dist/caboodle-x';
 /* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
-const createArrayLike = function (arr) {
+const createArrayLike = function(arr) {
   const o = {};
   arr.forEach((e, i) => {
     o[i] = e;
@@ -68,7 +68,7 @@ describe('any', () => {
     const arr = [1, 2, 3];
 
     let i = 0;
-    any(arr, (a) => {
+    any(arr, a => {
       i += 1;
       arr.push(a + 3);
       return i > 3;
@@ -81,13 +81,15 @@ describe('any', () => {
 
   it('should set the right context when given none', () => {
     let context;
-    any([1], function () {
+    any([1], function() {
       context = this;
     });
 
-    expect(context).toBe(function () {
-      return this;
-    }.call());
+    expect(context).toBe(
+      function() {
+        return this;
+      }.call(),
+    );
   });
 
   it('should return false if it runs to the end', () => {
@@ -121,7 +123,7 @@ describe('any', () => {
     const o = {a: actual};
     any(
       testSubject,
-      function (obj, index) {
+      function(obj, index) {
         this.a[index] = obj;
         numberOfRuns += 1;
         return numberOfRuns === 4;
@@ -147,7 +149,7 @@ describe('any', () => {
     const o = {a: actual};
     any(
       ts,
-      function (obj, index) {
+      function(obj, index) {
         this.a[index] = obj;
         numberOfRuns += 1;
         return numberOfRuns === 4;
@@ -168,9 +170,9 @@ describe('any', () => {
   });
 
   it('should work with arguments', () => {
-    const argObj = (function () {
+    const argObj = (function() {
       return arguments;
-    }('1'));
+    })('1');
 
     const callback = jest.fn();
     any(argObj, callback);

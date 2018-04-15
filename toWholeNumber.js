@@ -5,7 +5,7 @@
  */
 
 import _toInteger from './.internal/_toInteger';
-import MAX_SAFE_INTEGER from './MAX_SAFE_INTEGER';
+import MAX_SAFE_INTEGER from './maxSafeInteger';
 
 export default function toWholeNumber(value) {
   const integer = _toInteger(value);

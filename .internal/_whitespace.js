@@ -328,11 +328,14 @@ const last = types.length - 1;
 export default function build(type) {
   const index = _indexOf(types, _toLowerCase(_toString(type)));
   const prop = index === -1 ? types[last] : types[index];
-  const iteratee = function _iteratee(string, record) {
-    return record[prop] ? string + _fromCharCode(record.code) : string;
-  };
 
-  return _reduce(list, iteratee, '');
+  return _reduce(
+    list,
+    function _iteratee(string, record) {
+      return record[prop] ? string + _fromCharCode(record.code) : string;
+    },
+    '',
+  );
 }
 
 const copier = function _copier(record) {

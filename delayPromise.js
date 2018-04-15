@@ -19,20 +19,18 @@ export default function delayPromise(milliseconds, ...value) {
   const ms = toWholeNumber(milliseconds);
 
   if (value.length) {
-    const valueExecutor = function _valueExecutor(arg) {
+    return Promise.resolve(value[0]).then(function _valueExecutor(arg) {
+      // eslint-disable-next-line promise/no-nesting
       return delayPromise(ms).then(constant(arg));
-    };
-
-    return Promise.resolve(value[0]).then(valueExecutor);
+    });
   }
 
-  const timeoutExecutor = function _timeoutExecutor(resolve, reject) {
+  // eslint-disable-next-line promise/avoid-new
+  return new Promise(function _timeoutExecutor(resolve, reject) {
     try {
       _setTimeout(resolve, ms);
     } catch (error) {
       reject(error);
     }
-  };
-
-  return new Promise(timeoutExecutor);
+  });
 }

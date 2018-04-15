@@ -46,7 +46,9 @@ const getMethod = function _getMethod(O, P) {
   const func = O[P];
   if (!isNil(func)) {
     if (!_isFunction(func)) {
-      throw new TypeError(`${func} returned for property ${P} of object ${O} is not a function`);
+      throw new TypeError(
+        `${func} returned for property ${P} of object ${O} is not a function`,
+      );
     }
 
     return func;

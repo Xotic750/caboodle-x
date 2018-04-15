@@ -16,16 +16,16 @@ import _propertyIsEnumerable from './.internal/_propertyIsEnumerable';
 import _Object from './.internal/_Object';
 
 /* istanbul ignore next */
-const getOwnPropertySymbols = isFunctionType(_Object.getOwnPropertySymbols) ?
-  _Object.getOwnPropertySymbols :
-  stubArray;
+const getOwnPropertySymbols = isFunctionType(_Object.getOwnPropertySymbols)
+  ? _Object.getOwnPropertySymbols
+  : stubArray;
 
-const getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(target) {
-  const isEnumerable = function _isEnumerable(symbol) {
+const getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(
+  target,
+) {
+  return _filter(getOwnPropertySymbols(target), function _predicate(symbol) {
     return _propertyIsEnumerable(target, symbol);
-  };
-
-  return _filter(getOwnPropertySymbols(target), isEnumerable);
+  });
 };
 
 const reducer = function _reducer(tgt, source) {
@@ -34,13 +34,17 @@ const reducer = function _reducer(tgt, source) {
   }
 
   const object = _Object(source);
-  const assigner = function _assigner(tar, key) {
-    tar[key] = object[key];
 
-    return tar;
-  };
+  return _reduce(
+    _concat(_keys(object), getOwnEnumerablePropertySymbols(object)),
+    function _iteratee(tar, key) {
+      // eslint-disable-next-line no-param-reassign
+      tar[key] = object[key];
 
-  return _reduce(_concat(_keys(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
+      return tar;
+    },
+    tgt,
+  );
 };
 
 /**

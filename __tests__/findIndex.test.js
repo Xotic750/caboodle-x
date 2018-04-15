@@ -56,7 +56,7 @@ describe('findIndex', () => {
     const context = {};
     findIndex(
       [1],
-      function () {
+      function() {
         expect(this).toBe(context);
       }.bind(context),
     );
@@ -84,7 +84,7 @@ describe('findIndex', () => {
     };
 
     /* istanbul ignore next */
-    const foundIndex = findIndex(obj, (item) => {
+    const foundIndex = findIndex(obj, item => {
       throw new Error(`should not reach here ${item}`);
     });
 
@@ -132,9 +132,9 @@ describe('findIndex', () => {
   });
 
   it('should work with arguments', () => {
-    const obj = (function () {
+    const obj = (function() {
       return arguments;
-    }('a', 'b', 'c'));
+    })('a', 'b', 'c');
 
     const seen = [];
     const foundIndex = findIndex(obj, (item, idx) => {

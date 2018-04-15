@@ -2,7 +2,7 @@ import {arity} from '../dist/caboodle-x';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 
-const noop = function () {};
+const noop = function() {};
 
 describe('arity', () => {
   // let actual;
@@ -38,7 +38,7 @@ describe('arity', () => {
   });
 
   it('should throw when target is not a function', () => {
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(() => {
         arity(primitive);
       }).toThrowErrorMatchingSnapshot();
@@ -54,7 +54,9 @@ describe('arity', () => {
       noop(a, b, c);
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.func = arity(fn);
+    expect(testSubject.func).toHaveLength(3);
     expect(typeof testSubject.func).toBe('function');
     testSubject.func();
 
@@ -71,7 +73,9 @@ describe('arity', () => {
       noop(a, b, c);
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.func = arity(fn);
+    expect(testSubject.func).toHaveLength(3);
     expect(typeof testSubject.func).toBe('function');
     testSubject.func(1, 2, 3, 4);
 
@@ -89,7 +93,9 @@ describe('arity', () => {
       noop(a, b, c);
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.func = arity(fn, arityLength);
+    expect(testSubject.func).toHaveLength(arityLength);
     expect(typeof testSubject.func).toBe('function');
     testSubject.func(1, 2, 3, 4);
 
@@ -106,7 +112,9 @@ describe('arity', () => {
       noop(a, b, c);
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.Func = arity(fn);
+    expect(testSubject.Func).toHaveLength(3);
     const result = new testSubject.Func();
     expect(result).toBeTruthy();
     expect(context instanceof fn).toBe(true);
@@ -115,6 +123,7 @@ describe('arity', () => {
   });
 
   it("has the new instance's context as a constructor with arity set", () => {
+    const argsLength = 2;
     let context;
     let args;
     const fn = function _fn(a, b, c) {
@@ -123,7 +132,9 @@ describe('arity', () => {
       noop(a, b, c);
     };
 
-    testSubject.Func = arity(fn, 2);
+    expect(fn).toHaveLength(3);
+    testSubject.Func = arity(fn, argsLength);
+    expect(testSubject.Func).toHaveLength(argsLength);
     const result = new testSubject.Func(1, 2, 3);
     expect(result).toBeTruthy();
     expect(context instanceof fn).toBe(true);
@@ -163,18 +174,18 @@ describe('arity', () => {
 
     const Subject = arity(fn);
 
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(new Subject(primitive)).not.toBe(primitive);
     });
 
-    objects.forEach((object) => {
+    objects.forEach(object => {
       expect(new Subject(object)).toBe(object);
     });
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
     /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 

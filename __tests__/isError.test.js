@@ -9,7 +9,7 @@ describe('isError', () => {
       null,
       undefined,
       /* istanbul ignore next */
-      function () {},
+      function() {},
       [],
       /r/,
     ];
@@ -42,12 +42,12 @@ describe('isError', () => {
   });
 
   it('should work with sub-classed Error', () => {
-    const MyError = function () {};
+    const MyError = function() {};
     MyError.prototype = Object.create(Error.prototype);
     MyError.prototype.constructor = MyError;
     MyError.prototype.name = 'MyError';
 
-    const MySubError = function () {};
+    const MySubError = function() {};
     MySubError.prototype = Object.create(MyError.prototype);
     MySubError.prototype.constructor = MySubError;
     MySubError.prototype.name = 'MySubError';

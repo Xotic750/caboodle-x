@@ -4,9 +4,7 @@
  * @module toStringTag
  */
 
-const {
-  floor,
-} = Math;
+const {floor} = Math;
 
 /**
  * The notation “x modulo y” (y must be finite and nonzero) computes a value k

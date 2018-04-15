@@ -12,7 +12,8 @@ describe('isSurrogatePair', () => {
       const expected = values.map(() => false);
 
       const actual1 = values.map(item =>
-        isSurrogatePair(item.charAt(0), item.charAt(1)));
+        isSurrogatePair(item.charAt(0), item.charAt(1)),
+      );
 
       expect(actual1).toEqual(expected);
 
@@ -36,7 +37,8 @@ describe('isSurrogatePair', () => {
       const expected = values.map(() => true);
 
       const actual1 = values.map(item =>
-        isSurrogatePair(item.charAt(0), item.charAt(1)));
+        isSurrogatePair(item.charAt(0), item.charAt(1)),
+      );
 
       expect(actual1).toEqual(expected);
 

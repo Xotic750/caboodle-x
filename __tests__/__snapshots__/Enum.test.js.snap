@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Enum Class method names get added to the reserved list 1`] = `"Reserved name: favourite"`;
+
+exports[`Enum Instance method names get added to the reserved list 1`] = `"Reserved name: description"`;
+
+exports[`Enum should throw if duplicate name used 1`] = `"Attempted to reuse name: RED"`;
+
+exports[`Enum should throw if duplicate value used 1`] = `"Duplicate value (1) found: BLACK -> YELLOW"`;
+
+exports[`Enum should throw if duplicate value used 2`] = `"Duplicate value (NaN) found: b -> a"`;
+
+exports[`Enum should throw if duplicate value used 3`] = `"Duplicate value (0) found: b -> a"`;
+
+exports[`Enum should throw if name is reserved 1`] = `"Reserved name: forEach"`;
+
+exports[`Enum should throw if name is reserved 2`] = `"Reserved name: toJSON"`;
+
+exports[`Enum should throw if name is reserved 3`] = `"Reserved name: toString"`;
+
+exports[`Enum should throw if name is reserved 4`] = `"Reserved name: valueOf"`;
+
+exports[`Enum should throw on invalid typeName 1`] = `"Invalid enum name: "`;
+
+exports[`Enum should throw on invalid typeName 2`] = `"Invalid enum name: 123"`;
+
+exports[`Enum should throw on invalid typeName 3`] = `"Invalid enum name: [object Object]"`;
+
+exports[`Enum should throw on invalid typeName 4`] = `"Invalid enum name: "`;
+
+exports[`Enum should throw on invalid typeName 5`] = `"Invalid enum name: null"`;
+
+exports[`Enum should throw on invalid typeName 6`] = `"Invalid enum name: undefined"`;
+
+exports[`Enum should throw on invalid typeName 7`] = `"Invalid enum name: var"`;
+
+exports[`Enum should throw on invalid typeName 8`] = `"Invalid enum name: const"`;
+
+exports[`Enum should throw on invalid typeName 9`] = `"Cannot convert a Symbol value to a string"`;
+
+exports[`Enum subject can not be instantiated 1`] = `"Enum classes can’t be instantiated"`;

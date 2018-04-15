@@ -50,7 +50,7 @@ describe('assign', () => {
   });
 
   it('only iterates over own keys', () => {
-    const Foo = function () {};
+    const Foo = function() {};
     Foo.prototype.bar = true;
     const foo = new Foo();
     foo.baz = true;

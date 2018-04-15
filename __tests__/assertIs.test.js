@@ -16,7 +16,7 @@ describe('assertIs', () => {
   it('should throw with default message', () => {
     const assertIsArray = assertIs(Array.isArray);
 
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(() => {
         assertIsArray(primitive);
       }).toThrowErrorMatchingSnapshot();

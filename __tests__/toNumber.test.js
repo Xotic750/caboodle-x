@@ -78,14 +78,14 @@ describe('toNumber', () => {
     it('numbers', () => {
       expect(Number.isNaN(toNumber(NaN))).toBe(true, 'NaN returns itself');
 
-      [0, -0, 42, Infinity, -Infinity].forEach((num) => {
+      [0, -0, 42, Infinity, -Infinity].forEach(num => {
         expect(Object.is(toNumber(num), num)).toBe(
           true,
           `${num} returns itself`,
         );
       });
 
-      ['foo', '0', '4a', '2.0', 'Infinity', '-Infinity'].forEach((numString) => {
+      ['foo', '0', '4a', '2.0', 'Infinity', '-Infinity'].forEach(numString => {
         expect(Object.is(toNumber(numString), Number(numString))).toBe(
           true,
           `"${numString}" coerces to ${Number(numString)}`,
@@ -94,7 +94,7 @@ describe('toNumber', () => {
     });
 
     it('objects', () => {
-      objects.forEach((object) => {
+      objects.forEach(object => {
         expect(Object.is(toNumber(object), Number(object))).toBe(
           true,
           `object ${object} coerces to same as ToPrimitive of object does`,
@@ -108,56 +108,74 @@ describe('toNumber', () => {
 
     it('binary literals', () => {
       expect(toNumber('0b10')).toBe(2, '0b10 is 2');
-      expect(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0b11';
-        },
-      })).toBe(3, 'Object that toStrings to 0b11 is 3');
+      expect(
+        toNumber({
+          /* istanbul ignore next */
+          toString() {
+            return '0b11';
+          },
+        }),
+      ).toBe(3, 'Object that toStrings to 0b11 is 3');
 
       expect(Number.isNaN(toNumber('0b12'))).toBe(true, '0b12 is NaN');
-      expect(Number.isNaN(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0b112';
-        },
-      }))).toBe(true, 'Object that toStrings to 0b112 is NaN');
+      expect(
+        Number.isNaN(
+          toNumber({
+            /* istanbul ignore next */
+            toString() {
+              return '0b112';
+            },
+          }),
+        ),
+      ).toBe(true, 'Object that toStrings to 0b112 is NaN');
     });
 
     it('octal literals', () => {
       expect(toNumber('0o10')).toBe(8, '0o10 is 8');
-      expect(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0o11';
-        },
-      })).toBe(9, 'Object that toStrings to 0o11 is 9');
+      expect(
+        toNumber({
+          /* istanbul ignore next */
+          toString() {
+            return '0o11';
+          },
+        }),
+      ).toBe(9, 'Object that toStrings to 0o11 is 9');
 
       expect(Number.isNaN(toNumber('0o18'))).toBe(true, '0o18 is NaN');
-      expect(Number.isNaN(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0o118';
-        },
-      }))).toBe(true, 'Object that toStrings to 0o118 is NaN');
+      expect(
+        Number.isNaN(
+          toNumber({
+            /* istanbul ignore next */
+            toString() {
+              return '0o118';
+            },
+          }),
+        ),
+      ).toBe(true, 'Object that toStrings to 0o118 is NaN');
     });
 
     it('hex literals', () => {
       expect(toNumber('0xF')).toBe(15, '0xF is 15');
-      expect(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0xA';
-        },
-      })).toBe(10, 'Object that toStrings to 0xA is 1');
+      expect(
+        toNumber({
+          /* istanbul ignore next */
+          toString() {
+            return '0xA';
+          },
+        }),
+      ).toBe(10, 'Object that toStrings to 0xA is 1');
 
       expect(Number.isNaN(toNumber('0xG'))).toBe(true, '0xG is NaN');
-      expect(Number.isNaN(toNumber({
-        /* istanbul ignore next */
-        toString() {
-          return '0x11G';
-        },
-      }))).toBe(true, 'Object that toStrings to 0x11G is NaN');
+      expect(
+        Number.isNaN(
+          toNumber({
+            /* istanbul ignore next */
+            toString() {
+              return '0x11G';
+            },
+          }),
+        ),
+      ).toBe(true, 'Object that toStrings to 0x11G is NaN');
     });
 
     it('signed hex numbers', () => {
@@ -179,7 +197,7 @@ describe('toNumber', () => {
         'whitespace is trimmed',
       );
 
-      Object.keys(nonWhitespaces).forEach((desc) => {
+      Object.keys(nonWhitespaces).forEach(desc => {
         const nonWS = nonWhitespaces[desc];
         expect(Number.isNaN(toNumber(nonWS + 0 + nonWS))).toBe(
           true,

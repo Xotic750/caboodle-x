@@ -88,5 +88,6 @@ export default function isFunction(value, ...allowClass) {
   }
 
   const strTag = toStringTag(value);
+
   return strTag === FUNC_TAG || strTag === GEN_TAG || strTag === ASYNC_TAG;
 }

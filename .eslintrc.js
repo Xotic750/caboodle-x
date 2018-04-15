@@ -25,6 +25,7 @@ module.exports = {
     'plugin:eslint-comments/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
+    'plugin:prettier/recommended',
     'plugin:promise/recommended',
     'plugin:css-modules/recommended',
   ],
@@ -46,17 +47,14 @@ module.exports = {
       rules: {
         'compat/compat': 'off',
         'global-require': 'off',
-        'import/no-extraneous-dependencies': ['error', {
-          devDependencies: true,
-        }],
+        'import/no-extraneous-dependencies': [
+          'error',
+          {
+            devDependencies: true,
+          },
+        ],
         'no-console': 'off',
         'max-len': 'off',
-      },
-    },
-    {
-      files: ['webpack.*.js'],
-      rules: {
-        'prefer-arrow-callback': 'off',
       },
     },
     {
@@ -65,15 +63,13 @@ module.exports = {
         'func-names': 'off',
         'no-array-constructor': 'off',
         'no-empty': 'off',
+        'no-eval': 'off',
+        'no-new-func': 'off',
         'no-param-reassign': 'off',
         'no-sparse-arrays': 'off',
+        'no-unused-vars': 'off',
+        'prefer-arrow-callback': 'warn',
         'prefer-rest-params': 'off',
-      },
-    },
-    {
-      files: ['delayPromise.js', 'delayPromise.test.js'],
-      rules: {
-        'compat/compat': 'off',
         'promise/avoid-new': 'off',
         'promise/always-return': 'off',
         'promise/catch-or-return': 'off',
@@ -81,41 +77,9 @@ module.exports = {
       },
     },
     {
-      files: ['_isNaN.js'],
-      rules: {
-        'no-self-compare': 'off',
-      },
-    },
-    {
-      files: ['defineValidatorProperty.js', 'assign.js', 'isRegex.js'],
-      rules: {
-        'no-param-reassign': 'off',
-      },
-    },
-    {
       files: ['_*.js'],
       rules: {
         'no-underscore-dangle': 'off',
-      },
-    },
-    {
-      files: [
-        'toPrimitive.js',
-        'padStart.js',
-        'drop.js',
-        '_getAt.js',
-        '_find.js',
-        'getFunctionName.js',
-      ],
-      rules: {
-        'no-void': 'off',
-      },
-    },
-    {
-      files: ['getFunctionName.js'],
-      rules: {
-        'func-names': 'off',
-        'no-new-func': 'off',
       },
     },
   ],
@@ -125,7 +89,6 @@ module.exports = {
    */
   parserOptions: {
     ecmaFeatures: {
-      es6: true,
       impliedStrict: true,
     },
     ecmaVersion: 2018,
@@ -147,6 +110,7 @@ module.exports = {
     'json',
     'no-use-extend-native',
     'prefer-object-spread',
+    'prettier',
     'promise',
     'sort-class-members',
   ],
@@ -164,9 +128,8 @@ module.exports = {
      * Eslint rules that differ from airbnb base.
      * @see {@link https://eslint.org/docs/rules/}
      */
-    'global-require': 'warn',
-    'max-len': ['error', 130],
-    'object-curly-spacing': 'off',
+    'no-void': 'off',
+    'prefer-arrow-callback': 'off',
 
     /**
      * Additional ESLint rules for ESLint's directive-comments.
@@ -212,9 +175,12 @@ module.exports = {
      * ESLint plugin with rules that help validate proper imports.
      * @see {@link https://github.com/benmosher/eslint-plugin-import}
      */
-    'import/no-extraneous-dependencies': ['error', {
-      devDependencies: ['build/webpack.*.js'],
-    }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['webpack.*.js'],
+      },
+    ],
 
     /**
      * ESLint plugin for Jest.
@@ -244,6 +210,12 @@ module.exports = {
     'jsdoc/require-returns-type': 'warn',
 
     /**
+     * ESLint rule for prettier.
+     * @see {@link https://prettier.io/docs/en/eslint.html}
+     */
+    'prettier/prettier': 'error',
+
+    /**
      * ESLint rule for suggesting that object spread properties be used.
      * @see {@link https://github.com/bryanrsmith/eslint-plugin-prefer-object-spread}
      */
@@ -253,18 +225,21 @@ module.exports = {
      * An ESLint rule for enforcing consistent ES6 class member order.
      * @see {@link https://github.com/bryanrsmith/eslint-plugin-sort-class-members}
      */
-    'sort-class-members/sort-class-members': ['error', {
-      accessorPairPositioning: 'getThenSet',
-      order: [
-        '[static-properties]',
-        '[static-methods]',
-        '[properties]',
-        '[conventional-private-properties]',
-        'constructor',
-        '[methods]',
-        '[conventional-private-methods]',
-      ],
-    }],
+    'sort-class-members/sort-class-members': [
+      'error',
+      {
+        accessorPairPositioning: 'getThenSet',
+        order: [
+          '[static-properties]',
+          '[static-methods]',
+          '[properties]',
+          '[conventional-private-properties]',
+          'constructor',
+          '[methods]',
+          '[conventional-private-methods]',
+        ],
+      },
+    ],
   },
 
   /**
@@ -290,6 +265,6 @@ module.exports = {
         config: 'webpack.config.js',
       },
     },
+    polyfills: ['promises'],
   },
-
 };

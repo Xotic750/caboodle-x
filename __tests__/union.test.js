@@ -4,9 +4,9 @@ describe('union', () => {
   let args;
 
   beforeEach(() => {
-    args = (function () {
+    args = (function() {
       return arguments;
-    }(1, 2, 3));
+    })(1, 2, 3);
   });
 
   it('is a function', () => {

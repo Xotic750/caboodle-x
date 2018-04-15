@@ -50,7 +50,7 @@ describe('toObject', () => {
     testObject = {};
     expect(toObject(testObject)).toBe(testObject);
     /* istanbul ignore next */
-    testObject = function () {};
+    testObject = function() {};
     expect(toObject(testObject)).toBe(testObject);
     testObject = Object('test');
     expect(toObject(testObject)).toBe(testObject);

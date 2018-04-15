@@ -2,7 +2,7 @@ import {capitalizeFirst} from '../dist/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 
-const cap = (primitive) => {
+const cap = primitive => {
   const str = String(primitive);
 
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -24,7 +24,8 @@ describe('capitalizeFirst', () => {
     it('Multiple arguments', () => {
       const expected = primitives.map(cap);
       const actual = primitives.map(primitive =>
-        capitalizeFirst(primitive, primitive));
+        capitalizeFirst(primitive, primitive),
+      );
 
       expect(actual).toEqual(expected);
     });

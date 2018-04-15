@@ -32,7 +32,7 @@ describe('find()', () => {
     const context = {};
     find(
       list,
-      function () {
+      function() {
         return expect(this).toBe(context);
       }.bind(context),
     );

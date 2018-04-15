@@ -31,7 +31,7 @@ describe('replaceComments', () => {
       'abc',
       1,
       /* istanbul ignore next */
-      function () {},
+      function() {},
       [],
       /r/,
     ];

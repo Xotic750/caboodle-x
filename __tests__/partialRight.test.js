@@ -23,7 +23,9 @@ describe('partialRight', () => {
       context = this;
     };
 
+    expect(fn).toHaveLength(0);
     testSubject.func = partialRight(fn);
+    expect(testSubject.func).toHaveLength(0);
     testSubject.func();
 
     expect(context).toBe(testSubject);
@@ -32,12 +34,14 @@ describe('partialRight', () => {
   it('binds properly and supplies bound arguments', () => {
     let a;
     let context;
-    const fn = function _fn() {
+    const fn = function _fn(s, t, u, v) {
       a = Array.prototype.slice.call(arguments);
       context = this;
     };
 
+    expect(fn).toHaveLength(4);
     testSubject.func = partialRight(fn, 4, 5, 6);
+    expect(testSubject.func).toHaveLength(4);
     testSubject.func(1, 2, 3);
     expect(a).toEqual([1, 2, 3, 4, 5, 6]);
 
@@ -46,12 +50,14 @@ describe('partialRight', () => {
 
   it('returns properly without arguments', () => {
     let context;
-    const fn = function _fn() {
+    const fn = function _fn(a, b, c) {
       context = this;
       return Array.prototype.slice.call(arguments);
     };
 
+    expect(fn).toHaveLength(3);
     testSubject.func = partialRight(fn);
+    expect(testSubject.func).toHaveLength(3);
     actual = testSubject.func();
 
     expect(context).toBe(testSubject);
@@ -87,12 +93,14 @@ describe('partialRight', () => {
 
   it('passes the correct arguments as a constructor', () => {
     const expected = {name: 'Correct'};
-    const fn = function _fn(arg) {
+    const fn = function _fn(arg, a, b, c) {
       expect(Object.prototype.hasOwnProperty.call(this, 'name')).toBe(false);
       return arg;
     };
 
+    expect(fn).toHaveLength(4);
     testSubject.Func = partialRight(fn);
+    expect(testSubject.Func).toHaveLength(4);
     const ret = new testSubject.Func(expected);
     expect(ret).toBe(expected);
   });
@@ -117,18 +125,18 @@ describe('partialRight', () => {
 
     const Subject = partialRight(fn);
 
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(new Subject(primitive)).not.toBe(primitive);
     });
 
-    objects.forEach((object) => {
+    objects.forEach(object => {
       expect(new Subject(object)).toBe(object);
     });
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
     /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 

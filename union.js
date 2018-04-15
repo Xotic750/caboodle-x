@@ -18,7 +18,11 @@ const addNotIncluded = function _addNotIncluded(accumulator, value) {
 };
 
 const reduceArgs = function _reduceArgs(accumulator, array) {
-  return _accumulate(requireObjectCoercible(array), addNotIncluded, accumulator);
+  return _accumulate(
+    requireObjectCoercible(array),
+    addNotIncluded,
+    accumulator,
+  );
 };
 
 /**

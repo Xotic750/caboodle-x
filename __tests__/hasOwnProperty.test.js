@@ -36,7 +36,7 @@ describe('hasOwnProperty', () => {
   it('does not have own property', () => {
     const o = {foo: 'bar'};
     /* istanbul ignore next */
-    const fn = function () {};
+    const fn = function() {};
 
     expect(hasOwnProperty(o, 'bar')).toBe(false);
     expect(hasOwnProperty(o, 'propertyIsEnumerable')).toBe(false);

@@ -31,7 +31,7 @@ describe('parseInteger', () => {
     });
 
     it('defaults the radix to 10 when the number does not start with 0x or 0X', () => {
-      ['01', '08', '10', '42'].forEach((str) => {
+      ['01', '08', '10', '42'].forEach(str => {
         expect(parseInteger(str)).toBe(parseInteger(str, 10));
       });
     });

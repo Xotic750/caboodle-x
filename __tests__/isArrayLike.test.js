@@ -12,12 +12,12 @@ describe('isArrayLike', () => {
   });
 
   it('should return `true` for array-like values', () => {
-    (function () {
+    (function() {
       const values = [arguments, [1, 2, 3], {0: 1, length: 1}, 'a'];
       const expected = values.map(() => true);
       const actual = values.map(isArrayLike);
       expect(actual).toEqual(expected);
-    }(1, 2, 3));
+    })(1, 2, 3);
   });
 
   it('should return `false` for non-arrays', () => {
@@ -35,19 +35,16 @@ describe('isArrayLike', () => {
     expect(isArrayLike(/x/)).toBe(false);
 
     try {
-      // eslint-disable-next-line no-new-func
       const fat = new Function('return () => {return this;}');
       expect(isArrayLike(fat)).toBe(false);
     } catch (ignore) {}
 
     try {
-      // eslint-disable-next-line no-new-func
       const gen = new Function('return function* idMaker(){}');
       expect(isArrayLike(gen)).toBe(false);
     } catch (ignore) {}
 
     try {
-      // eslint-disable-next-line no-new-func
       const classes = new Function('"use strict"; return class MyClass {}');
       expect(isArrayLike(classes)).toBe(false);
     } catch (ignore) {}

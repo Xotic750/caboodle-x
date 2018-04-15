@@ -31,7 +31,9 @@ export default function callFunctionOrIdentity(fnOrValue, ...rest) {
   if (_isFunction(fnOrValue)) {
     const argsArray = getArgsArray(rest[0]);
 
-    return rest.length > 1 ? _apply(fnOrValue, rest[1], argsArray) : fnOrValue(...argsArray);
+    return rest.length > 1
+      ? _apply(fnOrValue, rest[1], argsArray)
+      : fnOrValue(...argsArray);
   }
 
   return fnOrValue;

@@ -1,6 +1,6 @@
 import {squeeze} from '../dist/caboodle-x';
 
-const createArrayLike = function (arr) {
+const createArrayLike = function(arr) {
   const o = {};
   const {length} = arr;
   for (let i = 0; i < length; i += 1) {

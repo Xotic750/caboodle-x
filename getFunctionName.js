@@ -7,14 +7,15 @@
 import _match from './.internal/_match';
 import _functionToString from './.internal/_functionToString';
 import _isFunction from './.internal/_isFunction';
+import _Function from './.internal/_Function';
 import normalizeSpace from './normalizeSpace';
 import replaceComments from './replaceComments';
 
 const ANONYMOUS = 'anonymous';
 
 let getName;
-if ((function test1() {}).name === 'test1') {
-  const createsAnonymous = Function().name === ANONYMOUS;
+if (function test1() {}.name === 'test1') {
+  const createsAnonymous = _Function().name === ANONYMOUS;
   if (createsAnonymous) {
     getName = function _getName(fn) {
       return fn.name === ANONYMOUS ? '' : fn.name;
@@ -29,12 +30,17 @@ if ((function test1() {}).name === 'test1') {
   getName = function _getName(fn) {
     let match;
     try {
-      match = _match(normalizeSpace(replaceComments(_functionToString(fn), ' ')), reName);
+      match = _match(
+        normalizeSpace(replaceComments(_functionToString(fn), ' ')),
+        reName,
+      );
       if (match) {
         const name = match[1];
         return name === ANONYMOUS ? '' : name;
       }
-    } catch (ignore) { /* ignore */ }
+    } catch (ignore) {
+      /* ignore */
+    }
 
     return '';
   };

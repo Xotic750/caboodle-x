@@ -5,15 +5,29 @@ describe('intersection', () => {
   let args;
 
   beforeEach(() => {
-    args = (function () {
+    args = (function() {
       return arguments;
-    }(1, 2, 3));
+    })(1, 2, 3);
 
     LARGE_ARRAY_SIZE = 200;
   });
 
   it('is a function', () => {
     expect(typeof intersection).toBe('function');
+  });
+
+  it('should throw when array is null or undefined', () => {
+    expect(() => {
+      intersection(undefined);
+    }).toThrowErrorMatchingSnapshot();
+
+    expect(() => {
+      intersection(null);
+    }).toThrowErrorMatchingSnapshot();
+  });
+
+  it('should return an empty array if no arrays are supplied', () => {
+    expect(intersection()).toEqual([]);
   });
 
   it('should return the intersection of the given arrays', () => {
@@ -65,11 +79,13 @@ describe('intersection', () => {
     expect(actual).toEqual([1, 3, 2]);
   });
 
-  it('should treat values that are not arrays or `arguments` objects as empty', () => {
+  it('should treat values that are not array-like as empty', () => {
     const array = [0, 1, null, 3];
+    const fn = function _fn(a) {};
 
-    expect(intersection(array, 3, {0: 1}, null)).toEqual([]);
-    expect(intersection(null, array, null, args, null)).toEqual([1, 3]);
-    expect(intersection(array, null, args, null)).toEqual([1, 3]);
+    expect(intersection(array, {0: 1})).toEqual([]);
+    expect(intersection(array, 3)).toEqual([]);
+    expect(intersection(array, true)).toEqual([]);
+    expect(intersection(array, fn)).toEqual([]);
   });
 });

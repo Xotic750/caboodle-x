@@ -8,9 +8,11 @@ import _find from './_find';
 import sameValueZero from '../sameValueZero';
 
 export default function _includes(array, searchElement, ...fromIndex) {
-  const isSameValueZero = function _isSameValueZero(value) {
-    return sameValueZero(searchElement, value);
-  };
-
-  return _find(array, isSameValueZero, ...fromIndex).includes;
+  return _find(
+    array,
+    function _predicate(value) {
+      return sameValueZero(searchElement, value);
+    },
+    ...fromIndex,
+  ).includes;
 }

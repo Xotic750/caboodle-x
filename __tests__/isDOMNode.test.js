@@ -120,13 +120,13 @@ const html4List = [
 ];
 
 /* istanbul ignore next */
-const noop = function () {};
+const noop = function() {};
 /* istanbul ignore next */
-const stubTrue = function () {
+const stubTrue = function() {
   return true;
 };
 /* istanbul ignore next */
-const stubFalse = function () {
+const stubFalse = function() {
   return false;
 };
 
@@ -169,7 +169,7 @@ describe('isDOMNode', () => {
     expect(isDOMNode(fragment)).toBe(true);
   });
 
-  it('should return `false` for other non-DOM objects', function () {
+  it('should return `false` for other non-DOM objects', function() {
     expect(isDOMNode(arguments)).toBe(false, 'arguments');
     expect(isDOMNode([])).toBe(false, 'Literal array');
     expect(isDOMNode(new Array(6))).toBe(false, 'new Array');
@@ -184,7 +184,9 @@ describe('isDOMNode', () => {
   it('should return `false` for non-DOM objects', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map((value, index) => (index ? isDOMNode(value) : isDOMNode()));
+    const actual = falsey.map(
+      (value, index) => (index ? isDOMNode(value) : isDOMNode()),
+    );
 
     expect(actual).toEqual(expected);
 

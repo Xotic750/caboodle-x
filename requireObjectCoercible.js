@@ -24,4 +24,7 @@ import isNil from './isNil';
  * RequireObjectCoercible(true); // true
  * RequireObjectCoercible(Symbol('foo')); // Symbol('foo')
  */
-export default _assertIs(_negate(isNil), 'Cannot call method on null or undefined');
+export default _assertIs(
+  _negate(isNil),
+  'Cannot call method on null or undefined',
+);

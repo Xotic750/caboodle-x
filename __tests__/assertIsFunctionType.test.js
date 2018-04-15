@@ -14,7 +14,7 @@ describe('assertIsFunction', () => {
   });
 
   it('should throw with default message', () => {
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(() => {
         assertIsFunction(primitive);
       }).toThrowErrorMatchingSnapshot();

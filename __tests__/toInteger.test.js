@@ -16,7 +16,7 @@ describe('toInteger', () => {
 
   it('Basic', () => {
     expect(Object.is(0, toInteger(NaN))).toBe(true, 'NaN coerces to +0');
-    [-0, 0, Infinity, 42].forEach((num) => {
+    [-0, 0, Infinity, 42].forEach(num => {
       expect(Object.is(num, toInteger(num))).toBe(
         true,
         `${num} returns itself`,

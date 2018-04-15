@@ -49,7 +49,12 @@ export default function isSurrogatePair(...args) {
   } else if (argsLength > 1) {
     const char2 = args[1];
 
-    if (!isString(char1) || char1.length !== 1 || !isString(char2) || char2.length !== 1) {
+    if (
+      !isString(char1) ||
+      char1.length !== 1 ||
+      !isString(char2) ||
+      char2.length !== 1
+    ) {
       return false;
     }
 
@@ -57,5 +62,7 @@ export default function isSurrogatePair(...args) {
     second = _charCodeAt(char2, 0);
   }
 
-  return first >= 0xD800 && first <= 0xDBFF && second >= 0xDC00 && second <= 0xDFFF;
+  return (
+    first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff
+  );
 }

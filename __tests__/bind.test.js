@@ -15,7 +15,7 @@ describe('bind', () => {
   const func = function _func() {
     Array.prototype.forEach.call(
       arguments,
-      function (a) {
+      function(a) {
         this.push(a);
       },
       this,
@@ -168,18 +168,18 @@ describe('bind', () => {
 
     const Subject = bind(fn, null);
 
-    primitives.forEach((primitive) => {
+    primitives.forEach(primitive => {
       expect(new Subject(primitive)).not.toBe(primitive);
     });
 
-    objects.forEach((object) => {
+    objects.forEach(object => {
       expect(new Subject(object)).toBe(object);
     });
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
     /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 

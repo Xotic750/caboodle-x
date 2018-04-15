@@ -58,11 +58,11 @@ const nonNumbers = [
   /a/g,
 ];
 
-const expectFalse = function (item) {
+const expectFalse = function(item) {
   expect(item).toBe(false);
 };
 
-const expectTrue = function (item) {
+const expectTrue = function(item) {
   expect(item).toBe(true);
 };
 

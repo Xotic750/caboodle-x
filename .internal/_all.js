@@ -7,9 +7,11 @@
 import _any from './_any';
 
 export default function _all(array, callback, ...rest) {
-  const iteratee = function _iteratee(...args) {
-    callback(...args);
-  };
-
-  _any(array, iteratee, ...rest);
+  _any(
+    array,
+    function _iteratee(...args) {
+      callback(...args);
+    },
+    ...rest,
+  );
 }

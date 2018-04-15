@@ -27,15 +27,12 @@ import requireObjectCoercible from './requireObjectCoercible';
  */
 export default function difference(array, ...excludes) {
   requireObjectCoercible(array);
+
   _all(excludes, requireObjectCoercible);
 
-  const siftPredicate = function _siftPredicate(value) {
-    const includesPredicate = function _includesPredicate(exclude) {
+  return _sift(array, function _siftPredicate(value) {
+    return !_any(excludes, function _includesPredicate(exclude) {
       return _includes(exclude, value);
-    };
-
-    return !_any(excludes, includesPredicate);
-  };
-
-  return _sift(array, siftPredicate);
+    });
+  });
 }

@@ -8,7 +8,7 @@ import _toString from './.internal/_toString';
 import _replace from './.internal/_replace';
 import requireCoercibleToString from './requireCoercibleToString';
 
-const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
 
 /**
  * This method replaces comments in a string.

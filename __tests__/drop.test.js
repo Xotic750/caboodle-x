@@ -48,13 +48,13 @@ describe('drop', () => {
   });
 
   it('should return all elements when `n` < `1`', () => {
-    [0, -1, -Infinity].forEach((n) => {
+    [0, -1, -Infinity].forEach(n => {
       expect(drop(array, n)).toEqual(array);
     });
   });
 
   it('should return an empty array when `n` >= `array.length`', () => {
-    [3, 4, 2 ** 32, Infinity].forEach((n) => {
+    [3, 4, 2 ** 32, Infinity].forEach(n => {
       expect(drop(array, n)).toEqual([]);
     });
   });

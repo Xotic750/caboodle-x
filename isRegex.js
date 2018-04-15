@@ -17,6 +17,7 @@ const tryRegexExecCall = function _tryRegexExecCall(value) {
   let storedLastIndex;
   try {
     storedLastIndex = value.lastIndex;
+    // eslint-disable-next-line no-param-reassign
     value.lastIndex = 0;
 
     _exec(value);
@@ -24,6 +25,7 @@ const tryRegexExecCall = function _tryRegexExecCall(value) {
   } catch (e) {
     return false;
   } finally {
+    // eslint-disable-next-line no-param-reassign
     value.lastIndex = storedLastIndex;
   }
 };
@@ -37,7 +39,8 @@ export default function isRegex(value) {
   }
 
   const descriptor = _getOwnPropertyDescriptor(value, 'lastIndex');
-  const hasLastIndexDataProperty = descriptor && _hasOwnProperty(descriptor, 'value');
+  const hasLastIndexDataProperty =
+    descriptor && _hasOwnProperty(descriptor, 'value');
   if (!hasLastIndexDataProperty) {
     return false;
   }

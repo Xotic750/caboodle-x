@@ -9,5 +9,8 @@ import requireObjectCoercible from './requireObjectCoercible';
 import toPropertyKey from './toPropertyKey';
 
 export default function hasOwnProperty(object, property) {
-  return _hasOwnProperty(requireObjectCoercible(object), toPropertyKey(property));
+  return _hasOwnProperty(
+    requireObjectCoercible(object),
+    toPropertyKey(property),
+  );
 }

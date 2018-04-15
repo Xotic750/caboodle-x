@@ -5,7 +5,7 @@ describe('apply', () => {
   const receiver = {};
 
   it('throws for non-functions', () => {
-    const throwsIfNotCallable = function (notFunc) {
+    const throwsIfNotCallable = function(notFunc) {
       expect(() => apply(notFunc, receiver)).toThrowErrorMatchingSnapshot();
     };
 
@@ -14,7 +14,7 @@ describe('apply', () => {
 
   it('has correct context and arguments', () => {
     apply(
-      function (a, b) {
+      function(a, b) {
         expect(this).toBe(receiver, 'context matches expected');
         expect([a, b]).toEqual([1, 2], 'named args are correct');
         expect(arguments).toHaveLength(3, 'extra argument was passed');

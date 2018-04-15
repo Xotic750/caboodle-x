@@ -1,7 +1,7 @@
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module MAX_SAFE_INTEGER
+ * @module _es6ShimIterator
  */
 
-export default 9007199254740991;
+export default '_es6-shim iterator_';

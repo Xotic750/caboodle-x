@@ -9,19 +9,18 @@ import _bound from './_bound';
 import isPrimitive from '../isPrimitive';
 
 export default function _partial(fn, ...partials) {
-  let bound;
+  return _bound(
+    function _binder(...args) {
+      const result = _call(fn, this, ...partials, ...args);
 
-  const binder = function _binder(...args) {
-    const result = _call(fn, this, ...partials, ...args);
+      if (this instanceof _bound) {
+        return isPrimitive(result) ? this : result;
+      }
 
-    if (this instanceof bound) {
-      return isPrimitive(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = _bound(binder, 'Partial', fn.prototype, fn.length - partials.length);
-
-  return bound;
+      return result;
+    },
+    'Partial',
+    fn.prototype,
+    fn.length - partials.length,
+  );
 }

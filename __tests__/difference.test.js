@@ -82,9 +82,9 @@ describe('difference', () => {
   });
 
   it('should work with `arguments` objects', () => {
-    const args = (function () {
+    const args = (function() {
       return arguments;
-    }(1, 2, 3));
+    })(1, 2, 3);
 
     const array = [0, 1, null, 3];
 

@@ -4,4 +4,6 @@
  * @module _Function
  */
 
-export default (function f() {}).constructor;
+const f = function f() {};
+
+export default f.constructor;
