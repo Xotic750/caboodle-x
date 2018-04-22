@@ -1,7 +1,11 @@
-import {isSurrogatePair} from '../dist/caboodle-x';
+import {isSurrogatePair} from '../index';
 
 describe('isSurrogatePair', () => {
   describe('Basic tests', () => {
+    it('should return false for no input', () => {
+      expect(isSurrogatePair()).toBe(false);
+    });
+
     it('should confirm that these are not surrogate pairs', () => {
       const values = [
         'a',

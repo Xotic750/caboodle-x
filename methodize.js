@@ -5,8 +5,8 @@
  */
 
 import _methodize from './.internal/_methodize';
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 
 export default function methodize(prototypeMethod) {
-  return _methodize(_assertIsFunction(prototypeMethod));
+  return _methodize(assertIsFunction(prototypeMethod));
 }

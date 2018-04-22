@@ -4,9 +4,11 @@
  * @module getFunctionName
  */
 
+import attempt from './attempt';
+import _isArray from './.internal/_isArray';
 import _match from './.internal/_match';
 import _functionToString from './.internal/_functionToString';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import _Function from './.internal/_Function';
 import normalizeSpace from './normalizeSpace';
 import replaceComments from './replaceComments';
@@ -14,6 +16,7 @@ import replaceComments from './replaceComments';
 const ANONYMOUS = 'anonymous';
 
 let getName;
+/* istanbul ignore next */
 if (function test1() {}.name === 'test1') {
   const createsAnonymous = _Function().name === ANONYMOUS;
   if (createsAnonymous) {
@@ -28,18 +31,17 @@ if (function test1() {}.name === 'test1') {
 } else {
   const reName = /^(?:async )?(?:function|class) ?(?:\* )?([\w$]+)/i;
   getName = function _getName(fn) {
-    let match;
-    try {
-      match = _match(
+    const result = attempt(function _attemptee() {
+      return _match(
         normalizeSpace(replaceComments(_functionToString(fn), ' ')),
         reName,
       );
-      if (match) {
-        const name = match[1];
-        return name === ANONYMOUS ? '' : name;
-      }
-    } catch (ignore) {
-      /* ignore */
+    });
+
+    if (_isArray(result.value)) {
+      const name = result.value[1];
+
+      return name === ANONYMOUS ? '' : name;
     }
 
     return '';
@@ -68,5 +70,5 @@ if (function test1() {}.name === 'test1') {
  * getFunctionName(class Test {}); // 'Test'
  */
 export default function getFunctionName(fn) {
-  return _isFunction(fn, true) ? getName(fn) : void 0;
+  return isFunction(fn, true) ? getName(fn) : void 0;
 }

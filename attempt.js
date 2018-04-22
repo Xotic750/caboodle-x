@@ -50,15 +50,15 @@ import _apply from './.internal/_apply';
  * // thisArg => [1, 2];
  */
 export default function attempt(fn, ...rest) {
+  const result = {};
+
   try {
-    return {
-      threw: false,
-      value: _apply(fn, this, rest),
-    };
+    result.value = _apply(fn, this, rest);
+    result.threw = false;
   } catch (e) {
-    return {
-      threw: true,
-      value: e,
-    };
+    result.value = e;
+    result.threw = true;
   }
+
+  return result;
 }

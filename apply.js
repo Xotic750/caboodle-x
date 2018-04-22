@@ -4,9 +4,9 @@
  * @module apply
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import _apply from './.internal/_apply';
 
 export default function apply(fn, ...applyArgs) {
-  return _apply(_assertIsFunction(fn), ...applyArgs);
+  return _apply(assertIsFunction(fn), ...applyArgs);
 }

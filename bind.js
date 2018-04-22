@@ -4,9 +4,9 @@
  * @module bind
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import _bind from './.internal/_bind';
 
 export default function bind(fn, ...bindArgs) {
-  return _bind(_assertIsFunction(fn), ...bindArgs);
+  return _bind(assertIsFunction(fn), ...bindArgs);
 }

@@ -89,7 +89,7 @@ _defineProperties(BigCounter.prototype, {
     value: function next() {
       const clone = _slice(this.count);
       this.count.length = 0;
-      const howMany = clone.length || 1;
+      const howMany = clone.length;
       let carry = 0;
       let index = 0;
       while (index < howMany || carry) {

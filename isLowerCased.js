@@ -6,8 +6,8 @@
 
 import isString from 'is-string';
 import _toLowerCase from './.internal/_toLowerCase';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 
 export default function isLowerCased(string) {
-  return isString(string) && _toLowerCase(string) === _toString(string);
+  return isString(string) && _toLowerCase(string) === toStr(string);
 }

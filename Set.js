@@ -85,6 +85,7 @@ _defineProperty(SetIt.prototype, 'next', {
  */
 _defineProperty(SetIt.prototype, SYMBOL_ITERATOR, {
   value: function iterator() {
+    /* istanbul ignore next */
     return this;
   },
 });

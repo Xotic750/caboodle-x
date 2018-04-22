@@ -1,37 +1,32 @@
-import {isNumberFinite} from '../dist/caboodle-x';
+import {isNumberFinite} from '../index';
 
 const integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
 const infinities = [Infinity, -Infinity];
 
-/* istanbul ignore next */
 const valueOfThree = {
   valueOf() {
     return 3;
   },
 };
 
-/* istanbul ignore next */
 const valueOfNaN = {
   valueOf() {
     return NaN;
   },
 };
 
-/* istanbul ignore next */
 const valueOfThrows = {
   valueOf() {
     throw Object(17);
   },
 };
 
-/* istanbul ignore next */
 const toStringThrows = {
   toString() {
     throw Object(42);
   },
 };
 
-/* istanbul ignore next */
 const toPrimitiveThrows = {
   toString() {
     throw Object(42);

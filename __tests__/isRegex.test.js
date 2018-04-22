@@ -1,4 +1,4 @@
-import {isRegex} from '../dist/caboodle-x';
+import {isRegex} from '../index';
 
 /* istanbul ignore next */
 const hasToStringTag =

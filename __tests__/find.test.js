@@ -1,4 +1,4 @@
-import {find} from '../dist/caboodle-x';
+import {find} from '../index';
 
 const list = [5, 10, 15, 20];
 
@@ -57,7 +57,6 @@ describe('find()', () => {
       length: -3,
     };
 
-    /* istanbul ignore next */
     const found = find(obj, () => {
       throw new Error('should not reach here');
     });

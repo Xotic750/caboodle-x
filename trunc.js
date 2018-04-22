@@ -4,4 +4,8 @@
  * @module trunc
  */
 
-export {default} from './.internal/_trunc';
+const {ceil, floor} = Math;
+
+export default function trunc(value) {
+  return value < 0 ? ceil(value) : floor(value);
+}

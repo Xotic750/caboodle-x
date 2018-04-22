@@ -6,8 +6,8 @@
 
 import isString from 'is-string';
 import _toUpperCase from './.internal/_toUpperCase';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 
 export default function isUpperCased(string) {
-  return isString(string) && _toUpperCase(string) === _toString(string);
+  return isString(string) && _toUpperCase(string) === toStr(string);
 }

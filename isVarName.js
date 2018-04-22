@@ -4,20 +4,19 @@
  * @module isVarName
  */
 
+import _Function from './.internal/_Function';
+import attempt from './attempt';
 import isStringType from './isStringType';
 import _trim from './.internal/_trim';
 
-export default function isVarName(str) {
-  if (!isStringType(str) || _trim(str) !== str) {
+const attemptee = function _attemptee(string) {
+  _Function(string, `var ${string}`);
+};
+
+export default function isVarName(string) {
+  if (!isStringType(string) || _trim(string) !== string) {
     return false;
   }
 
-  try {
-    // eslint-disable-next-line no-new-func
-    Function(str, `var ${str}`);
-  } catch (e) {
-    return false;
-  }
-
-  return true;
+  return !attempt(attemptee, string).threw;
 }

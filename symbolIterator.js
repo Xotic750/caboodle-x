@@ -5,7 +5,7 @@
  */
 
 import _Array from './.internal/_Array';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import ES6_SHIM_SYMBOL_ITERATOR from './.internal/_es6ShimIterator';
 import FALLBACK_SYMBOL_ITERATOR from './.internal/_fallbackSymbolIterator';
 import _hasRealSymbolIterator from './.internal/_hasRealSymbolIterator';
@@ -16,7 +16,7 @@ export default (function _getSymIt() {
     return Symbol.iterator;
   }
 
-  return _isFunction(_Array.prototype[ES6_SHIM_SYMBOL_ITERATOR])
+  return isFunction(_Array.prototype[ES6_SHIM_SYMBOL_ITERATOR])
     ? ES6_SHIM_SYMBOL_ITERATOR
     : FALLBACK_SYMBOL_ITERATOR;
 })();

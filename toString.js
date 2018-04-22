@@ -4,4 +4,13 @@
  * @module toString
  */
 
-export {default} from './.internal/_toString';
+import isSymbol from 'is-symbol';
+import _String from './.internal/_String';
+
+export default function toString(value) {
+  if (isSymbol(value)) {
+    throw new TypeError('Cannot convert a Symbol value to a string');
+  }
+
+  return _String(value);
+}

@@ -1,4 +1,4 @@
-import {isWholeNumber} from '../dist/caboodle-x';
+import {isWholeNumber} from '../index';
 
 describe('isWholeNumber', () => {
   it('should be a function', () => {

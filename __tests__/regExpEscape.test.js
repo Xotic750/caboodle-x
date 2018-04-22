@@ -1,9 +1,8 @@
-import {regexpEscape} from '../dist/caboodle-x';
+import {regexpEscape} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('regexpEscape', () => {

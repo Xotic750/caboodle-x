@@ -4,10 +4,10 @@
  * @module toUint24
  */
 
-import _toNumber from './.internal/_toNumber';
+import toNumber from './toNumber';
 import modulo from './modulo';
-import _sign from './.internal/_sign';
-import _isFinite from './.internal/_isFinite';
+import sign from './sign';
+import isNumberFinite from './isNumberFinite';
 
 const {floor, abs} = Math;
 
@@ -24,15 +24,15 @@ const {floor, abs} = Math;
  */
 export default function toUint24(argument) {
   // Let number be ? ToNumber(argument).
-  const number = _toNumber(argument);
+  const number = toNumber(argument);
 
   // If number is NaN, +0, -0, +∞, or -∞, return +0.
-  if (number === 0 || !_isFinite(number)) {
+  if (number === 0 || !isNumberFinite(number)) {
     return 0;
   }
 
   // Let int be the mathematical value that is the same sign as number and
   // whose magnitude is floor(abs(number)).
   // Let int24bit be int modulo 2^24.
-  return modulo(_sign(number) * floor(abs(number)), 0x1000000);
+  return modulo(sign(number) * floor(abs(number)), 0x1000000);
 }

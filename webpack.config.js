@@ -164,23 +164,7 @@ module.exports = function generateConfig(env) {
      * is called by the webpack compiler, giving access to the entire compilation lifecycle.
      *
      */
-    plugins: [
-      /**
-       * This plugin uses UglifyJS v3 (uglify-es) to minify your JavaScript.
-       * @type {!Object}
-       * @see {@link https://webpack.js.org/plugins/uglifyjs-webpack-plugin/}
-       */
-      NODE_ENV === PRODUCTION
-        ? new UglifyJsPlugin({
-            parallel: true,
-            sourceMap: true,
-            uglifyOptions: {
-              ecma: 5,
-              keep_fnames: true,
-            },
-          })
-        : null,
-    ].filter(Boolean),
+    plugins: [],
 
     /**
      * These options change how modules are resolved.
@@ -198,7 +182,7 @@ module.exports = function generateConfig(env) {
     },
   };
 
-  const packed = merge(base, {
+  const browser = merge(base, {
     optimization: {
       minimize: false,
     },
@@ -208,7 +192,37 @@ module.exports = function generateConfig(env) {
     },
   });
 
-  const minified = merge(base, {
+  const node = merge(base, {
+    optimization: {
+      minimize: false,
+    },
+
+    output: {
+      filename: `${filename}.node.js`,
+    },
+
+    target: 'node',
+  });
+
+  const browserMinified = merge(base, {
+    optimization: {
+      minimizer: [
+        /**
+         * This plugin uses UglifyJS v3 (uglify-es) to minify your JavaScript.
+         * @type {!Object}
+         * @see {@link https://webpack.js.org/plugins/uglifyjs-webpack-plugin/}
+         */
+        new UglifyJsPlugin({
+          parallel: true,
+          sourceMap: true,
+          uglifyOptions: {
+            ecma: 5,
+            keep_fnames: true,
+          },
+        }),
+      ],
+    },
+
     output: {
       filename: `${filename}.min.js`,
     },
@@ -222,5 +236,5 @@ module.exports = function generateConfig(env) {
     plugins: ENV.report ? [new BundleAnalyzerPlugin()] : [],
   });
 
-  return [packed, minified];
+  return [browser, browserMinified, node];
 };

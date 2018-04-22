@@ -4,4 +4,11 @@
  * @module assertIsFunction
  */
 
-export {default} from './.internal/_assertIsFunction';
+import _assertIs from './.internal/_assertIs';
+import isFunction from './isFunction';
+
+const asserter = _assertIs(isFunction, 'Not a function');
+
+export default function assertIsFunction(value, ...customMessage) {
+  return asserter(value, ...customMessage);
+}

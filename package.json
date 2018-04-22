@@ -1,6 +1,6 @@
 {
   "name": "caboodle-x",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "A collection of modern utils.",
   "homepage": "https://github.com/Xotic750/caboodle-x.git",
   "repository": {
@@ -10,12 +10,13 @@
   "bugs": {
     "url": "https://github.com/Xotic750/caboodle-x/issues"
   },
-  "main": "dist/caboodle-x.js",
+  "main": "dist/caboodle-x.node.js",
+  "browser": "dist/caboodle-x.js",
+  "module": "index",
   "scripts": {
-    "build":
-      "cross-env NODE_ENV=production webpack --bail --config webpack.config.js --progress --profile --colors",
-    "build:dev":
-      "webpack --bail --config webpack.config.js --progress --profile --colors",
+    "build:base": "webpack --bail --progress --profile --colors",
+    "build": "cross-env NODE_ENV=production npm run build:base",
+    "build:dev": "npm run build:base",
     "clean": "rimraf dist && npm run clean:coverage",
     "clean:coverage": "rimraf __tests__/coverage",
     "lint": "eslint --ext .js .",
@@ -40,7 +41,6 @@
   "keywords": ["modern", "utils", "library", "module", "node", "browser"],
   "dependencies": {
     "is-boolean-object": "^1.0.0",
-    "is-date-object": "^1.0.1",
     "is-number-object": "^1.0.3",
     "is-string": "^1.0.4",
     "is-symbol": "^1.0.1"
@@ -66,13 +66,13 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-import-resolver-webpack": "^0.9.0",
     "eslint-loader": "^2.0.0",
-    "eslint-plugin-babel": "^5.0.0",
+    "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-compat": "^2.2.0",
     "eslint-plugin-css-modules": "^2.7.5",
     "eslint-plugin-eslint-comments": "^2.0.2",
     "eslint-plugin-html": "^4.0.3",
     "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-jest": "^21.15.0",
+    "eslint-plugin-jest": "^21.15.1",
     "eslint-plugin-jsdoc": "^3.6.3",
     "eslint-plugin-json": "^1.2.0",
     "eslint-plugin-no-use-extend-native": "^0.3.12",
@@ -89,14 +89,14 @@
     "jsdoc-to-markdown": "^4.0.1",
     "nodemon": "^1.17.3",
     "nsp": "^3.2.1",
-    "prettier": "^1.12.0",
+    "prettier": "^1.12.1",
     "pretty-quick": "^1.4.1",
     "rimraf": "^2.6.2",
     "semver": "^5.5.0",
-    "uglifyjs-webpack-plugin": "^1.2.4",
-    "webpack": "^4.5.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^4.6.0",
     "webpack-bundle-analyzer": "^2.11.1",
-    "webpack-cli": "^2.0.14",
+    "webpack-cli": "^2.0.15",
     "webpack-merge": "^4.1.2"
   },
   "engines": {

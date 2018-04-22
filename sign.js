@@ -4,6 +4,9 @@
  * @module sign
  */
 
+import toNumber from './toNumber';
+import isNumberNaN from './isNumberNaN';
+
 /**
  * This method returns the sign of a number, indicating whether the number is positive,
  * negative or zero.
@@ -24,4 +27,12 @@
  * mathSign('foo'); // NaN
  * mathSign();      // NaN
  */
-export {default} from './.internal/_sign';
+export default function sign(x) {
+  const n = toNumber(x);
+
+  if (n === 0 || isNumberNaN(n)) {
+    return n;
+  }
+
+  return n > 0 ? 1 : -1;
+}

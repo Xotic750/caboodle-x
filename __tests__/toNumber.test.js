@@ -1,11 +1,10 @@
-import {toNumber} from '../dist/caboodle-x';
+import {toNumber} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
-/* istanbul ignore next */
+
 const coercibleObject = {
   toString() {
     return 42;
@@ -14,7 +13,7 @@ const coercibleObject = {
     return 3;
   },
 };
-/* istanbul ignore next */
+
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -23,7 +22,7 @@ const valueOfOnlyObject = {
     return 4;
   },
 };
-/* istanbul ignore next */
+
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -34,7 +33,7 @@ const toStringOnlyObject = {
 };
 
 const objects = [{}, coercibleObject, toStringOnlyObject, valueOfOnlyObject];
-/* istanbul ignore next */
+
 const uncoercibleObject = {
   toString() {
     return {};
@@ -110,7 +109,6 @@ describe('toNumber', () => {
       expect(toNumber('0b10')).toBe(2, '0b10 is 2');
       expect(
         toNumber({
-          /* istanbul ignore next */
           toString() {
             return '0b11';
           },
@@ -121,7 +119,6 @@ describe('toNumber', () => {
       expect(
         Number.isNaN(
           toNumber({
-            /* istanbul ignore next */
             toString() {
               return '0b112';
             },
@@ -134,7 +131,6 @@ describe('toNumber', () => {
       expect(toNumber('0o10')).toBe(8, '0o10 is 8');
       expect(
         toNumber({
-          /* istanbul ignore next */
           toString() {
             return '0o11';
           },
@@ -145,7 +141,6 @@ describe('toNumber', () => {
       expect(
         Number.isNaN(
           toNumber({
-            /* istanbul ignore next */
             toString() {
               return '0o118';
             },
@@ -158,7 +153,6 @@ describe('toNumber', () => {
       expect(toNumber('0xF')).toBe(15, '0xF is 15');
       expect(
         toNumber({
-          /* istanbul ignore next */
           toString() {
             return '0xA';
           },
@@ -169,7 +163,6 @@ describe('toNumber', () => {
       expect(
         Number.isNaN(
           toNumber({
-            /* istanbul ignore next */
             toString() {
               return '0x11G';
             },

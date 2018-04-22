@@ -5,13 +5,13 @@
  */
 
 import _includes from './.internal/_includes';
-import _toInteger from './.internal/_toInteger';
+import toInteger from './toInteger';
 import requireObjectCoercible from './requireObjectCoercible';
 
 export default function includes(array, searchElement, ...fromIndex) {
   return _includes(
     requireObjectCoercible(array),
     searchElement,
-    _toInteger(fromIndex[0]),
+    toInteger(fromIndex[0]),
   );
 }

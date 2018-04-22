@@ -1,4 +1,4 @@
-import {methodize} from '../dist/caboodle-x';
+import {methodize} from '../index';
 
 describe('methodize', () => {
   it('should be a function', () => {

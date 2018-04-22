@@ -5,10 +5,10 @@
  */
 
 import _assertIs from './.internal/_assertIs';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 
 export default function assertIs(predicate, defaultMessage) {
-  if (!_isFunction(predicate)) {
+  if (!isFunction(predicate)) {
     throw new TypeError('Predicate must be a function');
   }
 

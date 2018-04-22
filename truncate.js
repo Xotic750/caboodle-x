@@ -7,7 +7,7 @@
 import isRegExp from './isRegex';
 import isUndefined from './isUndefined';
 import toWholeNumber from './toWholeNumber';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 import isObjectLike from './isObjectLike';
 import _hasOwnProperty from './.internal/_hasOwnProperty';
 import _exec from './.internal/_exec';
@@ -134,7 +134,7 @@ const stringSize = function _stringSize(string) {
  * // 'hi-diddly-ho there, neig [...]'
  */
 export default function truncate(string, options) {
-  const str = _toString(string);
+  const str = toStr(string);
   let length = 30;
   let omission = '...';
   let separator;
@@ -142,7 +142,7 @@ export default function truncate(string, options) {
     if (_hasOwnProperty(options, 'separator')) {
       separator = isRegExp(options.separator)
         ? options.separator
-        : _toString(options.separator);
+        : toStr(options.separator);
     }
 
     if (_hasOwnProperty(options, 'length')) {
@@ -150,7 +150,7 @@ export default function truncate(string, options) {
     }
 
     if (_hasOwnProperty(options, 'omission')) {
-      omission = _toString(options.omission);
+      omission = toStr(options.omission);
     }
   }
 
@@ -178,6 +178,7 @@ export default function truncate(string, options) {
   }
 
   if (matchSymbols) {
+    /* istanbul ignore next */
     end += result.length - end;
   }
 
@@ -187,7 +188,7 @@ export default function truncate(string, options) {
       if (!separator.global) {
         separator = new _RegExp(
           separator.source,
-          _toString(_exec(matchFlags, separator)) + G_FLAG,
+          toStr(_exec(matchFlags, separator)) + G_FLAG,
         );
       }
 

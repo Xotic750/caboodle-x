@@ -1,9 +1,8 @@
-import {numberToDecimalString} from '../dist/caboodle-x';
+import {numberToDecimalString} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('numberToDecimalString', () => {
@@ -37,7 +36,6 @@ describe('numberToDecimalString', () => {
       '\t',
       new Date(),
       new RegExp(),
-      /* istanbul ignore next */
       function() {},
       ' 0.1',
       '7.5 ',
@@ -111,6 +109,7 @@ describe('numberToDecimalString', () => {
       });
     });
 
+    expect(numberToDecimalString(-0)).toBe('-0');
     expect(numberToDecimalString(Number.MAX_VALUE)).toBe(
       '179769313486231570000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000',
     );

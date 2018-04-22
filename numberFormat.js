@@ -11,12 +11,17 @@ import _replace from './.internal/_replace';
 import _split from './.internal/_split';
 import _stringSlice from './.internal/_stringSlice';
 import _join from './.internal/_join';
-import _isFinite from './.internal/_isFinite';
-import _toNumber from './.internal/_toNumber';
-import _toInteger from './.internal/_toInteger';
+import isNumberFinite from './isNumberFinite';
+import toNumber from './toNumber';
+import toInteger from './toInteger';
 import clamp from './clamp';
-import _toString from './.internal/_toString';
+import toStr from './toString';
+import isNil from './isNil';
 import numberToDecimalString from './numberToDecimalString';
+
+const isArgSupplied = function _isArgSupplied(args, index) {
+  return args.length > index && !isNil(args[index]);
+};
 
 /**
  * Format a given number using fixed-point notation, with user specified digit
@@ -40,13 +45,13 @@ import numberToDecimalString from './numberToDecimalString';
  * numberFormat(12345678.9, 0, null, '-'); // "12-345-679"
  */
 export default function numberFormat(value, ...rest) {
-  const number = _toNumber(value);
-  if (!_isFinite(number)) {
+  const number = toNumber(value);
+  if (!isNumberFinite(number)) {
     return _numberToString(number);
   }
 
   // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
-  const digits = rest.length > 0 ? clamp(_toInteger(rest[0]), 0, 20) : 2;
+  const digits = isArgSupplied(rest, 0) ? clamp(toInteger(rest[0]), 0, 20) : 2;
   // Formats a number using fixed-point notation.
   let fixed = numberToDecimalString(_toFixed(number, digits));
   if (digits > 0) {
@@ -55,10 +60,10 @@ export default function numberFormat(value, ...rest) {
     fixed = _join(parts, '.');
   }
 
-  const sectionLength = rest.length > 1 ? _toInteger(rest[1]) : 3;
+  const sectionLength = isArgSupplied(rest, 1) ? toInteger(rest[1]) : 3;
   // Formats a number (string) of fixed-point notation, with user delimiters.
-  const sectionDelimiter = rest.length > 2 ? _toString(rest[2]) : ',';
-  const decimalDelimiter = rest.length > 3 ? _toString(rest[3]) : '.';
+  const sectionDelimiter = isArgSupplied(rest, 2) ? toStr(rest[2]) : ',';
+  const decimalDelimiter = isArgSupplied(rest, 3) ? toStr(rest[3]) : '.';
 
   return _replace(
     decimalDelimiter === '.' ? fixed : _replace(fixed, '.', decimalDelimiter),

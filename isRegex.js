@@ -4,6 +4,7 @@
  * @module isRegex
  */
 
+import attempt from './attempt';
 import toStringTag from './toStringTag';
 import isObjectLike from './isObjectLike';
 import isToStringTagSupported from './isToStringTagSupported';
@@ -14,26 +15,32 @@ import _getOwnPropertyDescriptor from './.internal/_getOwnPropertyDescriptor';
 const regexClass = '[object RegExp]';
 
 const tryRegexExecCall = function _tryRegexExecCall(value) {
-  let storedLastIndex;
-  try {
-    storedLastIndex = value.lastIndex;
+  const result = attempt(function _attemptee() {
+    const storedLastIndex = value.lastIndex;
+
     // eslint-disable-next-line no-param-reassign
     value.lastIndex = 0;
-
     _exec(value);
-    return true;
-  } catch (e) {
+
+    return storedLastIndex;
+  });
+
+  /* istanbul ignore next */
+  if (result.threw) {
     return false;
-  } finally {
-    // eslint-disable-next-line no-param-reassign
-    value.lastIndex = storedLastIndex;
   }
+
+  // eslint-disable-next-line no-param-reassign
+  value.lastIndex = result.value;
+  return true;
 };
 
 export default function isRegex(value) {
   if (!isObjectLike(value)) {
     return false;
   }
+
+  /* istanbul ignore next */
   if (!isToStringTagSupported) {
     return toStringTag(value) === regexClass;
   }
@@ -41,6 +48,7 @@ export default function isRegex(value) {
   const descriptor = _getOwnPropertyDescriptor(value, 'lastIndex');
   const hasLastIndexDataProperty =
     descriptor && _hasOwnProperty(descriptor, 'value');
+
   if (!hasLastIndexDataProperty) {
     return false;
   }

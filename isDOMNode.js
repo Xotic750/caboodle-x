@@ -4,23 +4,25 @@
  * @module isDOMNode
  */
 
+import attempt from './attempt';
 import _methodize from './.internal/_methodize';
 import isBooleanType from './isBooleanType';
 import isNumberType from './isNumberType';
 import _Boolean from './.internal/_Boolean';
+import _document from './.internal/_document';
 
-/* istanbul ignore next */
-const doc = typeof document !== 'undefined' && document;
 let documentInheritsNode = false;
 let element;
 let hasChildNodes;
-/* istanbul ignore if */
-if (doc) {
-  try {
-    element = doc.createElement('div');
-    hasChildNodes = _methodize(doc.hasChildNodes);
+/* istanbul ignore next */
+if (_document) {
+  const result = attempt(function _attemptee() {
+    element = _document.createElement('div');
+    hasChildNodes = _methodize(_document.hasChildNodes);
     documentInheritsNode = isBooleanType(hasChildNodes(element));
-  } catch (ignore) {
+  });
+
+  if (result.threw) {
     hasChildNodes = null;
     documentInheritsNode = false;
   }
@@ -52,22 +54,26 @@ if (element && !documentInheritsNode) {
  */
 export default function isDOMNode(value) {
   if (hasChildNodes && value && isNumberType(value.nodeType)) {
-    if (value === doc) {
+    if (value === _document) {
       return true;
     }
 
-    try {
+    const result1 = attempt(function _attemptee() {
       return isBooleanType(hasChildNodes(value));
-    } catch (ignore) {
-      /* ignore */
+    });
+
+    if (result1.value === true) {
+      return true;
     }
 
     /* istanbul ignore if */
     if (!documentInheritsNode) {
-      try {
+      const result2 = attempt(function _attemptee() {
         return _Boolean(tryAppendChild(value));
-      } catch (ignore) {
-        /* ignore */
+      });
+
+      if (result2.value === true) {
+        return true;
       }
     }
   }

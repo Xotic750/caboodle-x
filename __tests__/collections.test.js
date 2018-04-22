@@ -2,7 +2,7 @@ import {
   Map as MapObject,
   Set as SetObject,
   SYMBOL_ITERATOR as symIt,
-} from '../dist/caboodle-x';
+} from '../index';
 
 const hasOwn = Object.prototype.hasOwnProperty;
 const functionsHaveNames = function foo() {}.name === 'foo';
@@ -65,7 +65,7 @@ describe('Collections', () => {
     it('should not be callable without "new"', () => {
       let threw = false;
       try {
-        SetObject();
+        MapObject();
       } catch (e) {
         expect(e).toBeInstanceOf(TypeError);
         threw = true;
@@ -700,40 +700,4 @@ describe('Collections', () => {
       });
     });
   });
-
-  // describe('isMap', () => {
-  //   it('should be false', () => {
-  //     expect(isMap()).toBe(false);
-  //     expect(isMap(undefined)).toBe(false);
-  //     expect(isMap(null)).toBe(false);
-  //     expect(isMap(1)).toBe(false);
-  //     expect(isMap(true)).toBe(false);
-  //     expect(isMap('abc')).toBe(false);
-  //     expect(isMap([])).toBe(false);
-  //     expect(isMap({})).toBe(false);
-  //     expect(isMap(new SetObject())).toBe(false);
-  //   });
-  //
-  //   it('should be true', () => {
-  //     expect(isMap(new MapObject())).toBe(true);
-  //   });
-  // });
-  //
-  // describe('isSet', () => {
-  //   it('should be false', () => {
-  //     expect(isSet()).toBe(false);
-  //     expect(isSet(undefined)).toBe(false);
-  //     expect(isSet(null)).toBe(false);
-  //     expect(isSet(1)).toBe(false);
-  //     expect(isSet(true)).toBe(false);
-  //     expect(isSet('abc')).toBe(false);
-  //     expect(isSet([])).toBe(false);
-  //     expect(isSet({})).toBe(false);
-  //     expect(isSet(new MapObject())).toBe(false);
-  //   });
-  //
-  //   it('should be true', () => {
-  //     expect(isSet(new SetObject())).toBe(true);
-  //   });
-  // });
 });

@@ -1,8 +1,7 @@
-import {isNumberNaN} from '../dist/caboodle-x';
+import {isNumberNaN} from '../index';
 
-/* istanbul ignore next */
 const itHasWindow = typeof window === 'undefined' ? xit : it;
-/* istanbul ignore next */
+
 const noop = () => {};
 
 describe('isNumberNaN', () => {
@@ -29,7 +28,6 @@ describe('isNumberNaN', () => {
   });
 
   it('valueOf', () => {
-    /* istanbul ignore next */
     const obj = {
       valueOf() {
         return NaN;

@@ -1,4 +1,4 @@
-import {constant} from '../dist/caboodle-x';
+import {constant} from '../index';
 
 describe('constant', () => {
   it('should be a function', () => {

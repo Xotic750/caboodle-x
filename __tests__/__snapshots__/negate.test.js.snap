@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`negate should throw TypeError 1`] = `"Not a function"`;
+
+exports[`negate should throw TypeError 2`] = `"Not a function"`;
+
+exports[`negate should throw TypeError 3`] = `"Not a function"`;

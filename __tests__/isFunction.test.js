@@ -1,10 +1,11 @@
-import {isFunction} from '../dist/caboodle-x';
+import {isFunction} from '../index';
 
 let hasFat;
 try {
   eval('(x, y) => {return this;};');
   hasFat = true;
 } catch (ignore) {}
+
 const itHasFat = hasFat ? it : xit;
 
 let hasGen;
@@ -12,6 +13,7 @@ try {
   eval('function* idMaker(x, y){};');
   hasGen = true;
 } catch (ignore) {}
+
 const itHasGen = hasGen ? it : xit;
 
 let hasAsync;
@@ -19,6 +21,7 @@ try {
   eval('async function idAsync(x, y){};');
   hasAsync = true;
 } catch (ignore) {}
+
 const itHasAsync = hasAsync ? it : xit;
 
 let hasClass;
@@ -26,6 +29,7 @@ try {
   eval('"use strict"; class My {};');
   hasClass = true;
 } catch (ignore) {}
+
 const itHasClass = hasClass ? it : xit;
 
 describe('Basic tests', () => {

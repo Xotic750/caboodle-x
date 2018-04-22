@@ -4,57 +4,49 @@
  * @module toNumber
  */
 
-import isDate from 'is-date-object';
 import isSymbol from 'is-symbol';
+import isDate from './isDate';
 import _call from './.internal/_call';
 import isPrimitive from './isPrimitive';
 import isSymbolSupported from './isSymbolSupported';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import requireObjectCoercible from './requireObjectCoercible';
-import isNil from './isNil';
 import isUndefined from './isUndefined';
+import _hasToPrimitive from './.internal/_hasToPrimitive';
+import _getMethod from './.internal/_getMethod';
+import _any from './.internal/_any';
 
-const symToPrimitive = isSymbolSupported && Symbol.toPrimitive;
+const symToPrimitive = _hasToPrimitive && Symbol.toPrimitive;
 const symValueOf = isSymbolSupported && Symbol.prototype.valueOf;
 const toStringOrder = ['toString', 'valueOf'];
 const toNumberOrder = ['valueOf', 'toString'];
-const orderLength = 2;
 
-const ordinaryToPrimitive = function _ordinaryToPrimitive(O, hint) {
-  requireObjectCoercible(O);
+const ordinaryToPrimitive = function _ordinaryToPrimitive(object, hint) {
+  requireObjectCoercible(object);
+  /* istanbul ignore next */
   if (hint !== 'number' && hint !== 'string') {
     throw new TypeError('hint must be "string" or "number"');
   }
 
   const methodNames = hint === 'string' ? toStringOrder : toNumberOrder;
-  let method;
   let result;
-  for (let i = 0; i < orderLength; i += 1) {
-    method = O[methodNames[i]];
-    if (_isFunction(method)) {
-      result = _call(method, O);
+  const wasConverted = _any(methodNames, function _predicate(methodName) {
+    const method = object[methodName];
+    if (isFunction(method)) {
+      result = _call(method, object);
       if (isPrimitive(result)) {
-        return result;
+        return true;
       }
     }
+
+    return false;
+  });
+
+  if (wasConverted) {
+    return result;
   }
 
   throw new TypeError('No default value');
-};
-
-const getMethod = function _getMethod(O, P) {
-  const func = O[P];
-  if (!isNil(func)) {
-    if (!_isFunction(func)) {
-      throw new TypeError(
-        `${func} returned for property ${P} of object ${O} is not a function`,
-      );
-    }
-
-    return func;
-  }
-
-  return void 0;
 };
 
 // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
@@ -95,9 +87,10 @@ export default function toPrimitive(input, ...preferredType) {
   }
 
   let exoticToPrim;
+  /* istanbul ignore next */
   if (isSymbolSupported) {
     if (symToPrimitive) {
-      exoticToPrim = getMethod(input, symToPrimitive);
+      exoticToPrim = _getMethod(input, symToPrimitive);
     } else if (isSymbol(input)) {
       exoticToPrim = symValueOf;
     }
@@ -113,6 +106,7 @@ export default function toPrimitive(input, ...preferredType) {
   }
 
   if (hint === 'default' && (isDate(input) || isSymbol(input))) {
+    /* istanbul ignore next */
     hint = 'string';
   }
 

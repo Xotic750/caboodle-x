@@ -1,4 +1,4 @@
-import {isVarName} from '../dist/caboodle-x';
+import {isVarName} from '../index';
 
 describe('isVarName', () => {
   it('should return true when the argument can be a variable name.', () => {

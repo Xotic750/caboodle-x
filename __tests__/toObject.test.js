@@ -1,10 +1,9 @@
-import {toObject} from '../dist/caboodle-x';
+import {toObject} from '../index';
 import noop from './helpers/noop';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('toObject', () => {
@@ -49,7 +48,6 @@ describe('toObject', () => {
     expect(toObject(testObject)).toBe(testObject);
     testObject = {};
     expect(toObject(testObject)).toBe(testObject);
-    /* istanbul ignore next */
     testObject = function() {};
     expect(toObject(testObject)).toBe(testObject);
     testObject = Object('test');

@@ -1,4 +1,4 @@
-import {replaceComments} from '../dist/caboodle-x';
+import {replaceComments} from '../index';
 
 /* istanbul ignore next */
 const hasSymbol =

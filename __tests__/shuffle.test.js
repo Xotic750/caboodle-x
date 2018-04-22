@@ -1,4 +1,4 @@
-import {shuffle} from '../dist/caboodle-x';
+import {shuffle} from '../index';
 
 describe('shuffle', () => {
   let array;

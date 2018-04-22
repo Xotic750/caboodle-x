@@ -1,4 +1,4 @@
-import {squeeze} from '../dist/caboodle-x';
+import {squeeze} from '../index';
 
 const createArrayLike = function(arr) {
   const o = {};

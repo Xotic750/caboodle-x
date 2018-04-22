@@ -1,27 +1,27 @@
 import objects from './helpers/objects';
-import {assertIsObject} from '../dist/caboodle-x';
+import {assertIsObjectLike} from '../index';
 
-describe('assertIsObject', () => {
+describe('assertIsObjectLike', () => {
   it('should be a function', () => {
-    expect(assertIsObject).toBeInstanceOf(Function);
+    expect(assertIsObjectLike).toBeInstanceOf(Function);
   });
 
   it('should return original object', () => {
     const expected = objects;
-    const actual = objects.map(object => assertIsObject(object));
+    const actual = objects.map(object => assertIsObjectLike(object));
 
     expect(actual).toEqual(expected);
   });
 
   it('should throw with default message', () => {
     expect(() => {
-      assertIsObject(0);
+      assertIsObjectLike(0);
     }).toThrowErrorMatchingSnapshot();
   });
 
   it('should throw with custom message', () => {
     expect(() => {
-      assertIsObject(true, 'Custom message');
+      assertIsObjectLike(true, 'Custom message');
     }).toThrowErrorMatchingSnapshot();
   });
 });

@@ -1,9 +1,8 @@
-import {assign} from '../dist/caboodle-x';
+import {assign} from '../index';
 
-/* istanbul ignore next */
 const hasSymbols =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolsIt = hasSymbols ? it : xit;
 
 describe('assign', () => {
@@ -146,7 +145,6 @@ describe('assign', () => {
       error = e;
     }
 
-    /* istanbul ignore next */
     if (thrower[1] === 'x') {
       // IE 9 doesn't throw in strict mode with preventExtensions
       expect(error).toEqual(expect.any(RangeError));
@@ -168,7 +166,6 @@ describe('assign', () => {
         return 3;
       },
       set(v) {
-        /* istanbul ignore next */
         throw new RangeError(`IE 9 does not throw on preventExtensions: ${v}`);
       },
     };
@@ -211,9 +208,7 @@ describe('assign', () => {
     Object.defineProperty(obj, nonEnumSymbol, {
       enumerable: false,
       get() {
-        /* istanbul ignore next */
         visited.push(nonEnumSymbol);
-        /* istanbul ignore next */
         return -Infinity;
       },
     });

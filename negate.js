@@ -5,8 +5,8 @@
  */
 
 import _negate from './.internal/_negate';
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 
 export default function negate(predicate) {
-  return _negate(_assertIsFunction(predicate));
+  return _negate(assertIsFunction(predicate));
 }

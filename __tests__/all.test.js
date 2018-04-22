@@ -1,14 +1,11 @@
-import {all} from '../dist/caboodle-x';
+import {all} from '../index';
 
-/* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
-/* istanbul ignore next */
 const isStrict = (function() {
   return Boolean(this) === false;
 })();
 
-/* istanbul ignore next */
 const itStrict = isStrict ? it : xit;
 
 const createArrayLike = function(arr) {
@@ -21,7 +18,7 @@ const createArrayLike = function(arr) {
   return o;
 };
 
-describe('each', () => {
+describe('all', () => {
   let actual;
   let expected;
   let testSubject;

@@ -7,4 +7,8 @@
 import _Boolean from './.internal/_Boolean';
 import _negate from './.internal/_negate';
 
-export default _negate(_Boolean);
+const predicate = _negate(_Boolean);
+
+export default function isFalsey(value) {
+  return predicate(value);
+}

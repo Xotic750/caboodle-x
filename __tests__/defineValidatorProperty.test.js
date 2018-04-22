@@ -1,9 +1,9 @@
-import {defineValidatorProperty} from '../dist/caboodle-x';
+import {defineValidatorProperty} from '../index';
 
 const has = Object.prototype.hasOwnProperty;
-/* istanbul ignore next */
+
 const doc = typeof document !== 'undefined' && document;
-/* istanbul ignore next */
+
 const itHasDoc = doc ? it : xit;
 
 const stubTrue = () => true;
@@ -241,6 +241,21 @@ describe('defineValidatorProperty', () => {
         enumerable: true,
         nilable: false,
         validator: x => typeof x === 'boolean',
+        value: null,
+        writable: true,
+      });
+    }).toThrowErrorMatchingSnapshot();
+  });
+
+  it('should throw if validator is not a function', () => {
+    const accessible = {};
+
+    expect(() => {
+      defineValidatorProperty(accessible, 'name', {
+        configurable: true,
+        enumerable: true,
+        nilable: false,
+        validator: 1,
         value: null,
         writable: true,
       });

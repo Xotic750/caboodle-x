@@ -82,6 +82,18 @@ module.exports = {
         'no-underscore-dangle': 'off',
       },
     },
+    {
+      files: ['delayPromise.js'],
+      rules: {
+        'promise/avoid-new': 'off',
+      },
+    },
+    {
+      files: ['isNumberNaN.js'],
+      rules: {
+        'no-self-compare': 'off',
+      },
+    },
   ],
 
   /**

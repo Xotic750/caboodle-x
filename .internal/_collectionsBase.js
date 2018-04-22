@@ -15,10 +15,10 @@ import _any from './_any';
 import _charAt from './_charAt';
 import _defineProperties from './_defineProperties';
 import _defineProperty from './_defineProperty';
-import _getAt from './_getAt';
+import _nth from './_nth';
 import _getSymbolIterator from './_getSymbolIterator';
 import _hasOwnProperty from './_hasOwnProperty';
-import _isFunction from './_isFunction';
+import isFunction from '../isFunction';
 import _occurs from './_occurs';
 import _push from './_push';
 import _splice from './_splice';
@@ -58,7 +58,7 @@ export function parseIterable(kind, context, iterable) {
   });
 
   const property = _getSymbolIterator(iterable);
-  if (iterable && _isFunction(iterable[property])) {
+  if (iterable && isFunction(iterable[property])) {
     const iterator = iterable[property]();
     let next = iterator.next();
     if (kind === 'map') {
@@ -83,7 +83,7 @@ export function parseIterable(kind, context, iterable) {
         context['[[id]]'].next();
       } else if (kind === 'map') {
         // eslint-disable-next-line no-param-reassign
-        context['[[value]]'][occurred.index] = _getAt(next.value, 1);
+        context['[[value]]'][occurred.index] = _nth(next.value, 1);
       }
 
       next = iterator.next();
@@ -137,7 +137,7 @@ export function parseIterable(kind, context, iterable) {
         context['[[id]]'].next();
       } else if (kind === 'map') {
         // eslint-disable-next-line no-param-reassign
-        context['[[value]]'][occurred.index] = _getAt(iterable[next], 1);
+        context['[[value]]'][occurred.index] = _nth(iterable[next], 1);
       }
 
       next += 1;

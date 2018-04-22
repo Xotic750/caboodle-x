@@ -1,6 +1,5 @@
-import {any} from '../dist/caboodle-x';
+import {any} from '../index';
 
-/* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
 const createArrayLike = function(arr) {
@@ -13,9 +12,8 @@ const createArrayLike = function(arr) {
   return o;
 };
 
-/* istanbul ignore next */
 const stubTrue = () => true;
-/* istanbul ignore next */
+
 const noop = () => {};
 
 describe('any', () => {

@@ -1,14 +1,13 @@
-import {toPrimitive} from '../dist/caboodle-x';
+import {toPrimitive} from '../index';
 
-/* istanbul ignore next */
 const hasSymbols =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbols = hasSymbols ? it : xit;
-/* istanbul ignore next */
+
 const hasSymbolToPrimitive =
   hasSymbols && typeof Symbol.toPrimitive === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbolToPrimitive = hasSymbolToPrimitive ? it : xit;
 
 const primitives = [
@@ -25,7 +24,6 @@ const primitives = [
   'abc',
 ];
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -35,7 +33,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -45,7 +42,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -55,7 +51,6 @@ const toStringOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const coercibleFnObject = {
   toString() {
     return 42;
@@ -65,7 +60,6 @@ const coercibleFnObject = {
   },
 };
 
-/* istanbul ignore next */
 const uncoercibleObject = {
   toString() {
     return {};
@@ -75,7 +69,6 @@ const uncoercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const uncoercibleFnObject = {
   toString() {
     return function toStrFn() {};
@@ -180,7 +173,6 @@ describe('toPrimitive', () => {
   });
 
   itHasSymbolToPrimitive('Symbol.toPrimitive', () => {
-    /* istanbul ignore next */
     const overriddenObject = {
       toString() {
         throw new Error();
@@ -223,7 +215,6 @@ describe('toPrimitive', () => {
   });
 
   itHasSymbolToPrimitive('Symbol.toPrimitive exceptions', () => {
-    /* istanbul ignore next */
     const nonFunctionToPrimitive = {
       toString() {
         throw new Error();
@@ -238,7 +229,6 @@ describe('toPrimitive', () => {
       toPrimitive(nonFunctionToPrimitive);
     }).toThrowErrorMatchingSnapshot();
 
-    /* istanbul ignore next */
     const uncoercibleToPrimitive = {
       toString() {
         throw new Error();
@@ -249,7 +239,6 @@ describe('toPrimitive', () => {
     };
 
     uncoercibleToPrimitive[Symbol.toPrimitive] = function(hint) {
-      /* istanbul ignore next */
       return {
         toString() {
           return hint;
@@ -261,7 +250,6 @@ describe('toPrimitive', () => {
       toPrimitive(uncoercibleToPrimitive);
     }).toThrowErrorMatchingSnapshot();
 
-    /* istanbul ignore next */
     const throwingToPrimitive = {
       toString() {
         throw new Error();

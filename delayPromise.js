@@ -4,9 +4,19 @@
  * @module delayPromise
  */
 
+import attempt from './attempt';
 import _setTimeout from './.internal/_setTimeout';
 import constant from './constant';
 import toWholeNumber from './toWholeNumber';
+
+const onTimeout = function _onTimeout(resolve, reject) {
+  const result = attempt(resolve);
+
+  /* istanbul ignore next */
+  if (result.threw) {
+    reject(result.value);
+  }
+};
 
 /**
  * Create a delayed promise.
@@ -18,19 +28,14 @@ import toWholeNumber from './toWholeNumber';
 export default function delayPromise(milliseconds, ...value) {
   const ms = toWholeNumber(milliseconds);
 
-  if (value.length) {
-    return Promise.resolve(value[0]).then(function _valueExecutor(arg) {
-      // eslint-disable-next-line promise/no-nesting
-      return delayPromise(ms).then(constant(arg));
-    });
-  }
+  return value.length
+    ? delayPromise(ms).then(constant(value[0]))
+    : new Promise(function _executor(resolve, reject) {
+        const result = attempt(_setTimeout, onTimeout, ms, resolve, reject);
 
-  // eslint-disable-next-line promise/avoid-new
-  return new Promise(function _timeoutExecutor(resolve, reject) {
-    try {
-      _setTimeout(resolve, ms);
-    } catch (error) {
-      reject(error);
-    }
-  });
+        /* istanbul ignore next */
+        if (result.threw) {
+          reject(result.value);
+        }
+      });
 }

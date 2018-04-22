@@ -1,6 +1,5 @@
-import {findIndex} from '../dist/caboodle-x';
+import {findIndex} from '../index';
 
-/* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
 describe('findIndex', () => {
@@ -83,7 +82,6 @@ describe('findIndex', () => {
       length: -3,
     };
 
-    /* istanbul ignore next */
     const foundIndex = findIndex(obj, item => {
       throw new Error(`should not reach here ${item}`);
     });

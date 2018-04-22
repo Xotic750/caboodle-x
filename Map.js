@@ -92,6 +92,7 @@ _defineProperty(MapIt.prototype, 'next', {
  */
 _defineProperty(MapIt.prototype, SYMBOL_ITERATOR, {
   value: function iterator() {
+    /* istanbul ignore next */
     return this;
   },
 });

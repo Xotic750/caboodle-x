@@ -1,4 +1,4 @@
-import {apply} from '../dist/caboodle-x';
+import {apply} from '../index';
 import nonSymbols from './helpers/nonSymbols';
 
 describe('apply', () => {

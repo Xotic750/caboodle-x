@@ -1,4 +1,4 @@
-import {sift} from '../dist/caboodle-x';
+import {sift} from '../index';
 
 /* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;

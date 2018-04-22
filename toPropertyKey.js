@@ -7,7 +7,7 @@
 import isSymbolSupported from './isSymbolSupported';
 import isSymbolType from './isSymbolType';
 import toPrimitive from './toPrimitive';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 
 /**
  * This method Converts argument to a value that can be used as a property key.
@@ -30,5 +30,5 @@ import _toString from './.internal/_toString';
 export default function toPropertyKey(argument) {
   const key = toPrimitive(argument, String);
 
-  return isSymbolSupported && isSymbolType(key) ? key : _toString(key);
+  return isSymbolSupported && isSymbolType(key) ? key : toStr(key);
 }

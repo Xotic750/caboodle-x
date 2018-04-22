@@ -4,15 +4,15 @@
  * @module sift
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import requireObjectCoercible from './requireObjectCoercible';
 import _sift from './.internal/_sift';
-import _toInteger from './.internal/_toInteger';
+import toInteger from './toInteger';
 
 export default function sift(array, callback, ...fromIndex) {
   return _sift(
     requireObjectCoercible(array),
-    _assertIsFunction(callback),
-    _toInteger(fromIndex[0]),
+    assertIsFunction(callback),
+    toInteger(fromIndex[0]),
   );
 }

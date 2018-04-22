@@ -4,12 +4,12 @@
  * @module nilifyIs
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import _call from './.internal/_call';
 import isNil from './isNil';
 
 export default function nilifyIs(predicate) {
-  _assertIsFunction(predicate);
+  assertIsFunction(predicate);
 
   return function nilifiedBound(value, ...rest) {
     return isNil(value) || _call(predicate, this, value, ...rest);

@@ -4,7 +4,7 @@
  * @module replaceComments
  */
 
-import _toString from './.internal/_toString';
+import toStr from './toString';
 import _replace from './.internal/_replace';
 import requireCoercibleToString from './requireCoercibleToString';
 
@@ -28,6 +28,6 @@ export default function replaceComments(string, ...replacement) {
   return _replace(
     requireCoercibleToString(string),
     STRIP_COMMENTS,
-    replacement.length ? _toString(replacement[0]) : '',
+    replacement.length ? toStr(replacement[0]) : '',
   );
 }

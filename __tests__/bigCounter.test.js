@@ -1,4 +1,4 @@
-import {BigCounter} from '../dist/caboodle-x';
+import {BigCounter} from '../index';
 
 describe('Basic tests', () => {
   it('Should throw without "new"', () => {

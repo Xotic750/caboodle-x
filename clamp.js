@@ -5,7 +5,7 @@
  */
 
 import _clamp from './.internal/_clamp';
-import _toNumber from './.internal/_toNumber';
+import toNumber from './toNumber';
 
 /**
  * This method clamps a number to min and max limits inclusive.
@@ -22,15 +22,15 @@ import _toNumber from './.internal/_toNumber';
  * clamp(10, -5, 5); // 5
  */
 export default function clamp(value, ...rest) {
-  const number = _toNumber(value);
+  const number = toNumber(value);
   const restLength = rest.length;
 
   if (restLength < 1) {
     return number;
   }
 
-  let min = _toNumber(rest[0]);
-  let max = _toNumber(rest[1]);
+  let min = toNumber(rest[0]);
+  let max = toNumber(rest[1]);
   if (restLength < 2) {
     max = min;
     min = 0;

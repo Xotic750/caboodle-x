@@ -4,4 +4,6 @@
  * @module isNumberNaN
  */
 
-export {default} from './.internal/_isNaN';
+export default function isNumberNaN(value) {
+  return value !== value;
+}

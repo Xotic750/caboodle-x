@@ -5,7 +5,7 @@
  */
 
 import isUndefined from './isUndefined';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import assertIs from './assertIs';
 import assertIsObject from './assertIsObjectLike';
 import _has from './.internal/_hasOwnProperty';
@@ -37,7 +37,7 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
   }
 
   if (_has(desc, 'validator')) {
-    if (!isUndefined(desc.validator) && !_isFunction(desc.validator)) {
+    if (!isUndefined(desc.validator) && !isFunction(desc.validator)) {
       throw new TypeError('validator must be a function');
     }
 
@@ -53,7 +53,7 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
   }
 
   if (_has(desc, 'get')) {
-    if (!isUndefined(desc.get) && !_isFunction(desc.get)) {
+    if (!isUndefined(desc.get) && !isFunction(desc.get)) {
       throw new TypeError('getter must be a function');
     }
 
@@ -61,7 +61,7 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
   }
 
   if (_has(desc, 'set')) {
-    if (!isUndefined(desc.set) && !_isFunction(desc.set)) {
+    if (!isUndefined(desc.set) && !isFunction(desc.set)) {
       throw new TypeError('setter must be a function');
     }
 

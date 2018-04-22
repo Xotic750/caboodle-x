@@ -5,8 +5,8 @@
  */
 
 import isNumberType from './isNumberType';
-import _toInteger from './.internal/_toInteger';
+import toInteger from './toInteger';
 
 export default function isInteger(value) {
-  return isNumberType(value) && _toInteger(value) === value;
+  return isNumberType(value) && toInteger(value) === value;
 }

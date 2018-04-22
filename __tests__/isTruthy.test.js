@@ -1,6 +1,5 @@
-import {isTruthy} from '../dist/caboodle-x';
+import {isTruthy} from '../index';
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -10,7 +9,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -20,7 +18,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;

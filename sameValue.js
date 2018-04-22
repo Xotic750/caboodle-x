@@ -4,7 +4,7 @@
  * @module sameValue
  */
 
-import _isNaN from './.internal/_isNaN';
+import isNumberNaN from './isNumberNaN';
 
 /**
  * This method is the comparison abstract operation SameValue(x, y), where x
@@ -28,5 +28,5 @@ export default function sameValue(value1, value2) {
     return 1 / value1 === 1 / value2;
   }
 
-  return value1 === value2 || (_isNaN(value1) && _isNaN(value2));
+  return value1 === value2 || (isNumberNaN(value1) && isNumberNaN(value2));
 }

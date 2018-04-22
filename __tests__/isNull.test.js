@@ -1,4 +1,4 @@
-import {isNull} from '../dist/caboodle-x';
+import {isNull} from '../index';
 
 const falsey = Object.freeze([undefined, false, 0, NaN, '']);
 

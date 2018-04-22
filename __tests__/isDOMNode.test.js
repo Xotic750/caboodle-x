@@ -1,4 +1,4 @@
-import {isDOMNode} from '../dist/caboodle-x';
+import {isDOMNode} from '../index';
 import falsey from './helpers/falsey';
 
 /* istanbul ignore next */

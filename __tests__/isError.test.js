@@ -1,18 +1,8 @@
-import {isError} from '../dist/caboodle-x';
+import {isError} from '../index';
 
 describe('isError', () => {
   it('should return `false` for non-error objects', () => {
-    const values = [
-      true,
-      'abc',
-      1,
-      null,
-      undefined,
-      /* istanbul ignore next */
-      function() {},
-      [],
-      /r/,
-    ];
+    const values = [true, 'abc', 1, null, undefined, function() {}, [], /r/];
     const expected = values.map(() => false);
     const actual = values.map(isError);
     expect(actual).toEqual(expected);

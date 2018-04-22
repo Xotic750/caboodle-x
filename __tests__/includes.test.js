@@ -1,4 +1,4 @@
-import {includes} from '../dist/caboodle-x';
+import {includes} from '../index';
 
 describe('includes', () => {
   const array = Object.freeze([1, 2, 3, 4]);

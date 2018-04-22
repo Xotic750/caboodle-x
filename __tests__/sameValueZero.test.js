@@ -1,8 +1,7 @@
-import {sameValueZero} from '../dist/caboodle-x';
+import {sameValueZero} from '../index';
 import nonNullPrimitives from './helpers/nonNullPrimitives';
 import nils from './helpers/nils';
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -12,7 +11,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -22,7 +20,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;

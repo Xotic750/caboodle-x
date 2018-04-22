@@ -12,7 +12,7 @@ import _stringIndexOf from './.internal/_stringIndexOf';
 import _join from './.internal/_join';
 import _search from './.internal/_search';
 import _test from './.internal/_test';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 
 const EMPTY_STRING = '';
 const DECIMAL_MARK = '.';
@@ -76,7 +76,7 @@ export default function toDecimalFormString(value) {
   if (workingValue === 0 && 1 / workingValue < 0) {
     workingValue = MINUS_ZERO_SYMBOL;
   } else {
-    workingValue = _toString(workingValue);
+    workingValue = toStr(workingValue);
     if (!_test(validPattern, workingValue)) {
       throw new TypeError(ERROR_MSG);
     }

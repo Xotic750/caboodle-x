@@ -1,9 +1,8 @@
-import {hasOwnProperty} from '../dist/caboodle-x';
+import {hasOwnProperty} from '../index';
 
-/* istanbul ignore next */
 const hasSymbolSupport =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbolSupport = hasSymbolSupport ? it : xit;
 
 describe('hasOwnProperty', () => {
@@ -35,7 +34,7 @@ describe('hasOwnProperty', () => {
 
   it('does not have own property', () => {
     const o = {foo: 'bar'};
-    /* istanbul ignore next */
+
     const fn = function() {};
 
     expect(hasOwnProperty(o, 'bar')).toBe(false);

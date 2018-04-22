@@ -1,5 +1,5 @@
 import '@babel/polyfill';
-import {intToRGB} from '../dist/caboodle-x';
+import {intToRGB} from '../index';
 
 describe('intToRGB', () => {
   it('is a function', () => {
@@ -16,7 +16,6 @@ describe('intToRGB', () => {
       true,
       {},
       [],
-      /* istanbul ignore next */
       function() {},
     ];
 

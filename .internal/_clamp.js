@@ -4,13 +4,13 @@
  * @module _clamp
  */
 
-import _isNaN from './_isNaN';
+import isNumberNaN from '../isNumberNaN';
 import _NaN from './_NaN';
 
 const {max, min} = Math;
 
 export default function _clamp(value, lower, upper) {
-  if (_isNaN(value) || _isNaN(lower) || _isNaN(upper)) {
+  if (isNumberNaN(value) || isNumberNaN(lower) || isNumberNaN(upper)) {
     return _NaN;
   }
 

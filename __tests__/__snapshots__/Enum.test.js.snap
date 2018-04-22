@@ -4,6 +4,8 @@ exports[`Enum Class method names get added to the reserved list 1`] = `"Reserved
 
 exports[`Enum Instance method names get added to the reserved list 1`] = `"Reserved name: description"`;
 
+exports[`Enum should throw "bad args" 1`] = `"bad args"`;
+
 exports[`Enum should throw if duplicate name used 1`] = `"Attempted to reuse name: RED"`;
 
 exports[`Enum should throw if duplicate value used 1`] = `"Duplicate value (1) found: BLACK -> YELLOW"`;

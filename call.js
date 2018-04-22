@@ -4,9 +4,9 @@
  * @module call
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import _call from './.internal/_call';
 
 export default function call(fn, ...callArgs) {
-  return _call(_assertIsFunction(fn), ...callArgs);
+  return _call(assertIsFunction(fn), ...callArgs);
 }

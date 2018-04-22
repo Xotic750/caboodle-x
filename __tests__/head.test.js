@@ -1,4 +1,4 @@
-import {head} from '../dist/caboodle-x';
+import {head} from '../index';
 
 describe('head', () => {
   it('should return the first element', () => {

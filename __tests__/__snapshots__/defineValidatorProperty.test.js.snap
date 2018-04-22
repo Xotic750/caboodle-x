@@ -21,3 +21,5 @@ exports[`defineValidatorProperty should throw error if setter is not a function 
 exports[`defineValidatorProperty should throw if nilable and further values fail validator 1`] = `"Not a valid value for  \\"name\\""`;
 
 exports[`defineValidatorProperty should throw if validator fails test 1`] = `"Not a valid initial value for \\"name\\""`;
+
+exports[`defineValidatorProperty should throw if validator is not a function 1`] = `"validator must be a function"`;

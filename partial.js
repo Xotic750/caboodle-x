@@ -4,9 +4,9 @@
  * @module partial
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import _partial from './.internal/_partial';
 
 export default function partial(fn, ...partials) {
-  return _partial(_assertIsFunction(fn), ...partials);
+  return _partial(assertIsFunction(fn), ...partials);
 }

@@ -6,7 +6,7 @@
 
 import _apply from './.internal/_apply';
 import assertIsObject from './assertIsObjectLike';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import _slice from './.internal/_slice';
 import isNil from './isNil';
 
@@ -28,7 +28,7 @@ const getArgsArray = function _getArgsArray(value) {
  * @returns {*} The result of the invoked function or the identity argument unchanged.
  */
 export default function callFunctionOrIdentity(fnOrValue, ...rest) {
-  if (_isFunction(fnOrValue)) {
+  if (isFunction(fnOrValue)) {
     const argsArray = getArgsArray(rest[0]);
 
     return rest.length > 1

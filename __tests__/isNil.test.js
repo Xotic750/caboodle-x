@@ -1,4 +1,4 @@
-import {isNil} from '../dist/caboodle-x';
+import {isNil} from '../index';
 
 describe('isNil', () => {
   it('should be a function', () => {

@@ -1,4 +1,4 @@
-import {isNumberType} from '../dist/caboodle-x';
+import {isNumberType} from '../index';
 
 describe('isNumberType', () => {
   it('should be a function', () => {

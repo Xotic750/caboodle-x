@@ -4,4 +4,8 @@
  * @module isTruthy
  */
 
-export {default} from './toBoolean';
+import _Boolean from './.internal/_Boolean';
+
+export default function isTruthy(value) {
+  return _Boolean(value);
+}

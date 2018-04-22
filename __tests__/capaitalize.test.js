@@ -1,4 +1,4 @@
-import {capitalize} from '../dist/caboodle-x';
+import {capitalize} from '../index';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 

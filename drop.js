@@ -4,12 +4,10 @@
  * @module drop
  */
 
-import isString from 'is-string';
+import _uniSlice from './.internal/_uniSlice';
 import isArrayLike from './isArrayLike';
 import requireObjectCoercible from './requireObjectCoercible';
 import toWholeNumber from './toWholeNumber';
-import _slice from './.internal/_slice';
-import _stringSlice from './.internal/_stringSlice';
 
 export default function drop(array, ...fromIndex) {
   if (!isArrayLike(requireObjectCoercible(array))) {
@@ -18,5 +16,5 @@ export default function drop(array, ...fromIndex) {
 
   const start = fromIndex.length ? toWholeNumber(fromIndex[0]) : 1;
 
-  return (isString(array) ? _stringSlice : _slice)(array, start);
+  return _uniSlice(array, start);
 }

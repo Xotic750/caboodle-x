@@ -1,4 +1,4 @@
-import {attempt} from '../dist/caboodle-x';
+import {attempt} from '../index';
 
 describe('attempt', () => {
   it('is a function', () => {

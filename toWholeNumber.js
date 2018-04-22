@@ -4,11 +4,11 @@
  * @module toWholeNumber
  */
 
-import _toInteger from './.internal/_toInteger';
+import toInteger from './toInteger';
 import MAX_SAFE_INTEGER from './maxSafeInteger';
 
 export default function toWholeNumber(value) {
-  const integer = _toInteger(value);
+  const integer = toInteger(value);
 
   // includes converting -0 to +0
   if (integer <= 0) {

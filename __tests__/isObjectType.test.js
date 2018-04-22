@@ -3,7 +3,7 @@ import truthy from './helpers/truthy';
 import numbers from './helpers/numbers';
 import strings from './helpers/strings';
 
-import {isObjectType} from '../dist/caboodle-x';
+import {isObjectType} from '../index';
 
 describe('isObjectType', () => {
   const primitives = Object.freeze([...truthy, ...numbers, ...strings]);

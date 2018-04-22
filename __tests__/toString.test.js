@@ -1,10 +1,9 @@
-import {toString} from '../dist/caboodle-x';
+import {toString} from '../index';
 import values from './helpers/nonSymbols';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('Basic tests', () => {

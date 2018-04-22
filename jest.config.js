@@ -3,7 +3,8 @@
 module.exports = {
   coverageDirectory: '__tests__/coverage/',
   collectCoverageFrom: [
-    'dist/caboodle-x.js',
+    '<rootDir>/*.js',
+    '!<rootDir>/*.*.js',
     '!<rootDir>/node_modules/',
     '!<rootDir>/__tests__/helpers/',
   ],

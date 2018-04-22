@@ -1,4 +1,4 @@
-import {isObjectLike} from '../dist/caboodle-x';
+import {isObjectLike} from '../index';
 
 describe('isObjectLike', () => {
   it('should be a function', () => {

@@ -4,4 +4,8 @@
  * @module toBoolean
  */
 
-export {default} from './.internal/_Boolean';
+import _Boolean from './.internal/_Boolean';
+
+export default function toBoolean(value) {
+  return _Boolean(value);
+}

@@ -1,4 +1,4 @@
-import {drop} from '../dist/caboodle-x';
+import {drop} from '../index';
 import falsey from './helpers/falsey';
 
 const array = [1, 2, 3];

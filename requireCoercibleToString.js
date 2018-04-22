@@ -4,9 +4,9 @@
  * @module requireCoercibleToString
  */
 
-import _toString from './.internal/_toString';
+import toStr from './toString';
 import requireObjectCoercible from './requireObjectCoercible';
 
 export default function requireCoercibleToString(value) {
-  return _toString(requireObjectCoercible(value));
+  return toStr(requireObjectCoercible(value));
 }

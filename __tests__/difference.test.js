@@ -1,4 +1,4 @@
-import {difference} from '../dist/caboodle-x';
+import {difference} from '../index';
 
 describe('difference', () => {
   let LARGE_ARRAY_SIZE;

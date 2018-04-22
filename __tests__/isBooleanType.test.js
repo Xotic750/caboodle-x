@@ -1,4 +1,4 @@
-import {isBooleanType} from '../dist/caboodle-x';
+import {isBooleanType} from '../index';
 
 describe('isBooleanType', () => {
   it('should be a function', () => {

@@ -5,7 +5,7 @@
  */
 
 import requireObjectCoercible from './requireCoercibleToString';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 import toWholeNumber from './toWholeNumber';
 import isUndefined from './isUndefined';
 import _stringSlice from './.internal/_stringSlice';
@@ -35,11 +35,11 @@ import _stringSlice from './.internal/_stringSlice';
  * padStart('a', 2, 'bc'); // 'ba'
  */
 export default function padStart(string, targetLength, ...rest) {
-  const str = _toString(requireObjectCoercible(string));
+  const str = toStr(requireObjectCoercible(string));
   const stringLength = toWholeNumber(str.length);
   const fillString = rest.length ? rest[0] : void 0;
 
-  let filler = isUndefined(fillString) ? '' : _toString(fillString);
+  let filler = isUndefined(fillString) ? '' : toStr(fillString);
   if (filler === '') {
     filler = ' ';
   }

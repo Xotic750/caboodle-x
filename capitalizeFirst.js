@@ -6,11 +6,11 @@
 
 import _charAt from './.internal/_charAt';
 import _stringSlice from './.internal/_stringSlice';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 import _toUpperCase from './.internal/_toUpperCase';
 
 export default function capitalizeFirst(string) {
-  const str = _toString(string);
+  const str = toStr(string);
 
   return _toUpperCase(_charAt(str, 0)) + _stringSlice(str, 1);
 }

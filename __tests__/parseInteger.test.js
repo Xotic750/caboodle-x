@@ -1,9 +1,8 @@
-import {parseInteger} from '../dist/caboodle-x';
+import {parseInteger} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('parseInteger', () => {
@@ -56,7 +55,6 @@ describe('parseInteger', () => {
 
     it('defaults the radix properly when not a true number', () => {
       const fakeZero = {
-        /* istanbul ignore next */
         valueOf() {
           return 0;
         },

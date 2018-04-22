@@ -6,8 +6,8 @@
 
 import _trimLeft from './.internal/_trimLeft';
 import requireObjectCoercible from './requireObjectCoercible';
-import _toString from './.internal/_toString';
+import toStr from './toString';
 
 export default function trimLeft(string) {
-  return _trimLeft(_toString(requireObjectCoercible(string)));
+  return _trimLeft(toStr(requireObjectCoercible(string)));
 }

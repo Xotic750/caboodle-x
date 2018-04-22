@@ -10,7 +10,7 @@ import _Object from './.internal/_Object';
 import _create from './.internal/_create';
 import isObjectLike from './isObjectLike';
 import isVarName from './isVarName';
-import _isFunction from './.internal/_isFunction';
+import isFunction from './isFunction';
 import isArrayLike from './isArrayLike';
 import isSafeInteger from './isSafeInteger';
 import isUndefined from './isUndefined';
@@ -42,6 +42,7 @@ const reserved = new Set([
   'valueOf',
 ]);
 
+/* istanbul ignore next */
 if (_hasFakeSymbolIterator) {
   reserved.add(SYMBOL_ITERATOR);
 }
@@ -134,14 +135,14 @@ const init = function _init(CstmCtr, properties, opts) {
 
   if (isArrayLike(properties)) {
     items = properties;
-  } else if (_isFunction(properties) && properties.prototype instanceof Enum) {
+  } else if (isFunction(properties) && properties.prototype instanceof Enum) {
     isClone = true;
     items = properties.toJSON();
   } else {
     throw new Error('bad args');
   }
 
-  const iter = _isFunction(opts.auto) ? opts.auto() : generateNextValue();
+  const iter = isFunction(opts.auto) ? opts.auto() : generateNextValue();
 
   let next;
 
@@ -475,7 +476,7 @@ _defineProperties(Enum, {
 
           const method = opts.classMethods[key];
 
-          if (_isFunction(method)) {
+          if (isFunction(method)) {
             _defineProperty(CstmCtr, key, {
               value: method,
             });
@@ -492,7 +493,7 @@ _defineProperties(Enum, {
           }
 
           const method = opts.instanceMethods[key];
-          if (_isFunction(method)) {
+          if (isFunction(method)) {
             _defineProperty(CstmCtr.prototype, key, {
               value: method,
             });

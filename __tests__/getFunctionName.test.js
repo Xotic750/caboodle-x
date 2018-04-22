@@ -1,4 +1,4 @@
-import {getFunctionName} from '../dist/caboodle-x';
+import {getFunctionName} from '../index';
 
 const getFat = function getFatFunc() {
   try {

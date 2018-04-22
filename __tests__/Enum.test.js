@@ -1,4 +1,4 @@
-import {Enum} from '../dist/caboodle-x';
+import {Enum} from '../index';
 
 const t = function test1() {};
 const hasFunctionNames = t.name === 'test1';
@@ -88,10 +88,9 @@ describe('Enum', () => {
   });
 
   it('subject can not be instantiated', () => {
-    subject = Enum.create(subjectName, subjectProps);
+    const Subject = Enum.create(subjectName, subjectProps);
     expect(() => {
-      // eslint-disable-next-line no-new
-      new subject(); // eslint-disable-line new-cap
+      subject = new Subject();
     }).toThrowErrorMatchingSnapshot();
   });
 
@@ -221,13 +220,15 @@ describe('Enum', () => {
   });
 
   it('subject should have working forEach', () => {
+    const context = {};
     subject = Enum.create(subjectName, subjectProps);
     let index = 0;
     subject.forEach(enumMember => {
       expect(enumMember.name).toBe(namesWithoutAliases[index]);
       expect(enumMember.value).toBe(valuesWithoutAliases[index]);
+      expect(this).toBe(context);
       index += 1;
-    });
+    }, context);
   });
 
   it('subject should have working find for unique values', () => {
@@ -340,6 +341,12 @@ describe('Enum', () => {
 
     expect(() => {
       Enum.create(subjectName, subjectProps, opts);
+    }).toThrowErrorMatchingSnapshot();
+  });
+
+  it('should throw "bad args"', () => {
+    expect(() => {
+      Enum.create(subjectName, 1, {});
     }).toThrowErrorMatchingSnapshot();
   });
 

@@ -4,7 +4,7 @@
  * @module accumulate
  */
 
-import _assertIsFunction from './.internal/_assertIsFunction';
+import assertIsFunction from './assertIsFunction';
 import toObject from './toObject';
 import toWholeNumber from './toWholeNumber';
 import _accumulate from './.internal/_accumulate';
@@ -21,7 +21,7 @@ export default function accumulate(array, callback, ...rest) {
 
   return _accumulate(
     object,
-    _assertIsFunction(callback),
+    assertIsFunction(callback),
     (rest.length ? rest : object)[start],
     rest.length ? start : start + 1,
   );

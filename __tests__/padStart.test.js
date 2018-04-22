@@ -1,4 +1,4 @@
-import {padStart} from '../dist/caboodle-x';
+import {padStart} from '../index';
 
 describe('padStart', () => {
   it('is a function', () => {
