@@ -1,4 +1,4 @@
-import {isUndefined} from '../dist/caboodle-x';
+import {isUndefined} from '../index';
 
 const falsey = Object.freeze([null, false, 0, NaN, '']);
 
@@ -14,9 +14,9 @@ describe('isUndefined', () => {
   });
 
   it('should return `false` for non `undefined` values', () => {
-    const expected = falsey.map(value => value === undefined);
+    const expected = falsey.map((value) => value === undefined);
 
-    const actual = falsey.map(value => isUndefined(value));
+    const actual = falsey.map((value) => isUndefined(value));
 
     expect(actual).toEqual(expected);
 

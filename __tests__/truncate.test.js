@@ -1,4 +1,4 @@
-import {truncate} from '../dist/caboodle-x';
+import {truncate} from '../index';
 
 describe('truncate', () => {
   const testString = 'hi-diddly-ho there, neighborino';

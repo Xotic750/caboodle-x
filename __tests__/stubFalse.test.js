@@ -1,4 +1,4 @@
-import {stubFalse} from '../dist/caboodle-x';
+import {stubFalse} from '../index';
 
 describe('stubFalse', () => {
   it('should be a function', () => {

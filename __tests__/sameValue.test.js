@@ -1,9 +1,8 @@
-import {sameValue} from '../dist/caboodle-x';
+import {sameValue} from '../index';
 
-/* istanbul ignore next */
 const hasSymbols =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbols = hasSymbols ? it : xit;
 
 describe('sameValue', () => {

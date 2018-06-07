@@ -7,7 +7,20 @@
 		exports["Caboodle"] = factory();
 	else
 		root["Caboodle"] = factory();
-})(window, function() {
+})((function () {
+  'use strict';
+
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  return Function('return this')();
+}()), function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -46,17 +59,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -76,20 +104,36 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 225);
+/******/ 	return __webpack_require__(__webpack_require__.s = 218);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : {
-    default: obj
-  };
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _methodize;
+
+var _bind2 = __webpack_require__(107);
+
+var _bind3 = _interopRequireDefault(_bind2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var call = Function.call; /**
+                           * @file Utility that needs description.
+                           * @copyright Copyright (c) 2018-present, Graham Fairweather
+                           * @module _methodize
+                           */
+
+function _methodize(prototypeMethod) {
+  return (0, _bind3.default)(call, prototypeMethod);
 }
-
-module.exports = _interopRequireDefault;
 
 /***/ }),
 /* 1 */
@@ -98,51 +142,23 @@ module.exports = _interopRequireDefault;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _methodize;
 
-var _bind2 = _interopRequireDefault(__webpack_require__(109));
+var _assertIs2 = __webpack_require__(46);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _methodize
- */
-var call = Function.call;
+var _assertIs3 = _interopRequireDefault(_assertIs2);
 
-function _methodize(prototypeMethod) {
-  return (0, _bind2.default)(call, prototypeMethod);
-}
+var _negate2 = __webpack_require__(64);
 
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+var _negate3 = _interopRequireDefault(_negate2);
 
-"use strict";
+var _isNil = __webpack_require__(6);
 
+var _isNil2 = _interopRequireDefault(_isNil);
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _assertIs2 = _interopRequireDefault(__webpack_require__(47));
-
-var _negate2 = _interopRequireDefault(__webpack_require__(65));
-
-var _isNil = _interopRequireDefault(__webpack_require__(8));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module requireObjectCoercible
- */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * The abstract operation RequireObjectCoercible throws an error if argument
@@ -160,9 +176,47 @@ var _isNil = _interopRequireDefault(__webpack_require__(8));
  * RequireObjectCoercible(true); // true
  * RequireObjectCoercible(Symbol('foo')); // Symbol('foo')
  */
-var _default = (0, _assertIs2.default)((0, _negate2.default)(_isNil.default), 'Cannot call method on null or undefined');
+exports.default = (0, _assertIs3.default)((0, _negate3.default)(_isNil2.default), 'Cannot call method on null or undefined'); /**
+                                                                                                                               * @file Utility that needs description.
+                                                                                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                                                               * @module requireObjectCoercible
+                                                                                                                               */
 
-exports.default = _default;
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _toString;
+
+var _isSymbol = __webpack_require__(71);
+
+var _isSymbol2 = _interopRequireDefault(_isSymbol);
+
+var _String2 = __webpack_require__(109);
+
+var _String3 = _interopRequireDefault(_String2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _toString
+ */
+
+function _toString(value) {
+  if ((0, _isSymbol2.default)(value)) {
+    throw new TypeError('Cannot convert a Symbol value to a string');
+  }
+
+  return (0, _String3.default)(value);
+}
 
 /***/ }),
 /* 3 */
@@ -171,59 +225,30 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _toString;
 
-var _isSymbol = _interopRequireDefault(__webpack_require__(73));
+var _assertIs2 = __webpack_require__(46);
 
-var _String2 = _interopRequireDefault(__webpack_require__(111));
+var _assertIs3 = _interopRequireDefault(_assertIs2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toString
- */
-function _toString(value) {
-  if ((0, _isSymbol.default)(value)) {
-    throw new TypeError('Cannot convert a Symbol value to a string');
-  }
+var _isFunction2 = __webpack_require__(10);
 
-  return (0, _String2.default)(value);
-}
+var _isFunction3 = _interopRequireDefault(_isFunction2);
 
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _assertIs2 = _interopRequireDefault(__webpack_require__(47));
-
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _assertIsFunction
  */
-var _default = (0, _assertIs2.default)(_isFunction2.default, 'Not a function');
 
-exports.default = _default;
+exports.default = (0, _assertIs3.default)(_isFunction3.default, 'Not a function');
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -250,47 +275,87 @@ module.exports = function isString(value) {
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _toInteger;
 
-var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
+var _isNaN2 = __webpack_require__(22);
 
-var _isFinite2 = _interopRequireDefault(__webpack_require__(42));
+var _isNaN3 = _interopRequireDefault(_isNaN2);
 
-var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
+var _isFinite2 = __webpack_require__(41);
 
-var _sign2 = _interopRequireDefault(__webpack_require__(55));
+var _isFinite3 = _interopRequireDefault(_isFinite2);
+
+var _toNumber2 = __webpack_require__(21);
+
+var _toNumber3 = _interopRequireDefault(_toNumber2);
+
+var _sign2 = __webpack_require__(54);
+
+var _sign3 = _interopRequireDefault(_sign2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that creates a delayed promise.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _toInteger
  */
+
 var abs = Math.abs,
     floor = Math.floor;
-
 function _toInteger(value) {
-  var number = (0, _toNumber2.default)(value);
+  var number = (0, _toNumber3.default)(value);
 
-  if ((0, _isNaN2.default)(number)) {
+  if ((0, _isNaN3.default)(number)) {
     return 0;
   }
 
-  if (number === 0 || !(0, _isFinite2.default)(number)) {
+  if (number === 0 || !(0, _isFinite3.default)(number)) {
     return number;
   }
 
-  return (0, _sign2.default)(number) * floor(abs(number));
+  return (0, _sign3.default)(number) * floor(abs(number));
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isNil;
+
+var _isUndefined = __webpack_require__(27);
+
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
+var _isNull = __webpack_require__(45);
+
+var _isNull2 = _interopRequireDefault(_isNull);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isNil
+ */
+
+function isNil(value) {
+  return (0, _isUndefined2.default)(value) || (0, _isNull2.default)(value);
 }
 
 /***/ }),
@@ -300,30 +365,36 @@ function _toInteger(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = toWholeNumber;
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+var _toInteger2 = __webpack_require__(5);
 
-var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(54));
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _MAX_SAFE_INTEGER = __webpack_require__(53);
+
+var _MAX_SAFE_INTEGER2 = _interopRequireDefault(_MAX_SAFE_INTEGER);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module toWholeNumber
  */
-function toWholeNumber(value) {
-  var integer = (0, _toInteger2.default)(value); // includes converting -0 to +0
 
+function toWholeNumber(value) {
+  var integer = (0, _toInteger3.default)(value);
+
+  // includes converting -0 to +0
   if (integer <= 0) {
     return 0;
   }
 
-  return integer > _MAX_SAFE_INTEGER.default ? _MAX_SAFE_INTEGER.default : integer;
+  return integer > _MAX_SAFE_INTEGER2.default ? _MAX_SAFE_INTEGER2.default : integer;
 }
 
 /***/ }),
@@ -333,25 +404,32 @@ function toWholeNumber(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isNil;
+exports.default = _stringTest;
 
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
+var _isRegex = __webpack_require__(40);
 
-var _isNull = _interopRequireDefault(__webpack_require__(46));
+var _isRegex2 = _interopRequireDefault(_isRegex);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNil
- */
-function isNil(value) {
-  return (0, _isUndefined.default)(value) || (0, _isNull.default)(value);
-}
+var _stringIndexOf2 = __webpack_require__(57);
+
+var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
+
+var _test2 = __webpack_require__(26);
+
+var _test3 = _interopRequireDefault(_test2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _stringTest(string, searchValue) {
+  return (0, _isRegex2.default)(searchValue) ? (0, _test3.default)(searchValue, string) : (0, _stringIndexOf3.default)(string, searchValue) !== -1;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _stringTest
+   */
 
 /***/ }),
 /* 9 */
@@ -360,27 +438,21 @@ function isNil(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _stringTest;
 
-var _isRegex = _interopRequireDefault(__webpack_require__(41));
+var _methodize2 = __webpack_require__(0);
 
-var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(58));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _test2 = _interopRequireDefault(__webpack_require__(27));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _stringTest
- */
-function _stringTest(string, searchValue) {
-  return (0, _isRegex.default)(searchValue) ? (0, _test2.default)(searchValue, string) : (0, _stringIndexOf2.default)(string, searchValue) !== -1;
-}
+exports.default = (0, _methodize3.default)(String.prototype.slice); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _stringSlice
+                                                                     */
 
 /***/ }),
 /* 10 */
@@ -389,76 +461,74 @@ function _stringTest(string, searchValue) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _stringSlice
- */
-var _default = (0, _methodize2.default)(String.prototype.slice);
-
-exports.default = _default;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isFunction;
 
-var _functionToString2 = _interopRequireDefault(__webpack_require__(110));
+var _functionToString2 = __webpack_require__(108);
 
-var _test2 = _interopRequireDefault(__webpack_require__(27));
+var _functionToString3 = _interopRequireDefault(_functionToString2);
 
-var _attempt = _interopRequireDefault(__webpack_require__(72));
+var _test2 = __webpack_require__(26);
 
-var _Boolean2 = _interopRequireDefault(__webpack_require__(34));
+var _test3 = _interopRequireDefault(_test2);
 
-var _toStringTag = _interopRequireDefault(__webpack_require__(45));
+var _attempt = __webpack_require__(70);
 
-var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(71));
+var _attempt2 = _interopRequireDefault(_attempt);
 
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
+var _Boolean2 = __webpack_require__(33);
 
-var _normalizeSpace = _interopRequireDefault(__webpack_require__(67));
+var _Boolean3 = _interopRequireDefault(_Boolean2);
 
-var _replaceComments = _interopRequireDefault(__webpack_require__(61));
+var _toStringTag = __webpack_require__(44);
 
-var _isClassSupported = _interopRequireDefault(__webpack_require__(102));
+var _toStringTag2 = _interopRequireDefault(_toStringTag);
+
+var _isToStringTagSupported = __webpack_require__(69);
+
+var _isToStringTagSupported2 = _interopRequireDefault(_isToStringTagSupported);
+
+var _isPrimitive = __webpack_require__(25);
+
+var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+
+var _normalizeSpace = __webpack_require__(66);
+
+var _normalizeSpace2 = _interopRequireDefault(_normalizeSpace);
+
+var _replaceComments = __webpack_require__(60);
+
+var _replaceComments2 = _interopRequireDefault(_replaceComments);
+
+var _isClassSupported = __webpack_require__(100);
+
+var _isClassSupported2 = _interopRequireDefault(_isClassSupported);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Determine whether a given value is a function object.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _isFunction
  */
+
 var FUNC_TAG = '[object Function]';
 var GEN_TAG = '[object GeneratorFunction]';
 var ASYNC_TAG = '[object AsyncFunction]';
 var ctrRx = /^class /;
 
 var testClassString = function _testClassString(value) {
-  return (0, _test2.default)(ctrRx, (0, _normalizeSpace.default)((0, _replaceComments.default)((0, _functionToString2.default)(value), ' ')));
+  return (0, _test3.default)(ctrRx, (0, _normalizeSpace2.default)((0, _replaceComments2.default)((0, _functionToString3.default)(value), ' ')));
 };
 
 var isES6ClassFn = function _isES6ClassFn(value) {
-  var result = (0, _attempt.default)(testClassString, value);
+  var result = (0, _attempt2.default)(testClassString, value);
+
   return !result.threw && result.value;
 };
+
 /**
  * Checks if `value` is classified as a `Function` object.
  *
@@ -468,15 +538,14 @@ var isES6ClassFn = function _isES6ClassFn(value) {
  * @returns {boolean} Returns `true` if `value` is correctly classified,
  * else `false`.
  */
-
-
 var tryFuncToString = function _tryFuncToString(value, allowClass) {
-  if (_isClassSupported.default && !allowClass && isES6ClassFn(value)) {
+  if (_isClassSupported2.default && !allowClass && isES6ClassFn(value)) {
     return false;
   }
 
-  return !(0, _attempt.default)(_functionToString2.default, value).threw;
+  return !(0, _attempt2.default)(_functionToString3.default, value).threw;
 };
+
 /**
  * Checks if `value` is classified as a `Function` object.
  *
@@ -501,23 +570,53 @@ var tryFuncToString = function _tryFuncToString(value, allowClass) {
  * isFunction(class Test {}, true); // true
  * isFunction((x, y) => {return this;}); // true
  */
-
-
 function isFunction(value) {
-  if ((0, _isPrimitive.default)(value)) {
+  if ((0, _isPrimitive2.default)(value)) {
     return false;
   }
 
-  if (_isToStringTagSupported.default) {
-    return tryFuncToString(value, (0, _Boolean2.default)(arguments.length <= 1 ? undefined : arguments[1]));
+  if (_isToStringTagSupported2.default) {
+    return tryFuncToString(value, (0, _Boolean3.default)(arguments.length <= 1 ? undefined : arguments[1]));
   }
 
-  if (_isClassSupported.default && !(arguments.length <= 1 ? undefined : arguments[1]) && isES6ClassFn(value)) {
+  if (_isClassSupported2.default && !(arguments.length <= 1 ? undefined : arguments[1]) && isES6ClassFn(value)) {
     return false;
   }
 
-  var strTag = (0, _toStringTag.default)(value);
+  var strTag = (0, _toStringTag2.default)(value);
   return strTag === FUNC_TAG || strTag === GEN_TAG || strTag === ASYNC_TAG;
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isObjectLike;
+
+var _isNull = __webpack_require__(45);
+
+var _isNull2 = _interopRequireDefault(_isNull);
+
+var _isObjectType = __webpack_require__(67);
+
+var _isObjectType2 = _interopRequireDefault(_isObjectType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isObjectLike
+ */
+
+function isObjectLike(value) {
+  return !(0, _isNull2.default)(value) && (0, _isObjectType2.default)(value);
 }
 
 /***/ }),
@@ -527,24 +626,29 @@ function isFunction(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isObjectLike;
+exports.default = toObject;
 
-var _isNull = _interopRequireDefault(__webpack_require__(46));
+var _requireObjectCoercible = __webpack_require__(1);
 
-var _isObjectType = _interopRequireDefault(__webpack_require__(68));
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _Object2 = __webpack_require__(63);
+
+var _Object3 = _interopRequireDefault(_Object2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectLike
+ * @module toObject
  */
-function isObjectLike(value) {
-  return !(0, _isNull.default)(value) && (0, _isObjectType.default)(value);
+
+function toObject(value) {
+  return (0, _Object3.default)((0, _requireObjectCoercible2.default)(value));
 }
 
 /***/ }),
@@ -554,25 +658,21 @@ function isObjectLike(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toObject;
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _methodize2 = __webpack_require__(0);
 
-var _Object2 = _interopRequireDefault(__webpack_require__(64));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toObject
- */
-function toObject(value) {
-  return (0, _Object2.default)((0, _requireObjectCoercible.default)(value));
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.replace); /**
+                                                                       * @file Utility that needs description.
+                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                       * @module _replace
+                                                                       */
 
 /***/ }),
 /* 14 */
@@ -581,23 +681,16 @@ function toObject(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _replace
+ * @module _apply
  */
-var _default = (0, _methodize2.default)(String.prototype.replace);
 
-exports.default = _default;
+exports.default = Function.call.bind(Function.apply);
 
 /***/ }),
 /* 15 */
@@ -609,16 +702,13 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _apply
+ * @module _call
  */
-var _default = Function.call.bind(Function.apply);
 
-exports.default = _default;
+exports.default = Function.call.bind(Function.call);
 
 /***/ }),
 /* 16 */
@@ -630,16 +720,35 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = _includes;
+
+var _find2 = __webpack_require__(49);
+
+var _find3 = _interopRequireDefault(_find2);
+
+var _sameValueZero = __webpack_require__(90);
+
+var _sameValueZero2 = _interopRequireDefault(_sameValueZero);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _call
+ * @module _includes
  */
-var _default = Function.call.bind(Function.call);
 
-exports.default = _default;
+function _includes(array, searchElement) {
+  var isSameValueZero = function _isSameValueZero(value) {
+    return (0, _sameValueZero2.default)(searchElement, value);
+  };
+
+  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  return _find3.default.apply(undefined, [array, isSameValueZero].concat(fromIndex)).includes;
+}
 
 /***/ }),
 /* 17 */
@@ -648,33 +757,21 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _includes;
 
-var _find2 = _interopRequireDefault(__webpack_require__(50));
+var _methodize2 = __webpack_require__(0);
 
-var _sameValueZero = _interopRequireDefault(__webpack_require__(92));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _includes
- */
-function _includes(array, searchElement) {
-  var isSameValueZero = function _isSameValueZero(value) {
-    return (0, _sameValueZero.default)(searchElement, value);
-  };
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
-  }
-
-  return _find2.default.apply(void 0, [array, isSameValueZero].concat(fromIndex)).includes;
-}
+exports.default = (0, _methodize3.default)(Array.prototype.push); /**
+                                                                   * @file Utility that needs description.
+                                                                   * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                   * @module _push
+                                                                   */
 
 /***/ }),
 /* 18 */
@@ -683,23 +780,32 @@ function _includes(array, searchElement) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = isArrayLike;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _isNil = __webpack_require__(6);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _push
- */
-var _default = (0, _methodize2.default)(Array.prototype.push);
+var _isNil2 = _interopRequireDefault(_isNil);
 
-exports.default = _default;
+var _isFunction2 = __webpack_require__(10);
+
+var _isFunction3 = _interopRequireDefault(_isFunction2);
+
+var _isWholeNumber = __webpack_require__(37);
+
+var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isArrayLike(value) {
+  return !(0, _isNil2.default)(value) && (0, _isWholeNumber2.default)(value.length) && !(0, _isFunction3.default)(value);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isArrayLike
+   */
 
 /***/ }),
 /* 19 */
@@ -708,27 +814,43 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isArrayLike;
+exports.default = _any;
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+var _fromIndex2 = __webpack_require__(95);
 
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+var _fromIndex3 = _interopRequireDefault(_fromIndex2);
 
-var _isWholeNumber = _interopRequireDefault(__webpack_require__(38));
+var _toObject = __webpack_require__(12);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isArrayLike
- */
-function isArrayLike(value) {
-  return !(0, _isNil.default)(value) && (0, _isWholeNumber.default)(value.length) && !(0, _isFunction2.default)(value);
-}
+var _toObject2 = _interopRequireDefault(_toObject);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _any(array, callback) {
+  var object = (0, _toObject2.default)(array);
+  var length = (0, _toWholeNumber2.default)(object.length);
+
+  if (length) {
+    for (var index = (0, _fromIndex3.default)(object, arguments.length <= 2 ? undefined : arguments[2]); index < length; index += 1) {
+      if (callback(object[index], index, object)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _any
+   */
 
 /***/ }),
 /* 20 */
@@ -737,38 +859,32 @@ function isArrayLike(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _any;
+exports.default = _all;
 
-var _fromIndex2 = _interopRequireDefault(__webpack_require__(97));
+var _any2 = __webpack_require__(19);
 
-var _toObject = _interopRequireDefault(__webpack_require__(13));
+var _any3 = _interopRequireDefault(_any2);
 
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _any
- */
-function _any(array, callback) {
-  var object = (0, _toObject.default)(array);
-  var length = (0, _toWholeNumber.default)(object.length);
+function _all(array, callback) {
+  var iteratee = function _iteratee() {
+    callback.apply(undefined, arguments);
+  };
 
-  if (length) {
-    for (var index = (0, _fromIndex2.default)(object, arguments.length <= 2 ? undefined : arguments[2]); index < length; index += 1) {
-      if (callback(object[index], index, object)) {
-        return true;
-      }
-    }
+  for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    rest[_key - 2] = arguments[_key];
   }
 
-  return false;
-}
+  _any3.default.apply(undefined, [array, iteratee].concat(rest));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _all
+   */
 
 /***/ }),
 /* 21 */
@@ -777,30 +893,103 @@ function _any(array, callback) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _all;
+exports.default = _toNumber;
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
+var _Number2 = __webpack_require__(59);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _all
- */
-function _all(array, callback) {
-  var iteratee = function _iteratee() {
-    callback.apply(void 0, arguments);
-  };
+var _Number3 = _interopRequireDefault(_Number2);
 
-  for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    rest[_key - 2] = arguments[_key];
+var _toPrimitive = __webpack_require__(58);
+
+var _toPrimitive2 = _interopRequireDefault(_toPrimitive);
+
+var _trim2 = __webpack_require__(42);
+
+var _trim3 = _interopRequireDefault(_trim2);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+var _test2 = __webpack_require__(26);
+
+var _test3 = _interopRequireDefault(_test2);
+
+var _isBinary = __webpack_require__(98);
+
+var _isBinary2 = _interopRequireDefault(_isBinary);
+
+var _isOctal = __webpack_require__(96);
+
+var _isOctal2 = _interopRequireDefault(_isOctal);
+
+var _isStringType = __webpack_require__(38);
+
+var _isStringType2 = _interopRequireDefault(_isStringType);
+
+var _isSymbolType = __webpack_require__(32);
+
+var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
+
+var _parseInt2 = __webpack_require__(56);
+
+var _parseInt3 = _interopRequireDefault(_parseInt2);
+
+var _NaN2 = __webpack_require__(55);
+
+var _NaN3 = _interopRequireDefault(_NaN2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var nonWSregex = new RegExp('[\x85\u180E\u200B\uFFFE]', 'g'); /**
+                                                               * @file Utility that needs description.
+                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                               * @module _toNumber
+                                                               */
+
+var hasNonWS = function _hasNonWS(value) {
+  return (0, _test3.default)(nonWSregex, value);
+};
+
+var invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
+var isInvalidHexLiteral = function _isInvalidHexLiteral(value) {
+  return (0, _test3.default)(invalidHexLiteral, value);
+};
+
+var dropPrefix = function _dropPrefix(value) {
+  return (0, _stringSlice3.default)(value, 2);
+};
+
+function _toNumber(argument) {
+  var value = (0, _toPrimitive2.default)(argument, Number);
+
+  if ((0, _isSymbolType2.default)(value)) {
+    throw new TypeError('Cannot convert a Symbol value to a number');
   }
 
-  _any2.default.apply(void 0, [array, iteratee].concat(rest));
+  if ((0, _isStringType2.default)(value)) {
+    if ((0, _isBinary2.default)(value)) {
+      return _toNumber((0, _parseInt3.default)(dropPrefix(value), 2));
+    }
+
+    if ((0, _isOctal2.default)(value)) {
+      return _toNumber((0, _parseInt3.default)(dropPrefix(value), 8));
+    }
+
+    if (hasNonWS(value) || isInvalidHexLiteral(value)) {
+      return _NaN3.default;
+    }
+
+    var trimmed = (0, _trim3.default)(value);
+    if (trimmed !== value) {
+      return _toNumber(trimmed);
+    }
+  }
+
+  return (0, _Number3.default)(value);
 }
 
 /***/ }),
@@ -810,84 +999,18 @@ function _all(array, callback) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _toNumber;
-
-var _Number2 = _interopRequireDefault(__webpack_require__(60));
-
-var _toPrimitive = _interopRequireDefault(__webpack_require__(59));
-
-var _trim2 = _interopRequireDefault(__webpack_require__(43));
-
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
-
-var _test2 = _interopRequireDefault(__webpack_require__(27));
-
-var _isBinary = _interopRequireDefault(__webpack_require__(100));
-
-var _isOctal = _interopRequireDefault(__webpack_require__(98));
-
-var _isStringType = _interopRequireDefault(__webpack_require__(39));
-
-var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
-
-var _parseInt2 = _interopRequireDefault(__webpack_require__(57));
-
-var _NaN2 = _interopRequireDefault(__webpack_require__(56));
-
+exports.default = _isNaN;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toNumber
+ * @module _isNaN
  */
-var nonWSregex = new RegExp("[\x85\u180E\u200B\uFFFE]", 'g');
 
-var hasNonWS = function _hasNonWS(value) {
-  return (0, _test2.default)(nonWSregex, value);
-};
-
-var invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
-
-var isInvalidHexLiteral = function _isInvalidHexLiteral(value) {
-  return (0, _test2.default)(invalidHexLiteral, value);
-};
-
-var dropPrefix = function _dropPrefix(value) {
-  return (0, _stringSlice2.default)(value, 2);
-};
-
-function _toNumber(argument) {
-  var value = (0, _toPrimitive.default)(argument, Number);
-
-  if ((0, _isSymbolType.default)(value)) {
-    throw new TypeError('Cannot convert a Symbol value to a number');
-  }
-
-  if ((0, _isStringType.default)(value)) {
-    if ((0, _isBinary.default)(value)) {
-      return _toNumber((0, _parseInt2.default)(dropPrefix(value), 2));
-    }
-
-    if ((0, _isOctal.default)(value)) {
-      return _toNumber((0, _parseInt2.default)(dropPrefix(value), 8));
-    }
-
-    if (hasNonWS(value) || isInvalidHexLiteral(value)) {
-      return _NaN2.default;
-    }
-
-    var trimmed = (0, _trim2.default)(value);
-
-    if (trimmed !== value) {
-      return _toNumber(trimmed);
-    }
-  }
-
-  return (0, _Number2.default)(value);
+function _isNaN(value) {
+  return value !== value;
 }
 
 /***/ }),
@@ -900,15 +1023,26 @@ function _toNumber(argument) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _isNaN;
+exports.default = requireCoercibleToString;
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _isNaN
+ * @module requireCoercibleToString
  */
-function _isNaN(value) {
-  return value !== value;
+
+function requireCoercibleToString(value) {
+  return (0, _toString3.default)((0, _requireObjectCoercible2.default)(value));
 }
 
 /***/ }),
@@ -918,25 +1052,21 @@ function _isNaN(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = requireCoercibleToString;
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _methodize2 = __webpack_require__(0);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module requireCoercibleToString
- */
-function requireCoercibleToString(value) {
-  return (0, _toString2.default)((0, _requireObjectCoercible.default)(value));
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.slice); /**
+                                                                    * @file Utility that needs description.
+                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                    * @module _slice
+                                                                    */
 
 /***/ }),
 /* 25 */
@@ -945,23 +1075,32 @@ function requireCoercibleToString(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = isPrimitive;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _isFunctionType = __webpack_require__(68);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _slice
- */
-var _default = (0, _methodize2.default)(Array.prototype.slice);
+var _isFunctionType2 = _interopRequireDefault(_isFunctionType);
 
-exports.default = _default;
+var _isNull = __webpack_require__(45);
+
+var _isNull2 = _interopRequireDefault(_isNull);
+
+var _isObjectType = __webpack_require__(67);
+
+var _isObjectType2 = _interopRequireDefault(_isObjectType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isPrimitive(value) {
+  return (0, _isNull2.default)(value) || !(0, _isFunctionType2.default)(value) && !(0, _isObjectType2.default)(value);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isPrimitive
+   */
 
 /***/ }),
 /* 26 */
@@ -970,27 +1109,21 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isPrimitive;
 
-var _isFunctionType = _interopRequireDefault(__webpack_require__(69));
+var _methodize2 = __webpack_require__(0);
 
-var _isNull = _interopRequireDefault(__webpack_require__(46));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _isObjectType = _interopRequireDefault(__webpack_require__(68));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isPrimitive
- */
-function isPrimitive(value) {
-  return (0, _isNull.default)(value) || !(0, _isFunctionType.default)(value) && !(0, _isObjectType.default)(value);
-}
+exports.default = (0, _methodize3.default)(RegExp.prototype.test); /**
+                                                                    * @file Utility that needs description.
+                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                    * @module _test
+                                                                    */
 
 /***/ }),
 /* 27 */
@@ -999,23 +1132,19 @@ function isPrimitive(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
+exports.default = isUndefined;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _test
+ * @module isUndefined
  */
-var _default = (0, _methodize2.default)(RegExp.prototype.test);
 
-exports.default = _default;
+function isUndefined(value) {
+  return typeof value === 'undefined';
+}
 
 /***/ }),
 /* 28 */
@@ -1027,16 +1156,18 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUndefined;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUndefined
- */
-function isUndefined(value) {
-  return typeof value === 'undefined';
-}
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.join); /**
+                                                                   * @file Utility that needs description.
+                                                                   * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                   * @module _join
+                                                                   */
 
 /***/ }),
 /* 29 */
@@ -1045,23 +1176,21 @@ function isUndefined(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _methodize2 = __webpack_require__(0);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _join
- */
-var _default = (0, _methodize2.default)(Array.prototype.join);
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-exports.default = _default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.charAt); /**
+                                                                      * @file Utility that needs description.
+                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                      * @module _charAt
+                                                                      */
 
 /***/ }),
 /* 30 */
@@ -1070,23 +1199,19 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
+exports.default = isNumberType;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _charAt
+ * @module isNumberType
  */
-var _default = (0, _methodize2.default)(String.prototype.charAt);
 
-exports.default = _default;
+function isNumberType(value) {
+  return typeof value === 'number';
+}
 
 /***/ }),
 /* 31 */
@@ -1098,54 +1223,45 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isNumberType;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNumberType
- */
-function isNumberType(value) {
-  return typeof value === 'number';
-}
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = build;
 
-var _assign = _interopRequireDefault(__webpack_require__(108));
+var _assign = __webpack_require__(106);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _assign2 = _interopRequireDefault(_assign);
 
-var _indexOf2 = _interopRequireDefault(__webpack_require__(220));
+var _toString2 = __webpack_require__(2);
 
-var _toLowerCase2 = _interopRequireDefault(__webpack_require__(62));
+var _toString3 = _interopRequireDefault(_toString2);
 
-var _fromCharCode2 = _interopRequireDefault(__webpack_require__(219));
+var _indexOf2 = __webpack_require__(213);
 
-var _map2 = _interopRequireDefault(__webpack_require__(104));
+var _indexOf3 = _interopRequireDefault(_indexOf2);
 
-var _reduce2 = _interopRequireDefault(__webpack_require__(63));
+var _toLowerCase2 = __webpack_require__(61);
 
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
+var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
 
-var _defineProperties2 = _interopRequireDefault(__webpack_require__(218));
+var _fromCharCode2 = __webpack_require__(212);
 
-/**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _whitespace
- */
+var _fromCharCode3 = _interopRequireDefault(_fromCharCode2);
+
+var _map2 = __webpack_require__(102);
+
+var _map3 = _interopRequireDefault(_map2);
+
+var _reduce2 = __webpack_require__(62);
+
+var _reduce3 = _interopRequireDefault(_reduce2);
+
+var _slice2 = __webpack_require__(24);
+
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _defineProperties2 = __webpack_require__(211);
+
+var _defineProperties3 = _interopRequireDefault(_defineProperties2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * A record of a white space character.
@@ -1424,37 +1540,65 @@ var list = [{
   es2017: true,
   es2018: true,
   html: false
-}];
+}]; /**
+     * @file List of ECMAScript white space characters.
+     * @copyright Copyright (c) 2018-present, Graham Fairweather
+     * @module _whitespace
+     */
+
 var types = ['html', 'es5', 'es2015', 'es2016', 'es2017', 'es2018'];
 var last = types.length - 1;
 
 function build(type) {
-  var index = (0, _indexOf2.default)(types, (0, _toLowerCase2.default)((0, _toString2.default)(type)));
+  var index = (0, _indexOf3.default)(types, (0, _toLowerCase3.default)((0, _toString3.default)(type)));
   var prop = index === -1 ? types[last] : types[index];
-
   var iteratee = function _iteratee(string, record) {
-    return record[prop] ? string + (0, _fromCharCode2.default)(record.code) : string;
+    return record[prop] ? string + (0, _fromCharCode3.default)(record.code) : string;
   };
 
-  return (0, _reduce2.default)(list, iteratee, '');
+  return (0, _reduce3.default)(list, iteratee, '');
 }
 
 var copier = function _copier(record) {
-  return (0, _assign.default)({}, record);
+  return (0, _assign2.default)({}, record);
 };
 
-(0, _defineProperties2.default)(build, {
+(0, _defineProperties3.default)(build, {
   types: {
     get: function get() {
-      return (0, _slice2.default)(types);
+      return (0, _slice3.default)(types);
     }
   },
   list: {
     get: function get() {
-      return (0, _map2.default)(list, copier);
+      return (0, _map3.default)(list, copier);
     }
   }
 });
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = isSymbolType;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isSymbolType
+ */
+
+function isSymbolType(value) {
+  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'symbol';
+}
 
 /***/ }),
 /* 33 */
@@ -1463,23 +1607,16 @@ var copier = function _copier(record) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSymbolType;
-
-var _typeof2 = _interopRequireDefault(__webpack_require__(70));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSymbolType
+ * @module _Boolean
  */
-function isSymbolType(value) {
-  return (0, _typeof2.default)(value) === 'symbol';
-}
+
+exports.default = true.constructor;
 
 /***/ }),
 /* 34 */
@@ -1491,43 +1628,25 @@ function isSymbolType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Boolean
- */
-var _default = true.constructor;
-exports.default = _default;
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = toPropertyKey;
 
-var _isSymbolSupported = _interopRequireDefault(__webpack_require__(44));
+var _isSymbolSupported = __webpack_require__(43);
 
-var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
+var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
 
-var _toPrimitive = _interopRequireDefault(__webpack_require__(59));
+var _isSymbolType = __webpack_require__(32);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
 
-/**
- * @file Converts argument to a value that can be used as a property key.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toPropertyKey
- */
+var _toPrimitive = __webpack_require__(58);
+
+var _toPrimitive2 = _interopRequireDefault(_toPrimitive);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method Converts argument to a value that can be used as a property key.
@@ -1547,10 +1666,40 @@ var _toString2 = _interopRequireDefault(__webpack_require__(3));
  *
  * toPropertyKey(Object.create(null)); // TypeError
  */
+/**
+ * @file Converts argument to a value that can be used as a property key.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module toPropertyKey
+ */
+
 function toPropertyKey(argument) {
-  var key = (0, _toPrimitive.default)(argument, String);
-  return _isSymbolSupported.default && (0, _isSymbolType.default)(key) ? key : (0, _toString2.default)(key);
+  var key = (0, _toPrimitive2.default)(argument, String);
+
+  return _isSymbolSupported2.default && (0, _isSymbolType2.default)(key) ? key : (0, _toString3.default)(key);
 }
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.toUpperCase); /**
+                                                                           * @file Utility that needs description.
+                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                           * @module _toUpperCase
+                                                                           */
 
 /***/ }),
 /* 36 */
@@ -1559,23 +1708,27 @@ function toPropertyKey(argument) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _assertIs2 = __webpack_require__(46);
+
+var _assertIs3 = _interopRequireDefault(_assertIs2);
+
+var _isObjectLike = __webpack_require__(11);
+
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toUpperCase
+ * @module assertIsObject
  */
-var _default = (0, _methodize2.default)(String.prototype.toUpperCase);
 
-exports.default = _default;
+exports.default = (0, _assertIs3.default)(_isObjectLike2.default, 'Not an object');
 
 /***/ }),
 /* 37 */
@@ -1584,25 +1737,24 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = isWholeNumber;
 
-var _assertIs2 = _interopRequireDefault(__webpack_require__(47));
+var _isSafeInteger = __webpack_require__(51);
 
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
+var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module assertIsObject
- */
-var _default = (0, _assertIs2.default)(_isObjectLike.default, 'Not an object');
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _default;
+function isWholeNumber(value) {
+  return (0, _isSafeInteger2.default)(value) && value >= 0;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isWholeNumber
+   */
 
 /***/ }),
 /* 38 */
@@ -1611,22 +1763,18 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isWholeNumber;
-
-var _isSafeInteger = _interopRequireDefault(__webpack_require__(52));
-
+exports.default = isStringType;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isWholeNumber
+ * @module isStringType
  */
-function isWholeNumber(value) {
-  return (0, _isSafeInteger.default)(value) && value >= 0;
+
+function isStringType(value) {
+  return typeof value === 'string';
 }
 
 /***/ }),
@@ -1639,16 +1787,18 @@ function isWholeNumber(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringType;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringType
- */
-function isStringType(value) {
-  return typeof value === 'string';
-}
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Object.prototype.hasOwnProperty); /**
+                                                                              * @file Utility that needs description.
+                                                                              * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                              * @module _hasOwnProperty
+                                                                              */
 
 /***/ }),
 /* 40 */
@@ -1657,23 +1807,75 @@ function isStringType(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = isRegex;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _toStringTag = __webpack_require__(44);
+
+var _toStringTag2 = _interopRequireDefault(_toStringTag);
+
+var _isObjectLike = __webpack_require__(11);
+
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+var _isToStringTagSupported = __webpack_require__(69);
+
+var _isToStringTagSupported2 = _interopRequireDefault(_isToStringTagSupported);
+
+var _hasOwnProperty2 = __webpack_require__(39);
+
+var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
+
+var _exec2 = __webpack_require__(97);
+
+var _exec3 = _interopRequireDefault(_exec2);
+
+var _getOwnPropertyDescriptor2 = __webpack_require__(209);
+
+var _getOwnPropertyDescriptor3 = _interopRequireDefault(_getOwnPropertyDescriptor2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file Utility that needs description.
+ * @file Is this value a JS regex?
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _hasOwnProperty
+ * @module isRegex
  */
-var _default = (0, _methodize2.default)(Object.prototype.hasOwnProperty);
 
-exports.default = _default;
+var regexClass = '[object RegExp]';
+
+var tryRegexExecCall = function _tryRegexExecCall(value, descriptor) {
+  /* istanbul ignore next */
+  try {
+    value.lastIndex = 0;
+
+    (0, _exec3.default)(value);
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    if (descriptor.writable) {
+      value.lastIndex = descriptor.value;
+    }
+  }
+};
+
+function isRegex(value) {
+  if (!(0, _isObjectLike2.default)(value)) {
+    return false;
+  }
+
+  /* istanbul ignore next */
+  if (!_isToStringTagSupported2.default) {
+    return (0, _toStringTag2.default)(value) === regexClass;
+  }
+
+  var descriptor = (0, _getOwnPropertyDescriptor3.default)(value, 'lastIndex');
+
+  return descriptor && (0, _hasOwnProperty3.default)(descriptor, 'value') ? tryRegexExecCall(value, descriptor) : false;
+}
 
 /***/ }),
 /* 41 */
@@ -1682,91 +1884,24 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isRegex;
-
-var _toStringTag = _interopRequireDefault(__webpack_require__(45));
-
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
-
-var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(71));
-
-var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(40));
-
-var _exec2 = _interopRequireDefault(__webpack_require__(99));
-
-var _getOwnPropertyDescriptor2 = _interopRequireDefault(__webpack_require__(216));
-
-/**
- * @file Is this value a JS regex?
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isRegex
- */
-var regexClass = '[object RegExp]';
-
-var tryRegexExecCall = function _tryRegexExecCall(value) {
-  var storedLastIndex;
-
-  try {
-    storedLastIndex = value.lastIndex;
-    value.lastIndex = 0;
-    (0, _exec2.default)(value);
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    value.lastIndex = storedLastIndex;
-  }
-};
-
-function isRegex(value) {
-  if (!(0, _isObjectLike.default)(value)) {
-    return false;
-  }
-
-  if (!_isToStringTagSupported.default) {
-    return (0, _toStringTag.default)(value) === regexClass;
-  }
-
-  var descriptor = (0, _getOwnPropertyDescriptor2.default)(value, 'lastIndex');
-  var hasLastIndexDataProperty = descriptor && (0, _hasOwnProperty2.default)(descriptor, 'value');
-
-  if (!hasLastIndexDataProperty) {
-    return false;
-  }
-
-  return tryRegexExecCall(value);
-}
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _isFinite;
 
-var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
+var _isNaN2 = __webpack_require__(22);
 
-var _Infinity2 = _interopRequireDefault(__webpack_require__(217));
+var _isNaN3 = _interopRequireDefault(_isNaN2);
 
-var _isNumberType = _interopRequireDefault(__webpack_require__(31));
+var _Infinity2 = __webpack_require__(210);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _isFinite
- */
+var _Infinity3 = _interopRequireDefault(_Infinity2);
+
+var _isNumberType = __webpack_require__(30);
+
+var _isNumberType2 = _interopRequireDefault(_isNumberType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method determines whether the passed value is a finite number.
@@ -1788,7 +1923,43 @@ var _isNumberType = _interopRequireDefault(__webpack_require__(31));
  * numIsFinite(null);      // false, would've been true with
  */
 function _isFinite(number) {
-  return (0, _isNumberType.default)(number) && !(0, _isNaN2.default)(number) && number !== _Infinity2.default && number !== -_Infinity2.default;
+  return (0, _isNumberType2.default)(number) && !(0, _isNaN3.default)(number) && number !== _Infinity3.default && number !== -_Infinity3.default;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _isFinite
+   */
+
+/***/ }),
+/* 42 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _trim;
+
+var _trimLeft2 = __webpack_require__(65);
+
+var _trimLeft3 = _interopRequireDefault(_trimLeft2);
+
+var _trimRight2 = __webpack_require__(101);
+
+var _trimRight3 = _interopRequireDefault(_trimRight2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file List of ECMAScript white space characters.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _trim
+ */
+
+function _trim(string) {
+  return (0, _trimRight3.default)((0, _trimLeft3.default)(string));
 }
 
 /***/ }),
@@ -1798,25 +1969,26 @@ function _isFinite(number) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trim;
 
-var _trimLeft2 = _interopRequireDefault(__webpack_require__(66));
+var _isSymbolType = __webpack_require__(32);
 
-var _trimRight2 = _interopRequireDefault(__webpack_require__(103));
+var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = typeof Symbol === 'function' && (0, _isSymbolType2.default)(Symbol('x')); /**
+                                                                                             * @file Tests if ES6 Symbol is supported.
+                                                                                             * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                             * @module isSymbolSupported
+                                                                                             */
 
 /**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trim
+ * Indicates if `Symbol`exists and creates the correct type.
+ * `true`, if it exists and creates the correct type, otherwise `false`.
  */
-function _trim(string) {
-  return (0, _trimRight2.default)((0, _trimLeft2.default)(string));
-}
 
 /***/ }),
 /* 44 */
@@ -1825,50 +1997,15 @@ function _trim(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
+var _methodize2 = __webpack_require__(0);
 
-/**
- * @file Tests if ES6 Symbol is supported.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSymbolSupported
- */
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * Indicates if `Symbol`exists and creates the correct type.
- * `true`, if it exists and creates the correct type, otherwise `false`.
- */
-var _default = typeof Symbol === 'function' && (0, _isSymbolType.default)(Symbol('x'));
-
-exports.default = _default;
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Get an object's ES6 @@toStringTag.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toStringTag
- */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * The `toStringTag` method returns "[object type]", where type is the
@@ -1877,9 +2014,32 @@ var _methodize2 = _interopRequireDefault(__webpack_require__(1));
  * @param {*} value - The object of which to get the object type string.
  * @returns {string} The object type string.
  */
-var _default = (0, _methodize2.default)(Object.prototype.toString);
+exports.default = (0, _methodize3.default)(Object.prototype.toString); /**
+                                                                        * @file Get an object's ES6 @@toStringTag.
+                                                                        * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                        * @module toStringTag
+                                                                        */
 
-exports.default = _default;
+/***/ }),
+/* 45 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isNull;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isNull
+ */
+
+function isNull(value) {
+  return value === null;
+}
 
 /***/ }),
 /* 46 */
@@ -1891,15 +2051,40 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isNull;
+exports.default = _assertIs;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNull
- */
-function isNull(value) {
-  return value === null;
+var _call2 = __webpack_require__(15);
+
+var _call3 = _interopRequireDefault(_call2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var toMessage = function _toMessage(message, fallback) {
+  return (0, _isNil2.default)(message) ? fallback : (0, _toString3.default)(message);
+}; /**
+    * @file Utility that needs description.
+    * @copyright Copyright (c) 2018-present, Graham Fairweather
+    * @module _assertIs
+    */
+
+function _assertIs(predicate, defaultMessage) {
+  var defMsg = toMessage(defaultMessage, 'Not a valid value');
+
+  return function assertIsBound(value, customMessage) {
+    if ((0, _call3.default)(predicate, this, value)) {
+      return value;
+    }
+
+    throw new TypeError(toMessage(customMessage, defMsg));
+  };
 }
 
 /***/ }),
@@ -1909,37 +2094,46 @@ function isNull(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _assertIs;
+exports.default = _sift;
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _any2 = __webpack_require__(19);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _any3 = _interopRequireDefault(_any2);
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _assertIs
+ * @module _sift
  */
-var toMessage = function _toMessage(message, fallback) {
-  return (0, _isNil.default)(message) ? fallback : (0, _toString2.default)(message);
-};
 
-function _assertIs(predicate, defaultMessage) {
-  var defMsg = toMessage(defaultMessage, 'Not a valid value');
-  return function assertIsBound(value, customMessage) {
-    if ((0, _call2.default)(predicate, this, value)) {
-      return value;
+function _sift(array, callback) {
+  var result = [];
+  var iteratee = function _iteratee(value) {
+    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
     }
 
-    throw new TypeError(toMessage(customMessage, defMsg));
+    if (callback.apply(undefined, [value].concat(args))) {
+      (0, _push3.default)(result, value);
+    }
   };
+
+  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  _any3.default.apply(undefined, [array, iteratee].concat(fromIndex));
+
+  return result;
 }
 
 /***/ }),
@@ -1949,42 +2143,43 @@ function _assertIs(predicate, defaultMessage) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _sift;
+exports.default = _getAt;
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
+var _isString = __webpack_require__(4);
 
-var _push2 = _interopRequireDefault(__webpack_require__(18));
+var _isString2 = _interopRequireDefault(_isString);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _isArrayLike = __webpack_require__(18);
+
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+var _charAt2 = __webpack_require__(29);
+
+var _charAt3 = _interopRequireDefault(_charAt2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file Utility that needs description.
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _sift
+ * @module _getAt
  */
-function _sift(array, callback) {
-  var result = [];
 
-  var iteratee = function _iteratee(value) {
-    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-      args[_key2 - 1] = arguments[_key2];
-    }
-
-    if (callback.apply(void 0, [value].concat(args))) {
-      (0, _push2.default)(result, value);
-    }
-  };
-
-  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
+function _getAt(array) {
+  if (!(0, _isArrayLike2.default)(array)) {
+    return void 0;
   }
 
-  _any2.default.apply(void 0, [array, iteratee].concat(fromIndex));
+  var index = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toInteger3.default)(arguments.length <= 1 ? undefined : arguments[1]) : 0;
 
-  return result;
+  return (0, _isString2.default)(array) ? (0, _charAt3.default)(array, index) : array[index];
 }
 
 /***/ }),
@@ -1994,56 +2189,17 @@ function _sift(array, callback) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _getAt;
-
-var _isString = _interopRequireDefault(__webpack_require__(5));
-
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
-
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
-
-var _charAt2 = _interopRequireDefault(__webpack_require__(30));
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getAt
- */
-function _getAt(array) {
-  if (!(0, _isArrayLike.default)(array)) {
-    return void 0;
-  }
-
-  var index = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toInteger2.default)(arguments.length <= 1 ? undefined : arguments[1]) : 0;
-  return (0, _isString.default)(array) ? (0, _charAt2.default)(array, index) : array[index];
-}
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _find;
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
+var _any2 = __webpack_require__(19);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _find
- */
+var _any3 = _interopRequireDefault(_any2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _find(array, callback) {
   var result = {
     includes: false,
@@ -2063,14 +2219,66 @@ function _find(array, callback) {
     return found;
   };
 
-  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     fromIndex[_key - 2] = arguments[_key];
   }
 
-  _any2.default.apply(void 0, [array, predicate].concat(fromIndex));
+  _any3.default.apply(undefined, [array, predicate].concat(fromIndex));
 
   return result;
-}
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _find
+   */
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _bound;
+
+var _apply2 = __webpack_require__(14);
+
+var _apply3 = _interopRequireDefault(_apply2);
+
+var _argsToArray2 = __webpack_require__(203);
+
+var _argsToArray3 = _interopRequireDefault(_argsToArray2);
+
+var _createArgList2 = __webpack_require__(202);
+
+var _createArgList3 = _interopRequireDefault(_createArgList2);
+
+var _create2 = __webpack_require__(201);
+
+var _create3 = _interopRequireDefault(_create2);
+
+var _Function2 = __webpack_require__(200);
+
+var _Function3 = _interopRequireDefault(_Function2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _bound(binder, name, prototype, length) {
+  var bound = (0, _Function3.default)('binder', '_apply', '_argsToArray', 'return function bound' + String(name) + '(' + String((0, _createArgList3.default)(length)) + '){ return _apply(binder,this,_argsToArray(arguments)); }')(binder, _apply3.default, _argsToArray3.default);
+
+  if (prototype) {
+    bound.prototype = (0, _create3.default)(prototype);
+  }
+
+  return bound;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _bound
+   */
 
 /***/ }),
 /* 51 */
@@ -2079,36 +2287,29 @@ function _find(array, callback) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _bound;
+exports.default = isSafeInteger;
 
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
+var _isInteger = __webpack_require__(94);
 
-var _argsToArray2 = _interopRequireDefault(__webpack_require__(210));
+var _isInteger2 = _interopRequireDefault(_isInteger);
 
-var _createArgList2 = _interopRequireDefault(__webpack_require__(209));
+var _MAX_SAFE_INTEGER = __webpack_require__(53);
 
-var _create2 = _interopRequireDefault(__webpack_require__(208));
+var _MAX_SAFE_INTEGER2 = _interopRequireDefault(_MAX_SAFE_INTEGER);
 
-var _Function2 = _interopRequireDefault(__webpack_require__(207));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _bound
+ * @module isSafeInteger
  */
-function _bound(binder, name, prototype, length) {
-  var bound = (0, _Function2.default)('binder', '_apply', '_argsToArray', "return function bound".concat(name, "(").concat((0, _createArgList2.default)(length), "){ return _apply(binder,this,_argsToArray(arguments)); }"))(binder, _apply2.default, _argsToArray2.default);
 
-  if (prototype) {
-    bound.prototype = (0, _create2.default)(prototype);
-  }
-
-  return bound;
+function isSafeInteger(value) {
+  return (0, _isInteger2.default)(value) && value >= -_MAX_SAFE_INTEGER2.default && value <= _MAX_SAFE_INTEGER2.default;
 }
 
 /***/ }),
@@ -2118,25 +2319,39 @@ function _bound(binder, name, prototype, length) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSafeInteger;
+exports.default = _accumulate;
 
-var _isInteger = _interopRequireDefault(__webpack_require__(96));
+var _all2 = __webpack_require__(20);
 
-var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(54));
+var _all3 = _interopRequireDefault(_all2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSafeInteger
- */
-function isSafeInteger(value) {
-  return (0, _isInteger.default)(value) && value >= -_MAX_SAFE_INTEGER.default && value <= _MAX_SAFE_INTEGER.default;
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _accumulate(array, callback, initialValue) {
+  var accumulator = initialValue;
+  var iteratee = function _iteratee() {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    accumulator = callback.apply(undefined, [accumulator].concat(args));
+  };
+
+  for (var _len = arguments.length, rest = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    rest[_key - 3] = arguments[_key];
+  }
+
+  _all3.default.apply(undefined, [array, iteratee].concat(rest));
+
+  return accumulator;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _accumulate
+   */
 
 /***/ }),
 /* 53 */
@@ -2145,39 +2360,16 @@ function isSafeInteger(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _accumulate;
-
-var _all2 = _interopRequireDefault(__webpack_require__(21));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _accumulate
+ * @module MAX_SAFE_INTEGER
  */
-function _accumulate(array, callback, initialValue) {
-  var accumulator = initialValue;
 
-  var iteratee = function _iteratee() {
-    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    accumulator = callback.apply(void 0, [accumulator].concat(args));
-  };
-
-  for (var _len = arguments.length, rest = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-    rest[_key - 3] = arguments[_key];
-  }
-
-  _all2.default.apply(void 0, [array, iteratee].concat(rest));
-
-  return accumulator;
-}
+exports.default = 9007199254740991;
 
 /***/ }),
 /* 54 */
@@ -2189,39 +2381,17 @@ function _accumulate(array, callback, initialValue) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module MAX_SAFE_INTEGER
- */
-var _default = 9007199254740991;
-exports.default = _default;
-
-/***/ }),
-/* 55 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = _sign;
 
-var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
+var _toNumber2 = __webpack_require__(21);
 
-var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
+var _toNumber3 = _interopRequireDefault(_toNumber2);
 
-/**
- * @file Shim for Math.sign.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sign
- */
+var _isNaN2 = __webpack_require__(22);
+
+var _isNaN3 = _interopRequireDefault(_isNaN2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method returns the sign of a number, indicating whether the number is positive,
@@ -2243,15 +2413,39 @@ var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
  * mathSign('foo'); // NaN
  * mathSign();      // NaN
  */
-function _sign(x) {
-  var n = (0, _toNumber2.default)(x);
+/**
+ * @file Shim for Math.sign.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module sign
+ */
 
-  if (n === 0 || (0, _isNaN2.default)(n)) {
+function _sign(x) {
+  var n = (0, _toNumber3.default)(x);
+
+  if (n === 0 || (0, _isNaN3.default)(n)) {
     return n;
   }
 
   return n > 0 ? 1 : -1;
 }
+
+/***/ }),
+/* 55 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Parses a string argument and returns an integer of the specified radix.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _NaN
+ */
+
+exports.default = 0 / 0;
 
 /***/ }),
 /* 56 */
@@ -2263,50 +2457,43 @@ function _sign(x) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Parses a string argument and returns an integer of the specified radix.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _NaN
- */
-var _default = 0 / 0;
-
-exports.default = _default;
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = _parseInt;
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _toString2 = __webpack_require__(2);
 
-var _trimLeft2 = _interopRequireDefault(__webpack_require__(66));
+var _toString3 = _interopRequireDefault(_toString2);
 
-var _Number2 = _interopRequireDefault(__webpack_require__(60));
+var _trimLeft2 = __webpack_require__(65);
 
-var _charAt2 = _interopRequireDefault(__webpack_require__(30));
+var _trimLeft3 = _interopRequireDefault(_trimLeft2);
 
-var _test2 = _interopRequireDefault(__webpack_require__(27));
+var _Number2 = __webpack_require__(59);
 
-var _NaN2 = _interopRequireDefault(__webpack_require__(56));
+var _Number3 = _interopRequireDefault(_Number2);
+
+var _charAt2 = __webpack_require__(29);
+
+var _charAt3 = _interopRequireDefault(_charAt2);
+
+var _test2 = __webpack_require__(26);
+
+var _test3 = _interopRequireDefault(_test2);
+
+var _NaN2 = __webpack_require__(55);
+
+var _NaN3 = _interopRequireDefault(_NaN2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Parses a string argument and returns an integer of the specified radix.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _parseInt
  */
+
 var parse = parseInt;
 var hexPattern = /^[-+]?0x/i;
+
 /**
  * This method parses a string argument and returns an integer of the specified
  * radix (the base in mathematical numeral systems).
@@ -2345,16 +2532,38 @@ var hexPattern = /^[-+]?0x/i;
  * $parseInt('Hello', 8); // Not a number at all
  * $parseInt('546', 2);   // Digits are not valid for binary representations
  */
-
 function _parseInt(string, radix) {
-  var str = (0, _trimLeft2.default)((0, _toString2.default)(string));
+  var str = (0, _trimLeft3.default)((0, _toString3.default)(string));
 
-  if ((0, _charAt2.default)(str, 0) === "\u180E") {
-    return _NaN2.default;
+  if ((0, _charAt3.default)(str, 0) === '\u180E') {
+    return _NaN3.default;
   }
 
-  return parse(str, (0, _Number2.default)(radix) || ((0, _test2.default)(hexPattern, str) ? 16 : 10));
+  return parse(str, (0, _Number3.default)(radix) || ((0, _test3.default)(hexPattern, str) ? 16 : 10));
 }
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.indexOf); /**
+                                                                       * @file Utility that needs description.
+                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                       * @module _stringIndexOf
+                                                                       */
 
 /***/ }),
 /* 58 */
@@ -2363,85 +2572,74 @@ function _parseInt(string, radix) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _stringIndexOf
- */
-var _default = (0, _methodize2.default)(String.prototype.indexOf);
-
-exports.default = _default;
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = toPrimitive;
 
-var _isDateObject = _interopRequireDefault(__webpack_require__(101));
+var _isDateObject = __webpack_require__(99);
 
-var _isSymbol = _interopRequireDefault(__webpack_require__(73));
+var _isDateObject2 = _interopRequireDefault(_isDateObject);
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _isSymbol = __webpack_require__(71);
 
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
+var _isSymbol2 = _interopRequireDefault(_isSymbol);
 
-var _isSymbolSupported = _interopRequireDefault(__webpack_require__(44));
+var _call2 = __webpack_require__(15);
 
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+var _call3 = _interopRequireDefault(_call2);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _isPrimitive = __webpack_require__(25);
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
 
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
+var _isSymbolSupported = __webpack_require__(43);
 
-/**
- * @file Converts a JavaScript object to a primitive value.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toNumber
- */
-var symToPrimitive = _isSymbolSupported.default && Symbol.toPrimitive;
-var symValueOf = _isSymbolSupported.default && Symbol.prototype.valueOf;
+var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
+
+var _isFunction2 = __webpack_require__(10);
+
+var _isFunction3 = _interopRequireDefault(_isFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+var _isUndefined = __webpack_require__(27);
+
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var symToPrimitive = _isSymbolSupported2.default && Symbol.toPrimitive; /**
+                                                                         * @file Converts a JavaScript object to a primitive value.
+                                                                         * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                         * @module toNumber
+                                                                         */
+
+var symValueOf = _isSymbolSupported2.default && Symbol.prototype.valueOf;
 var toStringOrder = ['toString', 'valueOf'];
 var toNumberOrder = ['valueOf', 'toString'];
 var orderLength = 2;
 
 var ordinaryToPrimitive = function _ordinaryToPrimitive(O, hint) {
-  (0, _requireObjectCoercible.default)(O);
-
+  (0, _requireObjectCoercible2.default)(O);
   if (hint !== 'number' && hint !== 'string') {
     throw new TypeError('hint must be "string" or "number"');
   }
 
   var methodNames = hint === 'string' ? toStringOrder : toNumberOrder;
-  var method;
-  var result;
-
+  var method = void 0;
+  var result = void 0;
   for (var i = 0; i < orderLength; i += 1) {
     method = O[methodNames[i]];
-
-    if ((0, _isFunction2.default)(method)) {
-      result = (0, _call2.default)(method, O);
-
-      if ((0, _isPrimitive.default)(result)) {
+    if ((0, _isFunction3.default)(method)) {
+      result = (0, _call3.default)(method, O);
+      if ((0, _isPrimitive2.default)(result)) {
         return result;
       }
     }
@@ -2452,17 +2650,18 @@ var ordinaryToPrimitive = function _ordinaryToPrimitive(O, hint) {
 
 var getMethod = function _getMethod(O, P) {
   var func = O[P];
-
-  if (!(0, _isNil.default)(func)) {
-    if (!(0, _isFunction2.default)(func)) {
-      throw new TypeError("".concat(func, " returned for property ").concat(P, " of object ").concat(O, " is not a function"));
+  if (!(0, _isNil2.default)(func)) {
+    if (!(0, _isFunction3.default)(func)) {
+      throw new TypeError(String(func) + ' returned for property ' + String(P) + ' of object ' + String(O) + ' is not a function');
     }
 
     return func;
   }
 
   return void 0;
-}; // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
+};
+
+// http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
 
 /**
  * This method converts a JavaScript object to a primitive value.
@@ -2485,15 +2684,12 @@ var getMethod = function _getMethod(O, P) {
  * toPrimitive(date, String)); // Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
  * toPrimitive(date, Number)); // 0
  */
-
-
 function toPrimitive(input) {
-  if ((0, _isPrimitive.default)(input)) {
+  if ((0, _isPrimitive2.default)(input)) {
     return input;
   }
 
   var hint = 'default';
-
   if (arguments.length <= 1 ? 0 : arguments.length - 1) {
     if ((arguments.length <= 1 ? undefined : arguments[1]) === String) {
       hint = 'string';
@@ -2502,32 +2698,48 @@ function toPrimitive(input) {
     }
   }
 
-  var exoticToPrim;
-
-  if (_isSymbolSupported.default) {
+  var exoticToPrim = void 0;
+  if (_isSymbolSupported2.default) {
     if (symToPrimitive) {
       exoticToPrim = getMethod(input, symToPrimitive);
-    } else if ((0, _isSymbol.default)(input)) {
+    } else if ((0, _isSymbol2.default)(input)) {
       exoticToPrim = symValueOf;
     }
   }
 
-  if (!(0, _isUndefined.default)(exoticToPrim)) {
-    var result = (0, _call2.default)(exoticToPrim, input, hint);
-
-    if ((0, _isPrimitive.default)(result)) {
+  if (!(0, _isUndefined2.default)(exoticToPrim)) {
+    var result = (0, _call3.default)(exoticToPrim, input, hint);
+    if ((0, _isPrimitive2.default)(result)) {
       return result;
     }
 
     throw new TypeError('unable to convert exotic object to primitive');
   }
 
-  if (hint === 'default' && ((0, _isDateObject.default)(input) || (0, _isSymbol.default)(input))) {
+  if (hint === 'default' && ((0, _isDateObject2.default)(input) || (0, _isSymbol2.default)(input))) {
     hint = 'string';
   }
 
   return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
 }
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Number
+ */
+
+exports.default = 0 .constructor;
 
 /***/ }),
 /* 60 */
@@ -2539,42 +2751,24 @@ function toPrimitive(input) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Number
- */
-var _default = 0 .constructor;
-exports.default = _default;
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = replaceComments;
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _toString2 = __webpack_require__(2);
 
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
+var _toString3 = _interopRequireDefault(_toString2);
 
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
+var _replace2 = __webpack_require__(13);
 
-/**
- * @file Replace the comments in a string.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module replaceComments
- */
-var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
+var _replace3 = _interopRequireDefault(_replace2);
+
+var _requireCoercibleToString = __webpack_require__(23);
+
+var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
+
 /**
  * This method replaces comments in a string.
  *
@@ -2589,10 +2783,38 @@ var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
  * replaceComments(test;/* test * /, ''), // 'test;'
  * replaceComments(test; // test, ''), // 'test;'
  */
+/**
+ * @file Replace the comments in a string.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module replaceComments
+ */
 
 function replaceComments(string) {
-  return (0, _replace2.default)((0, _requireCoercibleToString.default)(string), STRIP_COMMENTS, (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toString2.default)(arguments.length <= 1 ? undefined : arguments[1]) : '');
+  return (0, _replace3.default)((0, _requireCoercibleToString2.default)(string), STRIP_COMMENTS, (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toString3.default)(arguments.length <= 1 ? undefined : arguments[1]) : '');
 }
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.toLowerCase); /**
+                                                                           * @file Utility that needs description.
+                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                           * @module _toLowerCase
+                                                                           */
 
 /***/ }),
 /* 62 */
@@ -2601,23 +2823,21 @@ function replaceComments(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _methodize2 = __webpack_require__(0);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toLowerCase
- */
-var _default = (0, _methodize2.default)(String.prototype.toLowerCase);
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-exports.default = _default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.reduce); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _reduce
+                                                                     */
 
 /***/ }),
 /* 63 */
@@ -2626,23 +2846,16 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _reduce
+ * @module _Object
  */
-var _default = (0, _methodize2.default)(Array.prototype.reduce);
 
-exports.default = _default;
+exports.default = {}.constructor;
 
 /***/ }),
 /* 64 */
@@ -2654,15 +2867,27 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = _negate;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Object
- */
-var _default = {}.constructor;
-exports.default = _default;
+var _apply2 = __webpack_require__(14);
+
+var _apply3 = _interopRequireDefault(_apply2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _negate(predicate) {
+  return function boundNegate() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    return !(0, _apply3.default)(predicate, this, args);
+  };
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _negate
+   */
 
 /***/ }),
 /* 65 */
@@ -2671,28 +2896,33 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _negate;
+exports.default = _trimLeft;
 
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
+var _replace2 = __webpack_require__(13);
+
+var _replace3 = _interopRequireDefault(_replace2);
+
+var _whitespace2 = __webpack_require__(31);
+
+var _whitespace3 = _interopRequireDefault(_whitespace2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file Utility that needs description.
+ * @file List of ECMAScript white space characters.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _negate
+ * @module _trimLeft
  */
-function _negate(predicate) {
-  return function boundNegate() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
 
-    return !(0, _apply2.default)(predicate, this, args);
-  };
+var PRE = '^[';
+var POST = ']+';
+var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
+
+function _trimLeft(string) {
+  return (0, _replace3.default)(string, whiteSpace, '');
 }
 
 /***/ }),
@@ -2702,53 +2932,20 @@ function _negate(predicate) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _trimLeft;
-
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
-
-var _whitespace2 = _interopRequireDefault(__webpack_require__(32));
-
-/**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trimLeft
- */
-var PRE = '^[';
-var POST = ']+';
-var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
-
-function _trimLeft(string) {
-  return (0, _replace2.default)(string, whiteSpace, '');
-}
-
-/***/ }),
-/* 67 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = normalizeSpace;
 
-var _normalizeSpace2 = _interopRequireDefault(__webpack_require__(223));
+var _normalizeSpace2 = __webpack_require__(216);
 
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
+var _normalizeSpace3 = _interopRequireDefault(_normalizeSpace2);
 
-/**
- * @file Trims and replaces sequences of whitespace characters by a single space.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module normalizeSpace
- */
+var _requireCoercibleToString = __webpack_require__(23);
+
+var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method strips leading and trailing white-space from a string,
@@ -2763,8 +2960,38 @@ var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
  *
  * normalizeSpace(' \t\na \t\nb \t\n') === 'a b'; // true
  */
+/**
+ * @file Trims and replaces sequences of whitespace characters by a single space.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module normalizeSpace
+ */
+
 function normalizeSpace(string) {
-  return (0, _normalizeSpace2.default)((0, _requireCoercibleToString.default)(string));
+  return (0, _normalizeSpace3.default)((0, _requireCoercibleToString2.default)(string));
+}
+
+/***/ }),
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = isObjectType;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isObjectType
+ */
+
+function isObjectType(value) {
+  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
 }
 
 /***/ }),
@@ -2774,22 +3001,18 @@ function normalizeSpace(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isObjectType;
-
-var _typeof2 = _interopRequireDefault(__webpack_require__(70));
-
+exports.default = isFunctionType;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectType
+ * @module isFunctionType
  */
-function isObjectType(value) {
-  return (0, _typeof2.default)(value) === 'object';
+
+function isFunctionType(value) {
+  return typeof value === 'function';
 }
 
 /***/ }),
@@ -2802,64 +3025,22 @@ function isObjectType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isFunctionType;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isFunctionType
- */
-function isFunctionType(value) {
-  return typeof value === 'function';
-}
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
+                                                                                                                                                                                                                                                                               * @file Tests if ES6 @@toStringTag is supported.
+                                                                                                                                                                                                                                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                                                                                                                                                                                                               * @module isToStringTagSupported
+                                                                                                                                                                                                                                                                               */
 
-/***/ }),
-/* 70 */
-/***/ (function(module, exports) {
+var _isSymbolSupported = __webpack_require__(43);
 
-function _typeof2(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof2 = function _typeof2(obj) { return typeof obj; }; } else { _typeof2 = function _typeof2(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof2(obj); }
+var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
 
-function _typeof(obj) {
-  if (typeof Symbol === "function" && _typeof2(Symbol.iterator) === "symbol") {
-    module.exports = _typeof = function _typeof(obj) {
-      return _typeof2(obj);
-    };
-  } else {
-    module.exports = _typeof = function _typeof(obj) {
-      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : _typeof2(obj);
-    };
-  }
+var _isSymbolType = __webpack_require__(32);
 
-  return _typeof(obj);
-}
+var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
 
-module.exports = _typeof;
-
-/***/ }),
-/* 71 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _typeof2 = _interopRequireDefault(__webpack_require__(70));
-
-var _isSymbolSupported = _interopRequireDefault(__webpack_require__(44));
-
-var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
-
-/**
- * @file Tests if ES6 @@toStringTag is supported.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isToStringTagSupported
- */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Indicates if `Symbol.toStringTag`exists and is the correct type.
@@ -2867,31 +3048,25 @@ var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
  *
  * @type boolean
  */
-var _default = _isSymbolSupported.default && (0, _typeof2.default)((0, _isSymbolType.default)(Symbol.toStringTag));
-
-exports.default = _default;
+exports.default = _isSymbolSupported2.default && _typeof((0, _isSymbolType2.default)(Symbol.toStringTag));
 
 /***/ }),
-/* 72 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = attempt;
 
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
+var _apply2 = __webpack_require__(14);
 
-/**
- * @file Invokes function, returning an object of the results.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module attempt
- */
+var _apply3 = _interopRequireDefault(_apply2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method attempts to invoke the function, returning either the result or
@@ -2938,13 +3113,13 @@ var _apply2 = _interopRequireDefault(__webpack_require__(15));
  */
 function attempt(fn) {
   try {
-    for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       rest[_key - 1] = arguments[_key];
     }
 
     return {
       threw: false,
-      value: (0, _apply2.default)(fn, this, rest)
+      value: (0, _apply3.default)(fn, this, rest)
     };
   } catch (e) {
     return {
@@ -2952,10 +3127,14 @@ function attempt(fn) {
       value: e
     };
   }
-}
+} /**
+   * @file Invokes function, returning an object of the results.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module attempt
+   */
 
 /***/ }),
-/* 73 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2989,7 +3168,7 @@ if (hasSymbols) {
 
 
 /***/ }),
-/* 74 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2999,15 +3178,56 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = stubTrue;
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module stubTrue
  */
+
 function stubTrue() {
   return true;
 }
+
+/***/ }),
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _RegExp
+ */
+
+exports.default = /(?:)/.constructor;
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.search); /**
+                                                                      * @file Utility that needs description.
+                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                      * @module _search
+                                                                      */
 
 /***/ }),
 /* 75 */
@@ -3019,79 +3239,52 @@ function stubTrue() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _RegExp
- */
-var _default = /(?:)/.constructor;
-exports.default = _default;
-
-/***/ }),
-/* 76 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _search
- */
-var _default = (0, _methodize2.default)(String.prototype.search);
-
-exports.default = _default;
-
-/***/ }),
-/* 77 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = toDecimalFormString;
 
-var _Number2 = _interopRequireDefault(__webpack_require__(60));
+var _Number2 = __webpack_require__(59);
 
-var _charAt2 = _interopRequireDefault(__webpack_require__(30));
+var _Number3 = _interopRequireDefault(_Number2);
 
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+var _charAt2 = __webpack_require__(29);
 
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
+var _charAt3 = _interopRequireDefault(_charAt2);
 
-var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(58));
+var _stringSlice2 = __webpack_require__(9);
 
-var _join2 = _interopRequireDefault(__webpack_require__(29));
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
 
-var _search2 = _interopRequireDefault(__webpack_require__(76));
+var _replace2 = __webpack_require__(13);
 
-var _test2 = _interopRequireDefault(__webpack_require__(27));
+var _replace3 = _interopRequireDefault(_replace2);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _stringIndexOf2 = __webpack_require__(57);
 
-/**
- * @file Convert a base-10 or scientific E-notation value to a decimal form string.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module numberToDecimalString
- */
-var EMPTY_STRING = '';
+var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
+
+var _join2 = __webpack_require__(28);
+
+var _join3 = _interopRequireDefault(_join2);
+
+var _search2 = __webpack_require__(74);
+
+var _search3 = _interopRequireDefault(_search2);
+
+var _test2 = __webpack_require__(26);
+
+var _test3 = _interopRequireDefault(_test2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var EMPTY_STRING = ''; /**
+                        * @file Convert a base-10 or scientific E-notation value to a decimal form string.
+                        * @copyright Copyright (c) 2018-present, Graham Fairweather
+                        * @module numberToDecimalString
+                        */
+
 var DECIMAL_MARK = '.';
 var HYPHEN_MINUS = '-';
 var ZERO_SYMBOL = '0';
@@ -3099,6 +3292,7 @@ var MINUS_ZERO_SYMBOL = HYPHEN_MINUS + ZERO_SYMBOL;
 var ERROR_MSG = 'not a valid base 10 numeric value';
 var validPattern = /^-?(?:(?:\d|[1-9]\d*)(?:\.\d+)?)(?:e[+-]?\d+)?$/i;
 var expPattern = /e/i;
+
 /**
  * This method converts a base-10 or scientific E-notation value to
  * a decimal form string. Javascript's IEE 754 double-precision numbers
@@ -3145,65 +3339,59 @@ var expPattern = /e/i;
  * toDecimalFormString(Symbol('0')); // TypeError
  * toDecimalFormString(Object.create(null)); // TypeError
  */
-
 function toDecimalFormString(value) {
-  var workingValue = value; // Minus zero?
+  var workingValue = value;
 
+  // Minus zero?
   if (workingValue === 0 && 1 / workingValue < 0) {
     workingValue = MINUS_ZERO_SYMBOL;
   } else {
-    workingValue = (0, _toString2.default)(workingValue);
-
-    if (!(0, _test2.default)(validPattern, workingValue)) {
+    workingValue = (0, _toString3.default)(workingValue);
+    if (!(0, _test3.default)(validPattern, workingValue)) {
       throw new TypeError(ERROR_MSG);
     }
-  } // Determine sign.
+  }
 
-
-  var sign;
-
-  if ((0, _charAt2.default)(workingValue, 0) === HYPHEN_MINUS) {
-    workingValue = (0, _stringSlice2.default)(workingValue, 1);
+  // Determine sign.
+  var sign = void 0;
+  if ((0, _charAt3.default)(workingValue, 0) === HYPHEN_MINUS) {
+    workingValue = (0, _stringSlice3.default)(workingValue, 1);
     sign = -1;
   } else {
     sign = 1;
-  } // Decimal point?
-
-
-  var pointIndex = (0, _stringIndexOf2.default)(workingValue, DECIMAL_MARK);
-
-  if (pointIndex > -1) {
-    workingValue = (0, _replace2.default)(workingValue, DECIMAL_MARK, EMPTY_STRING);
   }
 
-  var exponentIndex = pointIndex; // Exponential form?
+  // Decimal point?
+  var pointIndex = (0, _stringIndexOf3.default)(workingValue, DECIMAL_MARK);
+  if (pointIndex > -1) {
+    workingValue = (0, _replace3.default)(workingValue, DECIMAL_MARK, EMPTY_STRING);
+  }
 
-  var index = (0, _search2.default)(workingValue, expPattern);
-
+  var exponentIndex = pointIndex;
+  // Exponential form?
+  var index = (0, _search3.default)(workingValue, expPattern);
   if (index > 0) {
     // Determine exponent.
     if (exponentIndex < 0) {
       exponentIndex = index;
     }
 
-    exponentIndex += (0, _Number2.default)((0, _stringSlice2.default)(workingValue, index + 1));
-    workingValue = (0, _stringSlice2.default)(workingValue, 0, index);
+    exponentIndex += (0, _Number3.default)((0, _stringSlice3.default)(workingValue, index + 1));
+    workingValue = (0, _stringSlice3.default)(workingValue, 0, index);
   } else if (exponentIndex < 0) {
     // Integer.
     exponentIndex = workingValue.length;
   }
 
-  var leadingZeroIndex = workingValue.length; // Determine leading zeros.
-
+  var leadingZeroIndex = workingValue.length;
+  // Determine leading zeros.
   index = 0;
-
-  while (index < leadingZeroIndex && (0, _charAt2.default)(workingValue, index) === ZERO_SYMBOL) {
+  while (index < leadingZeroIndex && (0, _charAt3.default)(workingValue, index) === ZERO_SYMBOL) {
     index += 1;
   }
 
-  var coefficient;
-  var exponent;
-
+  var coefficient = void 0;
+  var exponent = void 0;
   if (index === leadingZeroIndex) {
     // Zero.
     exponent = 0;
@@ -3213,28 +3401,27 @@ function toDecimalFormString(value) {
     if (leadingZeroIndex > 0) {
       do {
         leadingZeroIndex -= 1;
-      } while ((0, _charAt2.default)(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
+      } while ((0, _charAt3.default)(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
     }
 
     exponent = exponentIndex - index - 1;
     coefficient = [];
-    coefficient.length = leadingZeroIndex + 1; // Convert string to array of digits without leading/trailing zeros.
+    coefficient.length = leadingZeroIndex + 1;
 
+    // Convert string to array of digits without leading/trailing zeros.
     var position = 0;
-
     while (index <= leadingZeroIndex) {
-      coefficient[position] = (0, _Number2.default)((0, _charAt2.default)(workingValue, index));
+      coefficient[position] = (0, _Number3.default)((0, _charAt3.default)(workingValue, index));
       position += 1;
       index += 1;
     }
   }
 
-  var decimalForm = (0, _join2.default)(coefficient, EMPTY_STRING);
+  var decimalForm = (0, _join3.default)(coefficient, EMPTY_STRING);
   var decimalFormLength = decimalForm.length;
 
   if (exponent < 0) {
     exponent += 1;
-
     while (exponent) {
       decimalForm = ZERO_SYMBOL + decimalForm;
       exponent += 1;
@@ -3243,24 +3430,87 @@ function toDecimalFormString(value) {
     decimalForm = ZERO_SYMBOL + DECIMAL_MARK + decimalForm;
   } else if (exponent > 0) {
     exponent += 1;
-
     if (exponent > decimalFormLength) {
       exponent -= decimalFormLength;
-
       while (exponent) {
         decimalForm += ZERO_SYMBOL;
         exponent -= 1;
       }
     } else if (exponent < decimalFormLength) {
-      decimalForm = (0, _stringSlice2.default)(decimalForm, 0, exponent) + DECIMAL_MARK + (0, _stringSlice2.default)(decimalForm, exponent);
-    } // Exponent is zero.
+      decimalForm = (0, _stringSlice3.default)(decimalForm, 0, exponent) + DECIMAL_MARK + (0, _stringSlice3.default)(decimalForm, exponent);
+    }
 
+    // Exponent is zero.
   } else if (decimalFormLength > 1) {
-    decimalForm = (0, _charAt2.default)(decimalForm, 0) + DECIMAL_MARK + (0, _stringSlice2.default)(decimalForm, 1);
+    decimalForm = (0, _charAt3.default)(decimalForm, 0) + DECIMAL_MARK + (0, _stringSlice3.default)(decimalForm, 1);
   }
 
   return sign < 0 ? HYPHEN_MINUS + decimalForm : decimalForm;
 }
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _uniq;
+
+var _includes2 = __webpack_require__(16);
+
+var _includes3 = _interopRequireDefault(_includes2);
+
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+var _reduce2 = __webpack_require__(62);
+
+var _reduce3 = _interopRequireDefault(_reduce2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var callback = function _callback(accumulator, currentValue) {
+  if (!(0, _includes3.default)(accumulator, currentValue)) {
+    (0, _push3.default)(accumulator, currentValue);
+  }
+
+  return accumulator;
+}; /**
+    * @file Utility that needs description.
+    * @copyright Copyright (c) 2018-present, Graham Fairweather
+    * @module _uniq
+    */
+
+function _uniq(array) {
+  return (0, _reduce3.default)(array, callback, []);
+}
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _Boolean = __webpack_require__(33);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_Boolean).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 78 */
@@ -3269,34 +3519,36 @@ function toDecimalFormString(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _uniq;
+exports.default = isSpaced;
 
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
+var _isString = __webpack_require__(4);
 
-var _push2 = _interopRequireDefault(__webpack_require__(18));
+var _isString2 = _interopRequireDefault(_isString);
 
-var _reduce2 = _interopRequireDefault(__webpack_require__(63));
+var _stringTest2 = __webpack_require__(8);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _uniq
- */
-var callback = function _callback(accumulator, currentValue) {
-  if (!(0, _includes2.default)(accumulator, currentValue)) {
-    (0, _push2.default)(accumulator, currentValue);
-  }
+var _stringTest3 = _interopRequireDefault(_stringTest2);
 
-  return accumulator;
-};
+var _whitespace2 = __webpack_require__(31);
 
-function _uniq(array) {
-  return (0, _reduce2.default)(array, callback, []);
+var _whitespace3 = _interopRequireDefault(_whitespace2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PRE = '['; /**
+                * @file Utility that needs description.
+                * @copyright Copyright (c) 2018-present, Graham Fairweather
+                * @module isSpaced
+                */
+
+var POST = ']';
+var containsSpace = new RegExp(PRE + (0, _whitespace3.default)('html') + POST);
+
+function isSpaced(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, containsSpace);
 }
 
 /***/ }),
@@ -3306,19 +3558,19 @@ function _uniq(array) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _Boolean.default;
-  }
-});
+exports.default = isBooleanType;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isBooleanType
+ */
 
-var _Boolean = _interopRequireDefault(__webpack_require__(34));
+function isBooleanType(value) {
+  return typeof value === 'boolean';
+}
 
 /***/ }),
 /* 80 */
@@ -3327,82 +3579,32 @@ var _Boolean = _interopRequireDefault(__webpack_require__(34));
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isSpaced;
-
-var _isString = _interopRequireDefault(__webpack_require__(5));
-
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
-
-var _whitespace2 = _interopRequireDefault(__webpack_require__(32));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSpaced
- */
-var PRE = '[';
-var POST = ']';
-var containsSpace = new RegExp(PRE + (0, _whitespace2.default)('html') + POST);
-
-function isSpaced(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, containsSpace);
-}
-
-/***/ }),
-/* 81 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isBooleanType;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isBooleanType
- */
-function isBooleanType(value) {
-  return typeof value === 'boolean';
-}
-
-/***/ }),
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = padStart;
 
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
+var _requireCoercibleToString = __webpack_require__(23);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
 
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
+var _toString2 = __webpack_require__(2);
 
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
+var _toString3 = _interopRequireDefault(_toString2);
 
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+var _toWholeNumber = __webpack_require__(7);
 
-/**
- * @file Pads a string with another string (repeated, if needed).
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module padStart
- */
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+var _isUndefined = __webpack_require__(27);
+
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method pads the current string with another string (repeated, if needed)
@@ -3429,35 +3631,38 @@ var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
  * padStart('a', 2, 'bc'); // 'ba'
  */
 function padStart(string, targetLength) {
-  var str = (0, _toString2.default)((0, _requireCoercibleToString.default)(string));
-  var stringLength = (0, _toWholeNumber.default)(str.length);
+  var str = (0, _toString3.default)((0, _requireCoercibleToString2.default)(string));
+  var stringLength = (0, _toWholeNumber2.default)(str.length);
   var fillString = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : void 0;
-  var filler = (0, _isUndefined.default)(fillString) ? '' : (0, _toString2.default)(fillString);
 
+  var filler = (0, _isUndefined2.default)(fillString) ? '' : (0, _toString3.default)(fillString);
   if (filler === '') {
     filler = ' ';
   }
 
-  var intMaxLength = (0, _toWholeNumber.default)(targetLength);
-
+  var intMaxLength = (0, _toWholeNumber2.default)(targetLength);
   if (intMaxLength <= stringLength) {
     return str;
   }
 
   var fillLen = intMaxLength - stringLength;
-
   while (filler.length < fillLen) {
     var fLen = filler.length;
     var remainingCodeUnits = fillLen - fLen;
-    filler += fLen > remainingCodeUnits ? (0, _stringSlice2.default)(filler, 0, remainingCodeUnits) : filler;
+    filler += fLen > remainingCodeUnits ? (0, _stringSlice3.default)(filler, 0, remainingCodeUnits) : filler;
   }
 
-  var truncatedStringFiller = filler.length > fillLen ? (0, _stringSlice2.default)(filler, 0, fillLen) : filler;
+  var truncatedStringFiller = filler.length > fillLen ? (0, _stringSlice3.default)(filler, 0, fillLen) : filler;
+
   return truncatedStringFiller + str;
-}
+} /**
+   * @file Pads a string with another string (repeated, if needed).
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module padStart
+   */
 
 /***/ }),
-/* 83 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3467,13 +3672,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = modulo;
-
 /**
  * @file modulo - floored division implementation.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module toStringTag
  */
+
 var floor = Math.floor;
+
 /**
  * The notation “x modulo y” (y must be finite and nonzero) computes a value k
  * of the same sign as y (or zero) such that abs(k) < abs(y) and x-k = q × y
@@ -3497,38 +3703,49 @@ var floor = Math.floor;
 
 function modulo(dividend, divisor) {
   var remain = dividend % divisor;
+
   return floor(remain >= 0 ? remain : remain + divisor);
 }
 
 /***/ }),
-/* 84 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = toUint24;
 
-var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
+var _toNumber2 = __webpack_require__(21);
 
-var _modulo = _interopRequireDefault(__webpack_require__(83));
+var _toNumber3 = _interopRequireDefault(_toNumber2);
 
-var _sign2 = _interopRequireDefault(__webpack_require__(55));
+var _modulo = __webpack_require__(81);
 
-var _isFinite2 = _interopRequireDefault(__webpack_require__(42));
+var _modulo2 = _interopRequireDefault(_modulo);
+
+var _sign2 = __webpack_require__(54);
+
+var _sign3 = _interopRequireDefault(_sign2);
+
+var _isFinite2 = __webpack_require__(41);
+
+var _isFinite3 = _interopRequireDefault(_isFinite2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Converts a value to Uint24.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module toUint24
  */
+
 var floor = Math.floor,
     abs = Math.abs;
+
 /**
  * The abstract operation ToUint24 converts argument to one of 2^24 integer
  * values in the range 0 through 2^24-1, inclusive.
@@ -3543,17 +3760,64 @@ var floor = Math.floor,
 
 function toUint24(argument) {
   // Let number be ? ToNumber(argument).
-  var number = (0, _toNumber2.default)(argument); // If number is NaN, +0, -0, +∞, or -∞, return +0.
+  var number = (0, _toNumber3.default)(argument);
 
-  if (number === 0 || !(0, _isFinite2.default)(number)) {
+  // If number is NaN, +0, -0, +∞, or -∞, return +0.
+  if (number === 0 || !(0, _isFinite3.default)(number)) {
     return 0;
-  } // Let int be the mathematical value that is the same sign as number and
+  }
+
+  // Let int be the mathematical value that is the same sign as number and
   // whose magnitude is floor(abs(number)).
   // Let int24bit be int modulo 2^24.
-
-
-  return (0, _modulo.default)((0, _sign2.default)(number) * floor(abs(number)), 0x1000000);
+  return (0, _modulo2.default)((0, _sign3.default)(number) * floor(abs(number)), 0x1000000);
 }
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Number.prototype.toString); /**
+                                                                        * @file Utility that needs description.
+                                                                        * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                        * @module _numberToString
+                                                                        */
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.match); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _match
+                                                                     */
 
 /***/ }),
 /* 85 */
@@ -3562,23 +3826,26 @@ function toUint24(argument) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = surround;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _toString2 = __webpack_require__(2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _numberToString
- */
-var _default = (0, _methodize2.default)(Number.prototype.toString);
+var _toString3 = _interopRequireDefault(_toString2);
 
-exports.default = _default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function surround(string, wrapper) {
+  var wrap = (0, _toString3.default)(wrapper);
+
+  return wrap + (0, _toString3.default)(string) + wrap;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module surround
+   */
 
 /***/ }),
 /* 86 */
@@ -3587,23 +3854,40 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = nilifyIs;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _assertIsFunction2 = __webpack_require__(3);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _match
- */
-var _default = (0, _methodize2.default)(String.prototype.match);
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
 
-exports.default = _default;
+var _call2 = __webpack_require__(15);
+
+var _call3 = _interopRequireDefault(_call2);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function nilifyIs(predicate) {
+  (0, _assertIsFunction3.default)(predicate);
+
+  return function nilifiedBound(value) {
+    for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      rest[_key - 1] = arguments[_key];
+    }
+
+    return (0, _isNil2.default)(value) || _call3.default.apply(undefined, [predicate, this, value].concat(rest));
+  };
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module nilifyIs
+   */
 
 /***/ }),
 /* 87 */
@@ -3612,23 +3896,180 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = surround;
+exports.default = defineValidatorProperty;
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _isUndefined = __webpack_require__(27);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module surround
- */
-function surround(string, wrapper) {
-  var wrap = (0, _toString2.default)(wrapper);
-  return wrap + (0, _toString2.default)(string) + wrap;
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
+
+var _isFunction2 = __webpack_require__(10);
+
+var _isFunction3 = _interopRequireDefault(_isFunction2);
+
+var _assertIs = __webpack_require__(93);
+
+var _assertIs2 = _interopRequireDefault(_assertIs);
+
+var _assertIsObjectLike = __webpack_require__(36);
+
+var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
+
+var _hasOwnProperty = __webpack_require__(39);
+
+var _hasOwnProperty2 = _interopRequireDefault(_hasOwnProperty);
+
+var _nilifyIs = __webpack_require__(86);
+
+var _nilifyIs2 = _interopRequireDefault(_nilifyIs);
+
+var _surround = __webpack_require__(85);
+
+var _surround2 = _interopRequireDefault(_surround);
+
+var _Boolean2 = __webpack_require__(33);
+
+var _Boolean3 = _interopRequireDefault(_Boolean2);
+
+var _defineProperty2 = __webpack_require__(190);
+
+var _defineProperty3 = _interopRequireDefault(_defineProperty2);
+
+var _Object2 = __webpack_require__(63);
+
+var _Object3 = _interopRequireDefault(_Object2);
+
+var _apply2 = __webpack_require__(14);
+
+var _apply3 = _interopRequireDefault(_apply2);
+
+var _call2 = __webpack_require__(15);
+
+var _call3 = _interopRequireDefault(_call2);
+
+var _toPropertyKey = __webpack_require__(34);
+
+var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var MSG1 = 'Not a valid initial value for '; /**
+                                              * @file Utility that needs description.
+                                              * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                              * @module defineValidatorProperty
+                                              */
+
+var MSG2 = 'Not a valid value for  ';
+
+var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
+  var descriptor = {};
+
+  if ((0, _hasOwnProperty2.default)(desc, 'enumerable')) {
+    descriptor.enumerable = (0, _Boolean3.default)(desc.enumerable);
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'configurable')) {
+    descriptor.configurable = (0, _Boolean3.default)(desc.configurable);
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'nilable')) {
+    descriptor.nilable = (0, _Boolean3.default)(desc.nilable);
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'validator')) {
+    if (!(0, _isUndefined2.default)(desc.validator) && !(0, _isFunction3.default)(desc.validator)) {
+      throw new TypeError('validator must be a function');
+    }
+
+    descriptor.validator = desc.validator;
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'value')) {
+    descriptor.value = desc.value;
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'writable')) {
+    descriptor.writable = (0, _Boolean3.default)(desc.writable);
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'get')) {
+    if (!(0, _isUndefined2.default)(desc.get) && !(0, _isFunction3.default)(desc.get)) {
+      throw new TypeError('getter must be a function');
+    }
+
+    descriptor.get = desc.get;
+  }
+
+  if ((0, _hasOwnProperty2.default)(desc, 'set')) {
+    if (!(0, _isUndefined2.default)(desc.set) && !(0, _isFunction3.default)(desc.set)) {
+      throw new TypeError('setter must be a function');
+    }
+
+    descriptor.set = desc.set;
+  }
+
+  if (((0, _hasOwnProperty2.default)(descriptor, 'get') || (0, _hasOwnProperty2.default)(descriptor, 'set')) && ((0, _hasOwnProperty2.default)(descriptor, 'value') || (0, _hasOwnProperty2.default)(descriptor, 'writable'))) {
+    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+  }
+
+  return descriptor;
+};
+
+function defineValidatorProperty(object, property, descriptor) {
+  (0, _assertIsObjectLike2.default)(object);
+
+  var prop = (0, _toPropertyKey2.default)(property);
+  var props = toPropertyDescriptor((0, _Object3.default)(descriptor), defineValidatorProperty);
+  var isValidInitialValue = props.nilable && props.validator ? (0, _nilifyIs2.default)(props.validator) : props.validator;
+  var quotedProperty = (0, _surround2.default)(prop, '"');
+
+  if (isValidInitialValue) {
+    (0, _assertIs2.default)(isValidInitialValue, MSG1 + quotedProperty)(props.value);
+  }
+
+  var isValidValue = props.validator && (0, _assertIs2.default)(props.validator, MSG2 + quotedProperty);
+
+  var validatorDesctiptor = {
+    configurable: props.configurable,
+    enumerable: props.enumerable
+  };
+
+  if (props.get) {
+    validatorDesctiptor.get = function get() {
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return (0, _apply3.default)(props.get, this, args);
+    };
+  } else if (isValidValue && (0, _hasOwnProperty2.default)(props, 'value')) {
+    validatorDesctiptor.get = function get() {
+      return props.value;
+    };
+  }
+
+  if (props.set) {
+    validatorDesctiptor.set = function set(newValue) {
+      return (0, _call3.default)(props.set, this, newValue);
+    };
+  } else if ((0, _hasOwnProperty2.default)(props, 'value')) {
+    if (isValidValue && props.writable) {
+      validatorDesctiptor.set = function set(newValue) {
+        props.value = isValidValue(newValue);
+
+        return props.value;
+      };
+    } else {
+      validatorDesctiptor.value = props.value;
+      if ((0, _hasOwnProperty2.default)(props, 'writable')) {
+        validatorDesctiptor.writable = props.writable;
+      }
+    }
+  }
+
+  return (0, _defineProperty3.default)(object, prop, validatorDesctiptor);
 }
 
 /***/ }),
@@ -3638,34 +4079,24 @@ function surround(string, wrapper) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = nilifyIs;
+exports.default = _last;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _getAt2 = __webpack_require__(48);
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _getAt3 = _interopRequireDefault(_getAt2);
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module nilifyIs
- */
-function nilifyIs(predicate) {
-  (0, _assertIsFunction2.default)(predicate);
-  return function nilifiedBound(value) {
-    for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      rest[_key - 1] = arguments[_key];
-    }
-
-    return (0, _isNil.default)(value) || _call2.default.apply(void 0, [predicate, this, value].concat(rest));
-  };
-}
+function _last(array) {
+  return (0, _getAt3.default)(array, array.length - 1);
+} /**
+   * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _last
+   */
 
 /***/ }),
 /* 89 */
@@ -3674,200 +4105,16 @@ function nilifyIs(predicate) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = defineValidatorProperty;
-
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
-
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
-
-var _assertIs = _interopRequireDefault(__webpack_require__(95));
-
-var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(37));
-
-var _hasOwnProperty = _interopRequireDefault(__webpack_require__(40));
-
-var _nilifyIs = _interopRequireDefault(__webpack_require__(88));
-
-var _surround = _interopRequireDefault(__webpack_require__(87));
-
-var _Boolean2 = _interopRequireDefault(__webpack_require__(34));
-
-var _defineProperty2 = _interopRequireDefault(__webpack_require__(193));
-
-var _Object2 = _interopRequireDefault(__webpack_require__(64));
-
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
-
-var _call2 = _interopRequireDefault(__webpack_require__(16));
-
-var _toPropertyKey = _interopRequireDefault(__webpack_require__(35));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module defineValidatorProperty
- */
-var MSG1 = 'Not a valid initial value for ';
-var MSG2 = 'Not a valid value for  ';
-
-var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
-  var descriptor = {};
-
-  if ((0, _hasOwnProperty.default)(desc, 'enumerable')) {
-    descriptor.enumerable = (0, _Boolean2.default)(desc.enumerable);
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'configurable')) {
-    descriptor.configurable = (0, _Boolean2.default)(desc.configurable);
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'nilable')) {
-    descriptor.nilable = (0, _Boolean2.default)(desc.nilable);
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'validator')) {
-    if (!(0, _isUndefined.default)(desc.validator) && !(0, _isFunction2.default)(desc.validator)) {
-      throw new TypeError('validator must be a function');
-    }
-
-    descriptor.validator = desc.validator;
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'value')) {
-    descriptor.value = desc.value;
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'writable')) {
-    descriptor.writable = (0, _Boolean2.default)(desc.writable);
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'get')) {
-    if (!(0, _isUndefined.default)(desc.get) && !(0, _isFunction2.default)(desc.get)) {
-      throw new TypeError('getter must be a function');
-    }
-
-    descriptor.get = desc.get;
-  }
-
-  if ((0, _hasOwnProperty.default)(desc, 'set')) {
-    if (!(0, _isUndefined.default)(desc.set) && !(0, _isFunction2.default)(desc.set)) {
-      throw new TypeError('setter must be a function');
-    }
-
-    descriptor.set = desc.set;
-  }
-
-  if (((0, _hasOwnProperty.default)(descriptor, 'get') || (0, _hasOwnProperty.default)(descriptor, 'set')) && ((0, _hasOwnProperty.default)(descriptor, 'value') || (0, _hasOwnProperty.default)(descriptor, 'writable'))) {
-    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
-  }
-
-  return descriptor;
-};
-
-function defineValidatorProperty(object, property, descriptor) {
-  (0, _assertIsObjectLike.default)(object);
-  var prop = (0, _toPropertyKey.default)(property);
-  var props = toPropertyDescriptor((0, _Object2.default)(descriptor), defineValidatorProperty);
-  var isValidInitialValue = props.nilable && props.validator ? (0, _nilifyIs.default)(props.validator) : props.validator;
-  var quotedProperty = (0, _surround.default)(prop, '"');
-
-  if (isValidInitialValue) {
-    (0, _assertIs.default)(isValidInitialValue, MSG1 + quotedProperty)(props.value);
-  }
-
-  var isValidValue = props.validator && (0, _assertIs.default)(props.validator, MSG2 + quotedProperty);
-  var validatorDesctiptor = {
-    configurable: props.configurable,
-    enumerable: props.enumerable
-  };
-
-  if (props.get) {
-    validatorDesctiptor.get = function get() {
-      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      return (0, _apply2.default)(props.get, this, args);
-    };
-  } else if (isValidValue && (0, _hasOwnProperty.default)(props, 'value')) {
-    validatorDesctiptor.get = function get() {
-      return props.value;
-    };
-  }
-
-  if (props.set) {
-    validatorDesctiptor.set = function set(newValue) {
-      return (0, _call2.default)(props.set, this, newValue);
-    };
-  } else if ((0, _hasOwnProperty.default)(props, 'value')) {
-    if (isValidValue && props.writable) {
-      validatorDesctiptor.set = function set(newValue) {
-        props.value = isValidValue(newValue);
-        return props.value;
-      };
-    } else {
-      validatorDesctiptor.value = props.value;
-
-      if ((0, _hasOwnProperty.default)(props, 'writable')) {
-        validatorDesctiptor.writable = props.writable;
-      }
-    }
-  }
-
-  return (0, _defineProperty2.default)(object, prop, validatorDesctiptor);
-}
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _last;
-
-var _getAt2 = _interopRequireDefault(__webpack_require__(49));
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _last
- */
-function _last(array) {
-  return (0, _getAt2.default)(array, array.length - 1);
-}
-
-/***/ }),
-/* 91 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = sameValue;
 
-var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
+var _isNaN2 = __webpack_require__(22);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sameValue
- */
+var _isNaN3 = _interopRequireDefault(_isNaN2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method is the comparison abstract operation SameValue(x, y), where x
@@ -3891,36 +4138,41 @@ function sameValue(value1, value2) {
     return 1 / value1 === 1 / value2;
   }
 
-  return value1 === value2 || (0, _isNaN2.default)(value1) && (0, _isNaN2.default)(value2);
-}
+  return value1 === value2 || (0, _isNaN3.default)(value1) && (0, _isNaN3.default)(value2);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module sameValue
+   */
 
 /***/ }),
-/* 92 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = sameValueZero;
 
-var _sameValue = _interopRequireDefault(__webpack_require__(91));
+var _sameValue = __webpack_require__(89);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sameValueZero
- */
+var _sameValue2 = _interopRequireDefault(_sameValue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function sameValueZero(x, y) {
-  return x === y || (0, _sameValue.default)(x, y);
-}
+  return x === y || (0, _sameValue2.default)(x, y);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module sameValueZero
+   */
 
 /***/ }),
-/* 93 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3930,12 +4182,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = constant;
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module constant
  */
+
 function constant(value) {
   return function boundConstant() {
     return value;
@@ -3943,28 +4195,26 @@ function constant(value) {
 }
 
 /***/ }),
-/* 94 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = clamp;
 
-var _clamp2 = _interopRequireDefault(__webpack_require__(196));
+var _clamp2 = __webpack_require__(193);
 
-var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
+var _clamp3 = _interopRequireDefault(_clamp2);
 
-/**
- * @file Utility that clamps a number to min and max limits inclusive.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module clamp
- */
+var _toNumber2 = __webpack_require__(21);
+
+var _toNumber3 = _interopRequireDefault(_toNumber2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method clamps a number to min and max limits inclusive.
@@ -3980,17 +4230,22 @@ var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
  * clamp(-10, -5, 5); // -5
  * clamp(10, -5, 5); // 5
  */
+/**
+ * @file Utility that clamps a number to min and max limits inclusive.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module clamp
+ */
+
 function clamp(value) {
-  var number = (0, _toNumber2.default)(value);
+  var number = (0, _toNumber3.default)(value);
   var restLength = arguments.length <= 1 ? 0 : arguments.length - 1;
 
   if (restLength < 1) {
     return number;
   }
 
-  var min = (0, _toNumber2.default)(arguments.length <= 1 ? undefined : arguments[1]);
-  var max = (0, _toNumber2.default)(arguments.length <= 2 ? undefined : arguments[2]);
-
+  var min = (0, _toNumber3.default)(arguments.length <= 1 ? undefined : arguments[1]);
+  var max = (0, _toNumber3.default)(arguments.length <= 2 ? undefined : arguments[2]);
   if (restLength < 2) {
     max = min;
     min = 0;
@@ -4000,7 +4255,75 @@ function clamp(value) {
     throw new RangeError('"min" > "max"');
   }
 
-  return (0, _clamp2.default)(number, min, max);
+  return (0, _clamp3.default)(number, min, max);
+}
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = assertIs;
+
+var _assertIs2 = __webpack_require__(46);
+
+var _assertIs3 = _interopRequireDefault(_assertIs2);
+
+var _isFunction2 = __webpack_require__(10);
+
+var _isFunction3 = _interopRequireDefault(_isFunction2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module assertIs
+ */
+
+function assertIs(predicate, defaultMessage) {
+  if (!(0, _isFunction3.default)(predicate)) {
+    throw new TypeError('Predicate must be a function');
+  }
+
+  return (0, _assertIs3.default)(predicate, defaultMessage);
+}
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isInteger;
+
+var _isNumberType = __webpack_require__(30);
+
+var _isNumberType2 = _interopRequireDefault(_isNumberType);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isInteger
+ */
+
+function isInteger(value) {
+  return (0, _isNumberType2.default)(value) && (0, _toInteger3.default)(value) === value;
 }
 
 /***/ }),
@@ -4010,28 +4333,45 @@ function clamp(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = assertIs;
+exports.default = _fromIndex;
 
-var _assertIs2 = _interopRequireDefault(__webpack_require__(47));
+var _isArrayLike = __webpack_require__(18);
 
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+var _toObject = __webpack_require__(12);
+
+var _toObject2 = _interopRequireDefault(_toObject);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module assertIs
+ * @module _fromIndex
  */
-function assertIs(predicate, defaultMessage) {
-  if (!(0, _isFunction2.default)(predicate)) {
-    throw new TypeError('Predicate must be a function');
+
+var max = Math.max;
+function _fromIndex(array, fromIndex) {
+  var object = (0, _toObject2.default)(array);
+  if (!(0, _isArrayLike2.default)(object)) {
+    return 0;
   }
 
-  return (0, _assertIs2.default)(predicate, defaultMessage);
+  var index = (0, _toInteger3.default)(fromIndex);
+
+  return index >= 0 ? index : max(0, (0, _toWholeNumber2.default)(object.length) + index);
 }
 
 /***/ }),
@@ -4041,24 +4381,31 @@ function assertIs(predicate, defaultMessage) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isInteger;
+exports.default = isOctal;
 
-var _isNumberType = _interopRequireDefault(__webpack_require__(31));
+var _isString = __webpack_require__(4);
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+var _isString2 = _interopRequireDefault(_isString);
+
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isInteger
+ * @module isOctal
  */
-function isInteger(value) {
-  return (0, _isNumberType.default)(value) && (0, _toInteger2.default)(value) === value;
+
+var octalPattern = /^0o[0-7]+$/i;
+
+function isOctal(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, octalPattern);
 }
 
 /***/ }),
@@ -4068,38 +4415,21 @@ function isInteger(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _fromIndex;
 
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
+var _methodize2 = __webpack_require__(0);
 
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _toObject = _interopRequireDefault(__webpack_require__(13));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _fromIndex
- */
-var max = Math.max;
-
-function _fromIndex(array, fromIndex) {
-  var object = (0, _toObject.default)(array);
-
-  if (!(0, _isArrayLike.default)(object)) {
-    return 0;
-  }
-
-  var index = (0, _toInteger2.default)(fromIndex);
-  return index >= 0 ? index : max(0, (0, _toWholeNumber.default)(object.length) + index);
-}
+exports.default = (0, _methodize3.default)(RegExp.prototype.exec); /**
+                                                                    * @file Utility that needs description.
+                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                    * @module _exec
+                                                                    */
 
 /***/ }),
 /* 98 */
@@ -4108,84 +4438,35 @@ function _fromIndex(array, fromIndex) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isOctal;
-
-var _isString = _interopRequireDefault(__webpack_require__(5));
-
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isOctal
- */
-var octalPattern = /^0o[0-7]+$/i;
-
-function isOctal(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, octalPattern);
-}
-
-/***/ }),
-/* 99 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _exec
- */
-var _default = (0, _methodize2.default)(RegExp.prototype.exec);
-
-exports.default = _default;
-
-/***/ }),
-/* 100 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isBinary;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+var _isString2 = _interopRequireDefault(_isString);
+
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isBinary
  */
+
 var binaryPattern = /^0b[01]+$/i;
 
 function isBinary(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, binaryPattern);
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, binaryPattern);
 }
 
 /***/ }),
-/* 101 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4212,30 +4493,87 @@ module.exports = function isDateObject(value) {
 
 
 /***/ }),
+/* 100 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _attempt = __webpack_require__(70);
+
+var _attempt2 = _interopRequireDefault(_attempt);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// eslint-disable-next-line no-new-func
+exports.default = !(0, _attempt2.default)(Function('"use strict"; return class My {};')).threw; /**
+                                                                                                 * @file Determine whether a given value is a function object.
+                                                                                                 * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                                 * @module isClassSupported
+                                                                                                 */
+
+/***/ }),
+/* 101 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _trimRight;
+
+var _replace2 = __webpack_require__(13);
+
+var _replace3 = _interopRequireDefault(_replace2);
+
+var _whitespace2 = __webpack_require__(31);
+
+var _whitespace3 = _interopRequireDefault(_whitespace2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file List of ECMAScript white space characters.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _trimRight
+ */
+
+var PRE = '[';
+var POST = ']+$';
+var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
+
+function _trimRight(string) {
+  return (0, _replace3.default)(string, whiteSpace, '');
+}
+
+/***/ }),
 /* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _attempt = _interopRequireDefault(__webpack_require__(72));
+var _methodize2 = __webpack_require__(0);
 
-/**
- * @file Determine whether a given value is a function object.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isClassSupported
- */
-// eslint-disable-next-line no-new-func
-var _default = !(0, _attempt.default)(Function('"use strict"; return class My {};')).threw;
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-exports.default = _default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.map); /**
+                                                                  * @file Utility that needs description.
+                                                                  * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                  * @module _map
+                                                                  */
 
 /***/ }),
 /* 103 */
@@ -4244,29 +4582,16 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trimRight;
-
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
-
-var _whitespace2 = _interopRequireDefault(__webpack_require__(32));
-
 /**
- * @file List of ECMAScript white space characters.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trimRight
+ * @module _keys
  */
-var PRE = '[';
-var POST = ']+$';
-var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
 
-function _trimRight(string) {
-  return (0, _replace2.default)(string, whiteSpace, '');
-}
+exports.default = Object.keys;
 
 /***/ }),
 /* 104 */
@@ -4275,23 +4600,21 @@ function _trimRight(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _methodize2 = __webpack_require__(0);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _map
- */
-var _default = (0, _methodize2.default)(Array.prototype.map);
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-exports.default = _default;
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.filter); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _filter
+                                                                     */
 
 /***/ }),
 /* 105 */
@@ -4303,15 +4626,16 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
+exports.default = stubArray;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _keys
+ * @module stubArray
  */
-var _default = Object.keys;
-exports.default = _default;
+
+function stubArray() {
+  return [];
+}
 
 /***/ }),
 /* 106 */
@@ -4320,110 +4644,85 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _filter
- */
-var _default = (0, _methodize2.default)(Array.prototype.filter);
-
-exports.default = _default;
-
-/***/ }),
-/* 107 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = stubArray;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubArray
- */
-function stubArray() {
-  return [];
-}
-
-/***/ }),
-/* 108 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = assign;
 
-var _isFunctionType = _interopRequireDefault(__webpack_require__(69));
+var _isFunctionType = __webpack_require__(68);
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+var _isFunctionType2 = _interopRequireDefault(_isFunctionType);
 
-var _toObject = _interopRequireDefault(__webpack_require__(13));
+var _isNil = __webpack_require__(6);
 
-var _stubArray = _interopRequireDefault(__webpack_require__(107));
+var _isNil2 = _interopRequireDefault(_isNil);
 
-var _concat2 = _interopRequireDefault(__webpack_require__(222));
+var _toObject = __webpack_require__(12);
 
-var _filter2 = _interopRequireDefault(__webpack_require__(106));
+var _toObject2 = _interopRequireDefault(_toObject);
 
-var _reduce2 = _interopRequireDefault(__webpack_require__(63));
+var _stubArray = __webpack_require__(105);
 
-var _keys2 = _interopRequireDefault(__webpack_require__(105));
+var _stubArray2 = _interopRequireDefault(_stubArray);
 
-var _propertyIsEnumerable2 = _interopRequireDefault(__webpack_require__(221));
+var _concat2 = __webpack_require__(215);
 
-var _Object2 = _interopRequireDefault(__webpack_require__(64));
+var _concat3 = _interopRequireDefault(_concat2);
 
+var _filter2 = __webpack_require__(104);
+
+var _filter3 = _interopRequireDefault(_filter2);
+
+var _reduce2 = __webpack_require__(62);
+
+var _reduce3 = _interopRequireDefault(_reduce2);
+
+var _keys2 = __webpack_require__(103);
+
+var _keys3 = _interopRequireDefault(_keys2);
+
+var _propertyIsEnumerable2 = __webpack_require__(214);
+
+var _propertyIsEnumerable3 = _interopRequireDefault(_propertyIsEnumerable2);
+
+var _Object2 = __webpack_require__(63);
+
+var _Object3 = _interopRequireDefault(_Object2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* istanbul ignore next */
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module assign
  */
 
-/* istanbul ignore next */
-var getOwnPropertySymbols = (0, _isFunctionType.default)(_Object2.default.getOwnPropertySymbols) ? _Object2.default.getOwnPropertySymbols : _stubArray.default;
+var getOwnPropertySymbols = (0, _isFunctionType2.default)(_Object3.default.getOwnPropertySymbols) ? _Object3.default.getOwnPropertySymbols : _stubArray2.default;
 
 var getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(target) {
   var isEnumerable = function _isEnumerable(symbol) {
-    return (0, _propertyIsEnumerable2.default)(target, symbol);
+    return (0, _propertyIsEnumerable3.default)(target, symbol);
   };
 
-  return (0, _filter2.default)(getOwnPropertySymbols(target), isEnumerable);
+  return (0, _filter3.default)(getOwnPropertySymbols(target), isEnumerable);
 };
 
 var reducer = function _reducer(tgt, source) {
-  if ((0, _isNil.default)(source)) {
+  if ((0, _isNil2.default)(source)) {
     return tgt;
   }
 
-  var object = (0, _Object2.default)(source);
-
+  var object = (0, _Object3.default)(source);
   var assigner = function _assigner(tar, key) {
     tar[key] = object[key];
+
     return tar;
   };
 
-  return (0, _reduce2.default)((0, _concat2.default)((0, _keys2.default)(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
+  return (0, _reduce3.default)((0, _concat3.default)((0, _keys3.default)(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
 };
+
 /**
  * This method is used to copy the values of all enumerable own properties from
  * one or more source objects to a target object. It will return the target object.
@@ -4441,14 +4740,54 @@ var reducer = function _reducer(tgt, source) {
  * console.log(copy); // { a: 1 }
  */
 
-
 function assign(target) {
-  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+  for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     rest[_key - 1] = arguments[_key];
   }
 
-  return (0, _reduce2.default)(rest, reducer, (0, _toObject.default)(target));
+  return (0, _reduce3.default)(rest, reducer, (0, _toObject2.default)(target));
 }
+
+/***/ }),
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _bind
+ */
+
+exports.default = Function.call.bind(Function.bind);
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Function.prototype.toString); /**
+                                                                          * @file Utility that needs description.
+                                                                          * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                          * @module _functionToString
+                                                                          */
 
 /***/ }),
 /* 109 */
@@ -4460,16 +4799,13 @@ function assign(target) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _bind
+ * @module _String
  */
-var _default = Function.call.bind(Function.bind);
 
-exports.default = _default;
+exports.default = ''.constructor;
 
 /***/ }),
 /* 110 */
@@ -4478,23 +4814,30 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = uniq;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _uniq2 = __webpack_require__(76);
+
+var _uniq3 = _interopRequireDefault(_uniq2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _functionToString
+ * @module uniq
  */
-var _default = (0, _methodize2.default)(Function.prototype.toString);
 
-exports.default = _default;
+function uniq(array) {
+  return (0, _uniq3.default)((0, _requireObjectCoercible2.default)(array));
+}
 
 /***/ }),
 /* 111 */
@@ -4506,81 +4849,44 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _String
- */
-var _default = ''.constructor;
-exports.default = _default;
-
-/***/ }),
-/* 112 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = uniq;
-
-var _uniq2 = _interopRequireDefault(__webpack_require__(78));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module uniq
- */
-function uniq(array) {
-  return (0, _uniq2.default)((0, _requireObjectCoercible.default)(array));
-}
-
-/***/ }),
-/* 113 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
 exports.default = union;
 
-var _accumulate2 = _interopRequireDefault(__webpack_require__(53));
+var _accumulate2 = __webpack_require__(52);
 
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
+var _accumulate3 = _interopRequireDefault(_accumulate2);
 
-var _push2 = _interopRequireDefault(__webpack_require__(18));
+var _includes2 = __webpack_require__(16);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _includes3 = _interopRequireDefault(_includes2);
+
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Creates an array of unique values, in order, from all given arrays.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module union
  */
+
 var addNotIncluded = function _addNotIncluded(accumulator, value) {
-  if (!(0, _includes2.default)(accumulator, value)) {
-    (0, _push2.default)(accumulator, value);
+  if (!(0, _includes3.default)(accumulator, value)) {
+    (0, _push3.default)(accumulator, value);
   }
 
   return accumulator;
 };
 
 var reduceArgs = function _reduceArgs(accumulator, array) {
-  return (0, _accumulate2.default)((0, _requireObjectCoercible.default)(array), addNotIncluded, accumulator);
+  return (0, _accumulate3.default)((0, _requireObjectCoercible2.default)(array), addNotIncluded, accumulator);
 };
+
 /**
  * This method creates an array of unique values, in order, from all given
  * arrays using SameValueZero for equality comparisons.
@@ -4592,15 +4898,57 @@ var reduceArgs = function _reduceArgs(accumulator, array) {
  *
  * union([2], [1, 2]); // => [2, 1]
  */
-
-
 function union() {
-  for (var _len = arguments.length, arrays = new Array(_len), _key = 0; _key < _len; _key++) {
+  for (var _len = arguments.length, arrays = Array(_len), _key = 0; _key < _len; _key++) {
     arrays[_key] = arguments[_key];
   }
 
-  return (0, _accumulate2.default)(arrays, reduceArgs, []);
+  return (0, _accumulate3.default)(arrays, reduceArgs, []);
 }
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _toString = __webpack_require__(2);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_toString).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _toNumber = __webpack_require__(21);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_toNumber).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 114 */
@@ -4609,19 +4957,20 @@ function union() {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
+
+var _toInteger = __webpack_require__(5);
+
+Object.defineProperty(exports, 'default', {
   enumerable: true,
   get: function get() {
-    return _toString.default;
+    return _interopRequireDefault(_toInteger).default;
   }
 });
 
-var _toString = _interopRequireDefault(__webpack_require__(3));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 115 */
@@ -4630,19 +4979,21 @@ var _toString = _interopRequireDefault(__webpack_require__(3));
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _toNumber.default;
-  }
-});
 
-var _toNumber = _interopRequireDefault(__webpack_require__(22));
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.lastIndexOf); /**
+                                                                           * @file Utility that needs description.
+                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                           * @module _stringLastIndexOf
+                                                                           * */
 
 /***/ }),
 /* 116 */
@@ -4651,139 +5002,126 @@ var _toNumber = _interopRequireDefault(__webpack_require__(22));
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _toInteger.default;
-  }
-});
-
-var _toInteger = _interopRequireDefault(__webpack_require__(6));
-
-/***/ }),
-/* 117 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _stringLastIndexOf
- * */
-var _default = (0, _methodize2.default)(String.prototype.lastIndexOf);
-
-exports.default = _default;
-
-/***/ }),
-/* 118 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = truncate;
 
-var _isRegex = _interopRequireDefault(__webpack_require__(41));
+var _isRegex = __webpack_require__(40);
 
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
+var _isRegex2 = _interopRequireDefault(_isRegex);
 
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
+var _isUndefined = __webpack_require__(27);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _isUndefined2 = _interopRequireDefault(_isUndefined);
 
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
+var _toWholeNumber = __webpack_require__(7);
 
-var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(40));
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
 
-var _exec2 = _interopRequireDefault(__webpack_require__(99));
+var _toString2 = __webpack_require__(2);
 
-var _join2 = _interopRequireDefault(__webpack_require__(29));
+var _toString3 = _interopRequireDefault(_toString2);
 
-var _stringLastIndexOf2 = _interopRequireDefault(__webpack_require__(117));
+var _isObjectLike = __webpack_require__(11);
 
-var _match2 = _interopRequireDefault(__webpack_require__(86));
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
 
-var _search2 = _interopRequireDefault(__webpack_require__(76));
+var _hasOwnProperty2 = __webpack_require__(39);
 
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
+var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
 
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+var _exec2 = __webpack_require__(97);
 
-var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(58));
+var _exec3 = _interopRequireDefault(_exec2);
 
-var _RegExp2 = _interopRequireDefault(__webpack_require__(75));
+var _join2 = __webpack_require__(28);
 
-var _test2 = _interopRequireDefault(__webpack_require__(27));
+var _join3 = _interopRequireDefault(_join2);
+
+var _stringLastIndexOf2 = __webpack_require__(115);
+
+var _stringLastIndexOf3 = _interopRequireDefault(_stringLastIndexOf2);
+
+var _match2 = __webpack_require__(84);
+
+var _match3 = _interopRequireDefault(_match2);
+
+var _search2 = __webpack_require__(74);
+
+var _search3 = _interopRequireDefault(_search2);
+
+var _slice2 = __webpack_require__(24);
+
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+var _stringIndexOf2 = __webpack_require__(57);
+
+var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
+
+var _RegExp2 = __webpack_require__(73);
+
+var _RegExp3 = _interopRequireDefault(_RegExp2);
+
+var _test2 = __webpack_require__(26);
+
+var _test3 = _interopRequireDefault(_test2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Truncate a string to a maximum specified length.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module truncate
  */
+
 var G_FLAG = 'g';
 /* Used to match `RegExp` flags from their coerced string values. */
-
 var matchFlags = /\w*$/;
+
 /* Used to compose unicode character classes. */
+var rsAstralRange = '\\ud800-\\udfff';
+var rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23';
+var rsComboSymbolsRange = '\\u20d0-\\u20f0';
+var rsVarRange = '\\ufe0e\\ufe0f';
 
-var rsAstralRange = "\\ud800-\\udfff";
-var rsComboMarksRange = "\\u0300-\\u036f\\ufe20-\\ufe23";
-var rsComboSymbolsRange = "\\u20d0-\\u20f0";
-var rsVarRange = "\\ufe0e\\ufe0f";
 /* Used to compose unicode capture groups. */
+var rsAstral = '[' + rsAstralRange + ']';
+var rsCombo = '[' + rsComboMarksRange + rsComboSymbolsRange + ']';
+var rsFitz = '\\ud83c[\\udffb-\\udfff]';
+var rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')';
+var rsNonAstral = '[^' + rsAstralRange + ']';
+var rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}';
+var rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]';
+var rsZWJ = '\\u200d';
 
-var rsAstral = "[".concat(rsAstralRange, "]");
-var rsCombo = "[".concat(rsComboMarksRange).concat(rsComboSymbolsRange, "]");
-var rsFitz = "\\ud83c[\\udffb-\\udfff]";
-var rsModifier = "(?:".concat(rsCombo, "|").concat(rsFitz, ")");
-var rsNonAstral = "[^".concat(rsAstralRange, "]");
-var rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
-var rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
-var rsZWJ = "\\u200d";
 /* Used to compose unicode regexes. */
+var reOptMod = rsModifier + '?';
+var rsOptVar = '[' + rsVarRange + ']?';
+var rsOptJoin = '(?:' + rsZWJ + '(?:' + String((0, _join3.default)([rsNonAstral, rsRegional, rsSurrPair], '|')) + ')' + rsOptVar + reOptMod + ')*';
 
-var reOptMod = "".concat(rsModifier, "?");
-var rsOptVar = "[".concat(rsVarRange, "]?");
-var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat((0, _join2.default)([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
 var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = "(?:".concat((0, _join2.default)(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
+var rsSymbol = '(?:' + String((0, _join3.default)([rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral], '|')) + ')';
+
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
  */
+var reComplexSymbol = new _RegExp3.default(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, G_FLAG);
 
-var reComplexSymbol = new _RegExp2.default("".concat(rsFitz, "(?=").concat(rsFitz, ")|").concat(rsSymbol).concat(rsSeq), G_FLAG);
 /*
  * Used to detect strings with [zero-width joiners or code points from
  * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
  */
-
-var reHasComplexSymbol = new _RegExp2.default("[".concat(rsZWJ).concat(rsAstralRange).concat(rsComboMarksRange).concat(rsComboSymbolsRange).concat(rsVarRange, "]"));
-
+var reHasComplexSymbol = new _RegExp3.default('[' + rsZWJ + rsAstralRange + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
 var hasComplexSymbol = function _hasComplexSymbol(string) {
-  return (0, _test2.default)(reHasComplexSymbol, string);
+  return (0, _test3.default)(reHasComplexSymbol, string);
 };
+
 /**
  * Gets the number of symbols in `string`.
  *
@@ -4791,22 +5129,21 @@ var hasComplexSymbol = function _hasComplexSymbol(string) {
  * @param {string} string - The string to inspect.
  * @returns {number} Returns the string size.
  */
-
-
 var stringSize = function _stringSize(string) {
   if (!string || !hasComplexSymbol(string)) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
-  var result = 0;
 
-  while ((0, _test2.default)(reComplexSymbol, string)) {
+  var result = 0;
+  while ((0, _test3.default)(reComplexSymbol, string)) {
     result += 1;
   }
 
   return result;
 };
+
 /**
  * Truncates `string` if it's longer than the given maximum string length.
  * The last characters of the truncated string are replaced with the omission
@@ -4843,33 +5180,29 @@ var stringSize = function _stringSize(string) {
  * });
  * // 'hi-diddly-ho there, neig [...]'
  */
-
-
 function truncate(string, options) {
-  var str = (0, _toString2.default)(string);
+  var str = (0, _toString3.default)(string);
   var length = 30;
   var omission = '...';
-  var separator;
-
-  if ((0, _isObjectLike.default)(options)) {
-    if ((0, _hasOwnProperty2.default)(options, 'separator')) {
-      separator = (0, _isRegex.default)(options.separator) ? options.separator : (0, _toString2.default)(options.separator);
+  var separator = void 0;
+  if ((0, _isObjectLike2.default)(options)) {
+    if ((0, _hasOwnProperty3.default)(options, 'separator')) {
+      separator = (0, _isRegex2.default)(options.separator) ? options.separator : (0, _toString3.default)(options.separator);
     }
 
-    if ((0, _hasOwnProperty2.default)(options, 'length')) {
-      length = (0, _toWholeNumber.default)(options.length);
+    if ((0, _hasOwnProperty3.default)(options, 'length')) {
+      length = (0, _toWholeNumber2.default)(options.length);
     }
 
-    if ((0, _hasOwnProperty2.default)(options, 'omission')) {
-      omission = (0, _toString2.default)(options.omission);
+    if ((0, _hasOwnProperty3.default)(options, 'omission')) {
+      omission = (0, _toString3.default)(options.omission);
     }
   }
 
   var strLength = str.length;
-  var matchSymbols;
-
+  var matchSymbols = void 0;
   if (hasComplexSymbol(str)) {
-    matchSymbols = (0, _match2.default)(str, reComplexSymbol);
+    matchSymbols = (0, _match3.default)(str, reComplexSymbol);
     strLength = matchSymbols.length;
   }
 
@@ -4878,14 +5211,12 @@ function truncate(string, options) {
   }
 
   var end = length - stringSize(omission);
-
   if (end < 1) {
     return omission;
   }
 
-  var result = matchSymbols ? (0, _join2.default)((0, _slice2.default)(matchSymbols, 0, end), '') : (0, _stringSlice2.default)(str, 0, end);
-
-  if ((0, _isUndefined.default)(separator)) {
+  var result = matchSymbols ? (0, _join3.default)((0, _slice3.default)(matchSymbols, 0, end), '') : (0, _stringSlice3.default)(str, 0, end);
+  if ((0, _isUndefined2.default)(separator)) {
     return result + omission;
   }
 
@@ -4893,35 +5224,77 @@ function truncate(string, options) {
     end += result.length - end;
   }
 
-  if ((0, _isRegex.default)(separator)) {
-    if ((0, _search2.default)((0, _stringSlice2.default)(str, end), separator)) {
+  if ((0, _isRegex2.default)(separator)) {
+    if ((0, _search3.default)((0, _stringSlice3.default)(str, end), separator)) {
       var substr = result;
-
       if (!separator.global) {
-        separator = new _RegExp2.default(separator.source, (0, _toString2.default)((0, _exec2.default)(matchFlags, separator)) + G_FLAG);
+        separator = new _RegExp3.default(separator.source, (0, _toString3.default)((0, _exec3.default)(matchFlags, separator)) + G_FLAG);
       }
 
       separator.lastIndex = 0;
-      var newEnd;
-      var match = (0, _exec2.default)(separator, substr);
-
+      var newEnd = void 0;
+      var match = (0, _exec3.default)(separator, substr);
       while (match) {
         newEnd = match.index;
-        match = (0, _exec2.default)(separator, substr);
+        match = (0, _exec3.default)(separator, substr);
       }
 
-      result = (0, _stringSlice2.default)(result, 0, (0, _isUndefined.default)(newEnd) ? end : newEnd);
+      result = (0, _stringSlice3.default)(result, 0, (0, _isUndefined2.default)(newEnd) ? end : newEnd);
     }
-  } else if ((0, _stringIndexOf2.default)(str, separator, end) !== end) {
-    var index = (0, _stringLastIndexOf2.default)(result, separator);
-
+  } else if ((0, _stringIndexOf3.default)(str, separator, end) !== end) {
+    var index = (0, _stringLastIndexOf3.default)(result, separator);
     if (index > -1) {
-      result = (0, _stringSlice2.default)(result, 0, index);
+      result = (0, _stringSlice3.default)(result, 0, index);
     }
   }
 
   return result + omission;
 }
+
+/***/ }),
+/* 117 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _trunc;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _trunc
+ */
+
+var ceil = Math.ceil,
+    floor = Math.floor;
+function _trunc(value) {
+  return value < 0 ? ceil(value) : floor(value);
+}
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _trunc = __webpack_require__(117);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_trunc).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 119 */
@@ -4933,19 +5306,29 @@ function truncate(string, options) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trunc;
+exports.default = trimRight;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trunc
- */
-var ceil = Math.ceil,
-    floor = Math.floor;
+var _trimRight2 = __webpack_require__(101);
 
-function _trunc(value) {
-  return value < 0 ? ceil(value) : floor(value);
-}
+var _trimRight3 = _interopRequireDefault(_trimRight2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function trimRight(string) {
+  return (0, _trimRight3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
+} /**
+   * @file List of ECMAScript white space characters.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module trimRight
+   */
 
 /***/ }),
 /* 120 */
@@ -4954,19 +5337,32 @@ function _trunc(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _trunc.default;
-  }
-});
+exports.default = trimLeft;
 
-var _trunc = _interopRequireDefault(__webpack_require__(119));
+var _trimLeft2 = __webpack_require__(65);
+
+var _trimLeft3 = _interopRequireDefault(_trimLeft2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function trimLeft(string) {
+  return (0, _trimLeft3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
+} /**
+   * @file List of ECMAScript white space characters.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module trimLeft
+   */
 
 /***/ }),
 /* 121 */
@@ -4975,27 +5371,32 @@ var _trunc = _interopRequireDefault(__webpack_require__(119));
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trimRight;
+exports.default = trim;
 
-var _trimRight2 = _interopRequireDefault(__webpack_require__(103));
+var _requireObjectCoercible = __webpack_require__(1);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _trim2 = __webpack_require__(42);
 
-/**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module trimRight
- */
-function trimRight(string) {
-  return (0, _trimRight2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
-}
+var _trim3 = _interopRequireDefault(_trim2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function trim(string) {
+  return (0, _trim3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
+} /**
+   * @file List of ECMAScript white space characters.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module trim
+   */
 
 /***/ }),
 /* 122 */
@@ -5004,26 +5405,29 @@ function trimRight(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trimLeft;
+exports.default = _squeeze;
 
-var _trimLeft2 = _interopRequireDefault(__webpack_require__(66));
+var _filter2 = __webpack_require__(104);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _filter3 = _interopRequireDefault(_filter2);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _stubTrue = __webpack_require__(72);
+
+var _stubTrue2 = _interopRequireDefault(_stubTrue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file List of ECMAScript white space characters.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module trimLeft
+ * @module _squeeze
  */
-function trimLeft(string) {
-  return (0, _trimLeft2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
+
+function _squeeze(array) {
+  return (0, _filter3.default)(array, _stubTrue2.default);
 }
 
 /***/ }),
@@ -5033,26 +5437,29 @@ function trimLeft(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trim;
+exports.default = squeeze;
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _requireObjectCoercible = __webpack_require__(1);
 
-var _trim2 = _interopRequireDefault(__webpack_require__(43));
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _squeeze2 = __webpack_require__(122);
+
+var _squeeze3 = _interopRequireDefault(_squeeze2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file List of ECMAScript white space characters.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module trim
+ * @module squeeze
  */
-function trim(string) {
-  return (0, _trim2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
+
+function squeeze(array) {
+  return (0, _squeeze3.default)((0, _requireObjectCoercible2.default)(array));
 }
 
 /***/ }),
@@ -5062,24 +5469,18 @@ function trim(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _squeeze;
-
-var _filter2 = _interopRequireDefault(__webpack_require__(106));
-
-var _stubTrue = _interopRequireDefault(__webpack_require__(74));
-
+exports.default = stubString;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _squeeze
+ * @module stubString
  */
-function _squeeze(array) {
-  return (0, _filter2.default)(array, _stubTrue.default);
+
+function stubString() {
+  return '';
 }
 
 /***/ }),
@@ -5089,24 +5490,18 @@ function _squeeze(array) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = squeeze;
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _squeeze2 = _interopRequireDefault(__webpack_require__(124));
-
+exports.default = stubObject;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module squeeze
+ * @module stubObject
  */
-function squeeze(array) {
-  return (0, _squeeze2.default)((0, _requireObjectCoercible.default)(array));
+
+function stubObject() {
+  return {};
 }
 
 /***/ }),
@@ -5119,15 +5514,15 @@ function squeeze(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubString;
-
+exports.default = stubFalse;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubString
+ * @module stubFalse
  */
-function stubString() {
-  return '';
+
+function stubFalse() {
+  return false;
 }
 
 /***/ }),
@@ -5140,16 +5535,29 @@ function stubString() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubObject;
+exports.default = stringTest;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubObject
- */
-function stubObject() {
-  return {};
-}
+var _isRegex = __webpack_require__(40);
+
+var _isRegex2 = _interopRequireDefault(_isRegex);
+
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+var _requireCoercibleToString = __webpack_require__(23);
+
+var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function stringTest(string, patternOrRegex) {
+  return (0, _stringTest3.default)((0, _requireCoercibleToString2.default)(string), (0, _isRegex2.default)(patternOrRegex) ? patternOrRegex : (0, _requireCoercibleToString2.default)(patternOrRegex));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module stringTest
+   */
 
 /***/ }),
 /* 128 */
@@ -5161,15 +5569,34 @@ function stubObject() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubFalse;
+exports.default = sift;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _sift2 = __webpack_require__(47);
+
+var _sift3 = _interopRequireDefault(_sift2);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubFalse
+ * @module sift
  */
-function stubFalse() {
-  return false;
+
+function sift(array, callback) {
+  return (0, _sift3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
 }
 
 /***/ }),
@@ -5179,27 +5606,20 @@ function stubFalse() {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stringTest;
 
-var _isRegex = _interopRequireDefault(__webpack_require__(41));
+var _sign = __webpack_require__(54);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_sign).default;
+  }
+});
 
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stringTest
- */
-function stringTest(string, patternOrRegex) {
-  return (0, _stringTest2.default)((0, _requireCoercibleToString.default)(string), (0, _isRegex.default)(patternOrRegex) ? patternOrRegex : (0, _requireCoercibleToString.default)(patternOrRegex));
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 130 */
@@ -5208,76 +5628,30 @@ function stringTest(string, patternOrRegex) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = sift;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _sift2 = _interopRequireDefault(__webpack_require__(48));
-
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sift
- */
-function sift(array, callback) {
-  return (0, _sift2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
-}
-
-/***/ }),
-/* 131 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _sign.default;
-  }
-});
-
-var _sign = _interopRequireDefault(__webpack_require__(55));
-
-/***/ }),
-/* 132 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = shuffle;
 
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
+var _slice2 = __webpack_require__(24);
 
-var _toObject = _interopRequireDefault(__webpack_require__(13));
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _toObject = __webpack_require__(12);
+
+var _toObject2 = _interopRequireDefault(_toObject);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Creates an array of shuffled values.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isError
  */
+
 var floor = Math.floor,
     random = Math.random;
+
 /**
  * Creates an array of shuffled values.
  *
@@ -5292,9 +5666,8 @@ var floor = Math.floor,
  */
 
 function shuffle(array) {
-  var arr = (0, _slice2.default)((0, _toObject.default)(array));
+  var arr = (0, _slice3.default)((0, _toObject2.default)(array));
   var index = arr.length;
-
   while (index > 0) {
     var rnd = floor(random() * index);
     index -= 1;
@@ -5307,29 +5680,35 @@ function shuffle(array) {
 }
 
 /***/ }),
-/* 133 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = regExpEscape;
 
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
+var _replace2 = __webpack_require__(13);
 
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
+var _replace3 = _interopRequireDefault(_replace2);
+
+var _requireCoercibleToString = __webpack_require__(23);
+
+var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module regExpEscape
  */
+
 var pattern = /[\^$\\.*+?()[\]{}|]/g;
+
 /**
  * Method to safely escape `RegExp` special tokens for use in `new RegExp`.
  *
@@ -5343,9 +5722,100 @@ var pattern = /[\^$\\.*+?()[\]{}|]/g;
  * var regex = new RegExp(regexpEscape(str), 'g');
  * String(regex); // '/hello\. how are you\?/g'
  */
-
 function regExpEscape(string) {
-  return (0, _replace2.default)((0, _requireCoercibleToString.default)(string), pattern, '\\$&');
+  return (0, _replace3.default)((0, _requireCoercibleToString2.default)(string), pattern, '\\$&');
+}
+
+/***/ }),
+/* 132 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _partialRight;
+
+var _call2 = __webpack_require__(15);
+
+var _call3 = _interopRequireDefault(_call2);
+
+var _bound2 = __webpack_require__(50);
+
+var _bound3 = _interopRequireDefault(_bound2);
+
+var _isPrimitive = __webpack_require__(25);
+
+var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _partialRight(fn) {
+  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
+  }
+
+  var bound = void 0;
+
+  var binder = function _binder() {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    var result = _call3.default.apply(undefined, [fn, this].concat(args, partials));
+
+    if (this instanceof bound) {
+      return (0, _isPrimitive2.default)(result) ? this : result;
+    }
+
+    return result;
+  };
+
+  bound = (0, _bound3.default)(binder, 'PartialRight', fn.prototype, fn.length);
+
+  return bound;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _partialRight
+   */
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = partialRight;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _partialRight2 = __webpack_require__(132);
+
+var _partialRight3 = _interopRequireDefault(_partialRight2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module partialRight
+ */
+
+function partialRight(fn) {
+  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
+  }
+
+  return _partialRight3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(partials));
 }
 
 /***/ }),
@@ -5355,48 +5825,54 @@ function regExpEscape(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _partialRight;
+exports.default = _partial;
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _call2 = __webpack_require__(15);
 
-var _bound2 = _interopRequireDefault(__webpack_require__(51));
+var _call3 = _interopRequireDefault(_call2);
 
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
+var _bound2 = __webpack_require__(50);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _partialRight
- */
-function _partialRight(fn) {
-  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+var _bound3 = _interopRequireDefault(_bound2);
+
+var _isPrimitive = __webpack_require__(25);
+
+var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _partial(fn) {
+  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     partials[_key - 1] = arguments[_key];
   }
 
-  var bound;
+  var bound = void 0;
 
   var binder = function _binder() {
-    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
     }
 
-    var result = _call2.default.apply(void 0, [fn, this].concat(args, partials));
+    var result = _call3.default.apply(undefined, [fn, this].concat(partials, args));
 
     if (this instanceof bound) {
-      return (0, _isPrimitive.default)(result) ? this : result;
+      return (0, _isPrimitive2.default)(result) ? this : result;
     }
 
     return result;
   };
 
-  bound = (0, _bound2.default)(binder, 'PartialRight', fn.prototype, fn.length);
+  bound = (0, _bound3.default)(binder, 'Partial', fn.prototype, fn.length - partials.length);
+
   return bound;
-}
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _partial
+   */
 
 /***/ }),
 /* 135 */
@@ -5405,28 +5881,33 @@ function _partialRight(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = partialRight;
+exports.default = partial;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _assertIsFunction2 = __webpack_require__(3);
 
-var _partialRight2 = _interopRequireDefault(__webpack_require__(134));
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _partial2 = __webpack_require__(134);
+
+var _partial3 = _interopRequireDefault(_partial2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module partialRight
+ * @module partial
  */
-function partialRight(fn) {
-  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+
+function partial(fn) {
+  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     partials[_key - 1] = arguments[_key];
   }
 
-  return _partialRight2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(partials));
+  return _partial3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(partials));
 }
 
 /***/ }),
@@ -5436,48 +5917,20 @@ function partialRight(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _partial;
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _parseInt = __webpack_require__(56);
 
-var _bound2 = _interopRequireDefault(__webpack_require__(51));
-
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _partial
- */
-function _partial(fn) {
-  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_parseInt).default;
   }
+});
 
-  var bound;
-
-  var binder = function _binder() {
-    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    var result = _call2.default.apply(void 0, [fn, this].concat(partials, args));
-
-    if (this instanceof bound) {
-      return (0, _isPrimitive.default)(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = (0, _bound2.default)(binder, 'Partial', fn.prototype, fn.length - partials.length);
-  return bound;
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 137 */
@@ -5486,72 +5939,16 @@ function _partial(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = partial;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _partial2 = _interopRequireDefault(__webpack_require__(136));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module partial
- */
-function partial(fn) {
-  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
-  }
-
-  return _partial2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(partials));
-}
-
-/***/ }),
-/* 138 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _parseInt.default;
-  }
-});
-
-var _parseInt = _interopRequireDefault(__webpack_require__(57));
-
-/***/ }),
-/* 139 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = parseDecimal;
 
-var _parseInt2 = _interopRequireDefault(__webpack_require__(57));
+var _parseInt2 = __webpack_require__(56);
 
-/**
- * @file Utility to parse a string to a decimal value.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module parseDecimal
- */
+var _parseInt3 = _interopRequireDefault(_parseInt2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Parse a string to a decimal value.
@@ -5560,8 +5957,58 @@ var _parseInt2 = _interopRequireDefault(__webpack_require__(57));
  * @returns {number} The parsed decimal value.
  */
 function parseDecimal(value) {
-  return (0, _parseInt2.default)(value, 10);
-}
+  return (0, _parseInt3.default)(value, 10);
+} /**
+   * @file Utility to parse a string to a decimal value.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module parseDecimal
+   */
+
+/***/ }),
+/* 138 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.split); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _split
+                                                                     */
+
+/***/ }),
+/* 139 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Number.prototype.toFixed); /**
+                                                                       * @file Utility that needs description.
+                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                       * @module _toFixed
+                                                                       */
 
 /***/ }),
 /* 140 */
@@ -5570,94 +6017,68 @@ function parseDecimal(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _split
- */
-var _default = (0, _methodize2.default)(String.prototype.split);
-
-exports.default = _default;
-
-/***/ }),
-/* 141 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toFixed
- */
-var _default = (0, _methodize2.default)(Number.prototype.toFixed);
-
-exports.default = _default;
-
-/***/ }),
-/* 142 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = numberFormat;
 
-var _RegExp2 = _interopRequireDefault(__webpack_require__(75));
+var _RegExp2 = __webpack_require__(73);
 
-var _toFixed2 = _interopRequireDefault(__webpack_require__(141));
+var _RegExp3 = _interopRequireDefault(_RegExp2);
 
-var _numberToString2 = _interopRequireDefault(__webpack_require__(85));
+var _toFixed2 = __webpack_require__(139);
 
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
+var _toFixed3 = _interopRequireDefault(_toFixed2);
 
-var _split2 = _interopRequireDefault(__webpack_require__(140));
+var _numberToString2 = __webpack_require__(83);
 
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+var _numberToString3 = _interopRequireDefault(_numberToString2);
 
-var _join2 = _interopRequireDefault(__webpack_require__(29));
+var _replace2 = __webpack_require__(13);
 
-var _isFinite2 = _interopRequireDefault(__webpack_require__(42));
+var _replace3 = _interopRequireDefault(_replace2);
 
-var _toNumber2 = _interopRequireDefault(__webpack_require__(22));
+var _split2 = __webpack_require__(138);
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+var _split3 = _interopRequireDefault(_split2);
 
-var _clamp = _interopRequireDefault(__webpack_require__(94));
+var _stringSlice2 = __webpack_require__(9);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
 
-var _numberToDecimalString = _interopRequireDefault(__webpack_require__(77));
+var _join2 = __webpack_require__(28);
 
-/**
- * @file Format a number.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module numberFormat
- */
+var _join3 = _interopRequireDefault(_join2);
+
+var _isFinite2 = __webpack_require__(41);
+
+var _isFinite3 = _interopRequireDefault(_isFinite2);
+
+var _toNumber2 = __webpack_require__(21);
+
+var _toNumber3 = _interopRequireDefault(_toNumber2);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _clamp = __webpack_require__(92);
+
+var _clamp2 = _interopRequireDefault(_clamp);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+var _numberToDecimalString = __webpack_require__(75);
+
+var _numberToDecimalString2 = _interopRequireDefault(_numberToDecimalString);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Format a given number using fixed-point notation, with user specified digit
@@ -5680,29 +6101,85 @@ var _numberToDecimalString = _interopRequireDefault(__webpack_require__(77));
  * numberFormat(123456.789, 4, 4, ' ', ':'); // "12 3456:7890"
  * numberFormat(12345678.9, 0, null, '-'); // "12-345-679"
  */
+/**
+ * @file Format a number.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module numberFormat
+ */
+
 function numberFormat(value) {
-  var number = (0, _toNumber2.default)(value);
-
-  if (!(0, _isFinite2.default)(number)) {
-    return (0, _numberToString2.default)(number);
-  } // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
-
-
-  var digits = (arguments.length <= 1 ? 0 : arguments.length - 1) > 0 ? (0, _clamp.default)((0, _toInteger2.default)(arguments.length <= 1 ? undefined : arguments[1]), 0, 20) : 2; // Formats a number using fixed-point notation.
-
-  var fixed = (0, _numberToDecimalString.default)((0, _toFixed2.default)(number, digits));
-
-  if (digits > 0) {
-    var parts = (0, _split2.default)(fixed, '.');
-    parts[1] = (0, _stringSlice2.default)("".concat(parts[1] || '', "00000000000000000000"), 0, digits);
-    fixed = (0, _join2.default)(parts, '.');
+  var number = (0, _toNumber3.default)(value);
+  if (!(0, _isFinite3.default)(number)) {
+    return (0, _numberToString3.default)(number);
   }
 
-  var sectionLength = (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 ? (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]) : 3; // Formats a number (string) of fixed-point notation, with user delimiters.
+  // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
+  var digits = (arguments.length <= 1 ? 0 : arguments.length - 1) > 0 && !(0, _isNil2.default)(arguments.length <= 1 ? undefined : arguments[1]) ? (0, _clamp2.default)((0, _toInteger3.default)(arguments.length <= 1 ? undefined : arguments[1]), 0, 20) : 2;
+  // Formats a number using fixed-point notation.
+  var fixed = (0, _numberToDecimalString2.default)((0, _toFixed3.default)(number, digits));
+  if (digits > 0) {
+    var parts = (0, _split3.default)(fixed, '.');
+    parts[1] = (0, _stringSlice3.default)(String(parts[1] || '') + '00000000000000000000', 0, digits);
+    fixed = (0, _join3.default)(parts, '.');
+  }
 
-  var sectionDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 2 ? (0, _toString2.default)(arguments.length <= 3 ? undefined : arguments[3]) : ',';
-  var decimalDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 3 ? (0, _toString2.default)(arguments.length <= 4 ? undefined : arguments[4]) : '.';
-  return (0, _replace2.default)(decimalDelimiter === '.' ? fixed : (0, _replace2.default)(fixed, '.', decimalDelimiter), new _RegExp2.default("\\d(?=(\\d{".concat(sectionLength, "})+").concat(digits > 0 ? '\\D' : '$', ")"), 'g'), "$&".concat(sectionDelimiter));
+  var sectionLength = (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 && !(0, _isNil2.default)(arguments.length <= 2 ? undefined : arguments[2]) ? (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]) : 3;
+  // Formats a number (string) of fixed-point notation, with user delimiters.
+  var sectionDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 2 && !(0, _isNil2.default)(arguments.length <= 3 ? undefined : arguments[3]) ? (0, _toString3.default)(arguments.length <= 3 ? undefined : arguments[3]) : ',';
+  var decimalDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 3 && !(0, _isNil2.default)(arguments.length <= 4 ? undefined : arguments[4]) ? (0, _toString3.default)(arguments.length <= 4 ? undefined : arguments[4]) : '.';
+
+  return (0, _replace3.default)(decimalDelimiter === '.' ? fixed : (0, _replace3.default)(fixed, '.', decimalDelimiter), new _RegExp3.default('\\d(?=(\\d{' + String(sectionLength) + '})+' + (digits > 0 ? '\\D' : '$') + ')', 'g'), '$&' + String(sectionDelimiter));
+}
+
+/***/ }),
+/* 141 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = noop;
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module noop
+ */
+
+function noop() {}
+
+/***/ }),
+/* 142 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = negate;
+
+var _negate2 = __webpack_require__(64);
+
+var _negate3 = _interopRequireDefault(_negate2);
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module negate
+ */
+
+function negate(predicate) {
+  return (0, _negate3.default)((0, _assertIsFunction3.default)(predicate));
 }
 
 /***/ }),
@@ -5715,14 +6192,27 @@ function numberFormat(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = noop;
+exports.default = methodize;
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module noop
+ * @module methodize
  */
-function noop() {}
+
+function methodize(prototypeMethod) {
+  return (0, _methodize3.default)((0, _assertIsFunction3.default)(prototypeMethod));
+}
 
 /***/ }),
 /* 144 */
@@ -5731,24 +6221,29 @@ function noop() {}
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = negate;
+exports.default = last;
 
-var _negate2 = _interopRequireDefault(__webpack_require__(65));
+var _requireObjectCoercible = __webpack_require__(1);
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _last2 = __webpack_require__(88);
+
+var _last3 = _interopRequireDefault(_last2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file Utility that needs description.
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module negate
+ * @module last
  */
-function negate(predicate) {
-  return (0, _negate2.default)((0, _assertIsFunction2.default)(predicate));
+
+function last(array) {
+  return (0, _last3.default)((0, _requireObjectCoercible2.default)(array));
 }
 
 /***/ }),
@@ -5758,25 +6253,36 @@ function negate(predicate) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = methodize;
+exports.default = kebabJoin;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _toString2 = __webpack_require__(2);
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _toString3 = _interopRequireDefault(_toString2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module methodize
- */
-function methodize(prototypeMethod) {
-  return (0, _methodize2.default)((0, _assertIsFunction2.default)(prototypeMethod));
-}
+var _map2 = __webpack_require__(102);
+
+var _map3 = _interopRequireDefault(_map2);
+
+var _join2 = __webpack_require__(28);
+
+var _join3 = _interopRequireDefault(_join2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function kebabJoin() {
+  for (var _len = arguments.length, strings = Array(_len), _key = 0; _key < _len; _key++) {
+    strings[_key] = arguments[_key];
+  }
+
+  return (0, _join3.default)((0, _map3.default)(strings, _toString3.default), '-');
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module kebabJoin
+   */
 
 /***/ }),
 /* 146 */
@@ -5785,24 +6291,36 @@ function methodize(prototypeMethod) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = last;
+exports.default = isWhiteSpaced;
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _isString = __webpack_require__(4);
 
-var _last2 = _interopRequireDefault(__webpack_require__(90));
+var _isString2 = _interopRequireDefault(_isString);
 
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module last
- */
-function last(array) {
-  return (0, _last2.default)((0, _requireObjectCoercible.default)(array));
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+var _whitespace2 = __webpack_require__(31);
+
+var _whitespace3 = _interopRequireDefault(_whitespace2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PRE = '['; /**
+                * @file Utility that needs description.
+                * @copyright Copyright (c) 2018-present, Graham Fairweather
+                * @module isWhiteSpaced
+                */
+
+var POST = ']';
+var containsWhiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
+
+function isWhiteSpaced(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, containsWhiteSpace);
 }
 
 /***/ }),
@@ -5812,30 +6330,29 @@ function last(array) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = kebabJoin;
+exports.default = isValidHtml5Id;
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _isString = __webpack_require__(4);
 
-var _map2 = _interopRequireDefault(__webpack_require__(104));
+var _isString2 = _interopRequireDefault(_isString);
 
-var _join2 = _interopRequireDefault(__webpack_require__(29));
+var _isSpaced = __webpack_require__(78);
+
+var _isSpaced2 = _interopRequireDefault(_isSpaced);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module kebabJoin
+ * @module isValidHtml5Id
  */
-function kebabJoin() {
-  for (var _len = arguments.length, strings = new Array(_len), _key = 0; _key < _len; _key++) {
-    strings[_key] = arguments[_key];
-  }
 
-  return (0, _join2.default)((0, _map2.default)(strings, _toString2.default), '-');
+function isValidHtml5Id(string) {
+  return (0, _isString2.default)(string) && string.length > 0 && !(0, _isSpaced2.default)(string);
 }
 
 /***/ }),
@@ -5845,30 +6362,31 @@ function kebabJoin() {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isWhiteSpaced;
+exports.default = isValidHtml4Id;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+var _isString2 = _interopRequireDefault(_isString);
 
-var _whitespace2 = _interopRequireDefault(__webpack_require__(32));
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isWhiteSpaced
+ * @module isValidHtml4Id
  */
-var PRE = '[';
-var POST = ']';
-var containsWhiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
 
-function isWhiteSpaced(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, containsWhiteSpace);
+var validPattern = /^[A-Za-z][A-Za-z0-9\-_.]*$/;
+
+function isValidHtml4Id(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, validPattern);
 }
 
 /***/ }),
@@ -5878,25 +6396,32 @@ function isWhiteSpaced(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isValidHtml5Id;
+exports.default = isUpperCased;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _isSpaced = _interopRequireDefault(__webpack_require__(80));
+var _isString2 = _interopRequireDefault(_isString);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isValidHtml5Id
- */
-function isValidHtml5Id(string) {
-  return (0, _isString.default)(string) && string.length > 0 && !(0, _isSpaced.default)(string);
-}
+var _toUpperCase2 = __webpack_require__(35);
+
+var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isUpperCased(string) {
+  return (0, _isString2.default)(string) && (0, _toUpperCase3.default)(string) === (0, _toString3.default)(string);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isUpperCased
+   */
 
 /***/ }),
 /* 150 */
@@ -5905,26 +6430,29 @@ function isValidHtml5Id(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isValidHtml4Id;
+exports.default = isUniq;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isArrayLike = __webpack_require__(18);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+var _uniq2 = __webpack_require__(76);
+
+var _uniq3 = _interopRequireDefault(_uniq2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isValidHtml4Id
+ * @module isUniq
  */
-var validPattern = /^[A-Za-z][A-Za-z0-9\-_.]*$/;
 
-function isValidHtml4Id(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, validPattern);
+function isUniq(array) {
+  return (0, _isArrayLike2.default)(array) && (0, _uniq3.default)(array).length === array.length;
 }
 
 /***/ }),
@@ -5934,26 +6462,29 @@ function isValidHtml4Id(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUpperCased;
+exports.default = isUnderscored;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _toUpperCase2 = _interopRequireDefault(__webpack_require__(36));
+var _isString2 = _interopRequireDefault(_isString);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUpperCased
+ * @module isUnderscored
  */
-function isUpperCased(string) {
-  return (0, _isString.default)(string) && (0, _toUpperCase2.default)(string) === (0, _toString2.default)(string);
+
+function isUnderscored(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, '_');
 }
 
 /***/ }),
@@ -5963,25 +6494,20 @@ function isUpperCased(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUniq;
 
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
+var _toBoolean = __webpack_require__(77);
 
-var _uniq2 = _interopRequireDefault(__webpack_require__(78));
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_toBoolean).default;
+  }
+});
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUniq
- */
-function isUniq(array) {
-  return (0, _isArrayLike.default)(array) && (0, _uniq2.default)(array).length === array.length;
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 153 */
@@ -5990,25 +6516,21 @@ function isUniq(array) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUnderscored;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _methodize2 = __webpack_require__(0);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUnderscored
- */
-function isUnderscored(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, '_');
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(String.prototype.charCodeAt); /**
+                                                                          * @file Utility that needs description.
+                                                                          * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                          * @module _charCodeAt
+                                                                          */
 
 /***/ }),
 /* 154 */
@@ -6017,68 +6539,20 @@ function isUnderscored(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _toBoolean.default;
-  }
-});
-
-var _toBoolean = _interopRequireDefault(__webpack_require__(79));
-
-/***/ }),
-/* 155 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _charCodeAt
- */
-var _default = (0, _methodize2.default)(String.prototype.charCodeAt);
-
-exports.default = _default;
-
-/***/ }),
-/* 156 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isSurrogatePair;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _charCodeAt2 = _interopRequireDefault(__webpack_require__(155));
+var _isString2 = _interopRequireDefault(_isString);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSurrogatePair
- */
+var _charCodeAt2 = __webpack_require__(153);
+
+var _charCodeAt3 = _interopRequireDefault(_charCodeAt2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Tests if the two character arguments combined are a valid UTF-16
@@ -6101,6 +6575,12 @@ var _charCodeAt2 = _interopRequireDefault(__webpack_require__(155));
  * isSurrogatePair(test2); // true
  * isSurrogatePair(test2.charAt(0), test2.charAt(1)); // true
  */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isSurrogatePair
+ */
+
 function isSurrogatePair() {
   var argsLength = arguments.length;
 
@@ -6108,29 +6588,93 @@ function isSurrogatePair() {
     return false;
   }
 
-  var first;
-  var second;
+  var first = void 0;
+  var second = void 0;
   var char1 = arguments.length <= 0 ? undefined : arguments[0];
 
   if (argsLength === 1) {
-    if ((0, _isString.default)(char1) && char1.length === 2) {
-      first = (0, _charCodeAt2.default)(char1, 0);
-      second = (0, _charCodeAt2.default)(char1, 1);
+    if ((0, _isString2.default)(char1) && char1.length === 2) {
+      first = (0, _charCodeAt3.default)(char1, 0);
+      second = (0, _charCodeAt3.default)(char1, 1);
     } else {
       return false;
     }
   } else if (argsLength > 1) {
     var char2 = arguments.length <= 1 ? undefined : arguments[1];
 
-    if (!(0, _isString.default)(char1) || char1.length !== 1 || !(0, _isString.default)(char2) || char2.length !== 1) {
+    if (!(0, _isString2.default)(char1) || char1.length !== 1 || !(0, _isString2.default)(char2) || char2.length !== 1) {
       return false;
     }
 
-    first = (0, _charCodeAt2.default)(char1, 0);
-    second = (0, _charCodeAt2.default)(char2, 0);
+    first = (0, _charCodeAt3.default)(char1, 0);
+    second = (0, _charCodeAt3.default)(char2, 0);
   }
 
-  return first >= 0xD800 && first <= 0xDBFF && second >= 0xDC00 && second <= 0xDFFF;
+  return first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff;
+}
+
+/***/ }),
+/* 155 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isStringTypeOrNumberType;
+
+var _isStringType = __webpack_require__(38);
+
+var _isStringType2 = _interopRequireDefault(_isStringType);
+
+var _isNumberType = __webpack_require__(30);
+
+var _isNumberType2 = _interopRequireDefault(_isNumberType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isStringTypeOrNumberType
+ */
+
+function isStringTypeOrNumberType(value) {
+  return (0, _isStringType2.default)(value) || (0, _isNumberType2.default)(value);
+}
+
+/***/ }),
+/* 156 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isStringTypeOrInteger;
+
+var _isSafeInteger = __webpack_require__(51);
+
+var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
+
+var _isStringType = __webpack_require__(38);
+
+var _isStringType2 = _interopRequireDefault(_isStringType);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isStringTypeOrInteger
+ */
+
+function isStringTypeOrInteger(value) {
+  return (0, _isStringType2.default)(value) || (0, _isSafeInteger2.default)(value);
 }
 
 /***/ }),
@@ -6140,25 +6684,24 @@ function isSurrogatePair() {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringTypeOrNumberType;
+exports.default = isSearchIndex;
 
-var _isStringType = _interopRequireDefault(__webpack_require__(39));
+var _isWholeNumber = __webpack_require__(37);
 
-var _isNumberType = _interopRequireDefault(__webpack_require__(31));
+var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringTypeOrNumberType
- */
-function isStringTypeOrNumberType(value) {
-  return (0, _isStringType.default)(value) || (0, _isNumberType.default)(value);
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isSearchIndex(value) {
+  return value === -1 || (0, _isWholeNumber2.default)(value);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isReservedIdentifier
+   */
 
 /***/ }),
 /* 158 */
@@ -6167,24 +6710,29 @@ function isStringTypeOrNumberType(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringTypeOrInteger;
+exports.default = isPopulatedString;
 
-var _isSafeInteger = _interopRequireDefault(__webpack_require__(52));
+var _isString = __webpack_require__(4);
 
-var _isStringType = _interopRequireDefault(__webpack_require__(39));
+var _isString2 = _interopRequireDefault(_isString);
+
+var _trim2 = __webpack_require__(42);
+
+var _trim3 = _interopRequireDefault(_trim2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringTypeOrInteger
+ * @module isPopulatedString
  */
-function isStringTypeOrInteger(value) {
-  return (0, _isStringType.default)(value) || (0, _isSafeInteger.default)(value);
+
+function isPopulatedString(string) {
+  return (0, _isString2.default)(string) && (0, _trim3.default)(string).length > 0;
 }
 
 /***/ }),
@@ -6194,23 +6742,16 @@ function isStringTypeOrInteger(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSearchIndex;
-
-var _isWholeNumber = _interopRequireDefault(__webpack_require__(38));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isReservedIdentifier
+ * @module _isArray
  */
-function isSearchIndex(value) {
-  return value === -1 || (0, _isWholeNumber.default)(value);
-}
+
+exports.default = Array.isArray;
 
 /***/ }),
 /* 160 */
@@ -6219,24 +6760,29 @@ function isSearchIndex(value) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isPopulatedString;
+exports.default = isObjectLikeNotArray;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isArray2 = __webpack_require__(159);
 
-var _trim2 = _interopRequireDefault(__webpack_require__(43));
+var _isArray3 = _interopRequireDefault(_isArray2);
+
+var _isObjectLike = __webpack_require__(11);
+
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isPopulatedString
+ * @module isObjectLikeNotArray
  */
-function isPopulatedString(string) {
-  return (0, _isString.default)(string) && (0, _trim2.default)(string).length > 0;
+
+function isObjectLikeNotArray(value) {
+  return !(0, _isArray3.default)(value) && (0, _isObjectLike2.default)(value);
 }
 
 /***/ }),
@@ -6249,15 +6795,17 @@ function isPopulatedString(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _isArray
- */
-var _default = Array.isArray;
-exports.default = _default;
+var _isNaN = __webpack_require__(22);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_isNaN).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 162 */
@@ -6266,70 +6814,23 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isObjectLikeNotArray;
 
-var _isArray2 = _interopRequireDefault(__webpack_require__(161));
+var _isFinite = __webpack_require__(41);
 
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_isFinite).default;
+  }
+});
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectLikeNotArray
- */
-function isObjectLikeNotArray(value) {
-  return !(0, _isArray2.default)(value) && (0, _isObjectLike.default)(value);
-}
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 163 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _isNaN.default;
-  }
-});
-
-var _isNaN = _interopRequireDefault(__webpack_require__(23));
-
-/***/ }),
-/* 164 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _isFinite.default;
-  }
-});
-
-var _isFinite = _interopRequireDefault(__webpack_require__(42));
-
-/***/ }),
-/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6356,33 +6857,94 @@ module.exports = function isNumberObject(value) {
 
 
 /***/ }),
-/* 166 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isLowerCased;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _isString = __webpack_require__(4);
 
-var _toLowerCase2 = _interopRequireDefault(__webpack_require__(62));
+var _isString2 = _interopRequireDefault(_isString);
 
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
+var _toLowerCase2 = __webpack_require__(61);
+
+var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function isLowerCased(string) {
+  return (0, _isString2.default)(string) && (0, _toLowerCase3.default)(string) === (0, _toString3.default)(string);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isLowerCased
+   */
+
+/***/ }),
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isHex;
+
+var _isString = __webpack_require__(4);
+
+var _isString2 = _interopRequireDefault(_isString);
+
+var _stringTest2 = __webpack_require__(8);
+
+var _stringTest3 = _interopRequireDefault(_stringTest2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isLowerCased
+ * @module isHex
  */
-function isLowerCased(string) {
-  return (0, _isString.default)(string) && (0, _toLowerCase2.default)(string) === (0, _toString2.default)(string);
+
+var hexPattern = /^0x[0-9a-f]+$/i;
+
+function isHex(string) {
+  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, hexPattern);
 }
+
+/***/ }),
+/* 166 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _isFunction = __webpack_require__(10);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_isFunction).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ }),
 /* 167 */
@@ -6391,27 +6953,27 @@ function isLowerCased(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isHex;
 
-var _isString = _interopRequireDefault(__webpack_require__(5));
+var _Boolean2 = __webpack_require__(33);
 
-var _stringTest2 = _interopRequireDefault(__webpack_require__(9));
+var _Boolean3 = _interopRequireDefault(_Boolean2);
+
+var _negate2 = __webpack_require__(64);
+
+var _negate3 = _interopRequireDefault(_negate2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isHex
+ * @module isFalsey
  */
-var hexPattern = /^0x[0-9a-f]+$/i;
 
-function isHex(string) {
-  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, hexPattern);
-}
+exports.default = (0, _negate3.default)(_Boolean3.default);
 
 /***/ }),
 /* 168 */
@@ -6420,19 +6982,16 @@ function isHex(string) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _isFunction.default;
-  }
-});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _getPrototypeOf
+ */
 
-var _isFunction = _interopRequireDefault(__webpack_require__(11));
+exports.default = Object.getPrototypeOf;
 
 /***/ }),
 /* 169 */
@@ -6441,85 +7000,44 @@ var _isFunction = _interopRequireDefault(__webpack_require__(11));
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _Boolean2 = _interopRequireDefault(__webpack_require__(34));
-
-var _negate2 = _interopRequireDefault(__webpack_require__(65));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isFalsey
- */
-var _default = (0, _negate2.default)(_Boolean2.default);
-
-exports.default = _default;
-
-/***/ }),
-/* 170 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getPrototypeOf
- */
-var _default = Object.getPrototypeOf;
-exports.default = _default;
-
-/***/ }),
-/* 171 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isError;
 
-var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(170));
+var _getPrototypeOf2 = __webpack_require__(168);
 
-var _toStringTag = _interopRequireDefault(__webpack_require__(45));
+var _getPrototypeOf3 = _interopRequireDefault(_getPrototypeOf2);
 
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
+var _toStringTag = __webpack_require__(44);
 
+var _toStringTag2 = _interopRequireDefault(_toStringTag);
+
+var _isObjectLike = __webpack_require__(11);
+
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var testIsError = function _testIsError(value) {
+  return (0, _toStringTag2.default)(value) === '[object Error]';
+};
+
+/* istanbul ignore next */
 /**
  * @file Detect whether a value is an error.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isError
  */
-var testIsError = function _testIsError(value) {
-  return (0, _toStringTag.default)(value) === '[object Error]';
-};
-/* istanbul ignore if */
-
 
 if (!testIsError(Error.prototype)) {
   var errorProto = Error.prototype;
   var testStringTag = testIsError;
-
   testIsError = function _testIsError(value) {
     return value === errorProto || testStringTag(value);
   };
 }
+
 /**
  * Determine whether or not a given `value` is an `Error` type.
  *
@@ -6534,22 +7052,19 @@ if (!testIsError(Error.prototype)) {
  * isError('abc'); // false
  * isError(new Error()); //true
  */
-
-
 function isError(value) {
-  if (!(0, _isObjectLike.default)(value)) {
+  if (!(0, _isObjectLike2.default)(value)) {
     return false;
   }
 
   var object = value;
   var maxLoop = 100;
-
   while (object && maxLoop > -1) {
     if (testIsError(object)) {
       return true;
     }
 
-    object = (0, _getPrototypeOf2.default)(object);
+    object = (0, _getPrototypeOf3.default)(object);
     maxLoop -= 1;
   }
 
@@ -6557,63 +7072,69 @@ function isError(value) {
 }
 
 /***/ }),
-/* 172 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isDOMNode;
 
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+var _methodize2 = __webpack_require__(0);
 
-var _isBooleanType = _interopRequireDefault(__webpack_require__(81));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _isNumberType = _interopRequireDefault(__webpack_require__(31));
+var _isBooleanType = __webpack_require__(79);
 
-var _Boolean2 = _interopRequireDefault(__webpack_require__(34));
+var _isBooleanType2 = _interopRequireDefault(_isBooleanType);
 
+var _isNumberType = __webpack_require__(30);
+
+var _isNumberType2 = _interopRequireDefault(_isNumberType);
+
+var _Boolean2 = __webpack_require__(33);
+
+var _Boolean3 = _interopRequireDefault(_Boolean2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* istanbul ignore next */
 /**
  * @file Tests if a value is a DOM Node.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isDOMNode
  */
 
-/* istanbul ignore next */
 var doc = typeof document !== 'undefined' && document;
 var documentInheritsNode = false;
-var element;
-var hasChildNodes;
-/* istanbul ignore if */
-
+var element = void 0;
+var hasChildNodes = void 0;
+/* istanbul ignore next */
 if (doc) {
   try {
     element = doc.createElement('div');
-    hasChildNodes = (0, _methodize2.default)(doc.hasChildNodes);
-    documentInheritsNode = (0, _isBooleanType.default)(hasChildNodes(element));
+    hasChildNodes = (0, _methodize3.default)(doc.hasChildNodes);
+    documentInheritsNode = (0, _isBooleanType2.default)(hasChildNodes(element));
   } catch (ignore) {
     hasChildNodes = null;
     documentInheritsNode = false;
   }
 }
 
-var tryAppendChild;
+var tryAppendChild = void 0;
 /* istanbul ignore if */
-
 if (element && !documentInheritsNode) {
-  hasChildNodes = (0, _methodize2.default)(element.hasChildNodes);
-  var cloneNode = (0, _methodize2.default)(element.cloneNode);
-  var appendChild = (0, _methodize2.default)(element.appendChild);
-
+  hasChildNodes = (0, _methodize3.default)(element.hasChildNodes);
+  var cloneNode = (0, _methodize3.default)(element.cloneNode);
+  var appendChild = (0, _methodize3.default)(element.appendChild);
   tryAppendChild = function _tryAppendChild(value) {
     return appendChild(cloneNode(element, false), value);
   };
 }
+
 /**
  * This method tests if `value` is a DOM Node.
  *
@@ -6627,25 +7148,22 @@ if (element && !documentInheritsNode) {
  * isNode(document); // => true
  * isNode(document.createNode('div')); // => true
  */
-
-
 function isDOMNode(value) {
-  if (hasChildNodes && value && (0, _isNumberType.default)(value.nodeType)) {
+  if (hasChildNodes && value && (0, _isNumberType2.default)(value.nodeType)) {
     if (value === doc) {
       return true;
     }
 
     try {
-      return (0, _isBooleanType.default)(hasChildNodes(value));
+      return (0, _isBooleanType2.default)(hasChildNodes(value));
     } catch (ignore) {}
     /* ignore */
 
+
     /* istanbul ignore if */
-
-
     if (!documentInheritsNode) {
       try {
-        return (0, _Boolean2.default)(tryAppendChild(value));
+        return (0, _Boolean3.default)(tryAppendChild(value));
       } catch (ignore) {
         /* ignore */
       }
@@ -6656,32 +7174,33 @@ function isDOMNode(value) {
 }
 
 /***/ }),
-/* 173 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isCountingNumber;
 
-var _isWholeNumber = _interopRequireDefault(__webpack_require__(38));
+var _isWholeNumber = __webpack_require__(37);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isCountingNumber
- */
+var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function isCountingNumber(value) {
-  return (0, _isWholeNumber.default)(value) && value > 0;
-}
+  return (0, _isWholeNumber2.default)(value) && value > 0;
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module isCountingNumber
+   */
 
 /***/ }),
-/* 174 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6709,60 +7228,75 @@ module.exports = function isBoolean(value) {
 
 
 /***/ }),
-/* 175 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = isArrayLikeObject;
 
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
+var _isObjectLike = __webpack_require__(11);
 
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
+var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+
+var _isArrayLike = __webpack_require__(18);
+
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isArrayLikeObject
  */
+
 function isArrayLikeObject(value) {
-  return (0, _isObjectLike.default)(value) && (0, _isArrayLike.default)(value);
+  return (0, _isObjectLike2.default)(value) && (0, _isArrayLike2.default)(value);
 }
 
 /***/ }),
-/* 176 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-
-var _interopRequireDefault = __webpack_require__(0);
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = intToRGB;
 
-var _numberToString2 = _interopRequireDefault(__webpack_require__(85));
+var _numberToString2 = __webpack_require__(83);
 
-var _toUpperCase2 = _interopRequireDefault(__webpack_require__(36));
+var _numberToString3 = _interopRequireDefault(_numberToString2);
 
-var _toUint = _interopRequireDefault(__webpack_require__(84));
+var _toUpperCase2 = __webpack_require__(35);
 
-var _padStart = _interopRequireDefault(__webpack_require__(82));
+var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+
+var _toUint = __webpack_require__(82);
+
+var _toUint2 = _interopRequireDefault(_toUint);
+
+var _padStart = __webpack_require__(80);
+
+var _padStart2 = _interopRequireDefault(_padStart);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Convert an integer to a RGB string.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module intToRGB
  */
+
 var HASH = '#';
+
 /**
  * Takes a number between 0 and 16777215 inclusive and converts it
  * into 6 digit RGB notation.
@@ -6773,9 +7307,129 @@ var HASH = '#';
  * var intToRGB = require('int-to-rgb-x');
  * intToRGB(1); // "#000001"
  */
-
 function intToRGB(i) {
-  return HASH + (0, _toUpperCase2.default)((0, _padStart.default)((0, _numberToString2.default)((0, _toUint.default)(i), 16), 6, '0'));
+  return HASH + (0, _toUpperCase3.default)((0, _padStart2.default)((0, _numberToString3.default)((0, _toUint2.default)(i), 16), 6, '0'));
+}
+
+/***/ }),
+/* 175 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _methodize2 = __webpack_require__(0);
+
+var _methodize3 = _interopRequireDefault(_methodize2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = (0, _methodize3.default)(Array.prototype.shift); /**
+                                                                    * @file Utility that needs description.
+                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                    * @module _shift
+                                                                    */
+
+/***/ }),
+/* 176 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = intersection;
+
+var _sift2 = __webpack_require__(47);
+
+var _sift3 = _interopRequireDefault(_sift2);
+
+var _accumulate2 = __webpack_require__(52);
+
+var _accumulate3 = _interopRequireDefault(_accumulate2);
+
+var _any2 = __webpack_require__(19);
+
+var _any3 = _interopRequireDefault(_any2);
+
+var _includes2 = __webpack_require__(16);
+
+var _includes3 = _interopRequireDefault(_includes2);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+var _shift2 = __webpack_require__(175);
+
+var _shift3 = _interopRequireDefault(_shift2);
+
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } } /**
+                                                                                                                                                 * @file Creates an array of unique values that are included in all given arrays.
+                                                                                                                                                 * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                                                                                 * @module intersection
+                                                                                                                                                 */
+
+var isNotNil = function _isNotNil(value) {
+  return !(0, _isNil2.default)(value);
+};
+
+/**
+ * This method creates an array of unique values that are included in all given
+ * arrays using SameValueZero for equality comparisons. The order and references
+ * of result values are determined by the first array.
+ *
+ * @param {...Array} [arrays] - The arrays to inspect.
+ * @returns {Array} Returns the new array of intersecting values.
+ * @example
+ * var intersection = require('array-intersection-x');
+ *
+ * intersection([2, 1], [2, 3]); // => [2]
+ */
+function intersection() {
+  var _this = this;
+
+  for (var _len = arguments.length, arrays = Array(_len), _key = 0; _key < _len; _key++) {
+    arrays[_key] = arguments[_key];
+  }
+
+  var remaining = (0, _sift3.default)((0, _requireObjectCoercible2.default)(arrays), isNotNil);
+
+  if (remaining.length < 1) {
+    return [];
+  }
+
+  return (0, _accumulate3.default)((0, _shift3.default)(remaining), function (acc, value) {
+    _newArrowCheck(this, _this);
+
+    var isExcluded = !(0, _any3.default)(remaining, function (array) {
+      _newArrowCheck(this, _this);
+
+      return !(0, _includes3.default)((0, _requireObjectCoercible2.default)(array), value);
+    }.bind(this));
+
+    if (isExcluded && !(0, _includes3.default)(acc, value)) {
+      (0, _push3.default)(acc, value);
+    }
+
+    return acc;
+  }.bind(this), []);
 }
 
 /***/ }),
@@ -6785,35 +7439,53 @@ function intToRGB(i) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = includes;
+
+var _includes2 = __webpack_require__(16);
+
+var _includes3 = _interopRequireDefault(_includes2);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function includes(array, searchElement) {
+  return (0, _includes3.default)((0, _requireObjectCoercible2.default)(array), searchElement, (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module includes
+   */
+
+/***/ }),
+/* 178 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
+exports.default = identity;
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _shift
+ * @module identity
  */
-var _default = (0, _methodize2.default)(Array.prototype.shift);
 
-exports.default = _default;
-
-/***/ }),
-/* 178 */
-/***/ (function(module, exports) {
-
-function _newArrowCheck(innerThis, boundThis) {
-  if (innerThis !== boundThis) {
-    throw new TypeError("Cannot instantiate an arrow function");
-  }
+function identity(arg) {
+  return arg;
 }
-
-module.exports = _newArrowCheck;
 
 /***/ }),
 /* 179 */
@@ -6822,82 +7494,24 @@ module.exports = _newArrowCheck;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = intersection;
+exports.default = _head;
 
-var _newArrowCheck2 = _interopRequireDefault(__webpack_require__(178));
+var _getAt2 = __webpack_require__(48);
 
-var _sift2 = _interopRequireDefault(__webpack_require__(48));
+var _getAt3 = _interopRequireDefault(_getAt2);
 
-var _accumulate2 = _interopRequireDefault(__webpack_require__(53));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
-
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
-
-var _isNil = _interopRequireDefault(__webpack_require__(8));
-
-var _shift2 = _interopRequireDefault(__webpack_require__(177));
-
-var _push2 = _interopRequireDefault(__webpack_require__(18));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-/**
- * @file Creates an array of unique values that are included in all given arrays.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module intersection
- */
-var isNotNil = function _isNotNil(value) {
-  return !(0, _isNil.default)(value);
-};
-/**
- * This method creates an array of unique values that are included in all given
- * arrays using SameValueZero for equality comparisons. The order and references
- * of result values are determined by the first array.
- *
- * @param {...array} [arrays] - The arrays to inspect.
- * @returns {Array} Returns the new array of intersecting values.
- * @example
- * var intersection = require('array-intersection-x');
- *
- * intersection([2, 1], [2, 3]); // => [2]
- */
-
-
-function intersection() {
-  var _this = this;
-
-  for (var _len = arguments.length, arrays = new Array(_len), _key = 0; _key < _len; _key++) {
-    arrays[_key] = arguments[_key];
-  }
-
-  var remaining = (0, _sift2.default)((0, _requireObjectCoercible.default)(arrays), isNotNil);
-
-  if (remaining.length < 1) {
-    return [];
-  }
-
-  return (0, _accumulate2.default)((0, _shift2.default)(remaining), function (acc, value) {
-    var _this2 = this;
-
-    (0, _newArrowCheck2.default)(this, _this);
-    var isExcluded = !(0, _any2.default)(remaining, function (array) {
-      (0, _newArrowCheck2.default)(this, _this2);
-      return !(0, _includes2.default)((0, _requireObjectCoercible.default)(array), value);
-    }.bind(this));
-
-    if (isExcluded && !(0, _includes2.default)(acc, value)) {
-      (0, _push2.default)(acc, value);
-    }
-
-    return acc;
-  }.bind(this), []);
-}
+function _head(array) {
+  return (0, _getAt3.default)(array, 0);
+} /**
+   * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module _head
+   */
 
 /***/ }),
 /* 180 */
@@ -6906,26 +7520,29 @@ function intersection() {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = includes;
+exports.default = head;
 
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
+var _requireObjectCoercible = __webpack_require__(1);
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _head2 = __webpack_require__(179);
+
+var _head3 = _interopRequireDefault(_head2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
- * @file Utility that needs description.
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module includes
+ * @module head
  */
-function includes(array, searchElement) {
-  return (0, _includes2.default)((0, _requireObjectCoercible.default)(array), searchElement, (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
+
+function head(array) {
+  return (0, _head3.default)((0, _requireObjectCoercible2.default)(array));
 }
 
 /***/ }),
@@ -6938,16 +7555,29 @@ function includes(array, searchElement) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = identity;
+exports.default = hasOwnProperty;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module identity
- */
-function identity(arg) {
-  return arg;
-}
+var _hasOwnProperty2 = __webpack_require__(39);
+
+var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toPropertyKey = __webpack_require__(34);
+
+var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function hasOwnProperty(object, property) {
+  return (0, _hasOwnProperty3.default)((0, _requireObjectCoercible2.default)(object), (0, _toPropertyKey2.default)(property));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module hasOwnProperty
+   */
 
 /***/ }),
 /* 182 */
@@ -6956,115 +7586,44 @@ function identity(arg) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _head;
-
-var _getAt2 = _interopRequireDefault(__webpack_require__(49));
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _head
- */
-function _head(array) {
-  return (0, _getAt2.default)(array, 0);
-}
-
-/***/ }),
-/* 183 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = head;
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _head2 = _interopRequireDefault(__webpack_require__(182));
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module head
- */
-function head(array) {
-  return (0, _head2.default)((0, _requireObjectCoercible.default)(array));
-}
-
-/***/ }),
-/* 184 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = hasOwnProperty;
-
-var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(40));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _toPropertyKey = _interopRequireDefault(__webpack_require__(35));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module hasOwnProperty
- */
-function hasOwnProperty(object, property) {
-  return (0, _hasOwnProperty2.default)((0, _requireObjectCoercible.default)(object), (0, _toPropertyKey.default)(property));
-}
-
-/***/ }),
-/* 185 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = getFunctionName;
 
-var _match2 = _interopRequireDefault(__webpack_require__(86));
+var _match2 = __webpack_require__(84);
 
-var _functionToString2 = _interopRequireDefault(__webpack_require__(110));
+var _match3 = _interopRequireDefault(_match2);
 
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+var _functionToString2 = __webpack_require__(108);
 
-var _normalizeSpace = _interopRequireDefault(__webpack_require__(67));
+var _functionToString3 = _interopRequireDefault(_functionToString2);
 
-var _replaceComments = _interopRequireDefault(__webpack_require__(61));
+var _isFunction2 = __webpack_require__(10);
 
-/**
- * @file Get the name of the function.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module getFunctionName
- */
-var ANONYMOUS = 'anonymous';
-var getName;
+var _isFunction3 = _interopRequireDefault(_isFunction2);
 
-if (function test1() {}.name === 'test1') {
+var _normalizeSpace = __webpack_require__(66);
+
+var _normalizeSpace2 = _interopRequireDefault(_normalizeSpace);
+
+var _replaceComments = __webpack_require__(60);
+
+var _replaceComments2 = _interopRequireDefault(_replaceComments);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var ANONYMOUS = 'anonymous'; /**
+                              * @file Get the name of the function.
+                              * @copyright Copyright (c) 2018-present, Graham Fairweather
+                              * @module getFunctionName
+                              */
+
+function test1() {}
+
+var getName = void 0;
+if (test1.name === 'test1') {
   var createsAnonymous = Function().name === ANONYMOUS;
-
   if (createsAnonymous) {
     getName = function _getName(fn) {
       return fn.name === ANONYMOUS ? '' : fn.name;
@@ -7076,13 +7635,10 @@ if (function test1() {}.name === 'test1') {
   }
 } else {
   var reName = /^(?:async )?(?:function|class) ?(?:\* )?([\w$]+)/i;
-
   getName = function _getName(fn) {
-    var match;
-
+    var match = void 0;
     try {
-      match = (0, _match2.default)((0, _normalizeSpace.default)((0, _replaceComments.default)((0, _functionToString2.default)(fn), ' ')), reName);
-
+      match = (0, _match3.default)((0, _normalizeSpace2.default)((0, _replaceComments2.default)((0, _functionToString3.default)(fn), ' ')), reName);
       if (match) {
         var name = match[1];
         return name === ANONYMOUS ? '' : name;
@@ -7094,6 +7650,7 @@ if (function test1() {}.name === 'test1') {
     return '';
   };
 }
+
 /**
  * This method returns the name of the function, or `undefined` if not
  * a function.
@@ -7115,10 +7672,124 @@ if (function test1() {}.name === 'test1') {
  * getFunctionName(function* test2() {}); // 'test2'
  * getFunctionName(class Test {}); // 'Test'
  */
-
-
 function getFunctionName(fn) {
-  return (0, _isFunction2.default)(fn, true) ? getName(fn) : void 0;
+  return (0, _isFunction3.default)(fn, true) ? getName(fn) : void 0;
+}
+
+/***/ }),
+/* 183 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = getAt;
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _getAt2 = __webpack_require__(48);
+
+var _getAt3 = _interopRequireDefault(_getAt2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module getAt
+ */
+
+function getAt(array) {
+  for (var _len = arguments.length, position = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    position[_key - 1] = arguments[_key];
+  }
+
+  return _getAt3.default.apply(undefined, [(0, _requireObjectCoercible2.default)(array)].concat(position));
+}
+
+/***/ }),
+/* 184 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = findIndex;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _find2 = __webpack_require__(49);
+
+var _find3 = _interopRequireDefault(_find2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module findIndex
+ */
+
+function findIndex(array, callback) {
+  return (0, _find3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2])).index;
+}
+
+/***/ }),
+/* 185 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = find;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _find2 = __webpack_require__(49);
+
+var _find3 = _interopRequireDefault(_find2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module find
+ */
+
+function find(array, callback) {
+  return (0, _find3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2])).value;
 }
 
 /***/ }),
@@ -7128,28 +7799,51 @@ function getFunctionName(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = getAt;
+exports.default = drop;
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _isString = __webpack_require__(4);
 
-var _getAt2 = _interopRequireDefault(__webpack_require__(49));
+var _isString2 = _interopRequireDefault(_isString);
+
+var _isArrayLike = __webpack_require__(18);
+
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+var _slice2 = __webpack_require__(24);
+
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module getAt
+ * @module drop
  */
-function getAt(array) {
-  for (var _len = arguments.length, position = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    position[_key - 1] = arguments[_key];
+
+function drop(array) {
+  if (!(0, _isArrayLike2.default)((0, _requireObjectCoercible2.default)(array))) {
+    return void 0;
   }
 
-  return _getAt2.default.apply(void 0, [(0, _requireObjectCoercible.default)(array)].concat(position));
+  var start = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toWholeNumber2.default)(arguments.length <= 1 ? undefined : arguments[1]) : 1;
+
+  return ((0, _isString2.default)(array) ? _stringSlice3.default : _slice3.default)(array, start);
 }
 
 /***/ }),
@@ -7159,130 +7853,32 @@ function getAt(array) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = findIndex;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
-
-var _find2 = _interopRequireDefault(__webpack_require__(50));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module findIndex
- */
-function findIndex(array, callback) {
-  return (0, _find2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2])).index;
-}
-
-/***/ }),
-/* 188 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = find;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
-
-var _find2 = _interopRequireDefault(__webpack_require__(50));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module find
- */
-function find(array, callback) {
-  return (0, _find2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2])).value;
-}
-
-/***/ }),
-/* 189 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = drop;
-
-var _isString = _interopRequireDefault(__webpack_require__(5));
-
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
-
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
-
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module drop
- */
-function drop(array) {
-  if (!(0, _isArrayLike.default)((0, _requireObjectCoercible.default)(array))) {
-    return void 0;
-  }
-
-  var start = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toWholeNumber.default)(arguments.length <= 1 ? undefined : arguments[1]) : 1;
-  return ((0, _isString.default)(array) ? _stringSlice2.default : _slice2.default)(array, start);
-}
-
-/***/ }),
-/* 190 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = difference;
 
-var _sift2 = _interopRequireDefault(__webpack_require__(48));
+var _sift2 = __webpack_require__(47);
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
+var _sift3 = _interopRequireDefault(_sift2);
 
-var _all2 = _interopRequireDefault(__webpack_require__(21));
+var _any2 = __webpack_require__(19);
 
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
+var _any3 = _interopRequireDefault(_any2);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _all2 = __webpack_require__(20);
 
-/**
- * @file Creates an array of array values not included in the other given arrays.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module difference
- */
+var _all3 = _interopRequireDefault(_all2);
+
+var _includes2 = __webpack_require__(16);
+
+var _includes3 = _interopRequireDefault(_includes2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * This method creates an array of array values not included in the other given
@@ -7300,23 +7896,123 @@ var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
  * difference([2, 1], [2, 3]); // => [1]
  */
 function difference(array) {
-  for (var _len = arguments.length, excludes = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+  for (var _len = arguments.length, excludes = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
     excludes[_key - 1] = arguments[_key];
   }
 
-  (0, _requireObjectCoercible.default)(array);
-  (0, _all2.default)(excludes, _requireObjectCoercible.default);
+  (0, _requireObjectCoercible2.default)(array);
+  (0, _all3.default)(excludes, _requireObjectCoercible2.default);
 
   var siftPredicate = function _siftPredicate(value) {
     var includesPredicate = function _includesPredicate(exclude) {
-      return (0, _includes2.default)(exclude, value);
+      return (0, _includes3.default)(exclude, value);
     };
 
-    return !(0, _any2.default)(excludes, includesPredicate);
+    return !(0, _any3.default)(excludes, includesPredicate);
   };
 
-  return (0, _sift2.default)(array, siftPredicate);
-}
+  return (0, _sift3.default)(array, siftPredicate);
+} /**
+   * @file Creates an array of array values not included in the other given arrays.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module difference
+   */
+
+/***/ }),
+/* 188 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _setTimeout
+ */
+
+exports.default = setTimeout;
+
+/***/ }),
+/* 189 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = delayPromise;
+
+var _setTimeout2 = __webpack_require__(188);
+
+var _setTimeout3 = _interopRequireDefault(_setTimeout2);
+
+var _constant = __webpack_require__(91);
+
+var _constant2 = _interopRequireDefault(_constant);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Create a delayed promise.
+ *
+ * @param {number|string} milliseconds - The number of milliseconds to delay by.
+ * @param {*} [value] - The value to be resolved with.
+ * @returns {Promise} The delayed promise.
+ */
+function delayPromise(milliseconds) {
+  var ms = (0, _toWholeNumber2.default)(milliseconds);
+
+  if (arguments.length <= 1 ? 0 : arguments.length - 1) {
+    var valueExecutor = function _valueExecutor(arg) {
+      return delayPromise(ms).then((0, _constant2.default)(arg));
+    };
+
+    return Promise.resolve(arguments.length <= 1 ? undefined : arguments[1]).then(valueExecutor);
+  }
+
+  var timeoutExecutor = function _timeoutExecutor(resolve, reject) {
+    /* istanbul ignore next */
+    try {
+      (0, _setTimeout3.default)(resolve, ms);
+    } catch (error) {
+      reject(error);
+    }
+  };
+
+  return new Promise(timeoutExecutor);
+} /**
+   * @file Utility that creates a delayed promise.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module delayPromise
+   */
+
+/***/ }),
+/* 190 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _defineProperty
+ */
+
+exports.default = Object.defineProperty;
 
 /***/ }),
 /* 191 */
@@ -7328,15 +8024,52 @@ function difference(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = defineValidatorProperties;
+
+var _assertIsObjectLike = __webpack_require__(36);
+
+var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
+
+var _defineValidatorProperty = __webpack_require__(87);
+
+var _defineValidatorProperty2 = _interopRequireDefault(_defineValidatorProperty);
+
+var _toObject = __webpack_require__(12);
+
+var _toObject2 = _interopRequireDefault(_toObject);
+
+var _all2 = __webpack_require__(20);
+
+var _all3 = _interopRequireDefault(_all2);
+
+var _keys2 = __webpack_require__(103);
+
+var _keys3 = _interopRequireDefault(_keys2);
+
+var _toPropertyKey = __webpack_require__(34);
+
+var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _setTimeout
+ * @module defineValidatorProperties
  */
-var _default = setTimeout;
-exports.default = _default;
+
+function defineValidatorProperties(object, properties) {
+  (0, _assertIsObjectLike2.default)(object);
+
+  var props = (0, _toObject2.default)(properties);
+  var callback = function _callback(currentValue) {
+    (0, _defineValidatorProperty2.default)(object, (0, _toPropertyKey2.default)(currentValue), props[currentValue]);
+  };
+
+  (0, _all3.default)((0, _keys3.default)(props), callback);
+
+  return object;
+}
 
 /***/ }),
 /* 192 */
@@ -7345,142 +8078,24 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = delayPromise;
-
-var _setTimeout2 = _interopRequireDefault(__webpack_require__(191));
-
-var _constant = _interopRequireDefault(__webpack_require__(93));
-
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
-
-/**
- * @file Utility that creates a delayed promise.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module delayPromise
- */
-
-/**
- * Create a delayed promise.
- *
- * @param {number|string} milliseconds - The number of milliseconds to delay by.
- * @param {*} [value] - The value to be resolved with.
- * @returns {Promise} The delayed promise.
- */
-function delayPromise(milliseconds) {
-  var ms = (0, _toWholeNumber.default)(milliseconds);
-
-  if (arguments.length <= 1 ? 0 : arguments.length - 1) {
-    var valueExecutor = function _valueExecutor(arg) {
-      return delayPromise(ms).then((0, _constant.default)(arg));
-    };
-
-    return Promise.resolve(arguments.length <= 1 ? undefined : arguments[1]).then(valueExecutor);
-  }
-
-  var timeoutExecutor = function _timeoutExecutor(resolve, reject) {
-    try {
-      (0, _setTimeout2.default)(resolve, ms);
-    } catch (error) {
-      reject(error);
-    }
-  };
-
-  return new Promise(timeoutExecutor);
-}
-
-/***/ }),
-/* 193 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _defineProperty
- */
-var _default = Object.defineProperty;
-exports.default = _default;
-
-/***/ }),
-/* 194 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = defineValidatorProperties;
-
-var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(37));
-
-var _defineValidatorProperty = _interopRequireDefault(__webpack_require__(89));
-
-var _toObject = _interopRequireDefault(__webpack_require__(13));
-
-var _all2 = _interopRequireDefault(__webpack_require__(21));
-
-var _keys2 = _interopRequireDefault(__webpack_require__(105));
-
-var _toPropertyKey = _interopRequireDefault(__webpack_require__(35));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module defineValidatorProperties
- */
-function defineValidatorProperties(object, properties) {
-  (0, _assertIsObjectLike.default)(object);
-  var props = (0, _toObject.default)(properties);
-
-  var callback = function _callback(currentValue) {
-    (0, _defineValidatorProperty.default)(object, (0, _toPropertyKey.default)(currentValue), props[currentValue]);
-  };
-
-  (0, _all2.default)((0, _keys2.default)(props), callback);
-  return object;
-}
-
-/***/ }),
-/* 195 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = defaultToOneOf;
 
-var _includes2 = _interopRequireDefault(__webpack_require__(17));
+var _includes2 = __webpack_require__(16);
 
-var _last2 = _interopRequireDefault(__webpack_require__(90));
+var _includes3 = _interopRequireDefault(_includes2);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _last2 = __webpack_require__(88);
 
-/**
- * @file Utility to set a default value from an array.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module defaultToOneOf
- */
+var _last3 = _interopRequireDefault(_last2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * Tests if a comparate exists in a list of comparates an then returns the comparate if there
@@ -7493,9 +8108,139 @@ var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
  * @returns {*} - The comparate upon a match; otherwise the fallback value.
  */
 function defaultToOneOf(comparates, comparate) {
-  (0, _requireObjectCoercible.default)(comparates);
-  var fallback = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : (0, _last2.default)(comparates);
-  return (0, _includes2.default)(comparates, comparate) ? comparate : fallback;
+  (0, _requireObjectCoercible2.default)(comparates);
+
+  var fallback = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : (0, _last3.default)(comparates);
+
+  return (0, _includes3.default)(comparates, comparate) ? comparate : fallback;
+} /**
+   * @file Utility to set a default value from an array.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module defaultToOneOf
+   */
+
+/***/ }),
+/* 193 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _clamp;
+
+var _isNaN2 = __webpack_require__(22);
+
+var _isNaN3 = _interopRequireDefault(_isNaN2);
+
+var _NaN2 = __webpack_require__(55);
+
+var _NaN3 = _interopRequireDefault(_NaN2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _clamp
+ */
+
+var max = Math.max,
+    min = Math.min;
+function _clamp(value, lower, upper) {
+  if ((0, _isNaN3.default)(value) || (0, _isNaN3.default)(lower) || (0, _isNaN3.default)(upper)) {
+    return _NaN3.default;
+  }
+
+  return min(max(value, lower), upper);
+}
+
+/***/ }),
+/* 194 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = capitalize;
+
+var _charAt2 = __webpack_require__(29);
+
+var _charAt3 = _interopRequireDefault(_charAt2);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+var _toLowerCase2 = __webpack_require__(61);
+
+var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
+
+var _toUpperCase2 = __webpack_require__(35);
+
+var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function capitalize(string) {
+  var str = (0, _toString3.default)(string);
+
+  return (0, _toUpperCase3.default)((0, _charAt3.default)(str, 0)) + (0, _toLowerCase3.default)((0, _stringSlice3.default)(str, 1));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module capitalize
+   */
+
+/***/ }),
+/* 195 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = capitalizeFirst;
+
+var _charAt2 = __webpack_require__(29);
+
+var _charAt3 = _interopRequireDefault(_charAt2);
+
+var _stringSlice2 = __webpack_require__(9);
+
+var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+
+var _toString2 = __webpack_require__(2);
+
+var _toString3 = _interopRequireDefault(_toString2);
+
+var _toUpperCase2 = __webpack_require__(35);
+
+var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module capitalizeFirst
+ */
+
+function capitalizeFirst(string) {
+  var str = (0, _toString3.default)(string);
+
+  return (0, _toUpperCase3.default)((0, _charAt3.default)(str, 0)) + (0, _stringSlice3.default)(str, 1);
 }
 
 /***/ }),
@@ -7505,189 +8250,47 @@ function defaultToOneOf(comparates, comparate) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _clamp;
-
-var _isNaN2 = _interopRequireDefault(__webpack_require__(23));
-
-var _NaN2 = _interopRequireDefault(__webpack_require__(56));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _clamp
- */
-var max = Math.max,
-    min = Math.min;
-
-function _clamp(value, lower, upper) {
-  if ((0, _isNaN2.default)(value) || (0, _isNaN2.default)(lower) || (0, _isNaN2.default)(upper)) {
-    return _NaN2.default;
-  }
-
-  return min(max(value, lower), upper);
-}
-
-/***/ }),
-/* 197 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = capitalize;
-
-var _charAt2 = _interopRequireDefault(__webpack_require__(30));
-
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
-
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
-
-var _toLowerCase2 = _interopRequireDefault(__webpack_require__(62));
-
-var _toUpperCase2 = _interopRequireDefault(__webpack_require__(36));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module capitalize
- */
-function capitalize(string) {
-  var str = (0, _toString2.default)(string);
-  return (0, _toUpperCase2.default)((0, _charAt2.default)(str, 0)) + (0, _toLowerCase2.default)((0, _stringSlice2.default)(str, 1));
-}
-
-/***/ }),
-/* 198 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = capitalizeFirst;
-
-var _charAt2 = _interopRequireDefault(__webpack_require__(30));
-
-var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
-
-var _toString2 = _interopRequireDefault(__webpack_require__(3));
-
-var _toUpperCase2 = _interopRequireDefault(__webpack_require__(36));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module capitalizeFirst
- */
-function capitalizeFirst(string) {
-  var str = (0, _toString2.default)(string);
-  return (0, _toUpperCase2.default)((0, _charAt2.default)(str, 0)) + (0, _stringSlice2.default)(str, 1);
-}
-
-/***/ }),
-/* 199 */
-/***/ (function(module, exports) {
-
-function _nonIterableSpread() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance");
-}
-
-module.exports = _nonIterableSpread;
-
-/***/ }),
-/* 200 */
-/***/ (function(module, exports) {
-
-function _iterableToArray(iter) {
-  if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-}
-
-module.exports = _iterableToArray;
-
-/***/ }),
-/* 201 */
-/***/ (function(module, exports) {
-
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) {
-    for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) {
-      arr2[i] = arr[i];
-    }
-
-    return arr2;
-  }
-}
-
-module.exports = _arrayWithoutHoles;
-
-/***/ }),
-/* 202 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayWithoutHoles = __webpack_require__(201);
-
-var iterableToArray = __webpack_require__(200);
-
-var nonIterableSpread = __webpack_require__(199);
-
-function _toConsumableArray(arr) {
-  return arrayWithoutHoles(arr) || iterableToArray(arr) || nonIterableSpread();
-}
-
-module.exports = _toConsumableArray;
-
-/***/ }),
-/* 203 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = callFunctionOrIdentity;
 
-var _toConsumableArray2 = _interopRequireDefault(__webpack_require__(202));
+var _apply2 = __webpack_require__(14);
 
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
+var _apply3 = _interopRequireDefault(_apply2);
 
-var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(37));
+var _assertIsObjectLike = __webpack_require__(36);
 
-var _isFunction2 = _interopRequireDefault(__webpack_require__(11));
+var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
 
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
+var _isFunction2 = __webpack_require__(10);
 
-var _isNil = _interopRequireDefault(__webpack_require__(8));
+var _isFunction3 = _interopRequireDefault(_isFunction2);
 
-/**
- * @file Utility to invoke a function and return the result or return the identity argument unchanged.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module callFunctionOrIdentity
- */
+var _slice2 = __webpack_require__(24);
+
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _isNil = __webpack_require__(6);
+
+var _isNil2 = _interopRequireDefault(_isNil);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
+                                                                                                                                                                                                     * @file Utility to invoke a function and return the result or return the identity argument unchanged.
+                                                                                                                                                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                                                                                                                                     * @module callFunctionOrIdentity
+                                                                                                                                                                                                     */
+
 var requireIsObject = function _requireIsObject(value) {
-  return (0, _assertIsObjectLike.default)(value, 'CreateListFromArrayLike called on non-object');
+  return (0, _assertIsObjectLike2.default)(value, 'CreateListFromArrayLike called on non-object');
 };
 
 var getArgsArray = function _getArgsArray(value) {
-  return (0, _isNil.default)(value) ? [] : (0, _slice2.default)(requireIsObject(value));
+  return (0, _isNil2.default)(value) ? [] : (0, _slice3.default)(requireIsObject(value));
 };
+
 /**
  * Invoke a function and return the result or return the identity argument unchanged.
  *
@@ -7697,15 +8300,235 @@ var getArgsArray = function _getArgsArray(value) {
  * @param {*} [rest.thisArg=undefined] - The context to use when invoking a given function.
  * @returns {*} The result of the invoked function or the identity argument unchanged.
  */
-
-
 function callFunctionOrIdentity(fnOrValue) {
-  if ((0, _isFunction2.default)(fnOrValue)) {
+  if ((0, _isFunction3.default)(fnOrValue)) {
     var argsArray = getArgsArray(arguments.length <= 1 ? undefined : arguments[1]);
-    return (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 ? (0, _apply2.default)(fnOrValue, arguments.length <= 2 ? undefined : arguments[2], argsArray) : fnOrValue.apply(void 0, (0, _toConsumableArray2.default)(argsArray));
+
+    return (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 ? (0, _apply3.default)(fnOrValue, arguments.length <= 2 ? undefined : arguments[2], argsArray) : fnOrValue.apply(undefined, _toConsumableArray(argsArray));
   }
 
   return fnOrValue;
+}
+
+/***/ }),
+/* 197 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = call;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _call2 = __webpack_require__(15);
+
+var _call3 = _interopRequireDefault(_call2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module call
+ */
+
+function call(fn) {
+  for (var _len = arguments.length, callArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    callArgs[_key - 1] = arguments[_key];
+  }
+
+  return _call3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(callArgs));
+}
+
+/***/ }),
+/* 198 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = bind;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _bind2 = __webpack_require__(107);
+
+var _bind3 = _interopRequireDefault(_bind2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module bind
+ */
+
+function bind(fn) {
+  for (var _len = arguments.length, bindArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    bindArgs[_key - 1] = arguments[_key];
+  }
+
+  return _bind3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(bindArgs));
+}
+
+/***/ }),
+/* 199 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _assertIsFunction = __webpack_require__(3);
+
+Object.defineProperty(exports, 'default', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_assertIsFunction).default;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+/* 200 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Function
+ */
+
+function fn() {}
+
+exports.default = fn.constructor;
+
+/***/ }),
+/* 201 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _create
+ */
+
+exports.default = Object.create;
+
+/***/ }),
+/* 202 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _createArgList;
+
+var _String2 = __webpack_require__(109);
+
+var _String3 = _interopRequireDefault(_String2);
+
+var _join2 = __webpack_require__(28);
+
+var _join3 = _interopRequireDefault(_join2);
+
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+var _all2 = __webpack_require__(20);
+
+var _all3 = _interopRequireDefault(_all2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _createArgList
+ */
+
+var PRE = '$_';
+var POST = '_$';
+
+function _createArgList(length) {
+  var array = [];
+  var iteratee = function _iteratee(unused, index) {
+    (0, _push3.default)(array, PRE + (0, _String3.default)(index) + POST);
+  };
+
+  (0, _all3.default)({ length: length }, iteratee);
+
+  return (0, _join3.default)(array, ',');
+}
+
+/***/ }),
+/* 203 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _argsToArray;
+
+var _push2 = __webpack_require__(17);
+
+var _push3 = _interopRequireDefault(_push2);
+
+var _all2 = __webpack_require__(20);
+
+var _all3 = _interopRequireDefault(_all2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _argsToArray
+ */
+
+function _argsToArray(args) {
+  var array = [];
+  var iteratee = function _iteratee(arg) {
+    (0, _push3.default)(array, arg);
+  };
+
+  (0, _all3.default)(args, iteratee);
+
+  return array;
 }
 
 /***/ }),
@@ -7715,28 +8538,56 @@ function callFunctionOrIdentity(fnOrValue) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = call;
+exports.default = _arity;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _apply2 = __webpack_require__(14);
 
-var _call2 = _interopRequireDefault(__webpack_require__(16));
+var _apply3 = _interopRequireDefault(_apply2);
+
+var _slice2 = __webpack_require__(24);
+
+var _slice3 = _interopRequireDefault(_slice2);
+
+var _bound2 = __webpack_require__(50);
+
+var _bound3 = _interopRequireDefault(_bound2);
+
+var _isPrimitive = __webpack_require__(25);
+
+var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module call
+ * @module _arity
  */
-function call(fn) {
-  for (var _len = arguments.length, callArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    callArgs[_key - 1] = arguments[_key];
-  }
 
-  return _call2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(callArgs));
+function _arity(fn) {
+  var length = (arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length;
+  var bound = void 0;
+
+  var binder = function _binder() {
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var result = (0, _apply3.default)(fn, this, (0, _slice3.default)(args, 0, length));
+
+    if (this instanceof bound) {
+      return (0, _isPrimitive2.default)(result) ? this : result;
+    }
+
+    return result;
+  };
+
+  bound = (0, _bound3.default)(binder, 'Arity', fn.prototype, length);
+
+  return bound;
 }
 
 /***/ }),
@@ -7746,29 +8597,32 @@ function call(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = bind;
+exports.default = arity;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _assertIsFunction2 = __webpack_require__(3);
 
-var _bind2 = _interopRequireDefault(__webpack_require__(109));
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module bind
- */
-function bind(fn) {
-  for (var _len = arguments.length, bindArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    bindArgs[_key - 1] = arguments[_key];
-  }
+var _arity2 = __webpack_require__(204);
 
-  return _bind2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(bindArgs));
-}
+var _arity3 = _interopRequireDefault(_arity2);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function arity(fn) {
+  return (0, _arity3.default)((0, _assertIsFunction3.default)(fn), (0, _toWholeNumber2.default)((arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length));
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module arity
+   */
 
 /***/ }),
 /* 206 */
@@ -7777,19 +8631,34 @@ function bind(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-Object.defineProperty(exports, "default", {
-  enumerable: true,
-  get: function get() {
-    return _assertIsFunction.default;
-  }
-});
+exports.default = apply;
 
-var _assertIsFunction = _interopRequireDefault(__webpack_require__(4));
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _apply2 = __webpack_require__(14);
+
+var _apply3 = _interopRequireDefault(_apply2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module apply
+ */
+
+function apply(fn) {
+  for (var _len = arguments.length, applyArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    applyArgs[_key - 1] = arguments[_key];
+  }
+
+  return _apply3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(applyArgs));
+}
 
 /***/ }),
 /* 207 */
@@ -7801,16 +8670,35 @@ var _assertIsFunction = _interopRequireDefault(__webpack_require__(4));
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = any;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _any2 = __webpack_require__(19);
+
+var _any3 = _interopRequireDefault(_any2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Function
+ * @module any
  */
-var _default = function f() {}.constructor;
 
-exports.default = _default;
+function any(array, callback) {
+  return (0, _any3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+}
 
 /***/ }),
 /* 208 */
@@ -7822,15 +8710,35 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = all;
+
+var _assertIsFunction2 = __webpack_require__(3);
+
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+
+var _toInteger2 = __webpack_require__(5);
+
+var _toInteger3 = _interopRequireDefault(_toInteger2);
+
+var _all2 = __webpack_require__(20);
+
+var _all3 = _interopRequireDefault(_all2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _create
+ * @module all
  */
-var _default = Object.create;
-exports.default = _default;
+
+function all(array, callback) {
+  (0, _all3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+}
 
 /***/ }),
 /* 209 */
@@ -7839,41 +8747,16 @@ exports.default = _default;
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _createArgList;
-
-var _String2 = _interopRequireDefault(__webpack_require__(111));
-
-var _join2 = _interopRequireDefault(__webpack_require__(29));
-
-var _push2 = _interopRequireDefault(__webpack_require__(18));
-
-var _all2 = _interopRequireDefault(__webpack_require__(21));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _createArgList
+ * @module _getOwnPropertyDescriptor
  */
-var PRE = '$_';
-var POST = '_$';
 
-function _createArgList(length) {
-  var array = [];
-
-  var iteratee = function _iteratee(unused, index) {
-    (0, _push2.default)(array, PRE + (0, _String2.default)(index) + POST);
-  };
-
-  (0, _all2.default)({
-    length: length
-  }, iteratee);
-  return (0, _join2.default)(array, ',');
-}
+exports.default = Object.getOwnPropertyDescriptor;
 
 /***/ }),
 /* 210 */
@@ -7882,32 +8765,16 @@ function _createArgList(length) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _argsToArray;
-
-var _push2 = _interopRequireDefault(__webpack_require__(18));
-
-var _all2 = _interopRequireDefault(__webpack_require__(21));
-
 /**
- * @file Utility that needs description.
+ * @file Parses a string argument and returns an integer of the specified radix.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _argsToArray
+ * @module _Infinity
  */
-function _argsToArray(args) {
-  var array = [];
 
-  var iteratee = function _iteratee(arg) {
-    (0, _push2.default)(array, arg);
-  };
-
-  (0, _all2.default)(args, iteratee);
-  return array;
-}
+exports.default = 1 / 0;
 
 /***/ }),
 /* 211 */
@@ -7916,47 +8783,16 @@ function _argsToArray(args) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _arity;
-
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
-
-var _slice2 = _interopRequireDefault(__webpack_require__(25));
-
-var _bound2 = _interopRequireDefault(__webpack_require__(51));
-
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _arity
+ * @module _defineProperties
  */
-function _arity(fn) {
-  var length = (arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length;
-  var bound;
 
-  var binder = function _binder() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    var result = (0, _apply2.default)(fn, this, (0, _slice2.default)(args, 0, length));
-
-    if (this instanceof bound) {
-      return (0, _isPrimitive.default)(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = (0, _bound2.default)(binder, 'Arity', fn.prototype, length);
-  return bound;
-}
+exports.default = Object.defineProperties;
 
 /***/ }),
 /* 212 */
@@ -7965,27 +8801,16 @@ function _arity(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = arity;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _arity2 = _interopRequireDefault(__webpack_require__(211));
-
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
-
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module arity
+ * @module _fromCharCode
  */
-function arity(fn) {
-  return (0, _arity2.default)((0, _assertIsFunction2.default)(fn), (0, _toWholeNumber.default)((arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length));
-}
+
+exports.default = String.fromCharCode;
 
 /***/ }),
 /* 213 */
@@ -7994,29 +8819,21 @@ function arity(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = apply;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _methodize2 = __webpack_require__(0);
 
-var _apply2 = _interopRequireDefault(__webpack_require__(15));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module apply
- */
-function apply(fn) {
-  for (var _len = arguments.length, applyArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    applyArgs[_key - 1] = arguments[_key];
-  }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  return _apply2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(applyArgs));
-}
+exports.default = (0, _methodize3.default)(Array.prototype.indexOf); /**
+                                                                      * @file Utility that needs description.
+                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                      * @module _indexOf
+                                                                      */
 
 /***/ }),
 /* 214 */
@@ -8025,29 +8842,21 @@ function apply(fn) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = any;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _methodize2 = __webpack_require__(0);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _any2 = _interopRequireDefault(__webpack_require__(20));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module any
- */
-function any(array, callback) {
-  return (0, _any2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
-}
+exports.default = (0, _methodize3.default)(Object.prototype.propertyIsEnumerable); /**
+                                                                                    * @file Utility that needs description.
+                                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                                    * @module _propertyIsEnumerable
+                                                                                    */
 
 /***/ }),
 /* 215 */
@@ -8056,29 +8865,21 @@ function any(array, callback) {
 "use strict";
 
 
-var _interopRequireDefault = __webpack_require__(0);
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = all;
 
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+var _methodize2 = __webpack_require__(0);
 
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+var _methodize3 = _interopRequireDefault(_methodize2);
 
-var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _all2 = _interopRequireDefault(__webpack_require__(21));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module all
- */
-function all(array, callback) {
-  (0, _all2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
-}
+exports.default = (0, _methodize3.default)(Array.prototype.concat); /**
+                                                                     * @file Utility that needs description.
+                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
+                                                                     * @module _concat
+                                                                     */
 
 /***/ }),
 /* 216 */
@@ -8090,15 +8891,34 @@ function all(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = _normalizeSpace;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getOwnPropertyDescriptor
- */
-var _default = Object.getOwnPropertyDescriptor;
-exports.default = _default;
+var _trim2 = __webpack_require__(42);
+
+var _trim3 = _interopRequireDefault(_trim2);
+
+var _whitespace2 = __webpack_require__(31);
+
+var _whitespace3 = _interopRequireDefault(_whitespace2);
+
+var _replace2 = __webpack_require__(13);
+
+var _replace3 = _interopRequireDefault(_replace2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var PRE = '['; /**
+                * @file Trims and replaces sequences of whitespace characters by a single space.
+                * @copyright Copyright (c) 2018-present, Graham Fairweather
+                * @module _normalizeSpace
+                */
+
+var POST = ']+';
+var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST, 'g');
+
+function _normalizeSpace(string) {
+  return (0, _replace3.default)((0, _trim3.default)(string), whiteSpace, ' ');
+}
 
 /***/ }),
 /* 217 */
@@ -8110,16 +8930,50 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
+exports.default = accumulate;
 
-/**
- * @file Parses a string argument and returns an integer of the specified radix.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Infinity
- */
-var _default = 1 / 0;
+var _assertIsFunction2 = __webpack_require__(3);
 
-exports.default = _default;
+var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+
+var _toObject = __webpack_require__(12);
+
+var _toObject2 = _interopRequireDefault(_toObject);
+
+var _toWholeNumber = __webpack_require__(7);
+
+var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+
+var _accumulate2 = __webpack_require__(52);
+
+var _accumulate3 = _interopRequireDefault(_accumulate2);
+
+var _fromIndex2 = __webpack_require__(95);
+
+var _fromIndex3 = _interopRequireDefault(_fromIndex2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function accumulate(array, callback) {
+  var object = (0, _toObject2.default)(array);
+  var length = (0, _toWholeNumber2.default)(object.length);
+
+  for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    rest[_key - 2] = arguments[_key];
+  }
+
+  if (!rest.length && length < 1) {
+    throw new TypeError('accumulate of empty array with no initial value');
+  }
+
+  var start = (0, _fromIndex3.default)(object, rest[1]);
+
+  return (0, _accumulate3.default)(object, (0, _assertIsFunction3.default)(callback), (rest.length ? rest : object)[start], rest.length ? start : start + 1);
+} /**
+   * @file Utility that needs description.
+   * @copyright Copyright (c) 2018-present, Graham Fairweather
+   * @module accumulate
+   */
 
 /***/ }),
 /* 218 */
@@ -8131,1265 +8985,1205 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = void 0;
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _defineProperties
- */
-var _default = Object.defineProperties;
-exports.default = _default;
+var _accumulate = __webpack_require__(217);
 
-/***/ }),
-/* 219 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _fromCharCode
- */
-var _default = String.fromCharCode;
-exports.default = _default;
-
-/***/ }),
-/* 220 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _indexOf
- */
-var _default = (0, _methodize2.default)(Array.prototype.indexOf);
-
-exports.default = _default;
-
-/***/ }),
-/* 221 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _propertyIsEnumerable
- */
-var _default = (0, _methodize2.default)(Object.prototype.propertyIsEnumerable);
-
-exports.default = _default;
-
-/***/ }),
-/* 222 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _methodize2 = _interopRequireDefault(__webpack_require__(1));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _concat
- */
-var _default = (0, _methodize2.default)(Array.prototype.concat);
-
-exports.default = _default;
-
-/***/ }),
-/* 223 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _normalizeSpace;
-
-var _trim2 = _interopRequireDefault(__webpack_require__(43));
-
-var _whitespace2 = _interopRequireDefault(__webpack_require__(32));
-
-var _replace2 = _interopRequireDefault(__webpack_require__(14));
-
-/**
- * @file Trims and replaces sequences of whitespace characters by a single space.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _normalizeSpace
- */
-var PRE = '[';
-var POST = ']+';
-var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST, 'g');
-
-function _normalizeSpace(string) {
-  return (0, _replace2.default)((0, _trim2.default)(string), whiteSpace, ' ');
-}
-
-/***/ }),
-/* 224 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = accumulate;
-
-var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
-
-var _toObject = _interopRequireDefault(__webpack_require__(13));
-
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
-
-var _accumulate2 = _interopRequireDefault(__webpack_require__(53));
-
-var _fromIndex2 = _interopRequireDefault(__webpack_require__(97));
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module accumulate
- */
-function accumulate(array, callback) {
-  var object = (0, _toObject.default)(array);
-  var length = (0, _toWholeNumber.default)(object.length);
-
-  for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    rest[_key - 2] = arguments[_key];
-  }
-
-  if (!rest.length && length < 1) {
-    throw new TypeError('accumulate of empty array with no initial value');
-  }
-
-  var start = (0, _fromIndex2.default)(object, rest[1]);
-  return (0, _accumulate2.default)(object, (0, _assertIsFunction2.default)(callback), (rest.length ? rest : object)[start], rest.length ? start : start + 1);
-}
-
-/***/ }),
-/* 225 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _interopRequireDefault = __webpack_require__(0);
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "accumulate", {
+Object.defineProperty(exports, 'accumulate', {
   enumerable: true,
   get: function get() {
-    return _accumulate.default;
+    return _interopRequireDefault(_accumulate).default;
   }
 });
-Object.defineProperty(exports, "all", {
+
+var _all = __webpack_require__(208);
+
+Object.defineProperty(exports, 'all', {
   enumerable: true,
   get: function get() {
-    return _all.default;
+    return _interopRequireDefault(_all).default;
   }
 });
-Object.defineProperty(exports, "any", {
+
+var _any = __webpack_require__(207);
+
+Object.defineProperty(exports, 'any', {
   enumerable: true,
   get: function get() {
-    return _any.default;
+    return _interopRequireDefault(_any).default;
   }
 });
-Object.defineProperty(exports, "apply", {
+
+var _apply = __webpack_require__(206);
+
+Object.defineProperty(exports, 'apply', {
   enumerable: true,
   get: function get() {
-    return _apply.default;
+    return _interopRequireDefault(_apply).default;
   }
 });
-Object.defineProperty(exports, "arity", {
+
+var _arity = __webpack_require__(205);
+
+Object.defineProperty(exports, 'arity', {
   enumerable: true,
   get: function get() {
-    return _arity.default;
+    return _interopRequireDefault(_arity).default;
   }
 });
-Object.defineProperty(exports, "assign", {
+
+var _assign = __webpack_require__(106);
+
+Object.defineProperty(exports, 'assign', {
   enumerable: true,
   get: function get() {
-    return _assign.default;
+    return _interopRequireDefault(_assign).default;
   }
 });
-Object.defineProperty(exports, "assertIsFunction", {
+
+var _assertIsFunction = __webpack_require__(199);
+
+Object.defineProperty(exports, 'assertIsFunction', {
   enumerable: true,
   get: function get() {
-    return _assertIsFunction.default;
+    return _interopRequireDefault(_assertIsFunction).default;
   }
 });
-Object.defineProperty(exports, "assertIsObject", {
+
+var _assertIsObjectLike = __webpack_require__(36);
+
+Object.defineProperty(exports, 'assertIsObject', {
   enumerable: true,
   get: function get() {
-    return _assertIsObjectLike.default;
+    return _interopRequireDefault(_assertIsObjectLike).default;
   }
 });
-Object.defineProperty(exports, "assertIs", {
+
+var _assertIs = __webpack_require__(93);
+
+Object.defineProperty(exports, 'assertIs', {
   enumerable: true,
   get: function get() {
-    return _assertIs.default;
+    return _interopRequireDefault(_assertIs).default;
   }
 });
-Object.defineProperty(exports, "attempt", {
+
+var _attempt = __webpack_require__(70);
+
+Object.defineProperty(exports, 'attempt', {
   enumerable: true,
   get: function get() {
-    return _attempt.default;
+    return _interopRequireDefault(_attempt).default;
   }
 });
-Object.defineProperty(exports, "bind", {
+
+var _bind = __webpack_require__(198);
+
+Object.defineProperty(exports, 'bind', {
   enumerable: true,
   get: function get() {
-    return _bind.default;
+    return _interopRequireDefault(_bind).default;
   }
 });
-Object.defineProperty(exports, "call", {
+
+var _call = __webpack_require__(197);
+
+Object.defineProperty(exports, 'call', {
   enumerable: true,
   get: function get() {
-    return _call.default;
+    return _interopRequireDefault(_call).default;
   }
 });
-Object.defineProperty(exports, "callFunctionOrIdentity", {
+
+var _callFunctionOrIdentity = __webpack_require__(196);
+
+Object.defineProperty(exports, 'callFunctionOrIdentity', {
   enumerable: true,
   get: function get() {
-    return _callFunctionOrIdentity.default;
+    return _interopRequireDefault(_callFunctionOrIdentity).default;
   }
 });
-Object.defineProperty(exports, "capitalizeFirst", {
+
+var _capitalizeFirst = __webpack_require__(195);
+
+Object.defineProperty(exports, 'capitalizeFirst', {
   enumerable: true,
   get: function get() {
-    return _capitalizeFirst.default;
+    return _interopRequireDefault(_capitalizeFirst).default;
   }
 });
-Object.defineProperty(exports, "capitalize", {
+
+var _capitalize = __webpack_require__(194);
+
+Object.defineProperty(exports, 'capitalize', {
   enumerable: true,
   get: function get() {
-    return _capitalize.default;
+    return _interopRequireDefault(_capitalize).default;
   }
 });
-Object.defineProperty(exports, "clamp", {
+
+var _clamp = __webpack_require__(92);
+
+Object.defineProperty(exports, 'clamp', {
   enumerable: true,
   get: function get() {
-    return _clamp.default;
+    return _interopRequireDefault(_clamp).default;
   }
 });
-Object.defineProperty(exports, "constant", {
+
+var _constant = __webpack_require__(91);
+
+Object.defineProperty(exports, 'constant', {
   enumerable: true,
   get: function get() {
-    return _constant.default;
+    return _interopRequireDefault(_constant).default;
   }
 });
-Object.defineProperty(exports, "defaultToOneOf", {
+
+var _defaultToOneOf = __webpack_require__(192);
+
+Object.defineProperty(exports, 'defaultToOneOf', {
   enumerable: true,
   get: function get() {
-    return _defaultToOneOf.default;
+    return _interopRequireDefault(_defaultToOneOf).default;
   }
 });
-Object.defineProperty(exports, "defineValidatorProperties", {
+
+var _defineValidatorProperties = __webpack_require__(191);
+
+Object.defineProperty(exports, 'defineValidatorProperties', {
   enumerable: true,
   get: function get() {
-    return _defineValidatorProperties.default;
+    return _interopRequireDefault(_defineValidatorProperties).default;
   }
 });
-Object.defineProperty(exports, "defineValidatorProperty", {
+
+var _defineValidatorProperty = __webpack_require__(87);
+
+Object.defineProperty(exports, 'defineValidatorProperty', {
   enumerable: true,
   get: function get() {
-    return _defineValidatorProperty.default;
+    return _interopRequireDefault(_defineValidatorProperty).default;
   }
 });
-Object.defineProperty(exports, "delayPromise", {
+
+var _delayPromise = __webpack_require__(189);
+
+Object.defineProperty(exports, 'delayPromise', {
   enumerable: true,
   get: function get() {
-    return _delayPromise.default;
+    return _interopRequireDefault(_delayPromise).default;
   }
 });
-Object.defineProperty(exports, "difference", {
+
+var _difference = __webpack_require__(187);
+
+Object.defineProperty(exports, 'difference', {
   enumerable: true,
   get: function get() {
-    return _difference.default;
+    return _interopRequireDefault(_difference).default;
   }
 });
-Object.defineProperty(exports, "drop", {
+
+var _drop = __webpack_require__(186);
+
+Object.defineProperty(exports, 'drop', {
   enumerable: true,
   get: function get() {
-    return _drop.default;
+    return _interopRequireDefault(_drop).default;
   }
 });
-Object.defineProperty(exports, "find", {
+
+var _find = __webpack_require__(185);
+
+Object.defineProperty(exports, 'find', {
   enumerable: true,
   get: function get() {
-    return _find.default;
+    return _interopRequireDefault(_find).default;
   }
 });
-Object.defineProperty(exports, "findIndex", {
+
+var _findIndex = __webpack_require__(184);
+
+Object.defineProperty(exports, 'findIndex', {
   enumerable: true,
   get: function get() {
-    return _findIndex.default;
+    return _interopRequireDefault(_findIndex).default;
   }
 });
-Object.defineProperty(exports, "getAt", {
+
+var _getAt = __webpack_require__(183);
+
+Object.defineProperty(exports, 'getAt', {
   enumerable: true,
   get: function get() {
-    return _getAt.default;
+    return _interopRequireDefault(_getAt).default;
   }
 });
-Object.defineProperty(exports, "getFunctionName", {
+
+var _getFunctionName = __webpack_require__(182);
+
+Object.defineProperty(exports, 'getFunctionName', {
   enumerable: true,
   get: function get() {
-    return _getFunctionName.default;
+    return _interopRequireDefault(_getFunctionName).default;
   }
 });
-Object.defineProperty(exports, "hasOwnProperty", {
+
+var _hasOwnProperty = __webpack_require__(181);
+
+Object.defineProperty(exports, 'hasOwnProperty', {
   enumerable: true,
   get: function get() {
-    return _hasOwnProperty.default;
+    return _interopRequireDefault(_hasOwnProperty).default;
   }
 });
-Object.defineProperty(exports, "head", {
+
+var _head = __webpack_require__(180);
+
+Object.defineProperty(exports, 'head', {
   enumerable: true,
   get: function get() {
-    return _head.default;
+    return _interopRequireDefault(_head).default;
   }
 });
-Object.defineProperty(exports, "identity", {
+
+var _identity = __webpack_require__(178);
+
+Object.defineProperty(exports, 'identity', {
   enumerable: true,
   get: function get() {
-    return _identity.default;
+    return _interopRequireDefault(_identity).default;
   }
 });
-Object.defineProperty(exports, "includes", {
+
+var _includes = __webpack_require__(177);
+
+Object.defineProperty(exports, 'includes', {
   enumerable: true,
   get: function get() {
-    return _includes.default;
+    return _interopRequireDefault(_includes).default;
   }
 });
-Object.defineProperty(exports, "intersection", {
+
+var _intersection = __webpack_require__(176);
+
+Object.defineProperty(exports, 'intersection', {
   enumerable: true,
   get: function get() {
-    return _intersection.default;
+    return _interopRequireDefault(_intersection).default;
   }
 });
-Object.defineProperty(exports, "intToRGB", {
+
+var _intToRGB = __webpack_require__(174);
+
+Object.defineProperty(exports, 'intToRGB', {
   enumerable: true,
   get: function get() {
-    return _intToRGB.default;
+    return _interopRequireDefault(_intToRGB).default;
   }
 });
-Object.defineProperty(exports, "isArrayLikeObject", {
+
+var _isArrayLikeObject = __webpack_require__(173);
+
+Object.defineProperty(exports, 'isArrayLikeObject', {
   enumerable: true,
   get: function get() {
-    return _isArrayLikeObject.default;
+    return _interopRequireDefault(_isArrayLikeObject).default;
   }
 });
-Object.defineProperty(exports, "isArrayLike", {
+
+var _isArrayLike = __webpack_require__(18);
+
+Object.defineProperty(exports, 'isArrayLike', {
   enumerable: true,
   get: function get() {
-    return _isArrayLike.default;
+    return _interopRequireDefault(_isArrayLike).default;
   }
 });
-Object.defineProperty(exports, "isBinary", {
+
+var _isBinary = __webpack_require__(98);
+
+Object.defineProperty(exports, 'isBinary', {
   enumerable: true,
   get: function get() {
-    return _isBinary.default;
+    return _interopRequireDefault(_isBinary).default;
   }
 });
-Object.defineProperty(exports, "isBooleanType", {
+
+var _isBooleanType = __webpack_require__(79);
+
+Object.defineProperty(exports, 'isBooleanType', {
   enumerable: true,
   get: function get() {
-    return _isBooleanType.default;
+    return _interopRequireDefault(_isBooleanType).default;
   }
 });
-Object.defineProperty(exports, "isBoolean", {
+
+var _isBooleanObject = __webpack_require__(172);
+
+Object.defineProperty(exports, 'isBoolean', {
   enumerable: true,
   get: function get() {
-    return _isBooleanObject.default;
+    return _interopRequireDefault(_isBooleanObject).default;
   }
 });
-Object.defineProperty(exports, "isClassSupported", {
+
+var _isClassSupported = __webpack_require__(100);
+
+Object.defineProperty(exports, 'isClassSupported', {
   enumerable: true,
   get: function get() {
-    return _isClassSupported.default;
+    return _interopRequireDefault(_isClassSupported).default;
   }
 });
-Object.defineProperty(exports, "isCountingNumber", {
+
+var _isCountingNumber = __webpack_require__(171);
+
+Object.defineProperty(exports, 'isCountingNumber', {
   enumerable: true,
   get: function get() {
-    return _isCountingNumber.default;
+    return _interopRequireDefault(_isCountingNumber).default;
   }
 });
-Object.defineProperty(exports, "isDate", {
+
+var _isDateObject = __webpack_require__(99);
+
+Object.defineProperty(exports, 'isDate', {
   enumerable: true,
   get: function get() {
-    return _isDateObject.default;
+    return _interopRequireDefault(_isDateObject).default;
   }
 });
-Object.defineProperty(exports, "isDOMNode", {
+
+var _isDOMNode = __webpack_require__(170);
+
+Object.defineProperty(exports, 'isDOMNode', {
   enumerable: true,
   get: function get() {
-    return _isDOMNode.default;
+    return _interopRequireDefault(_isDOMNode).default;
   }
 });
-Object.defineProperty(exports, "isError", {
+
+var _isError = __webpack_require__(169);
+
+Object.defineProperty(exports, 'isError', {
   enumerable: true,
   get: function get() {
-    return _isError.default;
+    return _interopRequireDefault(_isError).default;
   }
 });
-Object.defineProperty(exports, "isFalsey", {
+
+var _isFalsey = __webpack_require__(167);
+
+Object.defineProperty(exports, 'isFalsey', {
   enumerable: true,
   get: function get() {
-    return _isFalsey.default;
+    return _interopRequireDefault(_isFalsey).default;
   }
 });
-Object.defineProperty(exports, "isFunction", {
+
+var _isFunction = __webpack_require__(166);
+
+Object.defineProperty(exports, 'isFunction', {
   enumerable: true,
   get: function get() {
-    return _isFunction.default;
+    return _interopRequireDefault(_isFunction).default;
   }
 });
-Object.defineProperty(exports, "isFunctionType", {
+
+var _isFunctionType = __webpack_require__(68);
+
+Object.defineProperty(exports, 'isFunctionType', {
   enumerable: true,
   get: function get() {
-    return _isFunctionType.default;
+    return _interopRequireDefault(_isFunctionType).default;
   }
 });
-Object.defineProperty(exports, "isHex", {
+
+var _isHex = __webpack_require__(165);
+
+Object.defineProperty(exports, 'isHex', {
   enumerable: true,
   get: function get() {
-    return _isHex.default;
+    return _interopRequireDefault(_isHex).default;
   }
 });
-Object.defineProperty(exports, "isInteger", {
+
+var _isInteger = __webpack_require__(94);
+
+Object.defineProperty(exports, 'isInteger', {
   enumerable: true,
   get: function get() {
-    return _isInteger.default;
+    return _interopRequireDefault(_isInteger).default;
   }
 });
-Object.defineProperty(exports, "isLowerCased", {
+
+var _isLowerCased = __webpack_require__(164);
+
+Object.defineProperty(exports, 'isLowerCased', {
   enumerable: true,
   get: function get() {
-    return _isLowerCased.default;
+    return _interopRequireDefault(_isLowerCased).default;
   }
 });
-Object.defineProperty(exports, "isNil", {
+
+var _isNil = __webpack_require__(6);
+
+Object.defineProperty(exports, 'isNil', {
   enumerable: true,
   get: function get() {
-    return _isNil.default;
+    return _interopRequireDefault(_isNil).default;
   }
 });
-Object.defineProperty(exports, "isNull", {
+
+var _isNull = __webpack_require__(45);
+
+Object.defineProperty(exports, 'isNull', {
   enumerable: true,
   get: function get() {
-    return _isNull.default;
+    return _interopRequireDefault(_isNull).default;
   }
 });
-Object.defineProperty(exports, "isNumber", {
+
+var _isNumberObject = __webpack_require__(163);
+
+Object.defineProperty(exports, 'isNumber', {
   enumerable: true,
   get: function get() {
-    return _isNumberObject.default;
+    return _interopRequireDefault(_isNumberObject).default;
   }
 });
-Object.defineProperty(exports, "isNumberFinite", {
+
+var _isNumberFinite = __webpack_require__(162);
+
+Object.defineProperty(exports, 'isNumberFinite', {
   enumerable: true,
   get: function get() {
-    return _isNumberFinite.default;
+    return _interopRequireDefault(_isNumberFinite).default;
   }
 });
-Object.defineProperty(exports, "isNumberNaN", {
+
+var _isNumberNaN = __webpack_require__(161);
+
+Object.defineProperty(exports, 'isNumberNaN', {
   enumerable: true,
   get: function get() {
-    return _isNumberNaN.default;
+    return _interopRequireDefault(_isNumberNaN).default;
   }
 });
-Object.defineProperty(exports, "isNumberType", {
+
+var _isNumberType = __webpack_require__(30);
+
+Object.defineProperty(exports, 'isNumberType', {
   enumerable: true,
   get: function get() {
-    return _isNumberType.default;
+    return _interopRequireDefault(_isNumberType).default;
   }
 });
-Object.defineProperty(exports, "isObjectLikeNotArray", {
+
+var _isObjectLikeNotArray = __webpack_require__(160);
+
+Object.defineProperty(exports, 'isObjectLikeNotArray', {
   enumerable: true,
   get: function get() {
-    return _isObjectLikeNotArray.default;
+    return _interopRequireDefault(_isObjectLikeNotArray).default;
   }
 });
-Object.defineProperty(exports, "isObjectLike", {
+
+var _isObjectLike = __webpack_require__(11);
+
+Object.defineProperty(exports, 'isObjectLike', {
   enumerable: true,
   get: function get() {
-    return _isObjectLike.default;
+    return _interopRequireDefault(_isObjectLike).default;
   }
 });
-Object.defineProperty(exports, "isObjectType", {
+
+var _isObjectType = __webpack_require__(67);
+
+Object.defineProperty(exports, 'isObjectType', {
   enumerable: true,
   get: function get() {
-    return _isObjectType.default;
+    return _interopRequireDefault(_isObjectType).default;
   }
 });
-Object.defineProperty(exports, "isOctal", {
+
+var _isOctal = __webpack_require__(96);
+
+Object.defineProperty(exports, 'isOctal', {
   enumerable: true,
   get: function get() {
-    return _isOctal.default;
+    return _interopRequireDefault(_isOctal).default;
   }
 });
-Object.defineProperty(exports, "isPopulatedString", {
+
+var _isPopulatedString = __webpack_require__(158);
+
+Object.defineProperty(exports, 'isPopulatedString', {
   enumerable: true,
   get: function get() {
-    return _isPopulatedString.default;
+    return _interopRequireDefault(_isPopulatedString).default;
   }
 });
-Object.defineProperty(exports, "isPrimitive", {
+
+var _isPrimitive = __webpack_require__(25);
+
+Object.defineProperty(exports, 'isPrimitive', {
   enumerable: true,
   get: function get() {
-    return _isPrimitive.default;
+    return _interopRequireDefault(_isPrimitive).default;
   }
 });
-Object.defineProperty(exports, "isRegex", {
+
+var _isRegex = __webpack_require__(40);
+
+Object.defineProperty(exports, 'isRegex', {
   enumerable: true,
   get: function get() {
-    return _isRegex.default;
+    return _interopRequireDefault(_isRegex).default;
   }
 });
-Object.defineProperty(exports, "isSafeInteger", {
+
+var _isSafeInteger = __webpack_require__(51);
+
+Object.defineProperty(exports, 'isSafeInteger', {
   enumerable: true,
   get: function get() {
-    return _isSafeInteger.default;
+    return _interopRequireDefault(_isSafeInteger).default;
   }
 });
-Object.defineProperty(exports, "isSearchIndex", {
+
+var _isSearchIndex = __webpack_require__(157);
+
+Object.defineProperty(exports, 'isSearchIndex', {
   enumerable: true,
   get: function get() {
-    return _isSearchIndex.default;
+    return _interopRequireDefault(_isSearchIndex).default;
   }
 });
-Object.defineProperty(exports, "isSpaced", {
+
+var _isSpaced = __webpack_require__(78);
+
+Object.defineProperty(exports, 'isSpaced', {
   enumerable: true,
   get: function get() {
-    return _isSpaced.default;
+    return _interopRequireDefault(_isSpaced).default;
   }
 });
-Object.defineProperty(exports, "isStringTypeOrInteger", {
+
+var _isStringTypeOrInteger = __webpack_require__(156);
+
+Object.defineProperty(exports, 'isStringTypeOrInteger', {
   enumerable: true,
   get: function get() {
-    return _isStringTypeOrInteger.default;
+    return _interopRequireDefault(_isStringTypeOrInteger).default;
   }
 });
-Object.defineProperty(exports, "isStringTypeOrNumberType", {
+
+var _isStringTypeOrNumberType = __webpack_require__(155);
+
+Object.defineProperty(exports, 'isStringTypeOrNumberType', {
   enumerable: true,
   get: function get() {
-    return _isStringTypeOrNumberType.default;
+    return _interopRequireDefault(_isStringTypeOrNumberType).default;
   }
 });
-Object.defineProperty(exports, "isStringType", {
+
+var _isStringType = __webpack_require__(38);
+
+Object.defineProperty(exports, 'isStringType', {
   enumerable: true,
   get: function get() {
-    return _isStringType.default;
+    return _interopRequireDefault(_isStringType).default;
   }
 });
-Object.defineProperty(exports, "isString", {
+
+var _isString = __webpack_require__(4);
+
+Object.defineProperty(exports, 'isString', {
   enumerable: true,
   get: function get() {
-    return _isString.default;
+    return _interopRequireDefault(_isString).default;
   }
 });
-Object.defineProperty(exports, "isSurrogatePair", {
+
+var _isSurrogatePair = __webpack_require__(154);
+
+Object.defineProperty(exports, 'isSurrogatePair', {
   enumerable: true,
   get: function get() {
-    return _isSurrogatePair.default;
+    return _interopRequireDefault(_isSurrogatePair).default;
   }
 });
-Object.defineProperty(exports, "isSymbolType", {
+
+var _isSymbolType = __webpack_require__(32);
+
+Object.defineProperty(exports, 'isSymbolType', {
   enumerable: true,
   get: function get() {
-    return _isSymbolType.default;
+    return _interopRequireDefault(_isSymbolType).default;
   }
 });
-Object.defineProperty(exports, "isSymbol", {
+
+var _isSymbol = __webpack_require__(71);
+
+Object.defineProperty(exports, 'isSymbol', {
   enumerable: true,
   get: function get() {
-    return _isSymbol.default;
+    return _interopRequireDefault(_isSymbol).default;
   }
 });
-Object.defineProperty(exports, "isSymbolSupported", {
+
+var _isSymbolSupported = __webpack_require__(43);
+
+Object.defineProperty(exports, 'isSymbolSupported', {
   enumerable: true,
   get: function get() {
-    return _isSymbolSupported.default;
+    return _interopRequireDefault(_isSymbolSupported).default;
   }
 });
-Object.defineProperty(exports, "isToStringTagSupported", {
+
+var _isToStringTagSupported = __webpack_require__(69);
+
+Object.defineProperty(exports, 'isToStringTagSupported', {
   enumerable: true,
   get: function get() {
-    return _isToStringTagSupported.default;
+    return _interopRequireDefault(_isToStringTagSupported).default;
   }
 });
-Object.defineProperty(exports, "isTruthy", {
+
+var _isTruthy = __webpack_require__(152);
+
+Object.defineProperty(exports, 'isTruthy', {
   enumerable: true,
   get: function get() {
-    return _isTruthy.default;
+    return _interopRequireDefault(_isTruthy).default;
   }
 });
-Object.defineProperty(exports, "isUndefined", {
+
+var _isUndefined = __webpack_require__(27);
+
+Object.defineProperty(exports, 'isUndefined', {
   enumerable: true,
   get: function get() {
-    return _isUndefined.default;
+    return _interopRequireDefault(_isUndefined).default;
   }
 });
-Object.defineProperty(exports, "isUnderscored", {
+
+var _isUnderscored = __webpack_require__(151);
+
+Object.defineProperty(exports, 'isUnderscored', {
   enumerable: true,
   get: function get() {
-    return _isUnderscored.default;
+    return _interopRequireDefault(_isUnderscored).default;
   }
 });
-Object.defineProperty(exports, "isUniq", {
+
+var _isUniq = __webpack_require__(150);
+
+Object.defineProperty(exports, 'isUniq', {
   enumerable: true,
   get: function get() {
-    return _isUniq.default;
+    return _interopRequireDefault(_isUniq).default;
   }
 });
-Object.defineProperty(exports, "isUpperCased", {
+
+var _isUpperCased = __webpack_require__(149);
+
+Object.defineProperty(exports, 'isUpperCased', {
   enumerable: true,
   get: function get() {
-    return _isUpperCased.default;
+    return _interopRequireDefault(_isUpperCased).default;
   }
 });
-Object.defineProperty(exports, "isValidHtml4Id", {
+
+var _isValidHtml4Id = __webpack_require__(148);
+
+Object.defineProperty(exports, 'isValidHtml4Id', {
   enumerable: true,
   get: function get() {
-    return _isValidHtml4Id.default;
+    return _interopRequireDefault(_isValidHtml4Id).default;
   }
 });
-Object.defineProperty(exports, "isValidHtml5Id", {
+
+var _isValidHtml5Id = __webpack_require__(147);
+
+Object.defineProperty(exports, 'isValidHtml5Id', {
   enumerable: true,
   get: function get() {
-    return _isValidHtml5Id.default;
+    return _interopRequireDefault(_isValidHtml5Id).default;
   }
 });
-Object.defineProperty(exports, "isWhiteSpaced", {
+
+var _isWhiteSpaced = __webpack_require__(146);
+
+Object.defineProperty(exports, 'isWhiteSpaced', {
   enumerable: true,
   get: function get() {
-    return _isWhiteSpaced.default;
+    return _interopRequireDefault(_isWhiteSpaced).default;
   }
 });
-Object.defineProperty(exports, "isWholeNumber", {
+
+var _isWholeNumber = __webpack_require__(37);
+
+Object.defineProperty(exports, 'isWholeNumber', {
   enumerable: true,
   get: function get() {
-    return _isWholeNumber.default;
+    return _interopRequireDefault(_isWholeNumber).default;
   }
 });
-Object.defineProperty(exports, "kebabJoin", {
+
+var _kebabJoin = __webpack_require__(145);
+
+Object.defineProperty(exports, 'kebabJoin', {
   enumerable: true,
   get: function get() {
-    return _kebabJoin.default;
+    return _interopRequireDefault(_kebabJoin).default;
   }
 });
-Object.defineProperty(exports, "last", {
+
+var _last = __webpack_require__(144);
+
+Object.defineProperty(exports, 'last', {
   enumerable: true,
   get: function get() {
-    return _last.default;
+    return _interopRequireDefault(_last).default;
   }
 });
-Object.defineProperty(exports, "methodize", {
+
+var _methodize = __webpack_require__(143);
+
+Object.defineProperty(exports, 'methodize', {
   enumerable: true,
   get: function get() {
-    return _methodize.default;
+    return _interopRequireDefault(_methodize).default;
   }
 });
-Object.defineProperty(exports, "modulo", {
+
+var _modulo = __webpack_require__(81);
+
+Object.defineProperty(exports, 'modulo', {
   enumerable: true,
   get: function get() {
-    return _modulo.default;
+    return _interopRequireDefault(_modulo).default;
   }
 });
-Object.defineProperty(exports, "negate", {
+
+var _negate = __webpack_require__(142);
+
+Object.defineProperty(exports, 'negate', {
   enumerable: true,
   get: function get() {
-    return _negate.default;
+    return _interopRequireDefault(_negate).default;
   }
 });
-Object.defineProperty(exports, "nilifyIs", {
+
+var _nilifyIs = __webpack_require__(86);
+
+Object.defineProperty(exports, 'nilifyIs', {
   enumerable: true,
   get: function get() {
-    return _nilifyIs.default;
+    return _interopRequireDefault(_nilifyIs).default;
   }
 });
-Object.defineProperty(exports, "normalizeSpace", {
+
+var _normalizeSpace = __webpack_require__(66);
+
+Object.defineProperty(exports, 'normalizeSpace', {
   enumerable: true,
   get: function get() {
-    return _normalizeSpace.default;
+    return _interopRequireDefault(_normalizeSpace).default;
   }
 });
-Object.defineProperty(exports, "noop", {
+
+var _noop = __webpack_require__(141);
+
+Object.defineProperty(exports, 'noop', {
   enumerable: true,
   get: function get() {
-    return _noop.default;
+    return _interopRequireDefault(_noop).default;
   }
 });
-Object.defineProperty(exports, "numberToDecimalString", {
+
+var _numberToDecimalString = __webpack_require__(75);
+
+Object.defineProperty(exports, 'numberToDecimalString', {
   enumerable: true,
   get: function get() {
-    return _numberToDecimalString.default;
+    return _interopRequireDefault(_numberToDecimalString).default;
   }
 });
-Object.defineProperty(exports, "numberFormat", {
+
+var _numberFormat = __webpack_require__(140);
+
+Object.defineProperty(exports, 'numberFormat', {
   enumerable: true,
   get: function get() {
-    return _numberFormat.default;
+    return _interopRequireDefault(_numberFormat).default;
   }
 });
-Object.defineProperty(exports, "parseDecimal", {
+
+var _parseDecimal = __webpack_require__(137);
+
+Object.defineProperty(exports, 'parseDecimal', {
   enumerable: true,
   get: function get() {
-    return _parseDecimal.default;
+    return _interopRequireDefault(_parseDecimal).default;
   }
 });
-Object.defineProperty(exports, "parseInteger", {
+
+var _parseInteger = __webpack_require__(136);
+
+Object.defineProperty(exports, 'parseInteger', {
   enumerable: true,
   get: function get() {
-    return _parseInteger.default;
+    return _interopRequireDefault(_parseInteger).default;
   }
 });
-Object.defineProperty(exports, "partial", {
+
+var _partial = __webpack_require__(135);
+
+Object.defineProperty(exports, 'partial', {
   enumerable: true,
   get: function get() {
-    return _partial.default;
+    return _interopRequireDefault(_partial).default;
   }
 });
-Object.defineProperty(exports, "partialRight", {
+
+var _partialRight = __webpack_require__(133);
+
+Object.defineProperty(exports, 'partialRight', {
   enumerable: true,
   get: function get() {
-    return _partialRight.default;
+    return _interopRequireDefault(_partialRight).default;
   }
 });
-Object.defineProperty(exports, "padStart", {
+
+var _padStart = __webpack_require__(80);
+
+Object.defineProperty(exports, 'padStart', {
   enumerable: true,
   get: function get() {
-    return _padStart.default;
+    return _interopRequireDefault(_padStart).default;
   }
 });
-Object.defineProperty(exports, "regexpEscape", {
+
+var _regexpEscape = __webpack_require__(131);
+
+Object.defineProperty(exports, 'regexpEscape', {
   enumerable: true,
   get: function get() {
-    return _regexpEscape.default;
+    return _interopRequireDefault(_regexpEscape).default;
   }
 });
-Object.defineProperty(exports, "replaceComments", {
+
+var _replaceComments = __webpack_require__(60);
+
+Object.defineProperty(exports, 'replaceComments', {
   enumerable: true,
   get: function get() {
-    return _replaceComments.default;
+    return _interopRequireDefault(_replaceComments).default;
   }
 });
-Object.defineProperty(exports, "requireCoercibleToString", {
+
+var _requireCoercibleToString = __webpack_require__(23);
+
+Object.defineProperty(exports, 'requireCoercibleToString', {
   enumerable: true,
   get: function get() {
-    return _requireCoercibleToString.default;
+    return _interopRequireDefault(_requireCoercibleToString).default;
   }
 });
-Object.defineProperty(exports, "requireObjectCoercible", {
+
+var _requireObjectCoercible = __webpack_require__(1);
+
+Object.defineProperty(exports, 'requireObjectCoercible', {
   enumerable: true,
   get: function get() {
-    return _requireObjectCoercible.default;
+    return _interopRequireDefault(_requireObjectCoercible).default;
   }
 });
-Object.defineProperty(exports, "sameValue", {
+
+var _sameValue = __webpack_require__(89);
+
+Object.defineProperty(exports, 'sameValue', {
   enumerable: true,
   get: function get() {
-    return _sameValue.default;
+    return _interopRequireDefault(_sameValue).default;
   }
 });
-Object.defineProperty(exports, "sameValueZero", {
+
+var _sameValueZero = __webpack_require__(90);
+
+Object.defineProperty(exports, 'sameValueZero', {
   enumerable: true,
   get: function get() {
-    return _sameValueZero.default;
+    return _interopRequireDefault(_sameValueZero).default;
   }
 });
-Object.defineProperty(exports, "shuffle", {
+
+var _shuffle = __webpack_require__(130);
+
+Object.defineProperty(exports, 'shuffle', {
   enumerable: true,
   get: function get() {
-    return _shuffle.default;
+    return _interopRequireDefault(_shuffle).default;
   }
 });
-Object.defineProperty(exports, "sign", {
+
+var _sign = __webpack_require__(129);
+
+Object.defineProperty(exports, 'sign', {
   enumerable: true,
   get: function get() {
-    return _sign.default;
+    return _interopRequireDefault(_sign).default;
   }
 });
-Object.defineProperty(exports, "sift", {
+
+var _sift = __webpack_require__(128);
+
+Object.defineProperty(exports, 'sift', {
   enumerable: true,
   get: function get() {
-    return _sift.default;
+    return _interopRequireDefault(_sift).default;
   }
 });
-Object.defineProperty(exports, "stringTest", {
+
+var _stringTest = __webpack_require__(127);
+
+Object.defineProperty(exports, 'stringTest', {
   enumerable: true,
   get: function get() {
-    return _stringTest.default;
+    return _interopRequireDefault(_stringTest).default;
   }
 });
-Object.defineProperty(exports, "stubArray", {
+
+var _stubArray = __webpack_require__(105);
+
+Object.defineProperty(exports, 'stubArray', {
   enumerable: true,
   get: function get() {
-    return _stubArray.default;
+    return _interopRequireDefault(_stubArray).default;
   }
 });
-Object.defineProperty(exports, "stubFalse", {
+
+var _stubFalse = __webpack_require__(126);
+
+Object.defineProperty(exports, 'stubFalse', {
   enumerable: true,
   get: function get() {
-    return _stubFalse.default;
+    return _interopRequireDefault(_stubFalse).default;
   }
 });
-Object.defineProperty(exports, "stubObject", {
+
+var _stubObject = __webpack_require__(125);
+
+Object.defineProperty(exports, 'stubObject', {
   enumerable: true,
   get: function get() {
-    return _stubObject.default;
+    return _interopRequireDefault(_stubObject).default;
   }
 });
-Object.defineProperty(exports, "stubString", {
+
+var _stubString = __webpack_require__(124);
+
+Object.defineProperty(exports, 'stubString', {
   enumerable: true,
   get: function get() {
-    return _stubString.default;
+    return _interopRequireDefault(_stubString).default;
   }
 });
-Object.defineProperty(exports, "stubTrue", {
+
+var _stubTrue = __webpack_require__(72);
+
+Object.defineProperty(exports, 'stubTrue', {
   enumerable: true,
   get: function get() {
-    return _stubTrue.default;
+    return _interopRequireDefault(_stubTrue).default;
   }
 });
-Object.defineProperty(exports, "squeeze", {
+
+var _squeeze = __webpack_require__(123);
+
+Object.defineProperty(exports, 'squeeze', {
   enumerable: true,
   get: function get() {
-    return _squeeze.default;
+    return _interopRequireDefault(_squeeze).default;
   }
 });
-Object.defineProperty(exports, "surround", {
+
+var _surround = __webpack_require__(85);
+
+Object.defineProperty(exports, 'surround', {
   enumerable: true,
   get: function get() {
-    return _surround.default;
+    return _interopRequireDefault(_surround).default;
   }
 });
-Object.defineProperty(exports, "trim", {
+
+var _trim = __webpack_require__(121);
+
+Object.defineProperty(exports, 'trim', {
   enumerable: true,
   get: function get() {
-    return _trim.default;
+    return _interopRequireDefault(_trim).default;
   }
 });
-Object.defineProperty(exports, "trimLeft", {
+
+var _trimLeft = __webpack_require__(120);
+
+Object.defineProperty(exports, 'trimLeft', {
   enumerable: true,
   get: function get() {
-    return _trimLeft.default;
+    return _interopRequireDefault(_trimLeft).default;
   }
 });
-Object.defineProperty(exports, "trimRight", {
+
+var _trimRight = __webpack_require__(119);
+
+Object.defineProperty(exports, 'trimRight', {
   enumerable: true,
   get: function get() {
-    return _trimRight.default;
+    return _interopRequireDefault(_trimRight).default;
   }
 });
-Object.defineProperty(exports, "trunc", {
+
+var _trunc = __webpack_require__(118);
+
+Object.defineProperty(exports, 'trunc', {
   enumerable: true,
   get: function get() {
-    return _trunc.default;
+    return _interopRequireDefault(_trunc).default;
   }
 });
-Object.defineProperty(exports, "truncate", {
+
+var _truncate = __webpack_require__(116);
+
+Object.defineProperty(exports, 'truncate', {
   enumerable: true,
   get: function get() {
-    return _truncate.default;
+    return _interopRequireDefault(_truncate).default;
   }
 });
-Object.defineProperty(exports, "toBoolean", {
+
+var _toBoolean = __webpack_require__(77);
+
+Object.defineProperty(exports, 'toBoolean', {
   enumerable: true,
   get: function get() {
-    return _toBoolean.default;
+    return _interopRequireDefault(_toBoolean).default;
   }
 });
-Object.defineProperty(exports, "toInteger", {
+
+var _toInteger = __webpack_require__(114);
+
+Object.defineProperty(exports, 'toInteger', {
   enumerable: true,
   get: function get() {
-    return _toInteger.default;
+    return _interopRequireDefault(_toInteger).default;
   }
 });
-Object.defineProperty(exports, "toNumber", {
+
+var _toNumber = __webpack_require__(113);
+
+Object.defineProperty(exports, 'toNumber', {
   enumerable: true,
   get: function get() {
-    return _toNumber.default;
+    return _interopRequireDefault(_toNumber).default;
   }
 });
-Object.defineProperty(exports, "toObject", {
+
+var _toObject = __webpack_require__(12);
+
+Object.defineProperty(exports, 'toObject', {
   enumerable: true,
   get: function get() {
-    return _toObject.default;
+    return _interopRequireDefault(_toObject).default;
   }
 });
-Object.defineProperty(exports, "toPrimitive", {
+
+var _toPrimitive = __webpack_require__(58);
+
+Object.defineProperty(exports, 'toPrimitive', {
   enumerable: true,
   get: function get() {
-    return _toPrimitive.default;
+    return _interopRequireDefault(_toPrimitive).default;
   }
 });
-Object.defineProperty(exports, "toPropertyKey", {
+
+var _toPropertyKey = __webpack_require__(34);
+
+Object.defineProperty(exports, 'toPropertyKey', {
   enumerable: true,
   get: function get() {
-    return _toPropertyKey.default;
+    return _interopRequireDefault(_toPropertyKey).default;
   }
 });
-Object.defineProperty(exports, "toString", {
+
+var _toString = __webpack_require__(112);
+
+Object.defineProperty(exports, 'toString', {
   enumerable: true,
   get: function get() {
-    return _toString.default;
+    return _interopRequireDefault(_toString).default;
   }
 });
-Object.defineProperty(exports, "toStringTag", {
+
+var _toStringTag = __webpack_require__(44);
+
+Object.defineProperty(exports, 'toStringTag', {
   enumerable: true,
   get: function get() {
-    return _toStringTag.default;
+    return _interopRequireDefault(_toStringTag).default;
   }
 });
-Object.defineProperty(exports, "toUint24", {
+
+var _toUint = __webpack_require__(82);
+
+Object.defineProperty(exports, 'toUint24', {
   enumerable: true,
   get: function get() {
-    return _toUint.default;
+    return _interopRequireDefault(_toUint).default;
   }
 });
-Object.defineProperty(exports, "toWholeNumber", {
+
+var _toWholeNumber = __webpack_require__(7);
+
+Object.defineProperty(exports, 'toWholeNumber', {
   enumerable: true,
   get: function get() {
-    return _toWholeNumber.default;
+    return _interopRequireDefault(_toWholeNumber).default;
   }
 });
-Object.defineProperty(exports, "union", {
+
+var _union = __webpack_require__(111);
+
+Object.defineProperty(exports, 'union', {
   enumerable: true,
   get: function get() {
-    return _union.default;
+    return _interopRequireDefault(_union).default;
   }
 });
-Object.defineProperty(exports, "uniq", {
+
+var _uniq = __webpack_require__(110);
+
+Object.defineProperty(exports, 'uniq', {
   enumerable: true,
   get: function get() {
-    return _uniq.default;
+    return _interopRequireDefault(_uniq).default;
   }
 });
-Object.defineProperty(exports, "MAX_SAFE_INTEGER", {
+
+var _MAX_SAFE_INTEGER = __webpack_require__(53);
+
+Object.defineProperty(exports, 'MAX_SAFE_INTEGER', {
   enumerable: true,
   get: function get() {
-    return _MAX_SAFE_INTEGER.default;
+    return _interopRequireDefault(_MAX_SAFE_INTEGER).default;
   }
 });
-
-var _accumulate = _interopRequireDefault(__webpack_require__(224));
-
-var _all = _interopRequireDefault(__webpack_require__(215));
-
-var _any = _interopRequireDefault(__webpack_require__(214));
-
-var _apply = _interopRequireDefault(__webpack_require__(213));
-
-var _arity = _interopRequireDefault(__webpack_require__(212));
-
-var _assign = _interopRequireDefault(__webpack_require__(108));
-
-var _assertIsFunction = _interopRequireDefault(__webpack_require__(206));
-
-var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(37));
-
-var _assertIs = _interopRequireDefault(__webpack_require__(95));
-
-var _attempt = _interopRequireDefault(__webpack_require__(72));
-
-var _bind = _interopRequireDefault(__webpack_require__(205));
-
-var _call = _interopRequireDefault(__webpack_require__(204));
-
-var _callFunctionOrIdentity = _interopRequireDefault(__webpack_require__(203));
-
-var _capitalizeFirst = _interopRequireDefault(__webpack_require__(198));
-
-var _capitalize = _interopRequireDefault(__webpack_require__(197));
-
-var _clamp = _interopRequireDefault(__webpack_require__(94));
-
-var _constant = _interopRequireDefault(__webpack_require__(93));
-
-var _defaultToOneOf = _interopRequireDefault(__webpack_require__(195));
-
-var _defineValidatorProperties = _interopRequireDefault(__webpack_require__(194));
-
-var _defineValidatorProperty = _interopRequireDefault(__webpack_require__(89));
-
-var _delayPromise = _interopRequireDefault(__webpack_require__(192));
-
-var _difference = _interopRequireDefault(__webpack_require__(190));
-
-var _drop = _interopRequireDefault(__webpack_require__(189));
-
-var _find = _interopRequireDefault(__webpack_require__(188));
-
-var _findIndex = _interopRequireDefault(__webpack_require__(187));
-
-var _getAt = _interopRequireDefault(__webpack_require__(186));
-
-var _getFunctionName = _interopRequireDefault(__webpack_require__(185));
-
-var _hasOwnProperty = _interopRequireDefault(__webpack_require__(184));
-
-var _head = _interopRequireDefault(__webpack_require__(183));
-
-var _identity = _interopRequireDefault(__webpack_require__(181));
-
-var _includes = _interopRequireDefault(__webpack_require__(180));
-
-var _intersection = _interopRequireDefault(__webpack_require__(179));
-
-var _intToRGB = _interopRequireDefault(__webpack_require__(176));
-
-var _isArrayLikeObject = _interopRequireDefault(__webpack_require__(175));
-
-var _isArrayLike = _interopRequireDefault(__webpack_require__(19));
-
-var _isBinary = _interopRequireDefault(__webpack_require__(100));
-
-var _isBooleanType = _interopRequireDefault(__webpack_require__(81));
-
-var _isBooleanObject = _interopRequireDefault(__webpack_require__(174));
-
-var _isClassSupported = _interopRequireDefault(__webpack_require__(102));
-
-var _isCountingNumber = _interopRequireDefault(__webpack_require__(173));
-
-var _isDateObject = _interopRequireDefault(__webpack_require__(101));
-
-var _isDOMNode = _interopRequireDefault(__webpack_require__(172));
-
-var _isError = _interopRequireDefault(__webpack_require__(171));
-
-var _isFalsey = _interopRequireDefault(__webpack_require__(169));
-
-var _isFunction = _interopRequireDefault(__webpack_require__(168));
-
-var _isFunctionType = _interopRequireDefault(__webpack_require__(69));
-
-var _isHex = _interopRequireDefault(__webpack_require__(167));
-
-var _isInteger = _interopRequireDefault(__webpack_require__(96));
-
-var _isLowerCased = _interopRequireDefault(__webpack_require__(166));
-
-var _isNil = _interopRequireDefault(__webpack_require__(8));
-
-var _isNull = _interopRequireDefault(__webpack_require__(46));
-
-var _isNumberObject = _interopRequireDefault(__webpack_require__(165));
-
-var _isNumberFinite = _interopRequireDefault(__webpack_require__(164));
-
-var _isNumberNaN = _interopRequireDefault(__webpack_require__(163));
-
-var _isNumberType = _interopRequireDefault(__webpack_require__(31));
-
-var _isObjectLikeNotArray = _interopRequireDefault(__webpack_require__(162));
-
-var _isObjectLike = _interopRequireDefault(__webpack_require__(12));
-
-var _isObjectType = _interopRequireDefault(__webpack_require__(68));
-
-var _isOctal = _interopRequireDefault(__webpack_require__(98));
-
-var _isPopulatedString = _interopRequireDefault(__webpack_require__(160));
-
-var _isPrimitive = _interopRequireDefault(__webpack_require__(26));
-
-var _isRegex = _interopRequireDefault(__webpack_require__(41));
-
-var _isSafeInteger = _interopRequireDefault(__webpack_require__(52));
-
-var _isSearchIndex = _interopRequireDefault(__webpack_require__(159));
-
-var _isSpaced = _interopRequireDefault(__webpack_require__(80));
-
-var _isStringTypeOrInteger = _interopRequireDefault(__webpack_require__(158));
-
-var _isStringTypeOrNumberType = _interopRequireDefault(__webpack_require__(157));
-
-var _isStringType = _interopRequireDefault(__webpack_require__(39));
-
-var _isString = _interopRequireDefault(__webpack_require__(5));
-
-var _isSurrogatePair = _interopRequireDefault(__webpack_require__(156));
-
-var _isSymbolType = _interopRequireDefault(__webpack_require__(33));
-
-var _isSymbol = _interopRequireDefault(__webpack_require__(73));
-
-var _isSymbolSupported = _interopRequireDefault(__webpack_require__(44));
-
-var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(71));
-
-var _isTruthy = _interopRequireDefault(__webpack_require__(154));
-
-var _isUndefined = _interopRequireDefault(__webpack_require__(28));
-
-var _isUnderscored = _interopRequireDefault(__webpack_require__(153));
-
-var _isUniq = _interopRequireDefault(__webpack_require__(152));
-
-var _isUpperCased = _interopRequireDefault(__webpack_require__(151));
-
-var _isValidHtml4Id = _interopRequireDefault(__webpack_require__(150));
-
-var _isValidHtml5Id = _interopRequireDefault(__webpack_require__(149));
-
-var _isWhiteSpaced = _interopRequireDefault(__webpack_require__(148));
-
-var _isWholeNumber = _interopRequireDefault(__webpack_require__(38));
-
-var _kebabJoin = _interopRequireDefault(__webpack_require__(147));
-
-var _last = _interopRequireDefault(__webpack_require__(146));
-
-var _methodize = _interopRequireDefault(__webpack_require__(145));
-
-var _modulo = _interopRequireDefault(__webpack_require__(83));
-
-var _negate = _interopRequireDefault(__webpack_require__(144));
-
-var _nilifyIs = _interopRequireDefault(__webpack_require__(88));
-
-var _normalizeSpace = _interopRequireDefault(__webpack_require__(67));
-
-var _noop = _interopRequireDefault(__webpack_require__(143));
-
-var _numberToDecimalString = _interopRequireDefault(__webpack_require__(77));
-
-var _numberFormat = _interopRequireDefault(__webpack_require__(142));
-
-var _parseDecimal = _interopRequireDefault(__webpack_require__(139));
-
-var _parseInteger = _interopRequireDefault(__webpack_require__(138));
-
-var _partial = _interopRequireDefault(__webpack_require__(137));
-
-var _partialRight = _interopRequireDefault(__webpack_require__(135));
-
-var _padStart = _interopRequireDefault(__webpack_require__(82));
-
-var _regexpEscape = _interopRequireDefault(__webpack_require__(133));
-
-var _replaceComments = _interopRequireDefault(__webpack_require__(61));
-
-var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(24));
-
-var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
-
-var _sameValue = _interopRequireDefault(__webpack_require__(91));
-
-var _sameValueZero = _interopRequireDefault(__webpack_require__(92));
-
-var _shuffle = _interopRequireDefault(__webpack_require__(132));
-
-var _sign = _interopRequireDefault(__webpack_require__(131));
-
-var _sift = _interopRequireDefault(__webpack_require__(130));
-
-var _stringTest = _interopRequireDefault(__webpack_require__(129));
-
-var _stubArray = _interopRequireDefault(__webpack_require__(107));
-
-var _stubFalse = _interopRequireDefault(__webpack_require__(128));
-
-var _stubObject = _interopRequireDefault(__webpack_require__(127));
-
-var _stubString = _interopRequireDefault(__webpack_require__(126));
-
-var _stubTrue = _interopRequireDefault(__webpack_require__(74));
-
-var _squeeze = _interopRequireDefault(__webpack_require__(125));
-
-var _surround = _interopRequireDefault(__webpack_require__(87));
-
-var _trim = _interopRequireDefault(__webpack_require__(123));
-
-var _trimLeft = _interopRequireDefault(__webpack_require__(122));
-
-var _trimRight = _interopRequireDefault(__webpack_require__(121));
-
-var _trunc = _interopRequireDefault(__webpack_require__(120));
-
-var _truncate = _interopRequireDefault(__webpack_require__(118));
-
-var _toBoolean = _interopRequireDefault(__webpack_require__(79));
-
-var _toInteger = _interopRequireDefault(__webpack_require__(116));
-
-var _toNumber = _interopRequireDefault(__webpack_require__(115));
-
-var _toObject = _interopRequireDefault(__webpack_require__(13));
-
-var _toPrimitive = _interopRequireDefault(__webpack_require__(59));
-
-var _toPropertyKey = _interopRequireDefault(__webpack_require__(35));
-
-var _toString = _interopRequireDefault(__webpack_require__(114));
-
-var _toStringTag = _interopRequireDefault(__webpack_require__(45));
-
-var _toUint = _interopRequireDefault(__webpack_require__(84));
-
-var _toWholeNumber = _interopRequireDefault(__webpack_require__(7));
-
-var _union = _interopRequireDefault(__webpack_require__(113));
-
-var _uniq = _interopRequireDefault(__webpack_require__(112));
 
-var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(54));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ })
 /******/ ]);

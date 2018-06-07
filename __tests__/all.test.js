@@ -1,17 +1,14 @@
-import {all} from '../dist/caboodle-x';
+import {all} from '../index';
 
-/* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
-/* istanbul ignore next */
-const isStrict = (function () {
+const isStrict = (function() {
   return Boolean(this) === false;
-}());
+})();
 
-/* istanbul ignore next */
 const itStrict = isStrict ? it : xit;
 
-const createArrayLike = function (arr) {
+const createArrayLike = function(arr) {
   const o = {};
   arr.forEach((e, i) => {
     o[i] = e;
@@ -83,13 +80,15 @@ describe('each', () => {
 
   it('should set the right context when given none', () => {
     let context;
-    all([1], function () {
+    all([1], function() {
       context = this;
     });
 
-    expect(context).toBe(function () {
-      return this;
-    }.call());
+    expect(context).toBe(
+      function() {
+        return this;
+      }.call(),
+    );
   });
 
   it('should iterate all', () => {
@@ -107,7 +106,7 @@ describe('each', () => {
 
     all(
       testSubject,
-      function (obj, index) {
+      function(obj, index) {
         this.a[index] = obj;
       }.bind(o),
     );
@@ -130,7 +129,7 @@ describe('each', () => {
 
     all(
       ts,
-      function (obj, index) {
+      function(obj, index) {
         this.a[index] = obj;
       }.bind(o),
     );
@@ -155,7 +154,7 @@ describe('each', () => {
       const o = {a: actual};
       all(
         str,
-        function (item, index) {
+        function(item, index) {
           this.a[index] = item;
         }.bind(o),
       );
@@ -178,7 +177,7 @@ describe('each', () => {
     let context;
     all(
       [1],
-      function () {
+      function() {
         context = this;
       }.bind('x'),
     );
@@ -187,9 +186,9 @@ describe('each', () => {
   });
 
   it('should work with arguments', () => {
-    const argObj = (function () {
+    const argObj = (function() {
       return arguments;
-    }('1'));
+    })('1');
 
     const callback = jest.fn();
     all(argObj, callback);

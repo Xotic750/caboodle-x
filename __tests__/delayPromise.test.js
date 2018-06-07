@@ -1,4 +1,4 @@
-import {delayPromise} from '../dist/caboodle-x';
+import {delayPromise} from '../index';
 
 describe('delayPromise', () => {
   describe('delay', () => {

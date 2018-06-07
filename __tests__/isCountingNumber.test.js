@@ -1,4 +1,4 @@
-import {isCountingNumber} from '../dist/caboodle-x';
+import {isCountingNumber} from '../index';
 
 describe('isCountingNumber', () => {
   it('should be a function', () => {

@@ -1,9 +1,9 @@
-import {defineValidatorProperty} from '../dist/caboodle-x';
+import {defineValidatorProperty} from '../index';
 
 const has = Object.prototype.hasOwnProperty;
-/* istanbul ignore next */
+
 const doc = typeof document !== 'undefined' && document;
-/* istanbul ignore next */
+
 const itHasDoc = doc ? it : xit;
 
 const stubTrue = () => true;
@@ -226,7 +226,7 @@ describe('defineValidatorProperty', () => {
       configurable: true,
       enumerable: true,
       nilable: false,
-      validator: x => typeof x === 'boolean',
+      validator: (x) => typeof x === 'boolean',
       value: true,
       writable: true,
     });
@@ -240,7 +240,7 @@ describe('defineValidatorProperty', () => {
         configurable: true,
         enumerable: true,
         nilable: false,
-        validator: x => typeof x === 'boolean',
+        validator: (x) => typeof x === 'boolean',
         value: null,
         writable: true,
       });
@@ -254,7 +254,7 @@ describe('defineValidatorProperty', () => {
       configurable: true,
       enumerable: true,
       nilable: true,
-      validator: x => typeof x === 'boolean',
+      validator: (x) => typeof x === 'boolean',
       value: undefined,
       writable: true,
     });
@@ -263,7 +263,7 @@ describe('defineValidatorProperty', () => {
       configurable: true,
       enumerable: true,
       nilable: true,
-      validator: x => typeof x === 'boolean',
+      validator: (x) => typeof x === 'boolean',
       value: null,
       writable: true,
     });
@@ -276,7 +276,7 @@ describe('defineValidatorProperty', () => {
       configurable: true,
       enumerable: true,
       nilable: true,
-      validator: x => typeof x === 'boolean',
+      validator: (x) => typeof x === 'boolean',
       value: null,
       writable: true,
     });
@@ -293,12 +293,20 @@ describe('defineValidatorProperty', () => {
       configurable: true,
       enumerable: true,
       nilable: true,
-      validator: x => typeof x === 'boolean',
+      validator: (x) => typeof x === 'boolean',
       value: null,
       writable: true,
     });
 
     expect((accessible.name = true)).toBe(true);
+  });
+
+  it('should not throw if validator is not a function', () => {
+    expect(() => {
+      defineValidatorProperty({}, 'name', {
+        validator: null,
+      });
+    }).toThrowErrorMatchingSnapshot();
   });
 
   itHasDoc('works with DOM elements', () => {

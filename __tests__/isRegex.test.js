@@ -1,9 +1,8 @@
-import {isRegex} from '../dist/caboodle-x';
+import {isRegex} from '../index';
 
-/* istanbul ignore next */
 const hasToStringTag =
   typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-/* istanbul ignore next */
+
 const itHastoStringTag = hasToStringTag ? it : xit;
 
 describe('isRegex', () => {

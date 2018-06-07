@@ -53,10 +53,14 @@ export default function padStart(string, targetLength, ...rest) {
   while (filler.length < fillLen) {
     const fLen = filler.length;
     const remainingCodeUnits = fillLen - fLen;
-    filler += fLen > remainingCodeUnits ? _stringSlice(filler, 0, remainingCodeUnits) : filler;
+    filler +=
+      fLen > remainingCodeUnits
+        ? _stringSlice(filler, 0, remainingCodeUnits)
+        : filler;
   }
 
-  const truncatedStringFiller = filler.length > fillLen ? _stringSlice(filler, 0, fillLen) : filler;
+  const truncatedStringFiller =
+    filler.length > fillLen ? _stringSlice(filler, 0, fillLen) : filler;
 
   return truncatedStringFiller + str;
 }

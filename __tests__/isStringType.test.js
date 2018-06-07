@@ -1,4 +1,4 @@
-import {isStringType} from '../dist/caboodle-x';
+import {isStringType} from '../index';
 
 describe('isStringType', () => {
   it('should be a function', () => {

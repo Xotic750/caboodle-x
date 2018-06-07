@@ -1,4 +1,4 @@
-import {getFunctionName} from '../dist/caboodle-x';
+import {getFunctionName} from '../index';
 
 const getFat = function getFatFunc() {
   try {
@@ -38,7 +38,6 @@ const getAF = function getAsyncFunc() {
   return false;
 };
 
-/* istanbul ignore next */
 const ifSupportsAFit = getAF() ? it : xit;
 
 describe('Basic tests', () => {
@@ -55,7 +54,7 @@ describe('Basic tests', () => {
       {name: 'blah'},
     ];
 
-    const cb = function () {};
+    const cb = function() {};
     const expected = values.map(cb);
     const actual = values.map(getFunctionName);
     expect(actual).toEqual(expected);
@@ -69,7 +68,7 @@ describe('Basic tests', () => {
       Number,
       Array,
       Function,
-      function () {},
+      function() {},
       function test() {},
       // eslint-disable-next-line no-new-func
       new Function(),

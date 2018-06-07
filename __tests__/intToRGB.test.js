@@ -1,4 +1,4 @@
-import {intToRGB} from '../dist/caboodle-x';
+import {intToRGB} from '../index';
 
 describe('intToRGB', () => {
   it('is a function', () => {
@@ -15,17 +15,19 @@ describe('intToRGB', () => {
       true,
       {},
       [],
-      /* istanbul ignore next */
-      function () {},
+
+      function() {},
     ];
 
-    const expected = nonNumbers.map(item =>
-      `#${(Number(item) || 0)
-        .toString(16)
-        .padStart(6, '0')
-        .toUpperCase()}`);
+    const expected = nonNumbers.map(
+      (item) =>
+        `#${(Number(item) || 0)
+          .toString(16)
+          .padStart(6, '0')
+          .toUpperCase()}`,
+    );
 
-    const actual = nonNumbers.map(item => intToRGB(item));
+    const actual = nonNumbers.map((item) => intToRGB(item));
 
     expect(actual).toEqual(expected);
   });

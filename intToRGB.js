@@ -22,5 +22,7 @@ const HASH = '#';
  * intToRGB(1); // "#000001"
  */
 export default function intToRGB(i) {
-  return HASH + _toUpperCase(padStart(_numberToString(toUint24(i), 16), 6, '0'));
+  return (
+    HASH + _toUpperCase(padStart(_numberToString(toUint24(i), 16), 6, '0'))
+  );
 }

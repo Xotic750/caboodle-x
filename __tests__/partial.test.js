@@ -1,11 +1,10 @@
-import {partial} from '../dist/caboodle-x';
+import {partial} from '../index';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 
 describe('partial', () => {
   let actual;
 
-  /* istanbul ignore next */
   const testSubject = {
     push(o) {
       this.a.push(o);
@@ -127,8 +126,7 @@ describe('partial', () => {
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
-    /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 

@@ -1,13 +1,13 @@
-import {intersection} from '../dist/caboodle-x';
+import {intersection} from '../index';
 
 describe('intersection', () => {
   let LARGE_ARRAY_SIZE;
   let args;
 
   beforeEach(() => {
-    args = (function () {
+    args = (function() {
       return arguments;
-    }(1, 2, 3));
+    })(1, 2, 3);
 
     LARGE_ARRAY_SIZE = 200;
   });

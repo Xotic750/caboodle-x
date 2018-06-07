@@ -1,4 +1,4 @@
-import {callFunctionOrIdentity} from '../dist/caboodle-x';
+import {callFunctionOrIdentity} from '../index';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 import noop from './helpers/noop';
@@ -11,22 +11,25 @@ describe('callFunctionOrIdentity', () => {
   describe('Non-arrays', () => {
     describe('Primitives', () => {
       it('Single argument', () => {
-        const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive));
+        const actual = primitives.map((primitive) =>
+          callFunctionOrIdentity(primitive),
+        );
 
         expect(actual).toEqual(primitives);
       });
 
       it('Two arguments', () => {
-        const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive, objects));
+        const actual = primitives.map((primitive) =>
+          callFunctionOrIdentity(primitive, objects),
+        );
 
         expect(actual).toEqual(primitives);
       });
 
       it('Three arguments', () => {
-        const actual = primitives.map(primitive =>
-          callFunctionOrIdentity(primitive, objects, {}));
+        const actual = primitives.map((primitive) =>
+          callFunctionOrIdentity(primitive, objects, {}),
+        );
 
         expect(actual).toEqual(primitives);
       });
@@ -34,21 +37,23 @@ describe('callFunctionOrIdentity', () => {
 
     describe('Objects', () => {
       it('Single argument', () => {
-        const actual = objects.map(object => callFunctionOrIdentity(object));
+        const actual = objects.map((object) => callFunctionOrIdentity(object));
 
         expect(actual).toEqual(objects);
       });
 
       it('Two arguments', () => {
-        const actual = objects.map(object =>
-          callFunctionOrIdentity(object, primitives));
+        const actual = objects.map((object) =>
+          callFunctionOrIdentity(object, primitives),
+        );
 
         expect(actual).toEqual(objects);
       });
 
       it('Three arguments', () => {
-        const actual = objects.map(object =>
-          callFunctionOrIdentity(object, primitives, {}));
+        const actual = objects.map((object) =>
+          callFunctionOrIdentity(object, primitives, {}),
+        );
 
         expect(actual).toEqual(objects);
       });

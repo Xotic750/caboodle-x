@@ -1,4 +1,4 @@
-import {attempt} from '../dist/caboodle-x';
+import {attempt} from '../index';
 
 describe('attempt', () => {
   it('is a function', () => {
@@ -23,7 +23,7 @@ describe('attempt', () => {
       err = e;
     }
 
-    const thrower = function () {
+    const thrower = function() {
       throw err;
     };
 
@@ -37,7 +37,7 @@ describe('attempt', () => {
   });
 
   it('should return the sum', () => {
-    const sumArgs = function (a, b) {
+    const sumArgs = function(a, b) {
       return a + b;
     };
 
@@ -51,7 +51,7 @@ describe('attempt', () => {
   });
 
   it('should have the correct this argument', () => {
-    const pusher = function (a, b) {
+    const pusher = function(a, b) {
       this.push(a, b);
       return 2;
     };

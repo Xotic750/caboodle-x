@@ -9,5 +9,8 @@ import _arity from './.internal/_arity';
 import toWholeNumber from './toWholeNumber';
 
 export default function arity(fn, ...n) {
-  return _arity(_assertIsFunction(fn), toWholeNumber(n.length ? n[0] : fn.length));
+  return _arity(
+    _assertIsFunction(fn),
+    toWholeNumber(n.length ? n[0] : fn.length),
+  );
 }

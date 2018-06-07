@@ -22,7 +22,7 @@ const isNotNil = function _isNotNil(value) {
  * arrays using SameValueZero for equality comparisons. The order and references
  * of result values are determined by the first array.
  *
- * @param {...array} [arrays] - The arrays to inspect.
+ * @param {...Array} [arrays] - The arrays to inspect.
  * @returns {Array} Returns the new array of intersecting values.
  * @example
  * var intersection = require('array-intersection-x');
@@ -36,13 +36,20 @@ export default function intersection(...arrays) {
     return [];
   }
 
-  return _accumulate(_shift(remaining), (acc, value) => {
-    const isExcluded = !_any(remaining, array => !_includes(requireObjectCoercible(array), value));
+  return _accumulate(
+    _shift(remaining),
+    (acc, value) => {
+      const isExcluded = !_any(
+        remaining,
+        (array) => !_includes(requireObjectCoercible(array), value),
+      );
 
-    if (isExcluded && !_includes(acc, value)) {
-      _push(acc, value);
-    }
+      if (isExcluded && !_includes(acc, value)) {
+        _push(acc, value);
+      }
 
-    return acc;
-  }, []);
+      return acc;
+    },
+    [],
+  );
 }

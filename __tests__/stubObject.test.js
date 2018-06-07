@@ -1,4 +1,4 @@
-import {stubObject} from '../dist/caboodle-x';
+import {stubObject} from '../index';
 
 describe('stubObject', () => {
   it('should be a function', () => {

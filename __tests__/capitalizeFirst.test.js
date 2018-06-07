@@ -1,4 +1,4 @@
-import {capitalizeFirst} from '../dist/caboodle-x';
+import {capitalizeFirst} from '../index';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 
@@ -16,15 +16,16 @@ describe('capitalizeFirst', () => {
   describe('Primitives', () => {
     it('Single argument', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map(primitive => capitalizeFirst(primitive));
+      const actual = primitives.map((primitive) => capitalizeFirst(primitive));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map(primitive =>
-        capitalizeFirst(primitive, primitive));
+      const actual = primitives.map((primitive) =>
+        capitalizeFirst(primitive, primitive),
+      );
 
       expect(actual).toEqual(expected);
     });
@@ -33,14 +34,14 @@ describe('capitalizeFirst', () => {
   describe('Objects', () => {
     it('Single argument', () => {
       const expected = objects.map(cap);
-      const actual = objects.map(object => capitalizeFirst(object));
+      const actual = objects.map((object) => capitalizeFirst(object));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
       const expected = objects.map(cap);
-      const actual = objects.map(object => capitalizeFirst(object, object));
+      const actual = objects.map((object) => capitalizeFirst(object, object));
 
       expect(actual).toEqual(expected);
     });
@@ -74,13 +75,13 @@ describe('capitalizeFirst', () => {
     ]);
 
     it('Single argument', () => {
-      const actual = sources.map(source => capitalizeFirst(source));
+      const actual = sources.map((source) => capitalizeFirst(source));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
-      const actual = sources.map(source => capitalizeFirst(source, source));
+      const actual = sources.map((source) => capitalizeFirst(source, source));
 
       expect(actual).toEqual(expected);
     });

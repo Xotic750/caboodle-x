@@ -14,7 +14,7 @@ const doc = typeof document !== 'undefined' && document;
 let documentInheritsNode = false;
 let element;
 let hasChildNodes;
-/* istanbul ignore if */
+/* istanbul ignore next */
 if (doc) {
   try {
     element = doc.createElement('div');
@@ -58,13 +58,17 @@ export default function isDOMNode(value) {
 
     try {
       return isBooleanType(hasChildNodes(value));
-    } catch (ignore) { /* ignore */ }
+    } catch (ignore) {
+      /* ignore */
+    }
 
     /* istanbul ignore if */
     if (!documentInheritsNode) {
       try {
         return _Boolean(tryAppendChild(value));
-      } catch (ignore) { /* ignore */ }
+      } catch (ignore) {
+        /* ignore */
+      }
     }
   }
 

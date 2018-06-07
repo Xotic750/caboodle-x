@@ -1,4 +1,4 @@
-import {isFunction} from '../dist/caboodle-x';
+import {isFunction} from '../index';
 
 let hasFat;
 try {
@@ -47,7 +47,7 @@ describe('Basic tests', () => {
       Boolean,
       Array,
       Function,
-      function () {},
+      function() {},
       function test(a) {}, // eslint-disable-line no-unused-vars
       new Function(), // eslint-disable-line no-new-func
       function test1(a, b) {}, // eslint-disable-line no-unused-vars

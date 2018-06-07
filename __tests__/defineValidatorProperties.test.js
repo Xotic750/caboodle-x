@@ -1,9 +1,9 @@
-import {defineValidatorProperties} from '../dist/caboodle-x';
+import {defineValidatorProperties} from '../index';
 
 const has = Object.prototype.hasOwnProperty;
-/* istanbul ignore next */
+
 const doc = typeof document !== 'undefined' && document;
-/* istanbul ignore next */
+
 const itHasDoc = doc ? it : xit;
 
 const stubTrue = () => true;
@@ -12,10 +12,9 @@ const testObj = Object.defineProperty({}, 'foo', {
   value: true,
 });
 
-/* istanbul ignore next */
 const hasNonEnumerable =
   Object.keys(testObj).length === 0 && testObj.foo === true;
-/* istanbul ignore next */
+
 const itHasNonEnumerable = hasNonEnumerable ? it : xit;
 
 describe('defineValidatorProperties', () => {

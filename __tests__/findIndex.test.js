@@ -1,6 +1,5 @@
-import {findIndex} from '../dist/caboodle-x';
+import {findIndex} from '../index';
 
-/* istanbul ignore next */
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
 describe('findIndex', () => {
@@ -28,12 +27,12 @@ describe('findIndex', () => {
   });
 
   it('should find item key by predicate', () => {
-    const result = findIndex(list, item => item === 15);
+    const result = findIndex(list, (item) => item === 15);
     expect(result).toBe(2);
   });
 
   it('should return -1 when nothing matched', () => {
-    const result = findIndex(list, item => item === 'a');
+    const result = findIndex(list, (item) => item === 'a');
     expect(result).toBe(-1);
   });
 
@@ -56,7 +55,7 @@ describe('findIndex', () => {
     const context = {};
     findIndex(
       [1],
-      function () {
+      function() {
         expect(this).toBe(context);
       }.bind(context),
     );
@@ -70,7 +69,7 @@ describe('findIndex', () => {
       length: 3,
     };
 
-    const foundIndex = findIndex(obj, item => item === 2);
+    const foundIndex = findIndex(obj, (item) => item === 2);
 
     expect(foundIndex).toBe(1);
   });
@@ -83,7 +82,6 @@ describe('findIndex', () => {
       length: -3,
     };
 
-    /* istanbul ignore next */
     const foundIndex = findIndex(obj, (item) => {
       throw new Error(`should not reach here ${item}`);
     });
@@ -132,9 +130,9 @@ describe('findIndex', () => {
   });
 
   it('should work with arguments', () => {
-    const obj = (function () {
+    const obj = (function() {
       return arguments;
-    }('a', 'b', 'c'));
+    })('a', 'b', 'c');
 
     const seen = [];
     const foundIndex = findIndex(obj, (item, idx) => {

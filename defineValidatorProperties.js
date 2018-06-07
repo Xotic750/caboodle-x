@@ -16,7 +16,11 @@ export default function defineValidatorProperties(object, properties) {
 
   const props = toObject(properties);
   const callback = function _callback(currentValue) {
-    defineValidatorProperty(object, toPropertyKey(currentValue), props[currentValue]);
+    defineValidatorProperty(
+      object,
+      toPropertyKey(currentValue),
+      props[currentValue],
+    );
   };
 
   _all(_keys(props), callback);

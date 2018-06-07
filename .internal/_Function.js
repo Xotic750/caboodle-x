@@ -4,4 +4,6 @@
  * @module _Function
  */
 
-export default (function f() {}).constructor;
+function fn() {}
+
+export default fn.constructor;

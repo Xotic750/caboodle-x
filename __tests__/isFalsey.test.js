@@ -1,6 +1,5 @@
-import {isFalsey} from '../dist/caboodle-x';
+import {isFalsey} from '../index';
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -10,7 +9,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -20,7 +18,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -44,7 +41,7 @@ describe('isFalsey', () => {
   it('should return true for falsey values', () => {
     const expected = falsies.map(() => true);
 
-    const actual = falsies.map(item => isFalsey(item));
+    const actual = falsies.map((item) => isFalsey(item));
 
     expect(actual).toEqual(expected);
   });
@@ -52,7 +49,7 @@ describe('isFalsey', () => {
   it('should return false for truthy values', () => {
     const expected = truthies.map(() => false);
 
-    const actual = truthies.map(item => isFalsey(item));
+    const actual = truthies.map((item) => isFalsey(item));
 
     expect(actual).toEqual(expected);
   });

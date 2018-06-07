@@ -44,32 +44,33 @@ const rsZWJ = '\\u200d';
 /* Used to compose unicode regexes. */
 const reOptMod = `${rsModifier}?`;
 const rsOptVar = `[${rsVarRange}]?`;
-const rsOptJoin = `(?:${rsZWJ}(?:${_join([
-  rsNonAstral,
-  rsRegional,
-  rsSurrPair,
-], '|')})${rsOptVar}${reOptMod})*`;
+const rsOptJoin = `(?:${rsZWJ}(?:${_join(
+  [rsNonAstral, rsRegional, rsSurrPair],
+  '|',
+)})${rsOptVar}${reOptMod})*`;
 
 const rsSeq = rsOptVar + reOptMod + rsOptJoin;
-const rsSymbol = `(?:${_join([
-  `${rsNonAstral + rsCombo}?`,
-  rsCombo,
-  rsRegional,
-  rsSurrPair,
-  rsAstral,
-], '|')})`;
+const rsSymbol = `(?:${_join(
+  [`${rsNonAstral + rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral],
+  '|',
+)})`;
 
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
  */
-const reComplexSymbol = new _RegExp(`${rsFitz}(?=${rsFitz})|${rsSymbol}${rsSeq}`, G_FLAG);
+const reComplexSymbol = new _RegExp(
+  `${rsFitz}(?=${rsFitz})|${rsSymbol}${rsSeq}`,
+  G_FLAG,
+);
 
 /*
  * Used to detect strings with [zero-width joiners or code points from
  * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
  */
-const reHasComplexSymbol = new _RegExp(`[${rsZWJ}${rsAstralRange}${rsComboMarksRange}${rsComboSymbolsRange}${rsVarRange}]`);
+const reHasComplexSymbol = new _RegExp(
+  `[${rsZWJ}${rsAstralRange}${rsComboMarksRange}${rsComboSymbolsRange}${rsVarRange}]`,
+);
 const hasComplexSymbol = function _hasComplexSymbol(string) {
   return _test(reHasComplexSymbol, string);
 };
@@ -139,7 +140,9 @@ export default function truncate(string, options) {
   let separator;
   if (isObjectLike(options)) {
     if (_hasOwnProperty(options, 'separator')) {
-      separator = isRegExp(options.separator) ? options.separator : _toString(options.separator);
+      separator = isRegExp(options.separator)
+        ? options.separator
+        : _toString(options.separator);
     }
 
     if (_hasOwnProperty(options, 'length')) {
@@ -167,7 +170,9 @@ export default function truncate(string, options) {
     return omission;
   }
 
-  let result = matchSymbols ? _join(_slice(matchSymbols, 0, end), '') : _stringSlice(str, 0, end);
+  let result = matchSymbols
+    ? _join(_slice(matchSymbols, 0, end), '')
+    : _stringSlice(str, 0, end);
   if (isUndefined(separator)) {
     return result + omission;
   }
@@ -180,7 +185,10 @@ export default function truncate(string, options) {
     if (_search(_stringSlice(str, end), separator)) {
       const substr = result;
       if (!separator.global) {
-        separator = new _RegExp(separator.source, _toString(_exec(matchFlags, separator)) + G_FLAG);
+        separator = new _RegExp(
+          separator.source,
+          _toString(_exec(matchFlags, separator)) + G_FLAG,
+        );
       }
 
       separator.lastIndex = 0;

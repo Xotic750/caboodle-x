@@ -1,18 +1,8 @@
-import {isError} from '../dist/caboodle-x';
+import {isError} from '../index';
 
 describe('isError', () => {
   it('should return `false` for non-error objects', () => {
-    const values = [
-      true,
-      'abc',
-      1,
-      null,
-      undefined,
-      /* istanbul ignore next */
-      function () {},
-      [],
-      /r/,
-    ];
+    const values = [true, 'abc', 1, null, undefined, function() {}, [], /r/];
     const expected = values.map(() => false);
     const actual = values.map(isError);
     expect(actual).toEqual(expected);
@@ -42,12 +32,12 @@ describe('isError', () => {
   });
 
   it('should work with sub-classed Error', () => {
-    const MyError = function () {};
+    const MyError = function() {};
     MyError.prototype = Object.create(Error.prototype);
     MyError.prototype.constructor = MyError;
     MyError.prototype.name = 'MyError';
 
-    const MySubError = function () {};
+    const MySubError = function() {};
     MySubError.prototype = Object.create(MyError.prototype);
     MySubError.prototype.constructor = MySubError;
     MySubError.prototype.name = 'MySubError';

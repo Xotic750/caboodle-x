@@ -11,6 +11,8 @@ import requireCoercibleToString from './requireCoercibleToString';
 export default function stringTest(string, patternOrRegex) {
   return _stringTest(
     requireCoercibleToString(string),
-    isRegex(patternOrRegex) ? patternOrRegex : requireCoercibleToString(patternOrRegex),
+    isRegex(patternOrRegex)
+      ? patternOrRegex
+      : requireCoercibleToString(patternOrRegex),
   );
 }

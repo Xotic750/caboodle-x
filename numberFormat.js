@@ -17,6 +17,7 @@ import _toInteger from './.internal/_toInteger';
 import clamp from './clamp';
 import _toString from './.internal/_toString';
 import numberToDecimalString from './numberToDecimalString';
+import isNil from './isNil';
 
 /**
  * Format a given number using fixed-point notation, with user specified digit
@@ -46,7 +47,8 @@ export default function numberFormat(value, ...rest) {
   }
 
   // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
-  const digits = rest.length > 0 ? clamp(_toInteger(rest[0]), 0, 20) : 2;
+  const digits =
+    rest.length > 0 && !isNil(rest[0]) ? clamp(_toInteger(rest[0]), 0, 20) : 2;
   // Formats a number using fixed-point notation.
   let fixed = numberToDecimalString(_toFixed(number, digits));
   if (digits > 0) {
@@ -55,14 +57,20 @@ export default function numberFormat(value, ...rest) {
     fixed = _join(parts, '.');
   }
 
-  const sectionLength = rest.length > 1 ? _toInteger(rest[1]) : 3;
+  const sectionLength =
+    rest.length > 1 && !isNil(rest[1]) ? _toInteger(rest[1]) : 3;
   // Formats a number (string) of fixed-point notation, with user delimiters.
-  const sectionDelimiter = rest.length > 2 ? _toString(rest[2]) : ',';
-  const decimalDelimiter = rest.length > 3 ? _toString(rest[3]) : '.';
+  const sectionDelimiter =
+    rest.length > 2 && !isNil(rest[2]) ? _toString(rest[2]) : ',';
+  const decimalDelimiter =
+    rest.length > 3 && !isNil(rest[3]) ? _toString(rest[3]) : '.';
 
   return _replace(
     decimalDelimiter === '.' ? fixed : _replace(fixed, '.', decimalDelimiter),
-    new _RegExp(`\\d(?=(\\d{${sectionLength}})+${digits > 0 ? '\\D' : '$'})`, 'g'),
+    new _RegExp(
+      `\\d(?=(\\d{${sectionLength}})+${digits > 0 ? '\\D' : '$'})`,
+      'g',
+    ),
     `$&${sectionDelimiter}`,
   );
 }

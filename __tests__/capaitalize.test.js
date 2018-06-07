@@ -1,4 +1,4 @@
-import {capitalize} from '../dist/caboodle-x';
+import {capitalize} from '../index';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 
@@ -16,15 +16,16 @@ describe('capitalize', () => {
   describe('Primitives', () => {
     it('Single argument', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map(primitive => capitalize(primitive));
+      const actual = primitives.map((primitive) => capitalize(primitive));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map(primitive =>
-        capitalize(primitive, primitive));
+      const actual = primitives.map((primitive) =>
+        capitalize(primitive, primitive),
+      );
 
       expect(actual).toEqual(expected);
     });
@@ -33,14 +34,14 @@ describe('capitalize', () => {
   describe('Objects', () => {
     it('Single argument', () => {
       const expected = objects.map(cap);
-      const actual = objects.map(object => capitalize(object));
+      const actual = objects.map((object) => capitalize(object));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
       const expected = objects.map(cap);
-      const actual = objects.map(object => capitalize(object, object));
+      const actual = objects.map((object) => capitalize(object, object));
 
       expect(actual).toEqual(expected);
     });
@@ -74,13 +75,13 @@ describe('capitalize', () => {
     ]);
 
     it('Single argument', () => {
-      const actual = sources.map(source => capitalize(source));
+      const actual = sources.map((source) => capitalize(source));
 
       expect(actual).toEqual(expected);
     });
 
     it('Multiple arguments', () => {
-      const actual = sources.map(source => capitalize(source, source));
+      const actual = sources.map((source) => capitalize(source, source));
 
       expect(actual).toEqual(expected);
     });

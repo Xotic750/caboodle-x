@@ -1,4 +1,4 @@
-import {isSurrogatePair} from '../dist/caboodle-x';
+import {isSurrogatePair} from '../index';
 
 describe('isSurrogatePair', () => {
   describe('Basic tests', () => {
@@ -11,12 +11,13 @@ describe('isSurrogatePair', () => {
 
       const expected = values.map(() => false);
 
-      const actual1 = values.map(item =>
-        isSurrogatePair(item.charAt(0), item.charAt(1)));
+      const actual1 = values.map((item) =>
+        isSurrogatePair(item.charAt(0), item.charAt(1)),
+      );
 
       expect(actual1).toEqual(expected);
 
-      const actual2 = values.map(item => isSurrogatePair(item));
+      const actual2 = values.map((item) => isSurrogatePair(item));
 
       expect(actual2).toEqual(expected);
 
@@ -35,12 +36,13 @@ describe('isSurrogatePair', () => {
 
       const expected = values.map(() => true);
 
-      const actual1 = values.map(item =>
-        isSurrogatePair(item.charAt(0), item.charAt(1)));
+      const actual1 = values.map((item) =>
+        isSurrogatePair(item.charAt(0), item.charAt(1)),
+      );
 
       expect(actual1).toEqual(expected);
 
-      const actual2 = values.map(item => isSurrogatePair(item));
+      const actual2 = values.map((item) => isSurrogatePair(item));
 
       expect(actual2).toEqual(expected);
     });

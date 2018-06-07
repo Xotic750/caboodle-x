@@ -1,10 +1,8 @@
-import {toPropertyKey} from '../dist/caboodle-x';
+import {toPropertyKey} from '../index';
 
-/* istanbul ignore next */
 const hasSymbols =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -14,7 +12,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -24,7 +21,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -36,7 +32,6 @@ const toStringOnlyObject = {
 
 const objects = [{}, coercibleObject, toStringOnlyObject, valueOfOnlyObject];
 
-/* istanbul ignore next */
 const symbols = hasSymbols ? [Symbol.iterator, Symbol('foo')] : [];
 const objectSymbols = symbols.map(Object);
 

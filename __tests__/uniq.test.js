@@ -1,4 +1,4 @@
-import {uniq} from '../dist/caboodle-x';
+import {uniq} from '../index';
 
 describe('uniq', () => {
   it('should be a function', () => {

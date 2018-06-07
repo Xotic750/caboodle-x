@@ -16,11 +16,13 @@ import _propertyIsEnumerable from './.internal/_propertyIsEnumerable';
 import _Object from './.internal/_Object';
 
 /* istanbul ignore next */
-const getOwnPropertySymbols = isFunctionType(_Object.getOwnPropertySymbols) ?
-  _Object.getOwnPropertySymbols :
-  stubArray;
+const getOwnPropertySymbols = isFunctionType(_Object.getOwnPropertySymbols)
+  ? _Object.getOwnPropertySymbols
+  : stubArray;
 
-const getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(target) {
+const getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(
+  target,
+) {
   const isEnumerable = function _isEnumerable(symbol) {
     return _propertyIsEnumerable(target, symbol);
   };
@@ -40,7 +42,11 @@ const reducer = function _reducer(tgt, source) {
     return tar;
   };
 
-  return _reduce(_concat(_keys(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
+  return _reduce(
+    _concat(_keys(object), getOwnEnumerablePropertySymbols(object)),
+    assigner,
+    tgt,
+  );
 };
 
 /**

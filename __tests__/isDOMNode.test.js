@@ -1,28 +1,27 @@
-import {isDOMNode} from '../dist/caboodle-x';
+import {isDOMNode} from '../index';
 import falsey from './helpers/falsey';
 
-/* istanbul ignore next */
 const itWindow = typeof window === 'undefined' ? xit : it;
-/* istanbul ignore next */
+
 const itGlobal = typeof global === 'undefined' ? xit : it;
-/* istanbul ignore next */
+
 const element =
   typeof document !== 'undefined' && document.createElement('div');
-/* istanbul ignore next */
+
 const itElement = element ? it : xit;
 
 let hasSymbolSupport;
 let symbol;
-/* istanbul ignore next */
+
 if (typeof Symbol === 'function') {
   symbol = Symbol('');
   hasSymbolSupport = typeof symbol === 'symbol';
 }
-/* istanbul ignore next */
+
 const itSymbol = hasSymbolSupport ? it : xit;
-/* istanbul ignore next */
+
 const itMap = typeof Map === 'function' ? it : xit;
-/* istanbul ignore next */
+
 const itSet = typeof Set === 'function' ? it : xit;
 
 const html4List = [
@@ -119,14 +118,13 @@ const html4List = [
   'VAR',
 ];
 
-/* istanbul ignore next */
-const noop = function () {};
-/* istanbul ignore next */
-const stubTrue = function () {
+const noop = function() {};
+
+const stubTrue = function() {
   return true;
 };
-/* istanbul ignore next */
-const stubFalse = function () {
+
+const stubFalse = function() {
   return false;
 };
 
@@ -149,7 +147,9 @@ describe('isDOMNode', () => {
 
   itElement('should return `true` for HTML4 DOM elements', () => {
     const expected = html4List.map(stubTrue);
-    const actual = html4List.map(tag => isDOMNode(document.createElement(tag)));
+    const actual = html4List.map((tag) =>
+      isDOMNode(document.createElement(tag)),
+    );
 
     expect(actual).toEqual(expected);
   });
@@ -169,7 +169,7 @@ describe('isDOMNode', () => {
     expect(isDOMNode(fragment)).toBe(true);
   });
 
-  it('should return `false` for other non-DOM objects', function () {
+  it('should return `false` for other non-DOM objects', function() {
     expect(isDOMNode(arguments)).toBe(false, 'arguments');
     expect(isDOMNode([])).toBe(false, 'Literal array');
     expect(isDOMNode(new Array(6))).toBe(false, 'new Array');
@@ -184,7 +184,9 @@ describe('isDOMNode', () => {
   it('should return `false` for non-DOM objects', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map((value, index) => (index ? isDOMNode(value) : isDOMNode()));
+    const actual = falsey.map(
+      (value, index) => (index ? isDOMNode(value) : isDOMNode()),
+    );
 
     expect(actual).toEqual(expected);
 

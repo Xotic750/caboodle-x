@@ -25,6 +25,7 @@ module.exports = {
     'plugin:eslint-comments/recommended',
     'plugin:import/errors',
     'plugin:import/warnings',
+    'plugin:prettier/recommended',
     'plugin:promise/recommended',
     'plugin:css-modules/recommended',
   ],
@@ -46,9 +47,12 @@ module.exports = {
       rules: {
         'compat/compat': 'off',
         'global-require': 'off',
-        'import/no-extraneous-dependencies': ['error', {
-          devDependencies: true,
-        }],
+        'import/no-extraneous-dependencies': [
+          'error',
+          {
+            devDependencies: true,
+          },
+        ],
         'no-console': 'off',
         'max-len': 'off',
       },
@@ -56,7 +60,11 @@ module.exports = {
     {
       files: ['webpack.*.js'],
       rules: {
+        'func-names': 'off',
+        'no-new-func': 'off',
+        'no-restricted-globals': 'off',
         'prefer-arrow-callback': 'off',
+        strict: 'off',
       },
     },
     {
@@ -147,6 +155,7 @@ module.exports = {
     'json',
     'no-use-extend-native',
     'prefer-object-spread',
+    'prettier',
     'promise',
     'sort-class-members',
   ],
@@ -165,8 +174,6 @@ module.exports = {
      * @see {@link https://eslint.org/docs/rules/}
      */
     'global-require': 'warn',
-    'max-len': ['error', 130],
-    'object-curly-spacing': 'off',
 
     /**
      * Additional ESLint rules for ESLint's directive-comments.
@@ -212,9 +219,12 @@ module.exports = {
      * ESLint plugin with rules that help validate proper imports.
      * @see {@link https://github.com/benmosher/eslint-plugin-import}
      */
-    'import/no-extraneous-dependencies': ['error', {
-      devDependencies: ['build/webpack.*.js'],
-    }],
+    'import/no-extraneous-dependencies': [
+      'error',
+      {
+        devDependencies: ['build/webpack.*.js'],
+      },
+    ],
 
     /**
      * ESLint plugin for Jest.
@@ -253,18 +263,27 @@ module.exports = {
      * An ESLint rule for enforcing consistent ES6 class member order.
      * @see {@link https://github.com/bryanrsmith/eslint-plugin-sort-class-members}
      */
-    'sort-class-members/sort-class-members': ['error', {
-      accessorPairPositioning: 'getThenSet',
-      order: [
-        '[static-properties]',
-        '[static-methods]',
-        '[properties]',
-        '[conventional-private-properties]',
-        'constructor',
-        '[methods]',
-        '[conventional-private-methods]',
-      ],
-    }],
+    'sort-class-members/sort-class-members': [
+      'error',
+      {
+        accessorPairPositioning: 'getThenSet',
+        order: [
+          '[static-properties]',
+          '[static-methods]',
+          '[properties]',
+          '[conventional-private-properties]',
+          'constructor',
+          '[methods]',
+          '[conventional-private-methods]',
+        ],
+      },
+    ],
+
+    /**
+     * ESLint rule for prettier.
+     * @see {@link https://prettier.io/docs/en/eslint.html|plugin}
+     */
+    'prettier/prettier': 'error',
   },
 
   /**
@@ -290,6 +309,6 @@ module.exports = {
         config: 'webpack.config.js',
       },
     },
+    polyfills: ['promises'],
   },
-
 };

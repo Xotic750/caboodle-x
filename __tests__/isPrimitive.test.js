@@ -1,10 +1,9 @@
-import {isPrimitive} from '../dist/caboodle-x';
+import {isPrimitive} from '../index';
 import noop from './helpers/noop';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('isPrimitive', () => {

@@ -27,6 +27,7 @@ export default function delayPromise(milliseconds, ...value) {
   }
 
   const timeoutExecutor = function _timeoutExecutor(resolve, reject) {
+    /* istanbul ignore next */
     try {
       _setTimeout(resolve, ms);
     } catch (error) {

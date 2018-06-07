@@ -9,10 +9,7 @@ import modulo from './modulo';
 import _sign from './.internal/_sign';
 import _isFinite from './.internal/_isFinite';
 
-const {
-  floor,
-  abs,
-} = Math;
+const {floor, abs} = Math;
 
 /**
  * The abstract operation ToUint24 converts argument to one of 2^24 integer

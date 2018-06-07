@@ -1,4 +1,4 @@
-import {getAt} from '../dist/caboodle-x';
+import {getAt} from '../index';
 
 describe('getAt', () => {
   it('should return the getAt element', () => {

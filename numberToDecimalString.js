@@ -73,7 +73,7 @@ export default function toDecimalFormString(value) {
   let workingValue = value;
 
   // Minus zero?
-  if (workingValue === 0 && (1 / workingValue) < 0) {
+  if (workingValue === 0 && 1 / workingValue < 0) {
     workingValue = MINUS_ZERO_SYMBOL;
   } else {
     workingValue = _toString(workingValue);
@@ -116,7 +116,10 @@ export default function toDecimalFormString(value) {
   let leadingZeroIndex = workingValue.length;
   // Determine leading zeros.
   index = 0;
-  while (index < leadingZeroIndex && _charAt(workingValue, index) === ZERO_SYMBOL) {
+  while (
+    index < leadingZeroIndex &&
+    _charAt(workingValue, index) === ZERO_SYMBOL
+  ) {
     index += 1;
   }
 
@@ -131,7 +134,10 @@ export default function toDecimalFormString(value) {
     if (leadingZeroIndex > 0) {
       do {
         leadingZeroIndex -= 1;
-      } while (_charAt(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
+      } while (
+        _charAt(workingValue, leadingZeroIndex) === ZERO_SYMBOL &&
+        leadingZeroIndex > 0
+      );
     }
 
     exponent = exponentIndex - index - 1;
@@ -167,12 +173,16 @@ export default function toDecimalFormString(value) {
         exponent -= 1;
       }
     } else if (exponent < decimalFormLength) {
-      decimalForm = _stringSlice(decimalForm, 0, exponent) + DECIMAL_MARK + _stringSlice(decimalForm, exponent);
+      decimalForm =
+        _stringSlice(decimalForm, 0, exponent) +
+        DECIMAL_MARK +
+        _stringSlice(decimalForm, exponent);
     }
 
     // Exponent is zero.
   } else if (decimalFormLength > 1) {
-    decimalForm = _charAt(decimalForm, 0) + DECIMAL_MARK + _stringSlice(decimalForm, 1);
+    decimalForm =
+      _charAt(decimalForm, 0) + DECIMAL_MARK + _stringSlice(decimalForm, 1);
   }
 
   return sign < 0 ? HYPHEN_MINUS + decimalForm : decimalForm;

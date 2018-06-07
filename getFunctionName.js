@@ -12,8 +12,10 @@ import replaceComments from './replaceComments';
 
 const ANONYMOUS = 'anonymous';
 
+function test1() {}
+
 let getName;
-if ((function test1() {}).name === 'test1') {
+if (test1.name === 'test1') {
   const createsAnonymous = Function().name === ANONYMOUS;
   if (createsAnonymous) {
     getName = function _getName(fn) {
@@ -29,12 +31,17 @@ if ((function test1() {}).name === 'test1') {
   getName = function _getName(fn) {
     let match;
     try {
-      match = _match(normalizeSpace(replaceComments(_functionToString(fn), ' ')), reName);
+      match = _match(
+        normalizeSpace(replaceComments(_functionToString(fn), ' ')),
+        reName,
+      );
       if (match) {
         const name = match[1];
         return name === ANONYMOUS ? '' : name;
       }
-    } catch (ignore) { /* ignore */ }
+    } catch (ignore) {
+      /* ignore */
+    }
 
     return '';
   };

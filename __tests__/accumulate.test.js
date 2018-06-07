@@ -1,6 +1,6 @@
-import {accumulate} from '../dist/caboodle-x';
+import {accumulate} from '../index';
 
-const createArrayLike = function (arr) {
+const createArrayLike = function(arr) {
   const o = {};
   const {length} = arr;
   for (let i = 0; i < length; i += 1) {
@@ -82,7 +82,9 @@ describe('accumulate', () => {
     });
 
     it('should return the expected result', () => {
-      expect(accumulate(testSubject, (a, b) => String(a || '') + String(b || ''))).toBe(testSubject.join(''));
+      expect(
+        accumulate(testSubject, (a, b) => String(a || '') + String(b || '')),
+      ).toBe(testSubject.join(''));
     });
 
     it('should not directly affect the passed array', () => {
@@ -171,7 +173,9 @@ describe('accumulate', () => {
     });
 
     it('should return the expected result', () => {
-      expect(accumulate(testObject, (a, b) => String(a || '') + String(b || ''))).toBe('123');
+      expect(
+        accumulate(testObject, (a, b) => String(a || '') + String(b || '')),
+      ).toBe('123');
     });
 
     it('should not directly affect the passed array', () => {

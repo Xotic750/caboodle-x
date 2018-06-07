@@ -13,10 +13,9 @@ import _getOwnPropertyDescriptor from './.internal/_getOwnPropertyDescriptor';
 
 const regexClass = '[object RegExp]';
 
-const tryRegexExecCall = function _tryRegexExecCall(value) {
-  let storedLastIndex;
+const tryRegexExecCall = function _tryRegexExecCall(value, descriptor) {
+  /* istanbul ignore next */
   try {
-    storedLastIndex = value.lastIndex;
     value.lastIndex = 0;
 
     _exec(value);
@@ -24,7 +23,9 @@ const tryRegexExecCall = function _tryRegexExecCall(value) {
   } catch (e) {
     return false;
   } finally {
-    value.lastIndex = storedLastIndex;
+    if (descriptor.writable) {
+      value.lastIndex = descriptor.value;
+    }
   }
 };
 
@@ -32,15 +33,15 @@ export default function isRegex(value) {
   if (!isObjectLike(value)) {
     return false;
   }
+
+  /* istanbul ignore next */
   if (!isToStringTagSupported) {
     return toStringTag(value) === regexClass;
   }
 
   const descriptor = _getOwnPropertyDescriptor(value, 'lastIndex');
-  const hasLastIndexDataProperty = descriptor && _hasOwnProperty(descriptor, 'value');
-  if (!hasLastIndexDataProperty) {
-    return false;
-  }
 
-  return tryRegexExecCall(value);
+  return descriptor && _hasOwnProperty(descriptor, 'value')
+    ? tryRegexExecCall(value, descriptor)
+    : false;
 }

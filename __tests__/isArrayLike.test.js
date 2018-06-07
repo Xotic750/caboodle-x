@@ -1,4 +1,4 @@
-import {isArrayLike} from '../dist/caboodle-x';
+import {isArrayLike} from '../index';
 
 const falsey = Object.freeze([false, 0, NaN, '']);
 
@@ -12,16 +12,16 @@ describe('isArrayLike', () => {
   });
 
   it('should return `true` for array-like values', () => {
-    (function () {
+    (function() {
       const values = [arguments, [1, 2, 3], {0: 1, length: 1}, 'a'];
       const expected = values.map(() => true);
       const actual = values.map(isArrayLike);
       expect(actual).toEqual(expected);
-    }(1, 2, 3));
+    })(1, 2, 3);
   });
 
   it('should return `false` for non-arrays', () => {
-    const expected = falsey.map(value => value === '');
+    const expected = falsey.map((value) => value === '');
     const actual = falsey.map(isArrayLike);
 
     expect(actual).toEqual(expected);

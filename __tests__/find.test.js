@@ -1,15 +1,15 @@
-import {find} from '../dist/caboodle-x';
+import {find} from '../index';
 
 const list = [5, 10, 15, 20];
 
 describe('find()', () => {
   it('should find item by predicate', () => {
-    const result = find(list, item => item === 15);
+    const result = find(list, (item) => item === 15);
     expect(result).toBe(15);
   });
 
   it('should return undefined when nothing matched', () => {
-    const result = find(list, item => item === 'a');
+    const result = find(list, (item) => item === 'a');
     expect(result).toBe(undefined);
   });
 
@@ -32,7 +32,7 @@ describe('find()', () => {
     const context = {};
     find(
       list,
-      function () {
+      function() {
         return expect(this).toBe(context);
       }.bind(context),
     );
@@ -45,7 +45,7 @@ describe('find()', () => {
       2: 3,
       length: 3,
     };
-    const found = find(obj, item => item === 2);
+    const found = find(obj, (item) => item === 2);
     expect(found).toBe(2);
   });
 
@@ -57,7 +57,6 @@ describe('find()', () => {
       length: -3,
     };
 
-    /* istanbul ignore next */
     const found = find(obj, () => {
       throw new Error('should not reach here');
     });

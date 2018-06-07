@@ -1,4 +1,4 @@
-import {difference} from '../dist/caboodle-x';
+import {difference} from '../index';
 
 describe('difference', () => {
   let LARGE_ARRAY_SIZE;
@@ -82,9 +82,9 @@ describe('difference', () => {
   });
 
   it('should work with `arguments` objects', () => {
-    const args = (function () {
+    const args = (function() {
       return arguments;
-    }(1, 2, 3));
+    })(1, 2, 3);
 
     const array = [0, 1, null, 3];
 

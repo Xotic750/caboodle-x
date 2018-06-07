@@ -1,4 +1,4 @@
-import {isNull} from '../dist/caboodle-x';
+import {isNull} from '../index';
 
 const falsey = Object.freeze([undefined, false, 0, NaN, '']);
 
@@ -14,9 +14,9 @@ describe('isNull', () => {
   });
 
   it('should return `false` for non `null` values', () => {
-    const expected = falsey.map(value => value === null);
+    const expected = falsey.map((value) => value === null);
 
-    const actual = falsey.map(value => isNull(value));
+    const actual = falsey.map((value) => isNull(value));
 
     expect(actual).toEqual(expected);
 

@@ -1,4 +1,4 @@
-import {nilifyIs} from '../dist/caboodle-x';
+import {nilifyIs} from '../index';
 
 describe('nilifyIs', () => {
   it('should be a function', () => {

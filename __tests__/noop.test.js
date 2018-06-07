@@ -1,5 +1,5 @@
 import empties from './helpers/empties';
-import {noop} from '../dist/caboodle-x';
+import {noop} from '../index';
 
 describe('noop', () => {
   it('should be a function', () => {

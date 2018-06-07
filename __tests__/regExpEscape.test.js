@@ -1,9 +1,8 @@
-import {regexpEscape} from '../dist/caboodle-x';
+import {regexpEscape} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('regexpEscape', () => {
@@ -39,7 +38,9 @@ describe('regexpEscape', () => {
   it('strings that need escaping', () => {
     expect(regexpEscape('hi. how are you?')).toBe('hi\\. how are you\\?');
     const syntaxCharacters = '^$\\.*+?()[]{}|';
-    expect(regexpEscape(syntaxCharacters)).toHaveLength(syntaxCharacters.length * 2);
+    expect(regexpEscape(syntaxCharacters)).toHaveLength(
+      syntaxCharacters.length * 2,
+    );
     expect(regexpEscape('\uD834\uDF06.')).toBe('\uD834\uDF06\\.');
   });
 
@@ -47,11 +48,13 @@ describe('regexpEscape', () => {
     const strings = ['hello there', '^$\\.*+?()[]{}|', '\uD834\uDF06.'];
 
     strings.forEach((str) => {
-      expect(regexpEscape({
-        toString() {
-          return str;
-        },
-      })).toBe(regexpEscape(str));
+      expect(
+        regexpEscape({
+          toString() {
+            return str;
+          },
+        }),
+      ).toBe(regexpEscape(str));
     });
   });
 

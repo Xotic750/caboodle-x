@@ -7,10 +7,7 @@
 import _slice from './.internal/_slice';
 import toObject from './toObject';
 
-const {
-  floor,
-  random,
-} = Math;
+const {floor, random} = Math;
 
 /**
  * Creates an array of shuffled values.

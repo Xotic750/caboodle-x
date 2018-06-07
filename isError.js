@@ -12,7 +12,7 @@ let testIsError = function _testIsError(value) {
   return toStringTag(value) === '[object Error]';
 };
 
-/* istanbul ignore if */
+/* istanbul ignore next */
 if (!testIsError(Error.prototype)) {
   const errorProto = Error.prototype;
   const testStringTag = testIsError;

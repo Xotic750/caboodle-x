@@ -1,4 +1,4 @@
-import {clamp} from '../dist/caboodle-x';
+import {clamp} from '../index';
 import noop from './helpers/noop';
 
 describe('clamp', () => {
@@ -23,8 +23,8 @@ describe('clamp', () => {
       Infinity,
     ];
 
-    const expected = values.map(value => Math.max(0, value));
-    const actual = values.map(value => clamp(value));
+    const expected = values.map((value) => Math.max(0, value));
+    const actual = values.map((value) => clamp(value));
 
     expect(Number.isNaN(clamp())).toBe(true);
     expect(actual).toEqual(expected);

@@ -1,5 +1,5 @@
 import objects from './helpers/objects';
-import {assertIsObject} from '../dist/caboodle-x';
+import {assertIsObject} from '../index';
 
 describe('assertIsObject', () => {
   it('should be a function', () => {
@@ -8,7 +8,7 @@ describe('assertIsObject', () => {
 
   it('should return original object', () => {
     const expected = objects;
-    const actual = objects.map(object => assertIsObject(object));
+    const actual = objects.map((object) => assertIsObject(object));
 
     expect(actual).toEqual(expected);
   });

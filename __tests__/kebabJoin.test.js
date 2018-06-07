@@ -1,4 +1,4 @@
-import {kebabJoin} from '../dist/caboodle-x';
+import {kebabJoin} from '../index';
 
 describe('kebabJoin', () => {
   it('should be a function', () => {

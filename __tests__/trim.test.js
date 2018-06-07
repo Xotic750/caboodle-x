@@ -1,9 +1,8 @@
-import {trim} from '../dist/caboodle-x';
+import {trim} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('trim', () => {
@@ -46,15 +45,7 @@ describe('trim', () => {
     });
 
     it('should return a string for everything', () => {
-      const values = [
-        true,
-        'abc',
-        1,
-        /* istanbul ignore next */
-        function () {},
-        [],
-        /r/,
-      ];
+      const values = [true, 'abc', 1, function() {}, [], /r/];
 
       const expected = values.map(String);
       const actual = values.map(trim);

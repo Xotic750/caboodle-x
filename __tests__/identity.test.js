@@ -1,4 +1,4 @@
-import {identity} from '../dist/caboodle-x';
+import {identity} from '../index';
 
 describe('identity', () => {
   const array = Object.freeze([1, 2, 3, 4]);

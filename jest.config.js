@@ -3,21 +3,10 @@
 module.exports = {
   coverageDirectory: '__tests__/coverage/',
   collectCoverageFrom: [
-    'dist/caboodle-x.js',
-    '!<rootDir>/node_modules/',
-    '!<rootDir>/__tests__/helpers/',
+    '<rootDir>/*.js',
+    '!<rootDir>/.*.js',
+    '!<rootDir>/*.*.js',
   ],
-  testPathIgnorePatterns: [
-    '<rootDir>/node_modules/',
-    '<rootDir>/__tests__/helpers/',
-  ],
-  moduleFileExtensions: [
-    'js',
-    'json',
-  ],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-  },
-  testMatch: ['**/?(*.)(spec|test).js?(x)'],
+  testMatch: ['**/*.test.js'],
   verbose: true,
 };

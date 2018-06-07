@@ -1,4 +1,4 @@
-import {toInteger} from '../dist/caboodle-x';
+import {toInteger} from '../index';
 
 const uncoercibleObject = {
   toString() {

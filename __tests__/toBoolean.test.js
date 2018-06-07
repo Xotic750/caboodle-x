@@ -1,6 +1,5 @@
-import {toBoolean} from '../dist/caboodle-x';
+import {toBoolean} from '../index';
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -10,7 +9,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -20,7 +18,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -30,7 +27,6 @@ const toStringOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const uncoercibleObject = {
   toString() {
     return {};

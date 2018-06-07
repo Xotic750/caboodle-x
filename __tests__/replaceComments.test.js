@@ -1,9 +1,8 @@
-import {replaceComments} from '../dist/caboodle-x';
+import {replaceComments} from '../index';
 
-/* istanbul ignore next */
 const hasSymbol =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const ifSymbolIt = hasSymbol ? it : xit;
 
 describe('replaceComments', () => {
@@ -26,15 +25,7 @@ describe('replaceComments', () => {
   });
 
   it('should return the coerced argument when target is not a string', () => {
-    const values = [
-      true,
-      'abc',
-      1,
-      /* istanbul ignore next */
-      function () {},
-      [],
-      /r/,
-    ];
+    const values = [true, 'abc', 1, function() {}, [], /r/];
 
     const expected = values.map(String);
     const actual = values.map(replaceComments);

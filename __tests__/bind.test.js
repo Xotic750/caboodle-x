@@ -1,11 +1,10 @@
-import {bind} from '../dist/caboodle-x';
+import {bind} from '../index';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 
 describe('bind', () => {
   let actual;
 
-  /* istanbul ignore next */
   const testSubject = {
     push(o) {
       this.a.push(o);
@@ -15,7 +14,7 @@ describe('bind', () => {
   const func = function _func() {
     Array.prototype.forEach.call(
       arguments,
-      function (a) {
+      function(a) {
         this.push(a);
       },
       this,
@@ -178,8 +177,7 @@ describe('bind', () => {
   });
 
   it('returns the value that instance of original "class" when called as a constructor', () => {
-    /* istanbul ignore next */
-    const ClassA = function (x) {
+    const ClassA = function(x) {
       this.name = x || 'A';
     };
 
@@ -191,7 +189,6 @@ describe('bind', () => {
   });
 
   it('sets a correct length without thisArg', () => {
-    /* istanbul ignore next */
     const fn = function _fn(a, b, c) {
       return a + b + c;
     };
@@ -201,7 +198,6 @@ describe('bind', () => {
   });
 
   it('sets a correct length with thisArg', () => {
-    /* istanbul ignore next */
     const fn = function _fn(a, b, c) {
       return a + b + c + this.d;
     };
@@ -211,7 +207,6 @@ describe('bind', () => {
   });
 
   it('sets a correct length with thisArg and first argument', () => {
-    /* istanbul ignore next */
     const fn = function _fn(a, b, c) {
       return a + b + c + this.d;
     };
@@ -221,7 +216,6 @@ describe('bind', () => {
   });
 
   it('sets a correct length without thisArg and first argument', () => {
-    /* istanbul ignore next */
     const fn = function _fn(a, b, c) {
       return a + b + c;
     };
@@ -231,7 +225,6 @@ describe('bind', () => {
   });
 
   it('sets a correct length without thisArg and too many argument', () => {
-    /* istanbul ignore next */
     const fn = function _fn(a, b, c) {
       return a + b + c;
     };

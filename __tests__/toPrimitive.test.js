@@ -1,14 +1,13 @@
-import {toPrimitive} from '../dist/caboodle-x';
+import {toPrimitive} from '../index';
 
-/* istanbul ignore next */
 const hasSymbols =
   typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbols = hasSymbols ? it : xit;
-/* istanbul ignore next */
+
 const hasSymbolToPrimitive =
   hasSymbols && typeof Symbol.toPrimitive === 'symbol';
-/* istanbul ignore next */
+
 const itHasSymbolToPrimitive = hasSymbolToPrimitive ? it : xit;
 
 const primitives = [
@@ -25,7 +24,6 @@ const primitives = [
   'abc',
 ];
 
-/* istanbul ignore next */
 const coercibleObject = {
   toString() {
     return 42;
@@ -35,7 +33,6 @@ const coercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const valueOfOnlyObject = {
   toString() {
     return {};
@@ -45,7 +42,6 @@ const valueOfOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const toStringOnlyObject = {
   toString() {
     return 7;
@@ -55,7 +51,6 @@ const toStringOnlyObject = {
   },
 };
 
-/* istanbul ignore next */
 const coercibleFnObject = {
   toString() {
     return 42;
@@ -65,7 +60,6 @@ const coercibleFnObject = {
   },
 };
 
-/* istanbul ignore next */
 const uncoercibleObject = {
   toString() {
     return {};
@@ -75,7 +69,6 @@ const uncoercibleObject = {
   },
 };
 
-/* istanbul ignore next */
 const uncoercibleFnObject = {
   toString() {
     return function toStrFn() {};
@@ -143,28 +136,43 @@ describe('toPrimitive', () => {
 
   it('Objects', () => {
     expect(toPrimitive(coercibleObject)).toBe(coercibleObject.valueOf());
-    expect(toPrimitive(coercibleObject, Number)).toBe(coercibleObject.valueOf());
-    expect(toPrimitive(coercibleObject, String)).toBe(coercibleObject.toString());
+    expect(toPrimitive(coercibleObject, Number)).toBe(
+      coercibleObject.valueOf(),
+    );
+    expect(toPrimitive(coercibleObject, String)).toBe(
+      coercibleObject.toString(),
+    );
 
     expect(toPrimitive(coercibleFnObject)).toBe(coercibleFnObject.toString());
-    expect(toPrimitive(coercibleFnObject, Number)).toBe(coercibleFnObject.toString());
-    expect(toPrimitive(coercibleFnObject, String)).toBe(coercibleFnObject.toString());
+    expect(toPrimitive(coercibleFnObject, Number)).toBe(
+      coercibleFnObject.toString(),
+    );
+    expect(toPrimitive(coercibleFnObject, String)).toBe(
+      coercibleFnObject.toString(),
+    );
 
     expect(toPrimitive({})).toBe('[object Object]');
     expect(toPrimitive({}, Number)).toBe('[object Object]');
     expect(toPrimitive({}, String)).toBe('[object Object]');
 
     expect(toPrimitive(toStringOnlyObject)).toBe(toStringOnlyObject.toString());
-    expect(toPrimitive(toStringOnlyObject, Number)).toBe(toStringOnlyObject.toString());
-    expect(toPrimitive(toStringOnlyObject, String)).toBe(toStringOnlyObject.toString());
+    expect(toPrimitive(toStringOnlyObject, Number)).toBe(
+      toStringOnlyObject.toString(),
+    );
+    expect(toPrimitive(toStringOnlyObject, String)).toBe(
+      toStringOnlyObject.toString(),
+    );
 
     expect(toPrimitive(valueOfOnlyObject)).toBe(valueOfOnlyObject.valueOf());
-    expect(toPrimitive(valueOfOnlyObject, Number)).toBe(valueOfOnlyObject.valueOf());
-    expect(toPrimitive(valueOfOnlyObject, String)).toBe(valueOfOnlyObject.valueOf());
+    expect(toPrimitive(valueOfOnlyObject, Number)).toBe(
+      valueOfOnlyObject.valueOf(),
+    );
+    expect(toPrimitive(valueOfOnlyObject, String)).toBe(
+      valueOfOnlyObject.valueOf(),
+    );
   });
 
   itHasSymbolToPrimitive('Symbol.toPrimitive', () => {
-    /* istanbul ignore next */
     const overriddenObject = {
       toString() {
         throw new Error();
@@ -174,7 +182,7 @@ describe('toPrimitive', () => {
       },
     };
 
-    overriddenObject[Symbol.toPrimitive] = function (hint) {
+    overriddenObject[Symbol.toPrimitive] = function(hint) {
       return String(hint);
     };
 
@@ -198,12 +206,15 @@ describe('toPrimitive', () => {
 
     nullToPrimitive[Symbol.toPrimitive] = null;
     expect(toPrimitive(nullToPrimitive)).toBe(toPrimitive(coercibleObject));
-    expect(toPrimitive(nullToPrimitive, Number)).toBe(toPrimitive(coercibleObject, Number));
-    expect(toPrimitive(nullToPrimitive, String)).toBe(toPrimitive(coercibleObject, String));
+    expect(toPrimitive(nullToPrimitive, Number)).toBe(
+      toPrimitive(coercibleObject, Number),
+    );
+    expect(toPrimitive(nullToPrimitive, String)).toBe(
+      toPrimitive(coercibleObject, String),
+    );
   });
 
   itHasSymbolToPrimitive('Symbol.toPrimitive exceptions', () => {
-    /* istanbul ignore next */
     const nonFunctionToPrimitive = {
       toString() {
         throw new Error();
@@ -218,7 +229,6 @@ describe('toPrimitive', () => {
       toPrimitive(nonFunctionToPrimitive);
     }).toThrowErrorMatchingSnapshot();
 
-    /* istanbul ignore next */
     const uncoercibleToPrimitive = {
       toString() {
         throw new Error();
@@ -228,8 +238,7 @@ describe('toPrimitive', () => {
       },
     };
 
-    uncoercibleToPrimitive[Symbol.toPrimitive] = function (hint) {
-      /* istanbul ignore next */
+    uncoercibleToPrimitive[Symbol.toPrimitive] = function(hint) {
       return {
         toString() {
           return hint;
@@ -241,7 +250,6 @@ describe('toPrimitive', () => {
       toPrimitive(uncoercibleToPrimitive);
     }).toThrowErrorMatchingSnapshot();
 
-    /* istanbul ignore next */
     const throwingToPrimitive = {
       toString() {
         throw new Error();
@@ -251,7 +259,7 @@ describe('toPrimitive', () => {
       },
     };
 
-    throwingToPrimitive[Symbol.toPrimitive] = function (hint) {
+    throwingToPrimitive[Symbol.toPrimitive] = function(hint) {
       throw new RangeError(hint);
     };
 

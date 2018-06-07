@@ -1,4 +1,4 @@
-import {parseDecimal} from '../dist/caboodle-x';
+import {parseDecimal} from '../index';
 
 describe('parseDecimal', () => {
   it('parseDecimal is a function', () => {
