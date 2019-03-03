@@ -19,13 +19,13 @@ describe('drop', () => {
   });
 
   it('should be undefined if not arraylike', () => {
-    expect(drop({})).toEqual(undefined);
-    expect(drop(() => {})).toEqual(undefined);
-    expect(drop(/rx/)).toEqual(undefined);
+    expect(drop({})).toStrictEqual(undefined);
+    expect(drop(() => {})).toStrictEqual(undefined);
+    expect(drop(/rx/)).toStrictEqual(undefined);
   });
 
   it('for empty array', () => {
-    expect(drop([])).toEqual([]);
+    expect(drop([])).toStrictEqual([]);
   });
 
   it('for empty string', () => {
@@ -36,51 +36,51 @@ describe('drop', () => {
     const set = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     const actual = set.map((x) => drop(x));
 
-    expect(actual).toEqual([[2, 3], [5, 6], [8, 9]]);
+    expect(actual).toStrictEqual([[2, 3], [5, 6], [8, 9]]);
   });
 
   it('should drop the first element of strings', () => {
     const set = ['abc', 'def', 'ghi'];
     const actual = set.map((x) => drop(x));
 
-    expect(actual).toEqual(['bc', 'ef', 'hi']);
+    expect(actual).toStrictEqual(['bc', 'ef', 'hi']);
   });
 
   it('should drop the first two elements', () => {
     const set = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     const actual = set.map((x) => drop(x, 2));
 
-    expect(actual).toEqual([[3], [6], [9]]);
+    expect(actual).toStrictEqual([[3], [6], [9]]);
   });
 
   it('should drop the first two elements of strings', () => {
     const set = ['abc', 'def', 'ghi'];
     const actual = set.map((x) => drop(x, 2));
 
-    expect(actual).toEqual(['c', 'f', 'i']);
+    expect(actual).toStrictEqual(['c', 'f', 'i']);
   });
 
   it('should treat falsey `n` values as `0`', () => {
     const expected = falsey.map(() => array);
     const actual = falsey.map((n) => drop(array, n));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return all elements when `n` < `1`', () => {
     [0, -1, -Infinity].forEach((n) => {
-      expect(drop(array, n)).toEqual(array);
+      expect(drop(array, n)).toStrictEqual(array);
     });
   });
 
   it('should return an empty array when `n` >= `array.length`', () => {
     [3, 4, 2 ** 32, Infinity].forEach((n) => {
-      expect(drop(array, n)).toEqual([]);
+      expect(drop(array, n)).toStrictEqual([]);
     });
   });
 
   it('should coerce `n` to an integer', () => {
-    expect(drop(array, 1.6)).toEqual([2, 3]);
-    expect(drop(array, 2.6)).toEqual([3]);
+    expect(drop(array, 1.6)).toStrictEqual([2, 3]);
+    expect(drop(array, 2.6)).toStrictEqual([3]);
   });
 });

@@ -12,6 +12,7 @@ export default function nilifyIs(predicate) {
   _assertIsFunction(predicate);
 
   return function nilifiedBound(value, ...rest) {
+    /* eslint-disable-next-line babel/no-invalid-this */
     return isNil(value) || _call(predicate, this, value, ...rest);
   };
 }

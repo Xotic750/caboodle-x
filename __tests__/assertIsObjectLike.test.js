@@ -10,7 +10,7 @@ describe('assertIsObject', () => {
     const expected = objects;
     const actual = objects.map((object) => assertIsObject(object));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should throw with default message', () => {

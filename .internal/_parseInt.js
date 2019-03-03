@@ -30,27 +30,6 @@ const hexPattern = /^[-+]?0x/i;
  * @throws {TypeError} If target is a Symbol or is not coercible.
  * @returns {number} An integer number parsed from the given string. If the first
  *  character cannot be converted to a number, NaN is returned.
- * @example
- * var $parseInt = require('parse-int-x').parseInt2018;
- *
- * // The following examples all return 15
- * $parseInt(' 0xF', 16);
- * $parseInt(' F', 16);
- * $parseInt('17', 8);
- * $parseInt(021, 8);
- * $parseInt('015', 10);   // $parseInt(015, 10); will return 15
- * $parseInt(15.99, 10);
- * $parseInt('15,123', 10);
- * $parseInt('FXX123', 16);
- * $parseInt('1111', 2);
- * $parseInt('15 * 3', 10);
- * $parseInt('15e2', 10);
- * $parseInt('15px', 10);
- * $parseInt('12', 13);
- *
- * //The following examples all return NaN:
- * $parseInt('Hello', 8); // Not a number at all
- * $parseInt('546', 2);   // Digits are not valid for binary representations
  */
 export default function _parseInt(string, radix) {
   const str = _trimLeft(_toString(string));

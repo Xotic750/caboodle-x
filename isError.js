@@ -27,13 +27,6 @@ if (!testIsError(Error.prototype)) {
  * @param {*} value - The object to be tested.
  * @returns {boolean} Returns `true` if `value` is an `Error` type,
  *  else `false`.
- * @example
- * var isError = require('is-error-x');
- *
- * isError(); // false
- * isError(Number.MIN_VALUE); // false
- * isError('abc'); // false
- * isError(new Error()); //true
  */
 export default function isError(value) {
   if (!isObjectLike(value)) {

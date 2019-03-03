@@ -9,6 +9,7 @@ const createArrayLike = function(arr) {
   });
 
   o.length = arr.length;
+
   return o;
 };
 
@@ -69,10 +70,11 @@ describe('any', () => {
     any(arr, (a) => {
       i += 1;
       arr.push(a + 3);
+
       return i > 3;
     });
 
-    expect(arr).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(arr).toStrictEqual([1, 2, 3, 4, 5, 6]);
 
     expect(i).toBe(3);
   });
@@ -80,11 +82,13 @@ describe('any', () => {
   it('should set the right context when given none', () => {
     let context;
     any([1], function() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     });
 
     expect(context).toBe(
       function() {
+        /* eslint-disable-next-line babel/no-invalid-this */
         return this;
       }.call(),
     );
@@ -111,10 +115,11 @@ describe('any', () => {
     any(testSubject, (obj, index) => {
       actual[index] = obj;
       numberOfRuns += 1;
+
       return numberOfRuns === 4;
     });
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should stop after 4 elements using a context', () => {
@@ -124,11 +129,12 @@ describe('any', () => {
       function(obj, index) {
         this.a[index] = obj;
         numberOfRuns += 1;
+
         return numberOfRuns === 4;
       }.bind(o),
     );
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should stop after 4 elements in an array-like object', () => {
@@ -136,10 +142,11 @@ describe('any', () => {
     any(ts, (obj, index) => {
       actual[index] = obj;
       numberOfRuns += 1;
+
       return numberOfRuns === 4;
     });
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should stop after 4 elements in an array-like object using a context', () => {
@@ -150,11 +157,12 @@ describe('any', () => {
       function(obj, index) {
         this.a[index] = obj;
         numberOfRuns += 1;
+
         return numberOfRuns === 4;
       }.bind(o),
     );
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should have a boxed object as list argument of callback', () => {

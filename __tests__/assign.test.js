@@ -1,7 +1,6 @@
 import {assign} from '../index';
 
-const hasSymbols =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolsIt = hasSymbols ? it : xit;
 
@@ -27,13 +26,13 @@ describe('assign', () => {
   it('returns the modified target object', () => {
     const target = {};
     const returned = assign(target, {a: 1});
-    expect(returned).toEqual(target);
+    expect(returned).toStrictEqual(target);
   });
 
   it('should merge two objects', () => {
     const target = {a: 1};
     const returned = assign(target, {b: 2});
-    expect(returned).toEqual({a: 1, b: 2});
+    expect(returned).toStrictEqual({a: 1, b: 2});
   });
 
   it('should merge three objects', () => {
@@ -41,7 +40,7 @@ describe('assign', () => {
     const source1 = {b: 2};
     const source2 = {c: 3};
     const returned = assign(target, source1, source2);
-    expect(returned).toEqual({
+    expect(returned).toStrictEqual({
       a: 1,
       b: 2,
       c: 3,
@@ -50,13 +49,14 @@ describe('assign', () => {
 
   it('only iterates over own keys', () => {
     const Foo = function() {};
+
     Foo.prototype.bar = true;
     const foo = new Foo();
     foo.baz = true;
     const target = {a: 1};
     const returned = assign(target, foo);
-    expect(returned).toEqual(target);
-    expect(target).toEqual({a: 1, baz: true});
+    expect(returned).toStrictEqual(target);
+    expect(target).toStrictEqual({a: 1, baz: true});
   });
 
   it('coerces lone target to an object', () => {
@@ -66,13 +66,13 @@ describe('assign', () => {
       string: assign('1'),
     };
 
-    expect(typeof result.bool).toEqual('object');
+    expect(typeof result.bool).toStrictEqual('object');
     expect(Boolean.prototype.valueOf.call(result.bool)).toBe(true);
 
-    expect(typeof result.number).toEqual('object');
+    expect(typeof result.number).toStrictEqual('object');
     expect(Number.prototype.valueOf.call(result.number)).toBe(1);
 
-    expect(typeof result.string).toEqual('object');
+    expect(typeof result.string).toStrictEqual('object');
     expect(String.prototype.valueOf.call(result.string)).toBe('1');
   });
 
@@ -92,7 +92,7 @@ describe('assign', () => {
 
     expect(typeof result.bool).toBe('object');
     expect(Boolean.prototype.valueOf.call(result.bool)).toBe(true);
-    expect(result.bool).toEqual(bool);
+    expect(result.bool).toStrictEqual(bool);
 
     expect(typeof result.number).toBe('object');
     expect(Number.prototype.valueOf.call(result.number)).toBe(1);
@@ -100,13 +100,12 @@ describe('assign', () => {
     expect(typeof result.string).toBe('object');
     expect(String.prototype.valueOf.call(result.string)).toBe('1');
     const compare = Object.keys(result.string).reduce((acc, key) => {
-      acc[key] = /\d+/.test(key)
-        ? result.string.charAt(key)
-        : result.string[key];
+      acc[key] = /\d+/.test(key) ? result.string.charAt(key) : result.string[key];
+
       return acc;
     }, {});
 
-    expect(compare).toEqual({
+    expect(compare).toStrictEqual({
       0: '1',
       a: 1,
       b: 1,
@@ -114,9 +113,9 @@ describe('assign', () => {
   });
 
   it('ignores non-object sources', () => {
-    expect(assign({a: 1}, null, {b: 2})).toEqual({a: 1, b: 2});
-    expect(assign({a: 1}, undefined, {b: 2})).toEqual({a: 1, b: 2});
-    expect(assign({a: 1}, {b: 2}, null)).toEqual({a: 1, b: 2});
+    expect(assign({a: 1}, null, {b: 2})).toStrictEqual({a: 1, b: 2});
+    expect(assign({a: 1}, undefined, {b: 2})).toStrictEqual({a: 1, b: 2});
+    expect(assign({a: 1}, {b: 2}, null)).toStrictEqual({a: 1, b: 2});
   });
 
   it('does not have pending exceptions', () => {
@@ -136,7 +135,7 @@ describe('assign', () => {
 
     Object.preventExtensions(thrower);
     Object.preventExtensions(expected);
-    expect(thrower).toEqual(expected);
+    expect(thrower).toStrictEqual(expected);
 
     let error;
     try {
@@ -147,10 +146,10 @@ describe('assign', () => {
 
     if (thrower[1] === 'x') {
       // IE 9 doesn't throw in strict mode with preventExtensions
-      expect(error).toEqual(expect.any(RangeError));
+      expect(error).toStrictEqual(expect.any(RangeError));
     } else {
-      expect(error).toEqual(expect.any(TypeError));
-      expect(thrower).toEqual(expected);
+      expect(error).toStrictEqual(expect.any(TypeError));
+      expect(thrower).toStrictEqual(expected);
     }
   });
 
@@ -179,9 +178,9 @@ describe('assign', () => {
     };
 
     Object.defineProperty(expected, 2, props);
-    expect(subject).toEqual(expected);
+    expect(subject).toStrictEqual(expected);
     const actual = assign({}, subject);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   ifSymbolsIt('includes enumerable symbols, after keys', () => {
@@ -191,6 +190,7 @@ describe('assign', () => {
       enumerable: true,
       get() {
         visited.push('a');
+
         return 42;
       },
     });
@@ -200,6 +200,7 @@ describe('assign', () => {
       enumerable: true,
       get() {
         visited.push(symbol);
+
         return Infinity;
       },
     });
@@ -209,12 +210,13 @@ describe('assign', () => {
       enumerable: false,
       get() {
         visited.push(nonEnumSymbol);
+
         return -Infinity;
       },
     });
 
     const target = assign({}, obj);
-    expect(visited).toEqual(['a', symbol]);
+    expect(visited).toStrictEqual(['a', symbol]);
     expect(target.a).toBe(42);
     expect(target[symbol]).toBe(Infinity);
     expect(target[nonEnumSymbol]).not.toBe(-Infinity);

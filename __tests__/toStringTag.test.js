@@ -1,7 +1,6 @@
 import {toStringTag} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const symbolIt = hasSymbol ? it : xit;
 

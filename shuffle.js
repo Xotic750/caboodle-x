@@ -12,14 +12,10 @@ const {floor, random} = Math;
 /**
  * Creates an array of shuffled values.
  *
- * @see {@link https://en.wikipedia.org/wiki/Fisher-Yates_shuffle}
+ * @see https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
  * @param {Array|Object} array - The array to shuffle.
  * @throws {TypeError} If array is null or undefined.
  * @returns {Array} Returns the new shuffled array.
- * @example
- * var shuffle = require('shuffle-x');
- *
- * shuffle([1, 2, 3, 4]); // => [4, 1, 3, 2]
  */
 export default function shuffle(array) {
   const arr = _slice(toObject(array));

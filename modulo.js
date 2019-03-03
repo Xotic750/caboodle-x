@@ -19,12 +19,8 @@ const {floor} = Math;
  * @param {number} dividend - The integer to find the remainder of.
  * @param {number} divisor - The integer to divide by.
  * @returns {number} The integer remainder.
- * @see {@link http://www.ecma-international.org/ecma-262/6.0/#sec-algorithm-conventions}
- * @see {@link https://en.wikipedia.org/wiki/Modulo_operation}
- * @example
- * var modulo = require('modulo-x');
- * modulo(1, 0x1000000); // 1
- * modulo(-1, 0x1000000); // 16777215 (2^24-1)
+ * @see http://www.ecma-international.org/ecma-262/6.0/#sec-algorithm-conventions
+ * @see https://en.wikipedia.org/wiki/Modulo_operation
  */
 export default function modulo(dividend, divisor) {
   const remain = dividend % divisor;

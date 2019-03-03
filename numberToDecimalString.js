@@ -32,42 +32,6 @@ const expPattern = /e/i;
  * @throws {TypeError} If value is not a valid format.
  * @throws {TypeError} If value is a Symbol or not coercible.
  * @returns {string} The value converted to a decimal form string.
- * @example
- * var toDecimalFormString = require('number-to-decimal-form-string-x');
- *
- * toDecimalFormString(Number.MIN_SAFE_INTEGER); // '-9007199254740991'
- * toDecimalFormString(-0); // '-0'
- *
- * var number = 0.00000000001;
- * number.toString(); // '1e-11'
- * toDecimalFormString(number); // '0.00000000001'
- *
- * number = 88259496234518.57;
- * number.toString(); '88259496234518.56'
- * toDecimalFormString(number); // '88259496234518.56'
- *
- * toDecimalFormString(Math.PI); // '3.141592653589793'
- * toDecimalFormString(Number.MAX_SAFE_INTEGER); // '9007199254740991'
- *
- * toDecimalFormString('0e+0'); // '0'
- * toDecimalFormString('1e-11'); // '0.00000000001'
- * toDecimalFormString('4.062e-3'); // '0.004062'
- * toDecimalFormString('4.461824e+2'); // '446.1824'
- *
- * toDecimalFormString(NaN); // TypeError
- * toDecimalFormString(' 0'); // TypeError
- * toDecimalFormString('0 '); // TypeError
- * toDecimalFormString('0.'); // TypeError
- * toDecimalFormString('.0'); // TypeError
- * toDecimalFormString('0x1'); // TypeError
- * toDecimalFormString('0o1'); // TypeError
- * toDecimalFormString('0b1'); // TypeError
- * toDecimalFormString('4.062 e-3'); // TypeError
- * toDecimalFormString('9 007 199 254 740 991'); // TypeError
- * toDecimalFormString('9,007,199,254,740,991'); // TypeError
- *
- * toDecimalFormString(Symbol('0')); // TypeError
- * toDecimalFormString(Object.create(null)); // TypeError
  */
 export default function toDecimalFormString(value) {
   let workingValue = value;
@@ -77,6 +41,7 @@ export default function toDecimalFormString(value) {
     workingValue = MINUS_ZERO_SYMBOL;
   } else {
     workingValue = _toString(workingValue);
+
     if (!_test(validPattern, workingValue)) {
       throw new TypeError(ERROR_MSG);
     }
@@ -84,6 +49,7 @@ export default function toDecimalFormString(value) {
 
   // Determine sign.
   let sign;
+
   if (_charAt(workingValue, 0) === HYPHEN_MINUS) {
     workingValue = _stringSlice(workingValue, 1);
     sign = -1;
@@ -93,6 +59,7 @@ export default function toDecimalFormString(value) {
 
   // Decimal point?
   const pointIndex = _stringIndexOf(workingValue, DECIMAL_MARK);
+
   if (pointIndex > -1) {
     workingValue = _replace(workingValue, DECIMAL_MARK, EMPTY_STRING);
   }
@@ -100,6 +67,7 @@ export default function toDecimalFormString(value) {
   let exponentIndex = pointIndex;
   // Exponential form?
   let index = _search(workingValue, expPattern);
+
   if (index > 0) {
     // Determine exponent.
     if (exponentIndex < 0) {
@@ -116,15 +84,13 @@ export default function toDecimalFormString(value) {
   let leadingZeroIndex = workingValue.length;
   // Determine leading zeros.
   index = 0;
-  while (
-    index < leadingZeroIndex &&
-    _charAt(workingValue, index) === ZERO_SYMBOL
-  ) {
+  while (index < leadingZeroIndex && _charAt(workingValue, index) === ZERO_SYMBOL) {
     index += 1;
   }
 
   let coefficient;
   let exponent;
+
   if (index === leadingZeroIndex) {
     // Zero.
     exponent = 0;
@@ -134,10 +100,7 @@ export default function toDecimalFormString(value) {
     if (leadingZeroIndex > 0) {
       do {
         leadingZeroIndex -= 1;
-      } while (
-        _charAt(workingValue, leadingZeroIndex) === ZERO_SYMBOL &&
-        leadingZeroIndex > 0
-      );
+      } while (_charAt(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
     }
 
     exponent = exponentIndex - index - 1;
@@ -166,6 +129,7 @@ export default function toDecimalFormString(value) {
     decimalForm = ZERO_SYMBOL + DECIMAL_MARK + decimalForm;
   } else if (exponent > 0) {
     exponent += 1;
+
     if (exponent > decimalFormLength) {
       exponent -= decimalFormLength;
       while (exponent) {
@@ -173,16 +137,12 @@ export default function toDecimalFormString(value) {
         exponent -= 1;
       }
     } else if (exponent < decimalFormLength) {
-      decimalForm =
-        _stringSlice(decimalForm, 0, exponent) +
-        DECIMAL_MARK +
-        _stringSlice(decimalForm, exponent);
+      decimalForm = _stringSlice(decimalForm, 0, exponent) + DECIMAL_MARK + _stringSlice(decimalForm, exponent);
     }
 
     // Exponent is zero.
   } else if (decimalFormLength > 1) {
-    decimalForm =
-      _charAt(decimalForm, 0) + DECIMAL_MARK + _stringSlice(decimalForm, 1);
+    decimalForm = _charAt(decimalForm, 0) + DECIMAL_MARK + _stringSlice(decimalForm, 1);
   }
 
   return sign < 0 ? HYPHEN_MINUS + decimalForm : decimalForm;

@@ -10,6 +10,7 @@ const createArrayLike = function(arr) {
   }
 
   o.length = length;
+
   return o;
 };
 
@@ -46,7 +47,7 @@ describe('sift', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
-  describe('Array object', () => {
+  describe('array object', () => {
     it('should call the callBack with the proper arguments', () => {
       const predicate = jest.fn();
       const arr = ['1'];
@@ -60,6 +61,7 @@ describe('sift', () => {
       let i = 0;
       sift(arr, (a) => {
         i += 1;
+
         if (i <= 4) {
           arr.push(a + 3);
         }
@@ -67,7 +69,7 @@ describe('sift', () => {
         return true;
       });
 
-      expect(arr).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(arr).toStrictEqual([1, 2, 3, 4, 5, 6]);
 
       expect(i).toBe(3);
     });
@@ -79,10 +81,11 @@ describe('sift', () => {
       delete testSubject[1];
       sift(testSubject, (o, i) => {
         passedValues[i] = o;
+
         return true;
       });
 
-      expect(passedValues).toEqual(testSubject);
+      expect(passedValues).toStrictEqual(testSubject);
     });
 
     it('should pass the right context to the sift', () => {
@@ -94,21 +97,24 @@ describe('sift', () => {
         testSubject,
         function(o, i) {
           this[i] = o;
+
           return true;
         }.bind(passedValues),
       );
 
-      expect(passedValues).toEqual(testSubject);
+      expect(passedValues).toStrictEqual(testSubject);
     });
 
     it('should set the right context when given none', () => {
       let context;
       sift([1], function() {
+        /* eslint-disable-next-line babel/no-invalid-this */
         context = this;
       });
 
       expect(context).toBe(
         function() {
+          /* eslint-disable-next-line babel/no-invalid-this */
           return this;
         }.call(),
       );
@@ -116,26 +122,27 @@ describe('sift', () => {
 
     it('should remove only the values for which the callBack returns false', () => {
       const result = sift(testSubject, callBack);
-      expect(result).toEqual(filteredArray);
+      expect(result).toStrictEqual(filteredArray);
     });
 
     it('should leave the original array untouched', () => {
       const copy = testSubject.slice();
       sift(testSubject, callBack);
-      expect(testSubject).toEqual(copy);
+      expect(testSubject).toStrictEqual(copy);
     });
 
     it('should not be affected by same-index mutation', () => {
       const results = sift([1, 2, 3], (value, index, array) => {
         array[index] = 'a';
+
         return true;
       });
 
-      expect(results).toEqual([1, 2, 3]);
+      expect(results).toStrictEqual([1, 2, 3]);
     });
   });
 
-  describe('Array like', () => {
+  describe('array like', () => {
     let testObject;
 
     beforeEach(() => {
@@ -155,6 +162,7 @@ describe('sift', () => {
       let i = 0;
       sift(arr, (a) => {
         i += 1;
+
         if (i <= 4) {
           arr[i + 2] = a + 3;
           arr.length += 1;
@@ -163,7 +171,7 @@ describe('sift', () => {
         return true;
       });
 
-      expect(Array.prototype.slice.call(arr)).toEqual([1, 2, 3, 4, 5, 6]);
+      expect(Array.prototype.slice.call(arr)).toStrictEqual([1, 2, 3, 4, 5, 6]);
 
       expect(i).toBe(3);
     });
@@ -176,10 +184,11 @@ describe('sift', () => {
       sift(testObject, (o, i) => {
         passedValues[i] = o;
         passedValues.length = i + 1;
+
         return true;
       });
 
-      expect(passedValues).toEqual(testObject);
+      expect(passedValues).toStrictEqual(testObject);
     });
 
     it('should set the right context when given none', () => {
@@ -187,6 +196,7 @@ describe('sift', () => {
       sift(
         createArrayLike([1]),
         function() {
+          /* eslint-disable-next-line babel/no-invalid-this */
           context = this;
         },
         undefined,
@@ -194,12 +204,13 @@ describe('sift', () => {
 
       expect(context).toBe(
         function() {
+          /* eslint-disable-next-line babel/no-invalid-this */
           return this;
         }.call(),
       );
     });
 
-    it('should pass the right context to the sift', () => {
+    it('should pass the correct context to the sift', () => {
       const passedValues = {};
       testObject = createArrayLike([1, 2, 3, 4]);
 
@@ -209,22 +220,23 @@ describe('sift', () => {
         function(o, i) {
           this[i] = o;
           this.length = i + 1;
+
           return true;
         }.bind(passedValues),
       );
 
-      expect(passedValues).toEqual(testObject);
+      expect(passedValues).toStrictEqual(testObject);
     });
 
     it('should remove only the values for which the callBack returns false', () => {
       const result = sift(testObject, callBack);
-      expect(result).toEqual(filteredArray);
+      expect(result).toStrictEqual(filteredArray);
     });
 
     it('should leave the original array untouched', () => {
       const copy = createArrayLike(testSubject);
       sift(testObject, callBack);
-      expect(testObject).toEqual(copy);
+      expect(testObject).toStrictEqual(copy);
     });
   });
 

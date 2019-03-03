@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toInteger Basic 1`] = `"No default value"`;
+exports[`toInteger basic 1`] = `"No default value"`;

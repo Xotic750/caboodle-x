@@ -17,11 +17,11 @@ describe('toUint24', () => {
     expect(toUint24(-1)).toBe(16777215);
   });
 
-  it('NaN should be 0', () => {
+  it('naN should be 0', () => {
     expect(toUint24(NaN)).toBe(0);
   });
 
-  it('Infinity should be 0', () => {
+  it('infinity should be 0', () => {
     expect(toUint24(Infinity)).toBe(0);
   });
 

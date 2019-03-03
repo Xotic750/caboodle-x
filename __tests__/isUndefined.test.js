@@ -1,4 +1,5 @@
 import {isUndefined} from '../index';
+import getArguments from './helpers/getArguments';
 
 const falsey = Object.freeze([null, false, 0, NaN, '']);
 
@@ -7,7 +8,7 @@ describe('isUndefined', () => {
     expect(isUndefined).toBeInstanceOf(Function);
   });
 
-  const args = arguments;
+  const args = getArguments();
 
   it('should return `true` for `undefined` values', () => {
     expect(isUndefined(undefined)).toBe(true);
@@ -18,7 +19,7 @@ describe('isUndefined', () => {
 
     const actual = falsey.map((value) => isUndefined(value));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
 
     expect(isUndefined(args)).toBe(false);
     expect(isUndefined([1, 2, 3])).toBe(false);

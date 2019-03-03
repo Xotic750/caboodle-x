@@ -2,9 +2,11 @@ import {getFunctionName} from '../index';
 
 const getFat = function getFatFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return () => {return this;};')();
-  } catch (ignore) {}
+  } catch (ignore) {
+    // empty
+  }
+
   return false;
 };
 
@@ -12,9 +14,11 @@ const ifSupportsFatit = getFat() ? it : xit;
 
 const getGF = function getGeneratoFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return function* idMaker(){};')();
-  } catch (ignore) {}
+  } catch (ignore) {
+    // empty
+  }
+
   return false;
 };
 
@@ -22,9 +26,11 @@ const ifSupportsGFit = getGF() ? it : xit;
 
 const getC = function getClassFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('"use strict"; return class My {};')();
-  } catch (ignore) {}
+  } catch (ignore) {
+    // empty
+  }
+
   return false;
 };
 
@@ -32,32 +38,25 @@ const ifSupportsCit = getC() ? it : xit;
 
 const getAF = function getAsyncFunc() {
   try {
-    // eslint-disable-next-line no-new-func
     return new Function('return async function wait() {}')();
-  } catch (ignore) {}
+  } catch (ignore) {
+    // empty
+  }
+
   return false;
 };
 
 const ifSupportsAFit = getAF() ? it : xit;
 
-describe('Basic tests', () => {
+describe('basic tests', () => {
   it('should return `undefined` for everything', () => {
-    const values = [
-      true,
-      'abc',
-      1,
-      null,
-      undefined,
-      new Date(),
-      [],
-      /r/,
-      {name: 'blah'},
-    ];
+    const values = [true, 'abc', 1, null, undefined, new Date(), [], /r/, {name: 'blah'}];
 
     const cb = function() {};
+
     const expected = values.map(cb);
     const actual = values.map(getFunctionName);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return a correct string for everything', () => {
@@ -70,7 +69,6 @@ describe('Basic tests', () => {
       Function,
       function() {},
       function test() {},
-      // eslint-disable-next-line no-new-func
       new Function(),
       function test1() {},
       function test2() {},
@@ -104,7 +102,7 @@ describe('Basic tests', () => {
     ];
 
     const actual = values.map(getFunctionName);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   ifSupportsFatit('should return a correct string for everything', () => {

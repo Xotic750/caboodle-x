@@ -10,6 +10,6 @@ describe('uniq', () => {
     const actual = array.map(uniq);
     const expected = [[2, 1], [1, 2]];
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 });

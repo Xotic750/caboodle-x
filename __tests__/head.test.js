@@ -14,7 +14,7 @@ describe('head', () => {
   });
 
   it('should return `undefined` when querying empty arrays', () => {
-    expect(head([])).toBe(undefined);
+    expect(head([])).toBeUndefined();
   });
 
   it('should return `` when querying empty strings', () => {
@@ -25,6 +25,6 @@ describe('head', () => {
     const array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     const actual = array.map(head);
 
-    expect(actual).toEqual([1, 4, 7]);
+    expect(actual).toStrictEqual([1, 4, 7]);
   });
 });

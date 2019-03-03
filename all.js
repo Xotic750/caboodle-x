@@ -10,9 +10,5 @@ import _toInteger from './.internal/_toInteger';
 import _all from './.internal/_all';
 
 export default function all(array, callback, ...fromIndex) {
-  _all(
-    requireObjectCoercible(array),
-    _assertIsFunction(callback),
-    _toInteger(fromIndex[0]),
-  );
+  _all(requireObjectCoercible(array), _assertIsFunction(callback), _toInteger(fromIndex[0]));
 }

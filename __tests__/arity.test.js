@@ -48,6 +48,7 @@ describe('arity', () => {
     let context;
     let args;
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
       args = Array.prototype.slice.call(arguments);
       noop(a, b, c);
@@ -58,13 +59,14 @@ describe('arity', () => {
     testSubject.func();
 
     expect(context).toBe(testSubject);
-    expect(args).toEqual([]);
+    expect(args).toStrictEqual([]);
   });
 
   it('binds properly without arguments', () => {
     let context;
     let args;
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
       args = Array.prototype.slice.call(arguments);
       noop(a, b, c);
@@ -75,7 +77,7 @@ describe('arity', () => {
     testSubject.func(1, 2, 3, 4);
 
     expect(context).toBe(testSubject);
-    expect(args).toEqual([1, 2, 3]);
+    expect(args).toStrictEqual([1, 2, 3]);
   });
 
   it('binds properly with arguments', () => {
@@ -83,6 +85,7 @@ describe('arity', () => {
     let context;
     let args;
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
       args = Array.prototype.slice.call(arguments);
       noop(a, b, c);
@@ -93,13 +96,14 @@ describe('arity', () => {
     testSubject.func(1, 2, 3, 4);
 
     expect(context).toBe(testSubject);
-    expect(args).toEqual([1]);
+    expect(args).toStrictEqual([1]);
   });
 
   it("has the new instance's context as a constructor", () => {
     let context;
     let args;
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
       args = Array.prototype.slice.call(arguments);
       noop(a, b, c);
@@ -110,13 +114,14 @@ describe('arity', () => {
     expect(result).toBeTruthy();
     expect(context instanceof fn).toBe(true);
     expect(result instanceof fn).toBe(true);
-    expect(args).toEqual([]);
+    expect(args).toStrictEqual([]);
   });
 
   it("has the new instance's context as a constructor with arity set", () => {
     let context;
     let args;
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
       args = Array.prototype.slice.call(arguments);
       noop(a, b, c);
@@ -127,13 +132,15 @@ describe('arity', () => {
     expect(result).toBeTruthy();
     expect(context instanceof fn).toBe(true);
     expect(result instanceof fn).toBe(true);
-    expect(args).toEqual([1, 2]);
+    expect(args).toStrictEqual([1, 2]);
   });
 
   it('passes the correct arguments as a constructor', () => {
     const expected = {name: 'Correct'};
     const fn = function _fn(arg) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(Object.prototype.hasOwnProperty.call(this, 'name')).toBe(false);
+
       return arg;
     };
 
@@ -145,7 +152,9 @@ describe('arity', () => {
   it('returns the return value of the bound function when called as a constructor', () => {
     const oracle = [1, 2, 3];
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 
@@ -156,7 +165,9 @@ describe('arity', () => {
 
   it('returns the correct value if constructor returns primitive', () => {
     const fn = function _fn(oracle) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 

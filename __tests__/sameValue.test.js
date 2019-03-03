@@ -1,7 +1,6 @@
 import {sameValue} from '../index';
 
-const hasSymbols =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const itHasSymbols = hasSymbols ? it : xit;
 
@@ -12,14 +11,8 @@ describe('sameValue', () => {
 
   it('works with primitives', () => {
     expect(sameValue()).toBe(true, 'two absent args are the same');
-    expect(sameValue(undefined)).toBe(
-      true,
-      'undefined & one absent arg are the same',
-    );
-    expect(sameValue(undefined, undefined)).toBe(
-      true,
-      'undefined sameValue undefined',
-    );
+    expect(sameValue(undefined)).toBe(true, 'undefined & one absent arg are the same');
+    expect(sameValue(undefined, undefined)).toBe(true, 'undefined sameValue undefined');
     expect(sameValue(null, null)).toBe(true, 'null sameValue null');
     expect(sameValue(true, true)).toBe(true, 'true sameValue true');
     expect(sameValue(false, false)).toBe(true, 'false sameValue false');
@@ -37,14 +30,8 @@ describe('sameValue', () => {
   });
 
   it('nonzero numbers', () => {
-    expect(sameValue(Infinity, Infinity)).toBe(
-      true,
-      'infinity sameValue infinity',
-    );
-    expect(sameValue(-Infinity, -Infinity)).toBe(
-      true,
-      'infinity sameValue infinity',
-    );
+    expect(sameValue(Infinity, Infinity)).toBe(true, 'infinity sameValue infinity');
+    expect(sameValue(-Infinity, -Infinity)).toBe(true, 'infinity sameValue infinity');
     expect(sameValue(42, 42)).toBe(true, '42 sameValue 42');
     expect(sameValue(42, -42)).toBe(false, '42 sameValue not -42');
   });
@@ -52,33 +39,18 @@ describe('sameValue', () => {
   it('strings', () => {
     expect(sameValue('', '')).toBe(true, 'empty string sameValue empty string');
     expect(sameValue('foo', 'foo')).toBe(true, 'string sameValue string');
-    expect(sameValue('foo', 'bar')).toBe(
-      false,
-      'string sameValue not different string',
-    );
+    expect(sameValue('foo', 'bar')).toBe(false, 'string sameValue not different string');
   });
 
   it('objects', () => {
     const obj = {};
     expect(sameValue(obj, obj)).toBe(true, 'object sameValue same object');
-    expect(sameValue(obj, {})).toBe(
-      false,
-      'object sameValue not different object',
-    );
+    expect(sameValue(obj, {})).toBe(false, 'object sameValue not different object');
   });
 
   itHasSymbols('Symbols', () => {
-    expect(sameValue(Symbol.iterator, Symbol.iterator)).toBe(
-      true,
-      'Symbol.iterator sameValue itself',
-    );
-    expect(sameValue(Symbol(''), Symbol(''))).toBe(
-      false,
-      'different Symbols are not equal',
-    );
-    expect(sameValue(Symbol.iterator, Object(Symbol.iterator))).toBe(
-      false,
-      'Symbol.iterator sameValue not boxed form of itself',
-    );
+    expect(sameValue(Symbol.iterator, Symbol.iterator)).toBe(true, 'Symbol.iterator sameValue itself');
+    expect(sameValue(Symbol(''), Symbol(''))).toBe(false, 'different Symbols are not equal');
+    expect(sameValue(Symbol.iterator, Object(Symbol.iterator))).toBe(false, 'Symbol.iterator sameValue not boxed form of itself');
   });
 });

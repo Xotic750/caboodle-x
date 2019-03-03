@@ -29,22 +29,14 @@ const toStringOnlyObject = {
   },
 };
 
-const values = [
-  {},
-  coercibleObject,
-  toStringOnlyObject,
-  valueOfOnlyObject,
-].concat(nils, nonNullPrimitives);
+const values = [{}, coercibleObject, toStringOnlyObject, valueOfOnlyObject].concat(nils, nonNullPrimitives);
 
 describe('sameValueZero', () => {
-  it('Basic', () => {
+  it('basic', () => {
     expect(sameValueZero(NaN, NaN)).toBe(true, 'NaN is SameValueZero as NaN');
     expect(sameValueZero(0, -0)).toBe(true, '+0 is SameValueZero as -0');
     values.forEach((val) => {
-      expect(sameValueZero(val, val)).toBe(
-        !Number.isNaN(val),
-        `"${val}" is SameValueZero to itself`,
-      );
+      expect(sameValueZero(val, val)).toBe(!Number.isNaN(val), `"${val}" is SameValueZero to itself`);
     });
   });
 });

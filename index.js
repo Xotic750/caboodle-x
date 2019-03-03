@@ -22,11 +22,9 @@ export {default as capitalize} from './capitalize';
 export {default as clamp} from './clamp';
 export {default as constant} from './constant';
 export {default as defaultToOneOf} from './defaultToOneOf';
-export {
-  default as defineValidatorProperties,
-} from './defineValidatorProperties';
+export {default as defineValidatorProperties} from './defineValidatorProperties';
 export {default as defineValidatorProperty} from './defineValidatorProperty';
-export {default as delayPromise} from './delayPromise';
+export {default as delayPromise} from 'delay-promise-x';
 export {default as difference} from './difference';
 export {default as drop} from './drop';
 export {default as find} from './find';

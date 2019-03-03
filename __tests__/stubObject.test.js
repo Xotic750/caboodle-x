@@ -9,6 +9,6 @@ describe('stubObject', () => {
     const actual = stubObject();
 
     expect(actual).toBeInstanceOf(Object);
-    expect(actual).toEqual({});
+    expect(actual).toStrictEqual({});
   });
 });

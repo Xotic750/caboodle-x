@@ -6,18 +6,7 @@ describe('intToRGB', () => {
   });
 
   it('non-numbers', () => {
-    const nonNumbers = [
-      undefined,
-      null,
-      '',
-      false,
-      '1',
-      true,
-      {},
-      [],
-
-      function() {},
-    ];
+    const nonNumbers = [undefined, null, '', false, '1', true, {}, [], function() {}];
 
     const expected = nonNumbers.map(
       (item) =>
@@ -29,7 +18,7 @@ describe('intToRGB', () => {
 
     const actual = nonNumbers.map((item) => intToRGB(item));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('-1 to be "#FFFFFF"', () => {
@@ -60,11 +49,11 @@ describe('intToRGB', () => {
     expect(intToRGB(16777217)).toBe('#000001');
   });
 
-  it('NaN to be "#000000"', () => {
+  it('naN to be "#000000"', () => {
     expect(intToRGB(NaN)).toBe('#000000');
   });
 
-  it('Infinity to be "#000000"', () => {
+  it('infinity to be "#000000"', () => {
     expect(intToRGB(Infinity)).toBe('#000000');
   });
 

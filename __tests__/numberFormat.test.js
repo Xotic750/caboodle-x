@@ -5,7 +5,7 @@ describe('numberFormat', () => {
     expect(typeof numberFormat).toBe('function');
   });
 
-  it('NaN, +-Infinity', () => {
+  it('naN, +-Infinity', () => {
     expect(numberFormat(NaN)).toBe('NaN');
     expect(numberFormat(Infinity)).toBe('Infinity');
     expect(numberFormat(-Infinity)).toBe('-Infinity');
@@ -28,9 +28,7 @@ describe('numberFormat', () => {
 
   it('should format negative integer correctly', () => {
     expect(numberFormat(-12345678)).toBe('-12,345,678.00');
-    expect(numberFormat(-12345678, 20)).toBe(
-      '-12,345,678.00000000000000000000',
-    );
+    expect(numberFormat(-12345678, 20)).toBe('-12,345,678.00000000000000000000');
     expect(numberFormat(-12345678, 1, 2)).toBe('-12,34,56,78.0');
     expect(numberFormat(-12345678, 3, 3, '^')).toBe('-12^345^678.000');
     expect(numberFormat(-12345678, 3, 3, '.', ',')).toBe('-12.345.678,000');
@@ -40,9 +38,7 @@ describe('numberFormat', () => {
 
   it('should format float correctly', () => {
     expect(numberFormat(12345678.9)).toBe('12,345,678.90');
-    expect(numberFormat(12345678.9, 20)).toBe(
-      '12,345,678.90000000037252902985',
-    );
+    expect(numberFormat(12345678.9, 20)).toBe('12,345,678.90000000037252902985');
     expect(numberFormat(12345678.9, 1, 2)).toBe('12,34,56,78.9');
     expect(numberFormat(12345678.9, 3, 3, '^')).toBe('12^345^678.900');
     expect(numberFormat(12345678.9, 3, 3, '.', ',')).toBe('12.345.678,900');
@@ -52,9 +48,7 @@ describe('numberFormat', () => {
 
   it('should format negative float correctly', () => {
     expect(numberFormat(-12345678.9)).toBe('-12,345,678.90');
-    expect(numberFormat(-12345678.9, 20)).toBe(
-      '-12,345,678.90000000037252902985',
-    );
+    expect(numberFormat(-12345678.9, 20)).toBe('-12,345,678.90000000037252902985');
     expect(numberFormat(-12345678.9, 1, 2)).toBe('-12,34,56,78.9');
     expect(numberFormat(-12345678.9, 3, 3, '^')).toBe('-12^345^678.900');
     expect(numberFormat(-12345678.9, 3, 3, '.', ',')).toBe('-12.345.678,900');
@@ -63,12 +57,8 @@ describe('numberFormat', () => {
   });
 
   it('null denotes use default', () => {
-    expect(numberFormat(12345678.9, null, null, null, null)).toBe(
-      '12,345,678.90',
-    );
-    expect(numberFormat(12345678.9, null, null, null, ':')).toBe(
-      '12,345,678:90',
-    );
+    expect(numberFormat(12345678.9, null, null, null, null)).toBe('12,345,678.90');
+    expect(numberFormat(12345678.9, null, null, null, ':')).toBe('12,345,678:90');
     expect(numberFormat(12345678.9, 0, null, '-')).toBe('12-345-679');
   });
 

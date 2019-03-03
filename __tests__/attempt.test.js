@@ -12,7 +12,7 @@ describe('attempt', () => {
       value: expect.any(Error),
     };
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return a threw result', () => {
@@ -33,7 +33,7 @@ describe('attempt', () => {
       value: err,
     };
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return the sum', () => {
@@ -47,12 +47,14 @@ describe('attempt', () => {
       value: 3,
     };
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should have the correct this argument', () => {
     const pusher = function(a, b) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       this.push(a, b);
+
       return 2;
     };
 
@@ -63,7 +65,7 @@ describe('attempt', () => {
       value: 2,
     };
 
-    expect(thisArg).toEqual([1, 2]);
-    expect(actual).toEqual(expected);
+    expect(thisArg).toStrictEqual([1, 2]);
+    expect(actual).toStrictEqual(expected);
   });
 });

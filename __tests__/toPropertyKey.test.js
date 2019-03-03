@@ -1,7 +1,6 @@
 import {toPropertyKey} from '../index';
 
-const hasSymbols =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const coercibleObject = {
   toString() {
@@ -40,12 +39,7 @@ const strings = ['', 'foo'];
 const booleans = [true, false];
 
 const nullPrimitives = [undefined, null];
-const nonSymbolPrimitives = [].concat(
-  nullPrimitives,
-  booleans,
-  strings,
-  numbers,
-);
+const nonSymbolPrimitives = [].concat(nullPrimitives, booleans, strings, numbers);
 
 describe('toPropertyKey', () => {
   it('is a function', () => {

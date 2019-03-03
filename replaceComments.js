@@ -18,16 +18,7 @@ const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
  * @throws {TypeError} If string is null or undefined or not coercible.
  * @throws {TypeError} If replacement is not coercible.
  * @returns {string} The new string with the comments replaced.
- * @example
- * var replaceComments = require('replace-comments-x');
- *
- * replaceComments(test;/* test * /, ''), // 'test;'
- * replaceComments(test; // test, ''), // 'test;'
  */
 export default function replaceComments(string, ...replacement) {
-  return _replace(
-    requireCoercibleToString(string),
-    STRIP_COMMENTS,
-    replacement.length ? _toString(replacement[0]) : '',
-  );
+  return _replace(requireCoercibleToString(string), STRIP_COMMENTS, replacement.length ? _toString(replacement[0]) : '');
 }

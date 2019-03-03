@@ -34,17 +34,11 @@ describe('isNumberNaN', () => {
       },
     };
 
-    expect(isNumberNaN(Number(obj))).toBe(
-      true,
-      'object with valueOf of NaN, converted to Number, is NaN',
-    );
-    expect(isNumberNaN(obj)).toBe(
-      false,
-      'object with valueOf of NaN is not NaN',
-    );
+    expect(isNumberNaN(Number(obj))).toBe(true, 'object with valueOf of NaN, converted to Number, is NaN');
+    expect(isNumberNaN(obj)).toBe(false, 'object with valueOf of NaN is not NaN');
   });
 
-  it('NaN', () => {
+  it('naN', () => {
     expect(isNumberNaN(NaN)).toBe(true, 'NaN is NaN');
   });
 

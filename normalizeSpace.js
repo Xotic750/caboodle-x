@@ -15,10 +15,6 @@ import requireCoercibleToString from './requireCoercibleToString';
  * @param {string} string - The string to be normalized.
  * @throws {TypeError} If string is null or undefined or not coercible.
  * @returns {string} The normalized string.
- * @example
- * var normalizeSpace = require('normalize-space-x');
- *
- * normalizeSpace(' \t\na \t\nb \t\n') === 'a b'; // true
  */
 export default function normalizeSpace(string) {
   return _normalizeSpace(requireCoercibleToString(string));

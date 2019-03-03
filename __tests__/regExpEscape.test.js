@@ -1,7 +1,6 @@
 import {regexpEscape} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -28,19 +27,14 @@ describe('regexpEscape', () => {
     const strings = ['The Quick Brown Fox', 'hello there', ''];
 
     strings.forEach((str) => {
-      expect(regexpEscape(str)).toBe(
-        str,
-        `${JSON.stringify(str)} regexpEscapes to itself.`,
-      );
+      expect(regexpEscape(str)).toBe(str, `${JSON.stringify(str)} regexpEscapes to itself.`);
     });
   });
 
   it('strings that need escaping', () => {
     expect(regexpEscape('hi. how are you?')).toBe('hi\\. how are you\\?');
     const syntaxCharacters = '^$\\.*+?()[]{}|';
-    expect(regexpEscape(syntaxCharacters)).toHaveLength(
-      syntaxCharacters.length * 2,
-    );
+    expect(regexpEscape(syntaxCharacters)).toHaveLength(syntaxCharacters.length * 2);
     expect(regexpEscape('\uD834\uDF06.')).toBe('\uD834\uDF06\\.');
   });
 
@@ -63,7 +57,7 @@ describe('regexpEscape', () => {
 
     const expected = values.map(String);
     const actual = values.map(regexpEscape);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should throw for Object.create(null)', () => {

@@ -8,6 +8,7 @@ const createArrayLike = function(arr) {
   }
 
   o.length = length;
+
   return o;
 };
 
@@ -40,22 +41,22 @@ describe('squeeze', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
-  describe('Array object', () => {
+  describe('array object', () => {
     it('should skip unset values', () => {
       delete testSubject[1];
       const passedValues = squeeze(testSubject);
 
-      expect(passedValues).toEqual(filteredArray);
+      expect(passedValues).toStrictEqual(filteredArray);
     });
 
     it('should leave the original array untouched', () => {
       const copy = testSubject.slice();
       squeeze(testSubject);
-      expect(testSubject).toEqual(copy);
+      expect(testSubject).toStrictEqual(copy);
     });
   });
 
-  describe('Array like', () => {
+  describe('array like', () => {
     let testObject;
 
     beforeEach(() => {
@@ -66,13 +67,13 @@ describe('squeeze', () => {
       delete testObject[1];
       const passedValues = squeeze(testObject);
 
-      expect(passedValues).toEqual(filteredArray);
+      expect(passedValues).toStrictEqual(filteredArray);
     });
 
     it('should leave the original array untouched', () => {
       const copy = createArrayLike(testSubject);
       squeeze(testObject);
-      expect(testObject).toEqual(copy);
+      expect(testObject).toStrictEqual(copy);
     });
   });
 });

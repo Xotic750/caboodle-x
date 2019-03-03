@@ -43,7 +43,7 @@ describe('isTruthy', () => {
 
     const actual = falsies.map((item) => isTruthy(item));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return true for truthy values', () => {
@@ -51,6 +51,6 @@ describe('isTruthy', () => {
 
     const actual = truthies.map((item) => isTruthy(item));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 });

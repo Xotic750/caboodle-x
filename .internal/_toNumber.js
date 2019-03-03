@@ -51,6 +51,7 @@ export default function _toNumber(argument) {
     }
 
     const trimmed = _trim(value);
+
     if (trimmed !== value) {
       return _toNumber(trimmed);
     }

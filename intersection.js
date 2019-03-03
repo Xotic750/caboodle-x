@@ -24,10 +24,6 @@ const isNotNil = function _isNotNil(value) {
  *
  * @param {...Array} [arrays] - The arrays to inspect.
  * @returns {Array} Returns the new array of intersecting values.
- * @example
- * var intersection = require('array-intersection-x');
- *
- * intersection([2, 1], [2, 3]); // => [2]
  */
 export default function intersection(...arrays) {
   const remaining = _sift(requireObjectCoercible(arrays), isNotNil);
@@ -39,10 +35,7 @@ export default function intersection(...arrays) {
   return _accumulate(
     _shift(remaining),
     (acc, value) => {
-      const isExcluded = !_any(
-        remaining,
-        (array) => !_includes(requireObjectCoercible(array), value),
-      );
+      const isExcluded = !_any(remaining, (array) => !_includes(requireObjectCoercible(array), value));
 
       if (isExcluded && !_includes(acc, value)) {
         _push(acc, value);

@@ -1,17 +1,22 @@
+import identity from 'lodash/identity';
 import {delayPromise} from '../index';
 
 describe('delayPromise', () => {
   describe('delay', () => {
-    it('should delay after resolution', () => {
-      const promise = delayPromise(1, delayPromise(1, 'what'));
+    it('should delay after resolution', async () => {
+      expect.assertions(1);
+      const value = await delayPromise(100, delayPromise(200, 'what'))
+        .then(identity)
+        .catch((error) => {
+          throw error;
+        });
 
-      return promise.then((value) => {
-        expect(value).toBe('what');
-      });
+      expect(value).toBe('what');
     });
 
-    it("should resolve follower promise's value", () => {
-      let resolveF;
+    it("should resolve follower promise's value", async () => {
+      expect.assertions(1);
+      let resolveF = null;
       const f = new Promise((resolve) => {
         resolveF = resolve;
       });
@@ -19,14 +24,18 @@ describe('delayPromise', () => {
       const v = new Promise((resolve) => {
         setTimeout(() => {
           resolve(3);
-        }, 1);
+        }, 200);
       });
 
       resolveF(v);
 
-      return delayPromise(1, f).then((value) => {
-        expect(value).toBe(3);
-      });
+      const value = await delayPromise(100, f)
+        .then(identity)
+        .catch((error) => {
+          throw error;
+        });
+
+      expect(value).toBe(3);
     });
   });
 });

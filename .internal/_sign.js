@@ -15,17 +15,6 @@ import _isNaN from './_isNaN';
  * @returns {number} A number representing the sign of the given argument. If the argument
  * is a positive number, negative number, positive zero or negative zero, the function will
  * return 1, -1, 0 or -0 respectively. Otherwise, NaN is returned.
- * @example
- * var mathSign = require('math-sign-x').sign2018;
- *
- * mathSign(3);     //  1
- * mathSign(-3);    // -1
- * mathSign('-3');  // -1
- * mathSign(0);     //  0
- * mathSign(-0);    // -0
- * mathSign(NaN);   // NaN
- * mathSign('foo'); // NaN
- * mathSign();      // NaN
  */
 export default function _sign(x) {
   const n = _toNumber(x);

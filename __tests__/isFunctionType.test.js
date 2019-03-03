@@ -14,6 +14,6 @@ describe('isFunctionType', () => {
     const expected = primitives.map(() => false);
     const actual = primitives.map(isFunctionType);
 
-    expect(expected).toEqual(actual);
+    expect(expected).toStrictEqual(actual);
   });
 });

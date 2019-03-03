@@ -13,6 +13,7 @@ const {max} = Math;
 
 export default function _fromIndex(array, fromIndex) {
   const object = toObject(array);
+
   if (!isArrayLike(object)) {
     return 0;
   }

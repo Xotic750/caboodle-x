@@ -58,6 +58,8 @@ describe('defineValidatorProperty', () => {
 
   it('should not throw error for empty descriptor', () => {
     defineValidatorProperty({}, 'name', {});
+
+    expect(true).toBe(true);
   });
 
   it('should throw error if getter is not a function', () => {
@@ -117,6 +119,8 @@ describe('defineValidatorProperty', () => {
       get() {},
       set() {},
     });
+
+    expect(true).toBe(true);
   });
 
   it('getters and setters should work', () => {
@@ -180,10 +184,10 @@ describe('defineValidatorProperty', () => {
       },
     });
 
-    expect(accessible.name).toBe(undefined);
+    expect(accessible.name).toBeUndefined();
     expect(value).toBe(1);
     expect((accessible.name = 2)).toBe(2);
-    expect(accessible.name).toBe(undefined);
+    expect(accessible.name).toBeUndefined();
     expect(value).toBe(2);
   });
 
@@ -230,6 +234,8 @@ describe('defineValidatorProperty', () => {
       value: true,
       writable: true,
     });
+
+    expect(accessible.name).toBe(true);
   });
 
   it('should throw if validator fails test', () => {
@@ -267,6 +273,8 @@ describe('defineValidatorProperty', () => {
       value: null,
       writable: true,
     });
+
+    expect(accessible.name).toBeNull();
   });
 
   it('should throw if nilable and further values fail validator', () => {

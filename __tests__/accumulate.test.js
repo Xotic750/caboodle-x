@@ -8,6 +8,7 @@ const createArrayLike = function(arr) {
   }
 
   o.length = length;
+
   return o;
 };
 
@@ -36,17 +37,17 @@ describe('accumulate', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
-  describe('Array', () => {
+  describe('array', () => {
     it('should pass the correct arguments to the callback', () => {
       const spy = jest.fn().mockReturnValue(0);
       accumulate(testSubject, spy);
-      expect(spy.mock.calls[0]).toEqual([1, 2, 1, testSubject]);
+      expect(JSON.parse(JSON.stringify(spy.mock.calls[0]))).toStrictEqual([1, 2, 1, testSubject]);
     });
 
     it('should start with the right initialValue', () => {
       const spy = jest.fn().mockReturnValue(0);
       accumulate(testSubject, spy, 0);
-      expect(spy.mock.calls[0]).toEqual([0, 1, 0, testSubject]);
+      expect(JSON.parse(JSON.stringify(spy.mock.calls[0]))).toStrictEqual([0, 1, 0, testSubject]);
     });
 
     it('should not affect elements added to the array after it has begun', () => {
@@ -55,13 +56,15 @@ describe('accumulate', () => {
       let i = 0;
       accumulate(arr, (a, b) => {
         i += 1;
+
         if (i <= 4) {
           arr.push(a + 3);
         }
+
         return b;
       });
 
-      expect(arr).toEqual([1, 2, 3, 4, 5]);
+      expect(arr).toStrictEqual([1, 2, 3, 4, 5]);
 
       expect(i).toBe(2);
     });
@@ -82,16 +85,14 @@ describe('accumulate', () => {
     });
 
     it('should return the expected result', () => {
-      expect(
-        accumulate(testSubject, (a, b) => String(a || '') + String(b || '')),
-      ).toBe(testSubject.join(''));
+      expect(accumulate(testSubject, (a, b) => String(a || '') + String(b || ''))).toBe(testSubject.join(''));
     });
 
     it('should not directly affect the passed array', () => {
       const copy = testSubject.slice();
       accumulate(testSubject, (a, b) => a + b);
 
-      expect(testSubject).toEqual(copy);
+      expect(testSubject).toStrictEqual(copy);
     });
 
     it('should skip non-set values', () => {
@@ -109,11 +110,11 @@ describe('accumulate', () => {
         return 0;
       });
 
-      expect(visited).toEqual({1: true, 3: true});
+      expect(visited).toStrictEqual({1: true, 3: true});
     });
   });
 
-  describe('Array-like objects', () => {
+  describe('array-like objects', () => {
     let testObject;
 
     beforeEach(() => {
@@ -123,13 +124,13 @@ describe('accumulate', () => {
     it('should pass the correct arguments to the callback', () => {
       const spy = jest.fn().mockReturnValue(0);
       accumulate(testObject, spy);
-      expect(spy.mock.calls[0]).toEqual([1, 2, 1, testObject]);
+      expect(JSON.parse(JSON.stringify(spy.mock.calls[0]))).toStrictEqual([1, 2, 1, testObject]);
     });
 
     it('should start with the right initialValue', () => {
       const spy = jest.fn().mockReturnValue(0);
       accumulate(testObject, spy, 0);
-      expect(spy.mock.calls[0]).toEqual([0, 1, 0, testObject]);
+      expect(JSON.parse(JSON.stringify(spy.mock.calls[0]))).toStrictEqual([0, 1, 0, testObject]);
     });
 
     it('should not affect elements added to the array after it has begun', () => {
@@ -138,6 +139,7 @@ describe('accumulate', () => {
       let i = 0;
       accumulate(arr, (a, b) => {
         i += 1;
+
         if (i <= 4) {
           arr[i + 2] = a + 3;
         }
@@ -145,7 +147,7 @@ describe('accumulate', () => {
         return b;
       });
 
-      expect(arr).toEqual({
+      expect(arr).toStrictEqual({
         0: 1,
         1: 2,
         2: 3,
@@ -173,16 +175,14 @@ describe('accumulate', () => {
     });
 
     it('should return the expected result', () => {
-      expect(
-        accumulate(testObject, (a, b) => String(a || '') + String(b || '')),
-      ).toBe('123');
+      expect(accumulate(testObject, (a, b) => String(a || '') + String(b || ''))).toBe('123');
     });
 
     it('should not directly affect the passed array', () => {
       const copy = createArrayLike(testSubject);
       accumulate(testObject, (a, b) => a + b);
 
-      expect(testObject).toEqual(copy);
+      expect(testObject).toStrictEqual(copy);
     });
 
     it('should skip non-set values', () => {
@@ -200,7 +200,7 @@ describe('accumulate', () => {
         return 0;
       });
 
-      expect(visited).toEqual({1: true, 3: true});
+      expect(visited).toStrictEqual({1: true, 3: true});
     });
   });
 

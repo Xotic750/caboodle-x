@@ -15,11 +15,14 @@ describe('bind', () => {
     Array.prototype.forEach.call(
       arguments,
       function(a) {
+        /* eslint-disable-next-line babel/no-invalid-this */
         this.push(a);
       },
+      /* eslint-disable-next-line babel/no-invalid-this */
       this,
     );
 
+    /* eslint-disable-next-line babel/no-invalid-this */
     return this;
   };
 
@@ -31,12 +34,14 @@ describe('bind', () => {
   it('binds properly without a context', () => {
     let context;
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     };
 
     testSubject.func = bind(fn);
     testSubject.func();
     const fn1 = function _fn1() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return this;
     };
 
@@ -48,13 +53,15 @@ describe('bind', () => {
     let context;
     const fn = function _fn() {
       a = Array.prototype.slice.call(arguments);
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     };
 
     testSubject.func = bind(fn, undefined, 1, 2, 3);
     testSubject.func(1, 2, 3);
-    expect(a).toEqual([1, 2, 3, 1, 2, 3]);
+    expect(a).toStrictEqual([1, 2, 3, 1, 2, 3]);
     const fn1 = function _fn1() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return this;
     };
 
@@ -64,25 +71,27 @@ describe('bind', () => {
   it('binds a context properly', () => {
     testSubject.func = bind(func, actual);
     testSubject.func(1, 2, 3);
-    expect(actual).toEqual([1, 2, 3]);
-    expect(testSubject.a).toEqual([]);
+    expect(actual).toStrictEqual([1, 2, 3]);
+    expect(testSubject.a).toStrictEqual([]);
   });
 
   it('binds a context and supplies bound arguments', () => {
     testSubject.func = bind(func, actual, 1, 2, 3);
     testSubject.func(4, 5, 6);
-    expect(actual).toEqual([1, 2, 3, 4, 5, 6]);
-    expect(testSubject.a).toEqual([]);
+    expect(actual).toStrictEqual([1, 2, 3, 4, 5, 6]);
+    expect(testSubject.a).toStrictEqual([]);
   });
 
   it('returns properly without binding a context', () => {
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return this;
     };
 
     testSubject.func = bind(fn);
     const context = testSubject.func();
     const fn1 = function _fn1() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return this;
     };
 
@@ -92,18 +101,21 @@ describe('bind', () => {
   it('returns properly without binding a context, and still supplies bound arguments', () => {
     let context;
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
+
       return Array.prototype.slice.call(arguments);
     };
 
     testSubject.func = bind(fn, undefined, 1, 2, 3);
     actual = testSubject.func(1, 2, 3);
     const fn1 = function _fn1() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return this;
     };
 
     expect(context).toBe(fn1.call());
-    expect(actual).toEqual([1, 2, 3, 1, 2, 3]);
+    expect(actual).toStrictEqual([1, 2, 3, 1, 2, 3]);
   });
 
   it('returns properly while binding a context properly', () => {
@@ -126,6 +138,7 @@ describe('bind', () => {
     let actualContext;
     const expectedContext = {foo: 'bar'};
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       actualContext = this;
     };
 
@@ -138,7 +151,9 @@ describe('bind', () => {
   it('passes the correct arguments as a constructor', () => {
     const expected = {name: 'Correct'};
     const fn = function _fn(arg) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(Object.prototype.hasOwnProperty.call(this, 'name')).toBe(false);
+
       return arg;
     };
 
@@ -150,7 +165,9 @@ describe('bind', () => {
   it('returns the return value of the bound function when called as a constructor', () => {
     const oracle = [1, 2, 3];
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 
@@ -161,7 +178,9 @@ describe('bind', () => {
 
   it('returns the correct value if constructor returns primitive', () => {
     const fn = function _fn(oracle) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 
@@ -199,6 +218,7 @@ describe('bind', () => {
 
   it('sets a correct length with thisArg', () => {
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return a + b + c + this.d;
     };
 
@@ -208,6 +228,7 @@ describe('bind', () => {
 
   it('sets a correct length with thisArg and first argument', () => {
     const fn = function _fn(a, b, c) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return a + b + c + this.d;
     };
 

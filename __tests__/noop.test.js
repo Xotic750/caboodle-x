@@ -12,6 +12,6 @@ describe('noop', () => {
 
     const actual = values.map((value, index) => (index ? noop(value) : noop()));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 });

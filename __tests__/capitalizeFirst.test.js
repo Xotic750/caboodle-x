@@ -9,45 +9,43 @@ const cap = (primitive) => {
 };
 
 describe('capitalizeFirst', () => {
-  it('No arguments', () => {
+  it('no arguments', () => {
     expect(capitalizeFirst()).toBe('Undefined');
   });
 
-  describe('Primitives', () => {
-    it('Single argument', () => {
+  describe('primitives', () => {
+    it('single argument', () => {
       const expected = primitives.map(cap);
       const actual = primitives.map((primitive) => capitalizeFirst(primitive));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
-    it('Multiple arguments', () => {
+    it('multiple arguments', () => {
       const expected = primitives.map(cap);
-      const actual = primitives.map((primitive) =>
-        capitalizeFirst(primitive, primitive),
-      );
+      const actual = primitives.map((primitive) => capitalizeFirst(primitive, primitive));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
   });
 
-  describe('Objects', () => {
-    it('Single argument', () => {
+  describe('objects', () => {
+    it('single argument', () => {
       const expected = objects.map(cap);
       const actual = objects.map((object) => capitalizeFirst(object));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
-    it('Multiple arguments', () => {
+    it('multiple arguments', () => {
       const expected = objects.map(cap);
       const actual = objects.map((object) => capitalizeFirst(object, object));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
   });
 
-  describe('Strings', () => {
+  describe('strings', () => {
     const sources = Object.freeze([
       'hpA9d UOjDeZG#5EL9zvb4',
       'åzdWVgv84L5ajX!0Fy12C9',
@@ -74,16 +72,16 @@ describe('capitalizeFirst', () => {
       'KEvEKBdhb47.QZOz[9l=0v',
     ]);
 
-    it('Single argument', () => {
+    it('single argument', () => {
       const actual = sources.map((source) => capitalizeFirst(source));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
-    it('Multiple arguments', () => {
+    it('multiple arguments', () => {
       const actual = sources.map((source) => capitalizeFirst(source, source));
 
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
   });
 });

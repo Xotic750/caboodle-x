@@ -1,8 +1,7 @@
 import {isPopulatedString} from '../index';
 import noop from './helpers/noop';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 

@@ -23,7 +23,7 @@ describe('parseDecimal', () => {
       expect(parseDecimal('  42A   ')).toBe(Number.parseInt('42', 10));
     });
 
-    it('NaN parsing', () => {
+    it('naN parsing', () => {
       expect(parseDecimal()).toBeNaN();
       expect(parseDecimal(undefined)).toBeNaN();
       expect(parseDecimal(null)).toBeNaN();

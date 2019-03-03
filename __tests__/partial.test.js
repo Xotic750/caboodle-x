@@ -19,6 +19,7 @@ describe('partial', () => {
   it('binds properly without arguments', () => {
     let context;
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     };
 
@@ -33,12 +34,13 @@ describe('partial', () => {
     let context;
     const fn = function _fn() {
       a = Array.prototype.slice.call(arguments);
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     };
 
     testSubject.func = partial(fn, 1, 2, 3);
     testSubject.func(4, 5, 6);
-    expect(a).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(a).toStrictEqual([1, 2, 3, 4, 5, 6]);
 
     expect(context).toBe(testSubject);
   });
@@ -46,7 +48,9 @@ describe('partial', () => {
   it('returns properly without arguments', () => {
     let context;
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
+
       return Array.prototype.slice.call(arguments);
     };
 
@@ -54,13 +58,15 @@ describe('partial', () => {
     actual = testSubject.func();
 
     expect(context).toBe(testSubject);
-    expect(actual).toEqual([]);
+    expect(actual).toStrictEqual([]);
   });
 
   it('returns properly and supplies bound arguments', () => {
     let context;
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
+
       return Array.prototype.slice.call(arguments);
     };
 
@@ -68,13 +74,14 @@ describe('partial', () => {
     actual = testSubject.func(4, 5, 6);
 
     expect(context).toBe(testSubject);
-    expect(actual).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(actual).toStrictEqual([1, 2, 3, 4, 5, 6]);
   });
 
   it("has the new instance's context as a constructor", () => {
     let actualContext;
     const expectedArgs = {foo: 'bar'};
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       actualContext = this;
     };
 
@@ -87,7 +94,9 @@ describe('partial', () => {
   it('passes the correct arguments as a constructor', () => {
     const expected = {name: 'Correct'};
     const fn = function _fn(arg) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(Object.prototype.hasOwnProperty.call(this, 'name')).toBe(false);
+
       return arg;
     };
 
@@ -99,7 +108,9 @@ describe('partial', () => {
   it('returns the return value of the bound function when called as a constructor', () => {
     const oracle = [1, 2, 3];
     const fn = function _fn() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 
@@ -110,7 +121,9 @@ describe('partial', () => {
 
   it('returns the correct value if constructor returns primitive', () => {
     const fn = function _fn(oracle) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       expect(this).not.toBe(oracle);
+
       return oracle;
     };
 

@@ -6,5 +6,5 @@
 
 import attempt from './attempt';
 
-// eslint-disable-next-line no-new-func
+/* eslint-disable-next-line no-new-func */
 export default !attempt(Function('"use strict"; return class My {};')).threw;

@@ -14,45 +14,12 @@ import _apply from './.internal/_apply';
  * @param {Function} fn - The function to attempt.
  * @param {...*} [rest] - The arguments to invoke the function with.
  * @returns {Object} Returns an object of the result.
- * @example
- * var attempt = require('attempt-x');
- *
- * function thrower() {
- *   throw new Error('Threw');
- * }
- *
- * attempt(thrower, 1, 2);
- * // {
- * //   threw: true,
- * //   value: // Error('Threw') object
- * // }
- *
- * function sumArgs(a, b) {
- *   return a + b;
- * }
- *
- * attempt(sumArgs, 1, 2);
- * // {
- * //   threw: false,
- * //   value: 3
- * // }
- *
- * var thisArg = [];
- * function pusher(a, b) {
- *   return this.push(a, b);
- * }
- *
- * attempt.call(thisArg, pusher, 1, 2);
- * // {
- * //   threw: false,
- * //   value: 2
- * // }
- * // thisArg => [1, 2];
  */
 export default function attempt(fn, ...rest) {
   try {
     return {
       threw: false,
+      /* eslint-disable-next-line babel/no-invalid-this */
       value: _apply(fn, this, rest),
     };
   } catch (e) {

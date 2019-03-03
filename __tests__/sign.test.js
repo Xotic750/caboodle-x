@@ -37,9 +37,7 @@ describe('sign', () => {
       expect(isNegativeZero(sign(-0))).toBe(true);
       expect(isNegativeZero(sign('-0'))).toBe(true);
       expect(Number.isNaN(sign(NaN))).toBe(true);
-      expect(Number.isNaN(sign('\u0085\u200b\ufffe0\u0085\u200b\ufffe'))).toBe(
-        true,
-      );
+      expect(Number.isNaN(sign('\u0085\u200b\ufffe0\u0085\u200b\ufffe'))).toBe(true);
       expect(Number.isNaN(sign('\u180e0\u180e'))).toBe(true);
       expect(Number.isNaN(sign('NaN'))).toBe(true);
       expect(Number.isNaN(sign(undefined))).toBe(true);

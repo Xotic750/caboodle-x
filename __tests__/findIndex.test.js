@@ -45,7 +45,8 @@ describe('findIndex', () => {
   it('should receive all three parameters', () => {
     const index = findIndex(list, (value, idx, arr) => {
       expect(list[idx]).toBe(value);
-      expect(list).toEqual(arr);
+      expect(list).toStrictEqual(arr);
+
       return false;
     });
     expect(index).toBe(-1);
@@ -95,10 +96,11 @@ describe('findIndex', () => {
     const seen = [];
     const foundIndex = findIndex(obj, (item, idx) => {
       seen.push([idx, item]);
+
       return typeof item === 'undefined' && idx === 2;
     });
     expect(foundIndex).toBe(2);
-    expect(seen).toEqual([[0, 1], [1, undefined], [2, undefined]]);
+    expect(seen).toStrictEqual([[0, 1], [1, undefined], [2, undefined]]);
   });
 
   it('should work with a sparse array-like object', () => {
@@ -111,22 +113,24 @@ describe('findIndex', () => {
     const seen = [];
     const foundIndex = findIndex(obj, (item, idx) => {
       seen.push([idx, item]);
+
       return false;
     });
 
     expect(foundIndex).toBe(-1);
-    expect(seen).toEqual([[0, 1], [1, undefined], [2, undefined]]);
+    expect(seen).toStrictEqual([[0, 1], [1, undefined], [2, undefined]]);
   });
 
   it('should work with strings', () => {
     const seen = [];
     const foundIndex = findIndex('abc', (item, idx) => {
       seen.push([idx, item]);
+
       return false;
     });
 
     expect(foundIndex).toBe(-1);
-    expect(seen).toEqual([[0, 'a'], [1, 'b'], [2, 'c']]);
+    expect(seen).toStrictEqual([[0, 'a'], [1, 'b'], [2, 'c']]);
   });
 
   it('should work with arguments', () => {
@@ -137,11 +141,12 @@ describe('findIndex', () => {
     const seen = [];
     const foundIndex = findIndex(obj, (item, idx) => {
       seen.push([idx, item]);
+
       return false;
     });
 
     expect(foundIndex).toBe(-1);
-    expect(seen).toEqual([[0, 'a'], [1, 'b'], [2, 'c']]);
+    expect(seen).toStrictEqual([[0, 'a'], [1, 'b'], [2, 'c']]);
   });
 
   itHasDoc('should work wih DOM elements', () => {

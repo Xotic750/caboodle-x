@@ -1,7 +1,6 @@
 import {normalizeSpace} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -32,31 +31,25 @@ describe('normalizeSpace', () => {
       }).toThrowErrorMatchingSnapshot();
     });
 
-    it('Basic tests', () => {
+    it('basic tests', () => {
       expect(normalizeSpace('a')).toBe('a', 'noop when no whitespace');
-      expect(
-        normalizeSpace(
-          `${allWhitespaceChars}a${allWhitespaceChars}b${allWhitespaceChars}`,
-        ),
-      ).toBe('a b', 'all expected whitespace chars are trimmed and normalized');
+      expect(normalizeSpace(`${allWhitespaceChars}a${allWhitespaceChars}b${allWhitespaceChars}`)).toBe(
+        'a b',
+        'all expected whitespace chars are trimmed and normalized',
+      );
 
       const zeroWidth = '\u200b';
-      expect(normalizeSpace(zeroWidth)).toBe(
-        zeroWidth,
-        'zero width space does not normalize',
-      );
+      expect(normalizeSpace(zeroWidth)).toBe(zeroWidth, 'zero width space does not normalize');
     });
 
     it('should return a string for everything', () => {
       const values = [true, 'abc', 1, function() {}, [], /r/];
 
       const reNormalize = new RegExp(`[${allWhitespaceChars}]+`, 'g');
-      const expected = values.map((value) =>
-        String(value).replace(reNormalize, ' '),
-      );
+      const expected = values.map((value) => String(value).replace(reNormalize, ' '));
 
       const actual = values.map(normalizeSpace);
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it('should throw for Object.create(null)', () => {

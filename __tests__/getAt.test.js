@@ -14,7 +14,7 @@ describe('getAt', () => {
   });
 
   it('should return `undefined` when querying empty arrays', () => {
-    expect(getAt([], 2)).toBe(undefined);
+    expect(getAt([], 2)).toBeUndefined();
   });
 
   it('should return `` when querying empty strings', () => {

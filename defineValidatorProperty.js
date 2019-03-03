@@ -68,13 +68,8 @@ const toPropertyDescriptor = function _toPropertyDescriptor(desc) {
     descriptor.set = desc.set;
   }
 
-  if (
-    (_has(descriptor, 'get') || _has(descriptor, 'set')) &&
-    (_has(descriptor, 'value') || _has(descriptor, 'writable'))
-  ) {
-    throw new TypeError(
-      'Invalid property descriptor. Cannot both specify accessors and a value or writable attribute',
-    );
+  if ((_has(descriptor, 'get') || _has(descriptor, 'set')) && (_has(descriptor, 'value') || _has(descriptor, 'writable'))) {
+    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
   }
 
   return descriptor;
@@ -84,22 +79,15 @@ export default function defineValidatorProperty(object, property, descriptor) {
   assertIsObject(object);
 
   const prop = toPropertyKey(property);
-  const props = toPropertyDescriptor(
-    _Object(descriptor),
-    defineValidatorProperty,
-  );
-  const isValidInitialValue =
-    props.nilable && props.validator
-      ? nilifyIs(props.validator)
-      : props.validator;
+  const props = toPropertyDescriptor(_Object(descriptor), defineValidatorProperty);
+  const isValidInitialValue = props.nilable && props.validator ? nilifyIs(props.validator) : props.validator;
   const quotedProperty = surround(prop, '"');
 
   if (isValidInitialValue) {
     assertIs(isValidInitialValue, MSG1 + quotedProperty)(props.value);
   }
 
-  const isValidValue =
-    props.validator && assertIs(props.validator, MSG2 + quotedProperty);
+  const isValidValue = props.validator && assertIs(props.validator, MSG2 + quotedProperty);
 
   const validatorDesctiptor = {
     configurable: props.configurable,
@@ -129,6 +117,7 @@ export default function defineValidatorProperty(object, property, descriptor) {
       };
     } else {
       validatorDesctiptor.value = props.value;
+
       if (_has(props, 'writable')) {
         validatorDesctiptor.writable = props.writable;
       }

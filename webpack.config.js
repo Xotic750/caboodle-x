@@ -5,10 +5,15 @@
  */
 
 const path = require('path');
+const childProcess = require('child_process');
+const {BannerPlugin, EnvironmentPlugin} = require('webpack');
 const merge = require('webpack-merge');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const semver = require('semver');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
+const utils = require('./Libs/utils');
+const PACKAGE = require('./package.json');
 
 const getGlobal = function() {
   'use strict';
@@ -16,12 +21,15 @@ const getGlobal = function() {
   if (typeof self !== 'undefined') {
     return self;
   }
+
   if (typeof window !== 'undefined') {
     return window;
   }
+
   if (typeof global !== 'undefined') {
     return global;
   }
+
   return Function('return this')();
 };
 
@@ -30,36 +38,44 @@ const library = 'Caboodle';
 const dist = path.resolve(__dirname, 'dist');
 
 /**
- * The NODE_ENV environment variable.
- * @type {!Object}
- */
-const {NODE_ENV} = process.env;
-
-/**
- * The production string.
+ * The ENVIRONMENT value.
  * @type {string}
  */
-const PRODUCTION = 'production';
-
-/**
- * The development string.
- * @type {string}
- */
-const DEVELOPMENT = 'development';
+const ENVIRONMENT = utils.IS_PRODUCTION ? utils.PRODUCTION : utils.DEVELOPMENT;
 
 /**
  * The default exclude regex.
- * @type {string}
+ * @type {RegExp}
  */
 const DEFAULT_EXCLUDE_RX = /node_modules/;
 
 /**
- * Allows you to pass in as many environment variables as you like using --env.
- *
- * @param {!Object} env - The env object.
- * @see {@link https://webpack.js.org/guides/environment-variables/}
+ * Shared (.js & .vue) babel-loader options.
+ * @type {!Object}
+ * @see {@link https://github.com/babel/babel-loader}
  */
+const babelLoader = {
+  exclude: DEFAULT_EXCLUDE_RX,
+  loader: 'babel-loader',
+};
+
 module.exports = function generateConfig(env) {
+  /**
+   * The date as of now.
+   * @type {string}
+   */
+  const NOW = new Date().toISOString();
+
+  /**
+   * The reference created by git describe --dirty`
+   * @type {string}
+   * @see {@link https://git-scm.com/docs/git-describe}
+   */
+  const DESCRIBE = childProcess
+    .spawnSync('git', ['describe', '--dirty'])
+    .stdout.toString()
+    .trim();
+
   const base = {
     /**
      * This option controls if and how source maps are generated.
@@ -83,31 +99,31 @@ module.exports = function generateConfig(env) {
 
     /**
      * Define the entry points for the application.
-     * @type {array.<string>}
+     * @type {Array.<string>}
      * @see {@link https://webpack.js.org/concepts/entry-points/}
      */
-    entry: './index.js',
+    entry: [path.join(__dirname, './index.js')],
 
-    mode: NODE_ENV === PRODUCTION ? PRODUCTION : DEVELOPMENT,
+    mode: ENVIRONMENT,
 
-    /**
-     * In modular programming, developers break programs up into discrete chunks of functionality
-     * called a module. Each module has a smaller surface area than a full program, making verification,
-     * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
-     * boundaries, so that each module has a coherent design and a clear purpose within the overall
-     * application.
-     *
-     * webpack supports modules written in a variety of languages and preprocessors, via loaders.
-     * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
-     * into your bundles.
-     *
-     * @type {array.<!Object>}
-     * @see {@link https://webpack.js.org/configuration/module/#module-rules}
-     */
     module: {
+      /**
+       * In modular programming, developers break programs up into discrete chunks of functionality
+       * called a module. Each module has a smaller surface area than a full program, making verification,
+       * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
+       * boundaries, so that each module has a coherent design and a clear purpose within the overall
+       * application.
+       *
+       * webpack supports modules written in a variety of languages and preprocessors, via loaders.
+       * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
+       * into your bundles.
+       *
+       * @type {Array.<!Object>}
+       * @see {@link https://webpack.js.org/configuration/module/#module-rules}
+       */
       rules: [
         /**
-         * eslint-loader options.
+         * Shared (.js & .vue) eslint-loader options.
          * @type {!Object}
          * @see {@link https://github.com/MoOx/eslint-loader}
          */
@@ -117,23 +133,37 @@ module.exports = function generateConfig(env) {
           loader: 'eslint-loader',
           options: {
             emitError: true,
-            emitWarning: false,
-            failOnError: true,
-            failOnWarning: false,
+            emitWarning: true,
+            failOnError: utils.IS_PRODUCTION,
+            failOnWarning: utils.IS_PRODUCTION,
+            // currently disabled as not working in <= v2.1.1
+            fix:
+              !utils.IS_PRODUCTION &&
+              semver.satisfies(semver.coerce(utils.getStringOption(PACKAGE, 'devDependencies.eslint-loader')), '>2.1.1'),
             formatter: eslintFriendlyFormatter,
-            quiet: true,
+            quiet: utils.IS_PRODUCTION,
           },
-          test: /\.(js)$/,
+          // json does not work because of ESM import
+          test: /\.js$/,
+        },
+
+        /**
+         * Extract sourceMappingURL comments from modules and offer it to webpack
+         * @see {@link https://github.com/webpack-contrib/source-map-loader}
+         */
+        {
+          enforce: 'pre',
+          loader: 'source-map-loader',
+          test: /\.js$/,
         },
 
         /**
          * This package allows transpiling JavaScript files using Babel and webpack.
-         *
+         * @type {!Object}
          * @see {@link https://webpack.js.org/loaders/babel-loader/}
          */
         {
-          exclude: DEFAULT_EXCLUDE_RX,
-          loader: 'babel-loader',
+          ...babelLoader,
           test: /\.js$/,
         },
       ],
@@ -173,7 +203,39 @@ module.exports = function generateConfig(env) {
      * is called by the webpack compiler, giving access to the entire compilation lifecycle.
      *
      */
-    plugins: [],
+    plugins: [
+      /**
+       * Use the shorthand version.
+       * @type {!Object}
+       * @see {@link https://webpack.js.org/plugins/environment-plugin/}
+       */
+      new EnvironmentPlugin({
+        NODE_ENV: ENVIRONMENT,
+      }),
+
+      /**
+       * Adds a banner to the top of each generated chunk.
+       * @type {!Object}
+       * @see {@link https://webpack.js.org/plugins/banner-`plugin/}
+       */
+      new BannerPlugin({
+        banner: `/*!\n${JSON.stringify(
+          {
+            copyrite: utils.getStringOption(PACKAGE, 'copyright'),
+            date: NOW,
+            describe: DESCRIBE,
+            description: utils.getStringOption(PACKAGE, 'description'),
+            file: '[file]',
+            hash: '[hash]',
+            license: utils.getStringOption(PACKAGE, 'license'),
+            version: utils.getStringOption(PACKAGE, 'version'),
+          },
+          null,
+          2,
+        )}\n*/`,
+        raw: true,
+      }),
+    ],
 
     /**
      * These options change how modules are resolved.
@@ -213,10 +275,10 @@ module.exports = function generateConfig(env) {
      * @see {@link https://github.com/webpack-contrib/webpack-bundle-analyzer}
      */
     plugins: [
-      new UglifyJsPlugin({
+      new TerserPlugin({
         parallel: true,
         sourceMap: true,
-        uglifyOptions: {
+        terserOptions: {
           ecma: 5,
         },
       }),

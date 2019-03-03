@@ -17,10 +17,6 @@ const {floor, abs} = Math;
  *
  * @param {number} argument - The argument to convert to one of 2^24 integers.
  * @returns {number} Integer value, 0 through 2^24-1, inclusive.
- * @example
- * var toUint24 = require('to-uint-24-x');
- * toUint24(1); // 1
- * toUint24(-1); // 16777215 (2^24-1)
  */
 export default function toUint24(argument) {
   // Let number be ? ToNumber(argument).

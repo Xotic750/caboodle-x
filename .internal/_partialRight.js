@@ -12,9 +12,12 @@ export default function _partialRight(fn, ...partials) {
   let bound;
 
   const binder = function _binder(...args) {
+    /* eslint-disable-next-line babel/no-invalid-this */
     const result = _call(fn, this, ...args, ...partials);
 
+    /* eslint-disable-next-line babel/no-invalid-this */
     if (this instanceof bound) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return isPrimitive(result) ? this : result;
     }
 

@@ -12,8 +12,7 @@ const testObj = Object.defineProperty({}, 'foo', {
   value: true,
 });
 
-const hasNonEnumerable =
-  Object.keys(testObj).length === 0 && testObj.foo === true;
+const hasNonEnumerable = Object.keys(testObj).length === 0 && testObj.foo === true;
 
 const itHasNonEnumerable = hasNonEnumerable ? it : xit;
 
@@ -111,6 +110,8 @@ describe('defineValidatorProperties', () => {
         name: {},
       },
     );
+
+    expect(true).toBe(true);
   });
 
   itHasDoc('works with DOM elements', () => {
@@ -138,11 +139,11 @@ describe('defineValidatorProperties', () => {
       },
     });
 
-    expect(props.foo).toEqual({
+    expect(props.foo).toStrictEqual({
       value: true,
     });
 
-    expect(props.blah).toEqual({
+    expect(props.blah).toStrictEqual({
       value: true,
     });
 
@@ -151,6 +152,6 @@ describe('defineValidatorProperties', () => {
     expect(has.call(obj, 'foo')).toBe(true);
     expect(obj.foo).toBe(true);
     expect(has.call(obj, 'blah')).toBe(false);
-    expect(obj.blah).toBe(undefined);
+    expect(obj.blah).toBeUndefined();
   });
 });

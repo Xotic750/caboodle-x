@@ -10,7 +10,7 @@ describe('isUniq', () => {
     const actual = array.map(isUniq);
     const expected = [false, false];
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should return true', () => {
@@ -18,6 +18,6 @@ describe('isUniq', () => {
     const actual = array.map(isUniq);
     const expected = [true, true];
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 });

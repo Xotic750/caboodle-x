@@ -6,22 +6,22 @@ describe('isInteger', () => {
   });
 
   it('should return true', () => {
-    isInteger(0);
-    isInteger(-0);
-    isInteger(1);
-    isInteger(-100000);
+    expect(isInteger(0)).toBe(true);
+    expect(isInteger(-0)).toBe(true);
+    expect(isInteger(1)).toBe(true);
+    expect(isInteger(-100000)).toBe(true);
   });
 
   it('should return false', () => {
-    isInteger(0.1);
-    isInteger(-0.1);
-    isInteger(Math.PI);
-    isInteger(NaN);
-    isInteger(Infinity);
-    isInteger(-Infinity);
-    isInteger('10');
-    isInteger(true);
-    isInteger(false);
-    isInteger([1]);
+    expect(isInteger(0.1)).toBe(false);
+    expect(isInteger(-0.1)).toBe(false);
+    expect(isInteger(Math.PI)).toBe(false);
+    expect(isInteger(NaN)).toBe(false);
+    expect(isInteger(Infinity)).toBe(false);
+    expect(isInteger(-Infinity)).toBe(false);
+    expect(isInteger('10')).toBe(false);
+    expect(isInteger(true)).toBe(false);
+    expect(isInteger(false)).toBe(false);
+    expect(isInteger([1])).toBe(false);
   });
 });

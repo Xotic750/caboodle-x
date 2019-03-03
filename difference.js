@@ -20,10 +20,6 @@ import requireObjectCoercible from './requireObjectCoercible';
  * @param {Array.<Array>} [excludes] - The values to exclude.
  * @throws {TypeError} If any excludes value is null or undefined.
  * @returns {Array} Returns the new array of filtered values.
- * @example
- * var difference = require('array-difference-x');
- *
- * difference([2, 1], [2, 3]); // => [1]
  */
 export default function difference(array, ...excludes) {
   requireObjectCoercible(array);

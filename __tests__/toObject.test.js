@@ -1,8 +1,7 @@
 import {toObject} from '../index';
 import noop from './helpers/noop';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -49,6 +48,7 @@ describe('toObject', () => {
     testObject = {};
     expect(toObject(testObject)).toBe(testObject);
     testObject = function() {};
+
     expect(toObject(testObject)).toBe(testObject);
     testObject = Object('test');
     expect(toObject(testObject)).toBe(testObject);
@@ -60,6 +60,6 @@ describe('toObject', () => {
 
   ifSymbolIt('should return Symbol', () => {
     const sym = Symbol('foo');
-    expect(toObject(sym)).toEqual(Object(sym));
+    expect(toObject(sym)).toStrictEqual(Object(sym));
   });
 });

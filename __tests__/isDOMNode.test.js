@@ -5,8 +5,7 @@ const itWindow = typeof window === 'undefined' ? xit : it;
 
 const itGlobal = typeof global === 'undefined' ? xit : it;
 
-const element =
-  typeof document !== 'undefined' && document.createElement('div');
+const element = typeof document !== 'undefined' && document.createElement('div');
 
 const itElement = element ? it : xit;
 
@@ -147,11 +146,9 @@ describe('isDOMNode', () => {
 
   itElement('should return `true` for HTML4 DOM elements', () => {
     const expected = html4List.map(stubTrue);
-    const actual = html4List.map((tag) =>
-      isDOMNode(document.createElement(tag)),
-    );
+    const actual = html4List.map((tag) => isDOMNode(document.createElement(tag)));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   itElement('should return `true` for DOM comments', () => {
@@ -184,11 +181,9 @@ describe('isDOMNode', () => {
   it('should return `false` for non-DOM objects', () => {
     const expected = falsey.map(stubFalse);
 
-    const actual = falsey.map(
-      (value, index) => (index ? isDOMNode(value) : isDOMNode()),
-    );
+    const actual = falsey.map((value, index) => (index ? isDOMNode(value) : isDOMNode()));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
 
     expect(isDOMNode(true)).toBe(false);
     expect(isDOMNode('a')).toBe(false);

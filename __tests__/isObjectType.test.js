@@ -16,15 +16,15 @@ describe('isObjectType', () => {
     const expected = objects.map(() => true);
     const actual = objects.map(isObjectType);
 
-    expect(actual).toEqual(expected);
-    expect(isObjectType(null)).toEqual(true);
+    expect(actual).toStrictEqual(expected);
+    expect(isObjectType(null)).toStrictEqual(true);
   });
 
   it('should return false', () => {
     const expected = primitives.map(() => false);
     const actual = primitives.map(isObjectType);
 
-    expect(actual).toEqual(expected);
-    expect(isObjectType(undefined)).toEqual(false);
+    expect(actual).toStrictEqual(expected);
+    expect(isObjectType(undefined)).toStrictEqual(false);
   });
 });

@@ -16,6 +16,7 @@ export default function _assertIs(predicate, defaultMessage) {
   const defMsg = toMessage(defaultMessage, 'Not a valid value');
 
   return function assertIsBound(value, customMessage) {
+    /* eslint-disable-next-line babel/no-invalid-this */
     if (_call(predicate, this, value)) {
       return value;
     }

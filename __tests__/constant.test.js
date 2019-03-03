@@ -8,10 +8,10 @@ describe('constant', () => {
   it('should return a constant value', () => {
     const array = [];
     const object = {};
-    const ARRAY = constant(array);
-    const OBJECT = constant(object);
+    const arrayConst = constant(array);
+    const objectConst = constant(object);
 
-    expect(ARRAY()).toBe(array);
-    expect(OBJECT()).toBe(object);
+    expect(arrayConst()).toBe(array);
+    expect(objectConst()).toBe(object);
   });
 });

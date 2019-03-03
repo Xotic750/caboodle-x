@@ -46,22 +46,27 @@ describe('negate', () => {
           case 0:
             negateFn();
             break;
+
           case 1:
             negateFn(1);
             break;
+
           case 2:
             negateFn(1, 2);
             break;
+
           case 3:
             negateFn(1, 2, 3);
             break;
+
           case 4:
           default:
             negateFn(1, 2, 3, 4);
         }
+
         return argCount === index;
       });
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 });

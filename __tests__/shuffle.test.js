@@ -39,13 +39,13 @@ describe('shuffle', () => {
   });
 
   it('should contain the same elements after a collection is shuffled', () => {
-    expect(shuffle(array).sort()).toEqual(array);
-    expect(shuffle(object).sort()).toEqual(array);
+    expect(shuffle(array).sort()).toStrictEqual(array);
+    expect(shuffle(object).sort()).toStrictEqual(array);
     expect(
       shuffle(string)
         .map((item) => Number(item))
         .sort(),
-    ).toEqual(array);
+    ).toStrictEqual(array);
   });
 
   it('should shuffle small collections', () => {
@@ -63,10 +63,10 @@ describe('shuffle', () => {
 
     const expected = ['[1,2]', '[2,1]'];
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should treat number values for `collection` as empty', () => {
-    expect(shuffle(1)).toEqual([]);
+    expect(shuffle(1)).toStrictEqual([]);
   });
 });

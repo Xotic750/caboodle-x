@@ -4,311 +4,56 @@
  * @see {@link https://eslint.org} for further information.
  */
 
+/** configuration */
 module.exports = {
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-environments}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-environments|env}
    */
-  env: {
-    browser: true,
-    commonjs: true,
-    es6: true,
-    jest: true,
-    node: true,
-  },
+  env: {},
 
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#extending-configuration-files}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#extending-configuration-files|extends}
    */
-  extends: [
-    'eslint:recommended',
-    'airbnb-base',
-    'plugin:eslint-comments/recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:prettier/recommended',
-    'plugin:promise/recommended',
-    'plugin:css-modules/recommended',
-  ],
+  extends: ['@prorenata/eslint-config-vue'],
 
   /**
    * You can define global variables here.
-   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-globals}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-globals|globals}
    */
   globals: {},
 
   /**
    * Sometimes a more fine-controlled configuration is necessary, for example if the configuration
    * for files within the same directory has to be different.
-   * @see {@link https://eslint.org/docs/user-guide/configuring#configuration-based-on-glob-patterns}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#configuration-based-on-glob-patterns|overrides}
    */
-  overrides: [
-    {
-      files: ['webpack.*.js', '__tests__/**/*.js'],
-      rules: {
-        'compat/compat': 'off',
-        'global-require': 'off',
-        'import/no-extraneous-dependencies': [
-          'error',
-          {
-            devDependencies: true,
-          },
-        ],
-        'no-console': 'off',
-        'max-len': 'off',
-      },
-    },
-    {
-      files: ['webpack.*.js'],
-      rules: {
-        'func-names': 'off',
-        'no-new-func': 'off',
-        'no-restricted-globals': 'off',
-        'prefer-arrow-callback': 'off',
-        strict: 'off',
-      },
-    },
-    {
-      files: ['__tests__/**/*.js'],
-      rules: {
-        'func-names': 'off',
-        'no-array-constructor': 'off',
-        'no-empty': 'off',
-        'no-param-reassign': 'off',
-        'no-sparse-arrays': 'off',
-        'prefer-rest-params': 'off',
-      },
-    },
-    {
-      files: ['delayPromise.js', 'delayPromise.test.js'],
-      rules: {
-        'compat/compat': 'off',
-        'promise/avoid-new': 'off',
-        'promise/always-return': 'off',
-        'promise/catch-or-return': 'off',
-        'promise/no-nesting': 'off',
-      },
-    },
-    {
-      files: ['_isNaN.js'],
-      rules: {
-        'no-self-compare': 'off',
-      },
-    },
-    {
-      files: ['defineValidatorProperty.js', 'assign.js', 'isRegex.js'],
-      rules: {
-        'no-param-reassign': 'off',
-      },
-    },
-    {
-      files: ['_*.js'],
-      rules: {
-        'no-underscore-dangle': 'off',
-      },
-    },
-    {
-      files: [
-        'toPrimitive.js',
-        'padStart.js',
-        'drop.js',
-        '_getAt.js',
-        '_find.js',
-        'getFunctionName.js',
-      ],
-      rules: {
-        'no-void': 'off',
-      },
-    },
-    {
-      files: ['getFunctionName.js'],
-      rules: {
-        'func-names': 'off',
-        'no-new-func': 'off',
-      },
-    },
-  ],
+  overrides: [],
 
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-parser-options}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#specifying-parser-options|parserOptions}
    */
-  parserOptions: {
-    ecmaFeatures: {
-      es6: true,
-      impliedStrict: true,
-    },
-    ecmaVersion: 2018,
-    parser: 'babel-eslint',
-    sourceType: 'module',
-  },
+  parserOptions: {},
 
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#configuring-plugins}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#configuring-plugins|plugins}
    */
-  plugins: [
-    'babel',
-    'compat',
-    'css-modules',
-    'eslint-comments',
-    'html',
-    'jest',
-    'jsdoc',
-    'json',
-    'no-use-extend-native',
-    'prefer-object-spread',
-    'prettier',
-    'promise',
-    'sort-class-members',
-  ],
+  plugins: [],
 
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy|root}
    */
   root: true,
 
   /**
-   * @see {@link https://eslint.org/docs/user-guide/configuring#configuring-rules}
+   * @see {@link https://eslint.org/docs/user-guide/configuring#configuring-rules|rules
    */
-  rules: {
-    /**
-     * Eslint rules that differ from airbnb base.
-     * @see {@link https://eslint.org/docs/rules/}
-     */
-    'global-require': 'warn',
-
-    /**
-     * Additional ESLint rules for ESLint's directive-comments.
-     * @see {@link https://github.com/mysticatea/eslint-plugin-eslint-comments}
-     */
-    'eslint-comments/disable-enable-pair': 'error',
-    'eslint-comments/no-duplicate-disable': 'error',
-    'eslint-comments/no-unlimited-disable': 'error',
-    'eslint-comments/no-unused-disable': 'error',
-    'eslint-comments/no-unused-enable': 'error',
-    'eslint-comments/no-use': 'off',
-
-    /**
-     * An ESlint rule plugin companion to babel-eslint.
-     * @see {@link https://github.com/babel/eslint-plugin-babel}
-     */
-    'babel/new-cap': 'off',
-    'babel/no-invalid-this': 'off',
-    'babel/object-curly-spacing': 'error',
-    'babel/semi': 'error',
-
-    /**
-     * Lint the browser compatibility of your code.
-     * Good to know during development so we make sure that we have all polyfill and transforms.
-     * @see {@link https://github.com/amilajack/eslint-plugin-compat}
-     */
-    'compat/compat': process.env.NODE_ENV === 'production' ? 'off' : 'warn',
-
-    /**
-     * Helps you in tracking down problems when you are using css-modules.
-     * @see {@link https://github.com/atfzl/eslint-plugin-css-modules}
-     */
-    'css-modules/no-undef-class': 'warn',
-    'css-modules/no-unused-class': 'off',
-
-    /**
-     * ESLint plugin to prevent use of extended native objects.
-     * @see {@link https://github.com/dustinspecker/eslint-plugin-no-use-extend-native}
-     */
-    'no-use-extend-native/no-use-extend-native': 'error',
-
-    /**
-     * ESLint plugin with rules that help validate proper imports.
-     * @see {@link https://github.com/benmosher/eslint-plugin-import}
-     */
-    'import/no-extraneous-dependencies': [
-      'error',
-      {
-        devDependencies: ['build/webpack.*.js'],
-      },
-    ],
-
-    /**
-     * ESLint plugin for Jest.
-     * @see {@link https://github.com/jest-community/eslint-plugin-jest}
-     */
-    'jest/no-disabled-tests': 'warn',
-    'jest/no-focused-tests': 'error',
-    'jest/no-identical-title': 'error',
-    'jest/prefer-to-have-length': 'warn',
-    'jest/valid-expect': 'error',
-
-    /**
-     * JSDoc specific linting rules for ESLint.
-     * @see {@link https://github.com/gajus/eslint-plugin-jsdoc}
-     */
-    'jsdoc/check-param-names': 'warn',
-    'jsdoc/check-tag-names': 'warn',
-    'jsdoc/check-types': 'warn',
-    'jsdoc/newline-after-description': 'warn',
-    'jsdoc/require-description-complete-sentence': 'warn',
-    'jsdoc/require-example': 'off',
-    'jsdoc/require-hyphen-before-param-description': 'warn',
-    'jsdoc/require-param': 'warn',
-    'jsdoc/require-param-description': 'warn',
-    'jsdoc/require-param-type': 'warn',
-    'jsdoc/require-returns-description': 'warn',
-    'jsdoc/require-returns-type': 'warn',
-
-    /**
-     * ESLint rule for suggesting that object spread properties be used.
-     * @see {@link https://github.com/bryanrsmith/eslint-plugin-prefer-object-spread}
-     */
-    'prefer-object-spread/prefer-object-spread': 'error',
-
-    /**
-     * An ESLint rule for enforcing consistent ES6 class member order.
-     * @see {@link https://github.com/bryanrsmith/eslint-plugin-sort-class-members}
-     */
-    'sort-class-members/sort-class-members': [
-      'error',
-      {
-        accessorPairPositioning: 'getThenSet',
-        order: [
-          '[static-properties]',
-          '[static-methods]',
-          '[properties]',
-          '[conventional-private-properties]',
-          'constructor',
-          '[methods]',
-          '[conventional-private-methods]',
-        ],
-      },
-    ],
-
-    /**
-     * ESLint rule for prettier.
-     * @see {@link https://prettier.io/docs/en/eslint.html|plugin}
-     */
-    'prettier/prettier': 'error',
-  },
+  rules: {},
 
   /**
    * Webpack-literate module resolution plugin for eslint-plugin-import.
-   * @see {@link https://www.npmjs.com/package/eslint-import-resolver-webpack}
+   * @see {@link https://www.npmjs.com/package/eslint-import-resolver-webpack|plugin}
    */
   settings: {
-    'html/html-extensions': [
-      '.erb',
-      '.handlebars',
-      '.hbs',
-      '.htm',
-      '.html',
-      '.mustache',
-      '.nunjucks',
-      '.php',
-      '.tag',
-      '.twig',
-      '.we',
-    ],
-    'import/resolver': {
-      webpack: {
-        config: 'webpack.config.js',
-      },
-    },
-    polyfills: ['promises'],
+    polyfills: [],
   },
 };

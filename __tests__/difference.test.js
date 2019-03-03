@@ -36,27 +36,25 @@ describe('difference', () => {
   });
 
   it('should remain unchanged with only 1 argument', () => {
-    expect(difference([1, 2, 3])).toEqual([1, 2, 3]);
+    expect(difference([1, 2, 3])).toStrictEqual([1, 2, 3]);
   });
 
   it('should return the difference of the given arrays', () => {
     let actual = difference([1, 2, 3, 4, 5], [5, 2, 10]);
 
-    expect(actual).toEqual([1, 3, 4]);
+    expect(actual).toStrictEqual([1, 3, 4]);
 
     actual = difference([1, 2, 3, 4, 5], [5, 2, 10], [8, 4]);
 
-    expect(actual).toEqual([1, 3]);
+    expect(actual).toStrictEqual([1, 3]);
   });
 
   it('should match `NaN`', () => {
-    expect(difference([1, NaN, 3], [NaN, 5, NaN])).toEqual([1, 3]);
+    expect(difference([1, NaN, 3], [NaN, 5, NaN])).toStrictEqual([1, 3]);
   });
 
   it('should work with large arrays', () => {
-    const array1 = new Array(LARGE_ARRAY_SIZE + 1)
-      .fill()
-      .map(Number.call, Number);
+    const array1 = new Array(LARGE_ARRAY_SIZE + 1).fill().map(Number.call, Number);
     const array2 = new Array(LARGE_ARRAY_SIZE).fill().map(Number.call, Number);
     const a = {};
     const b = {};
@@ -65,7 +63,7 @@ describe('difference', () => {
     array1.push(a, b, c);
     array2.push(b, c, a);
 
-    expect(difference(array1, array2)).toEqual([LARGE_ARRAY_SIZE]);
+    expect(difference(array1, array2)).toStrictEqual([LARGE_ARRAY_SIZE]);
   });
 
   it('should work with large arrays of objects', () => {
@@ -73,12 +71,12 @@ describe('difference', () => {
     const object2 = {};
     const largeArray = new Array(LARGE_ARRAY_SIZE).fill(object1);
 
-    expect(difference([object1, object2], largeArray)).toEqual([object2]);
+    expect(difference([object1, object2], largeArray)).toStrictEqual([object2]);
   });
 
   it('should work with large arrays of `NaN`', () => {
     const largeArray = new Array(LARGE_ARRAY_SIZE).fill(NaN);
-    expect(difference([1, NaN, 3], largeArray)).toEqual([1, 3]);
+    expect(difference([1, NaN, 3], largeArray)).toStrictEqual([1, 3]);
   });
 
   it('should work with `arguments` objects', () => {
@@ -88,6 +86,6 @@ describe('difference', () => {
 
     const array = [0, 1, null, 3];
 
-    expect(difference(array, args)).toEqual([0, null]);
+    expect(difference(array, args)).toStrictEqual([0, null]);
   });
 });

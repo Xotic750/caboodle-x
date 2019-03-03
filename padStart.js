@@ -27,24 +27,21 @@ import _stringSlice from './.internal/_stringSlice';
  *  parameter is " " (U+0020).
  * @returns {string} A String of the specified length with the pad string
  *  applied from the start.
- * @example
- * var padStart = require('string-pad-start-x');
- *
- * padStart('a', 3, 'b'); // 'bba'
- * padStart('a', 3); // '  a'
- * padStart('a', 2, 'bc'); // 'ba'
  */
 export default function padStart(string, targetLength, ...rest) {
   const str = _toString(requireObjectCoercible(string));
   const stringLength = toWholeNumber(str.length);
+  /* eslint-disable-next-line no-void */
   const fillString = rest.length ? rest[0] : void 0;
 
   let filler = isUndefined(fillString) ? '' : _toString(fillString);
+
   if (filler === '') {
     filler = ' ';
   }
 
   const intMaxLength = toWholeNumber(targetLength);
+
   if (intMaxLength <= stringLength) {
     return str;
   }
@@ -53,14 +50,10 @@ export default function padStart(string, targetLength, ...rest) {
   while (filler.length < fillLen) {
     const fLen = filler.length;
     const remainingCodeUnits = fillLen - fLen;
-    filler +=
-      fLen > remainingCodeUnits
-        ? _stringSlice(filler, 0, remainingCodeUnits)
-        : filler;
+    filler += fLen > remainingCodeUnits ? _stringSlice(filler, 0, remainingCodeUnits) : filler;
   }
 
-  const truncatedStringFiller =
-    filler.length > fillLen ? _stringSlice(filler, 0, fillLen) : filler;
+  const truncatedStringFiller = filler.length > fillLen ? _stringSlice(filler, 0, fillLen) : filler;
 
   return truncatedStringFiller + str;
 }

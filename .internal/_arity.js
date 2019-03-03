@@ -14,9 +14,12 @@ export default function _arity(fn, ...arity) {
   let bound;
 
   const binder = function _binder(...args) {
+    /* eslint-disable-next-line babel/no-invalid-this */
     const result = _apply(fn, this, _slice(args, 0, length));
 
+    /* eslint-disable-next-line babel/no-invalid-this */
     if (this instanceof bound) {
+      /* eslint-disable-next-line babel/no-invalid-this */
       return isPrimitive(result) ? this : result;
     }
 

@@ -3,6 +3,7 @@ import {all} from '../index';
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 
 const isStrict = (function() {
+  /* eslint-disable-next-line babel/no-invalid-this */
   return Boolean(this) === false;
 })();
 
@@ -15,6 +16,7 @@ const createArrayLike = function(arr) {
   });
 
   o.length = arr.length;
+
   return o;
 };
 
@@ -73,7 +75,7 @@ describe('each', () => {
       arr.push(a + 3);
     });
 
-    expect(arr).toEqual([1, 2, 3, 4, 5, 6]);
+    expect(arr).toStrictEqual([1, 2, 3, 4, 5, 6]);
 
     expect(i).toBe(3);
   });
@@ -81,11 +83,13 @@ describe('each', () => {
   it('should set the right context when given none', () => {
     let context;
     all([1], function() {
+      /* eslint-disable-next-line babel/no-invalid-this */
       context = this;
     });
 
     expect(context).toBe(
       function() {
+        /* eslint-disable-next-line babel/no-invalid-this */
         return this;
       }.call(),
     );
@@ -98,7 +102,7 @@ describe('each', () => {
       return true;
     });
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should iterate all using a context', () => {
@@ -111,7 +115,7 @@ describe('each', () => {
       }.bind(o),
     );
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should iterate all in an array-like object', () => {
@@ -120,7 +124,7 @@ describe('each', () => {
       actual[index] = obj;
     });
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should iterate all in an array-like object using a context', () => {
@@ -134,7 +138,7 @@ describe('each', () => {
       }.bind(o),
     );
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   describe('strings', () => {
@@ -146,7 +150,7 @@ describe('each', () => {
         actual[index] = item;
       });
 
-      expect(actual).toEqual(str.split(''));
+      expect(actual).toStrictEqual(str.split(''));
     });
 
     it('should iterate all in a string using a context', () => {
@@ -159,7 +163,7 @@ describe('each', () => {
         }.bind(o),
       );
 
-      expect(actual).toEqual(str.split(''));
+      expect(actual).toStrictEqual(str.split(''));
     });
   });
 

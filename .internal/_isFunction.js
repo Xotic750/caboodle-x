@@ -21,10 +21,7 @@ const ASYNC_TAG = '[object AsyncFunction]';
 const ctrRx = /^class /;
 
 const testClassString = function _testClassString(value) {
-  return _test(
-    ctrRx,
-    normalizeSpace(replaceComments(_functionToString(value), ' ')),
-  );
+  return _test(ctrRx, normalizeSpace(replaceComments(_functionToString(value), ' ')));
 };
 
 const isES6ClassFn = function _isES6ClassFn(value) {
@@ -57,22 +54,6 @@ const tryFuncToString = function _tryFuncToString(value, allowClass) {
  * @param {boolean} [allowClass=false] - Whether to _sift ES6 classes.
  * @returns {boolean} Returns `true` if `value` is correctly classified,
  * else `false`.
- * @example
- * var isFunction = require('is-function-x');
- *
- * isFunction(); // false
- * isFunction(Number.MIN_VALUE); // false
- * isFunction('abc'); // false
- * isFunction(true); // false
- * isFunction({ name: 'abc' }); // false
- * isFunction(function () {}); // true
- * isFunction(new Function ()); // true
- * isFunction(function* test1() {}); // true
- * isFunction(function test2(a, b) {}); // true
- * isFunction(async function test3() {}); // true
- * isFunction(class Test {}); // false
- * isFunction(class Test {}, true); // true
- * isFunction((x, y) => {return this;}); // true
  */
 export default function isFunction(value, ...allowClass) {
   if (isPrimitive(value)) {
@@ -88,5 +69,6 @@ export default function isFunction(value, ...allowClass) {
   }
 
   const strTag = toStringTag(value);
+
   return strTag === FUNC_TAG || strTag === GEN_TAG || strTag === ASYNC_TAG;
 }

@@ -13,16 +13,12 @@ import _fromIndex from './.internal/_fromIndex';
 export default function accumulate(array, callback, ...rest) {
   const object = toObject(array);
   const length = toWholeNumber(object.length);
+
   if (!rest.length && length < 1) {
     throw new TypeError('accumulate of empty array with no initial value');
   }
 
   const start = _fromIndex(object, rest[1]);
 
-  return _accumulate(
-    object,
-    _assertIsFunction(callback),
-    (rest.length ? rest : object)[start],
-    rest.length ? start : start + 1,
-  );
+  return _accumulate(object, _assertIsFunction(callback), (rest.length ? rest : object)[start], rest.length ? start : start + 1);
 }

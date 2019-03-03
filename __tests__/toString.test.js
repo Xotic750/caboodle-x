@@ -1,16 +1,15 @@
 import {toString} from '../index';
 import values from './helpers/nonSymbols';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
-describe('Basic tests', () => {
+describe('basic tests', () => {
   it('should return a string for everything', () => {
     const expected = values.map(String);
     const actual = values.map(toString);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should throw for Object.create(null)', () => {

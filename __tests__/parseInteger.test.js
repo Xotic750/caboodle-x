@@ -1,7 +1,6 @@
 import {parseInteger} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -71,7 +70,7 @@ describe('parseInteger', () => {
       expect(parseInteger('+0xF', 16)).toBe(15);
     });
 
-    it('NaN parsing', () => {
+    it('naN parsing', () => {
       expect(parseInteger()).toBeNaN();
       expect(parseInteger(undefined)).toBeNaN();
       expect(parseInteger(null)).toBeNaN();

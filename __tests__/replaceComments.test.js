@@ -1,7 +1,6 @@
 import {replaceComments} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -29,7 +28,7 @@ describe('replaceComments', () => {
 
     const expected = values.map(String);
     const actual = values.map(replaceComments);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
     const date = new Date();
     expect(replaceComments(date)).toBe(String(date));
   });
@@ -75,10 +74,7 @@ describe('replaceComments', () => {
     expect(replaceComments('complex; // test', ' ')).toBe('complex;  ');
     expect(replaceComments('complex;//test', ' ')).toBe('complex; ');
     expect(replaceComments('complex; //test', ' ')).toBe('complex;  ');
-    const actual = replaceComments(
-      'function /*1*/complex/*2*/(/*3*/)/*4*/{/*5*/}/*6*///test',
-      ' ',
-    );
+    const actual = replaceComments('function /*1*/complex/*2*/(/*3*/)/*4*/{/*5*/}/*6*///test', ' ');
     const epected = 'function  complex ( ) { }  ';
     expect(actual).toBe(epected);
   });

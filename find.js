@@ -10,9 +10,5 @@ import _toInteger from './.internal/_toInteger';
 import _find from './.internal/_find';
 
 export default function find(array, callback, ...fromIndex) {
-  return _find(
-    requireObjectCoercible(array),
-    _assertIsFunction(callback),
-    _toInteger(fromIndex[0]),
-  ).value;
+  return _find(requireObjectCoercible(array), _assertIsFunction(callback), _toInteger(fromIndex[0])).value;
 }

@@ -12,7 +12,7 @@ import requireObjectCoercible from './requireObjectCoercible';
  * Tests if a comparate exists in a list of comparates an then returns the comparate if there
  * is a match; otherwise returns the last comparates value or fallback value if supplied.
  *
- * @param {Array|} [comparates=[]] - An array of values.
+ * @param {Array} [comparates=[]] - An array of values.
  * @param {*} comparate - The value to compare against the supplied list of comparates.
  * @param {Array} fallbackArg - The rest of the arguments array.
  * @param {*} [fallbackArg.fallback=comparates[last]] - The returned value if no match exists.

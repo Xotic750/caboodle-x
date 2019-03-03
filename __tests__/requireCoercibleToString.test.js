@@ -1,7 +1,6 @@
 import {requireCoercibleToString} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -29,7 +28,7 @@ describe('requireCoercibleToString', () => {
 
     const expected = values.map(String);
     const actual = values.map(requireCoercibleToString);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should throw for Object.create(null)', () => {

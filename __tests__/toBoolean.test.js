@@ -50,17 +50,11 @@ describe('toBoolean', () => {
     expect(toBoolean(true)).toBe(true, 'true returns true');
 
     [0, -0, NaN].forEach((falsyNumber) => {
-      expect(toBoolean(falsyNumber)).toBe(
-        false,
-        `falsy number ${falsyNumber} coerces to false`,
-      );
+      expect(toBoolean(falsyNumber)).toBe(false, `falsy number ${falsyNumber} coerces to false`);
     });
 
     [Infinity, 42, 1, -Infinity].forEach((truthyNumber) => {
-      expect(toBoolean(truthyNumber)).toBe(
-        true,
-        `truthy number ${truthyNumber} coerces to true`,
-      );
+      expect(toBoolean(truthyNumber)).toBe(true, `truthy number ${truthyNumber} coerces to true`);
     });
 
     expect(toBoolean('')).toBe(false, 'empty string coerces to false');
@@ -69,9 +63,6 @@ describe('toBoolean', () => {
       expect(toBoolean(obj)).toBe(true, 'object coerces to true');
     });
 
-    expect(toBoolean(uncoercibleObject)).toBe(
-      true,
-      'uncoercibleObject coerces to true',
-    );
+    expect(toBoolean(uncoercibleObject)).toBe(true, 'uncoercibleObject coerces to true');
   });
 });

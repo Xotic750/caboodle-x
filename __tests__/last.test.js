@@ -14,7 +14,7 @@ describe('last', () => {
   });
 
   it('should return `undefined` when querying empty arrays', () => {
-    expect(last([])).toBe(undefined);
+    expect(last([])).toBeUndefined();
   });
 
   it('should return `` when querying empty strings', () => {
@@ -25,6 +25,6 @@ describe('last', () => {
     const array = [[1, 2, 3], [4, 5, 6], [7, 8, 9]];
     const actual = array.map(last);
 
-    expect(actual).toEqual([3, 6, 9]);
+    expect(actual).toStrictEqual([3, 6, 9]);
   });
 });

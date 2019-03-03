@@ -19,6 +19,7 @@ const tryRegexExecCall = function _tryRegexExecCall(value, descriptor) {
     value.lastIndex = 0;
 
     _exec(value);
+
     return true;
   } catch (e) {
     return false;
@@ -41,7 +42,5 @@ export default function isRegex(value) {
 
   const descriptor = _getOwnPropertyDescriptor(value, 'lastIndex');
 
-  return descriptor && _hasOwnProperty(descriptor, 'value')
-    ? tryRegexExecCall(value, descriptor)
-    : false;
+  return descriptor && _hasOwnProperty(descriptor, 'value') ? tryRegexExecCall(value, descriptor) : false;
 }

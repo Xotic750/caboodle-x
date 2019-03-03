@@ -1,7 +1,6 @@
 import {isRegex} from '../index';
 
-const hasToStringTag =
-  typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+const hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
 
 const itHastoStringTag = hasToStringTag ? it : xit;
 
@@ -34,10 +33,7 @@ describe('isRegex', () => {
     };
 
     fakeRegex[Symbol.toStringTag] = 'RegExp';
-    expect(isRegex(fakeRegex)).toBe(
-      false,
-      'fake RegExp with @@toStringTag "RegExp" is not regex',
-    );
+    expect(isRegex(fakeRegex)).toBe(false, 'fake RegExp with @@toStringTag "RegExp" is not regex');
   });
 
   it('regexes', () => {
@@ -51,10 +47,7 @@ describe('isRegex', () => {
     regex.lastIndex = marker;
     expect(regex.lastIndex).toBe(marker, 'lastIndex is the marker object');
     expect(isRegex(regex)).toBe(true, 'is regex');
-    expect(regex.lastIndex).toBe(
-      marker,
-      'lastIndex is the marker object after isRegex',
-    );
+    expect(regex.lastIndex).toBe(marker, 'lastIndex is the marker object after isRegex');
   });
 
   it('lastIndex is nonzero', () => {

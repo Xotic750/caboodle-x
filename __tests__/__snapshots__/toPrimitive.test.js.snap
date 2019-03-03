@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`toPrimitive Symbol.toPrimitive exceptions 1`] = `"'#<Object>' returned for property 'Symbol(Symbol.toPrimitive)' of object '[object Object]' is not a function"`;
+exports[`toPrimitive Symbol.toPrimitive exceptions 1`] = `"Cannot convert a Symbol value to a string"`;
 
 exports[`toPrimitive Symbol.toPrimitive exceptions 2`] = `"unable to convert exotic object to primitive"`;
 

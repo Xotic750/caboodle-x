@@ -9,6 +9,6 @@ describe('stubArray', () => {
     const actual = stubArray();
 
     expect(actual).toBeInstanceOf(Array);
-    expect(actual).toEqual([]);
+    expect(actual).toStrictEqual([]);
   });
 });

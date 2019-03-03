@@ -7,27 +7,13 @@ describe('clamp', () => {
   });
 
   it('should work Math like with none or a single argument', () => {
-    const values = [
-      undefined,
-      null,
-      0,
-      '',
-      false,
-      true,
-      1,
-      '1',
-      [],
-      {},
-      noop,
-      NaN,
-      Infinity,
-    ];
+    const values = [undefined, null, 0, '', false, true, 1, '1', [], {}, noop, NaN, Infinity];
 
     const expected = values.map((value) => Math.max(0, value));
     const actual = values.map((value) => clamp(value));
 
     expect(Number.isNaN(clamp())).toBe(true);
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
   });
 
   it('should not work Math like with special single argument', () => {

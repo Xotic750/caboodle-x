@@ -10,7 +10,7 @@ describe('find()', () => {
 
   it('should return undefined when nothing matched', () => {
     const result = find(list, (item) => item === 'a');
-    expect(result).toBe(undefined);
+    expect(result).toBeUndefined();
   });
 
   it('should throw TypeError when function was not passed', () => {
@@ -22,10 +22,11 @@ describe('find()', () => {
   it('should receive all three parameters', () => {
     const foundIndex = find(list, (value, index, arr) => {
       expect(list).toHaveProperty(String(index), value);
-      expect(list).toEqual(arr);
+      expect(list).toStrictEqual(arr);
+
       return false;
     });
-    expect(foundIndex).toBe(undefined);
+    expect(foundIndex).toBeUndefined();
   });
 
   it('should work with a context', () => {
@@ -61,7 +62,7 @@ describe('find()', () => {
       throw new Error('should not reach here');
     });
 
-    expect(found).toBe(undefined);
+    expect(found).toBeUndefined();
   });
 
   it('should work with a sparse array', () => {
@@ -70,10 +71,11 @@ describe('find()', () => {
     const seen = [];
     const found = find(obj, (item, idx) => {
       seen.push([idx, item]);
+
       return false;
     });
-    expect(found).toBe(undefined);
-    expect(seen).toEqual([[0, 1], [1, undefined], [2, undefined]]);
+    expect(found).toBeUndefined();
+    expect(seen).toStrictEqual([[0, 1], [1, undefined], [2, undefined]]);
   });
 
   it('should work with a sparse array-like object', () => {
@@ -81,9 +83,10 @@ describe('find()', () => {
     const seen = [];
     const found = find(obj, (item, idx) => {
       seen.push([idx, item]);
+
       return false;
     });
-    expect(found).toBe(undefined);
-    expect(seen).toEqual([[0, 1], [1, undefined], [2, undefined]]);
+    expect(found).toBeUndefined();
+    expect(seen).toStrictEqual([[0, 1], [1, undefined], [2, undefined]]);
   });
 });

@@ -15,12 +15,6 @@ const pattern = /[\^$\\.*+?()[\]{}|]/g;
  * @param {string} string - The string to be escaped.
  * @throws {TypeError} If string is null or undefined or not coercible.
  * @returns {string} The escaped string.
- * @example
- * var regexpEscape = require('caboodle-x/regexpEscape');
- *
- * var str = 'hello. how are you?';
- * var regex = new RegExp(regexpEscape(str), 'g');
- * String(regex); // '/hello\. how are you\?/g'
  */
 export default function regExpEscape(string) {
   return _replace(requireCoercibleToString(string), pattern, '\\$&');

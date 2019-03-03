@@ -16,10 +16,6 @@ import _toNumber from './.internal/_toNumber';
  * @param {number} rest.max - The maximum number.
  * @throws {RangeError} If min > max.
  * @returns {number} The clamped number.
- * @example
- *
- * clamp(-10, -5, 5); // -5
- * clamp(10, -5, 5); // 5
  */
 export default function clamp(value, ...rest) {
   const number = _toNumber(value);
@@ -31,6 +27,7 @@ export default function clamp(value, ...rest) {
 
   let min = _toNumber(rest[0]);
   let max = _toNumber(rest[1]);
+
   if (restLength < 2) {
     max = min;
     min = 0;

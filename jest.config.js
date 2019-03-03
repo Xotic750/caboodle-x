@@ -2,11 +2,7 @@
 
 module.exports = {
   coverageDirectory: '__tests__/coverage/',
-  collectCoverageFrom: [
-    '<rootDir>/*.js',
-    '!<rootDir>/.*.js',
-    '!<rootDir>/*.*.js',
-  ],
+  collectCoverageFrom: ['<rootDir>/*.js', '!<rootDir>/.*.js', '!<rootDir>/*.*.js'],
   testMatch: ['**/*.test.js'],
   verbose: true,
 };

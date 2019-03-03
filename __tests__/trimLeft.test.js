@@ -1,7 +1,6 @@
 import {trimLeft} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -30,23 +29,14 @@ describe('trimLeft', () => {
       }).toThrowErrorMatchingSnapshot();
     });
 
-    it('Basic tests', () => {
+    it('basic tests', () => {
       let rest = 'a \t\n';
-      expect(trimLeft(` \t\n${rest}`)).toBe(
-        rest,
-        'strips whitespace off the left side',
-      );
+      expect(trimLeft(` \t\n${rest}`)).toBe(rest, 'strips whitespace off the left side');
       expect(trimLeft('a')).toBe('a', 'noop when no whitespace');
       rest = `a${allWhitespaceChars}`;
-      expect(trimLeft(allWhitespaceChars + rest)).toBe(
-        rest,
-        'all expected whitespace chars are trimmed',
-      );
+      expect(trimLeft(allWhitespaceChars + rest)).toBe(rest, 'all expected whitespace chars are trimmed');
       const zeroWidth = '\u200b';
-      expect(trimLeft(zeroWidth)).toBe(
-        zeroWidth,
-        'zero width space does not trim',
-      );
+      expect(trimLeft(zeroWidth)).toBe(zeroWidth, 'zero width space does not trim');
     });
 
     it('should return a string for everything', () => {
@@ -54,7 +44,7 @@ describe('trimLeft', () => {
 
       const expected = values.map(String);
       const actual = values.map(trimLeft);
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it('should throw for Object.create(null)', () => {

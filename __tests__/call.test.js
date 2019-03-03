@@ -15,10 +15,11 @@ describe('call', () => {
   it('has correct context and arguments', () => {
     call(
       function(a, b) {
+        /* eslint-disable-next-line babel/no-invalid-this */
         expect(this).toBe(receiver, 'context matches expected');
-        expect([a, b]).toEqual([1, 2], 'named args are correct');
+        expect([a, b]).toStrictEqual([1, 2], 'named args are correct');
         expect(arguments).toHaveLength(3, 'extra argument was passed');
-        expect(arguments[2]).toEqual(3, 'extra argument was correct');
+        expect(arguments[2]).toStrictEqual(3, 'extra argument was correct');
       },
       receiver,
       1,

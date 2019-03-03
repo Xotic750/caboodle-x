@@ -19,13 +19,13 @@ describe('intersection', () => {
   it('should return the intersection of the given arrays', () => {
     const actual = intersection([1, 3, 2], [5, 2, 1, 4], [2, 1]);
 
-    expect(actual).toEqual([1, 2]);
+    expect(actual).toStrictEqual([1, 2]);
   });
 
   it('should return an array of unique values', () => {
     const actual = intersection([1, 1, 3, 2, 2], [5, 2, 2, 1, 4], [2, 1, 1]);
 
-    expect(actual).toEqual([1, 2]);
+    expect(actual).toStrictEqual([1, 2]);
   });
 
   it('should match `NaN`', () => {
@@ -39,9 +39,9 @@ describe('intersection', () => {
     const object = {};
     let largeArray = new Array(LARGE_ARRAY_SIZE).fill(object);
 
-    expect(intersection([object], largeArray)).toEqual([object]);
+    expect(intersection([object], largeArray)).toStrictEqual([object]);
     largeArray = new Array(LARGE_ARRAY_SIZE).fill().map(Number.call, Number);
-    expect(intersection(largeArray, [1])).toEqual([1]);
+    expect(intersection(largeArray, [1])).toStrictEqual([1]);
   });
 
   it('should work with large arrays of `NaN`', () => {
@@ -55,21 +55,21 @@ describe('intersection', () => {
     const array = [0, 1, null, 3];
     const expected = [1, 3];
 
-    expect(intersection(array, args)).toEqual(expected);
-    expect(intersection(args, array)).toEqual(expected);
+    expect(intersection(array, args)).toStrictEqual(expected);
+    expect(intersection(args, array)).toStrictEqual(expected);
   });
 
   it('should work with a single array', () => {
     const actual = intersection([1, 1, 3, 2, 2]);
 
-    expect(actual).toEqual([1, 3, 2]);
+    expect(actual).toStrictEqual([1, 3, 2]);
   });
 
   it('should treat values that are not arrays or `arguments` objects as empty', () => {
     const array = [0, 1, null, 3];
 
-    expect(intersection(array, 3, {0: 1}, null)).toEqual([]);
-    expect(intersection(null, array, null, args, null)).toEqual([1, 3]);
-    expect(intersection(array, null, args, null)).toEqual([1, 3]);
+    expect(intersection(array, 3, {0: 1}, null)).toStrictEqual([]);
+    expect(intersection(null, array, null, args, null)).toStrictEqual([1, 3]);
+    expect(intersection(array, null, args, null)).toStrictEqual([1, 3]);
   });
 });

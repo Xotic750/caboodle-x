@@ -1,4 +1,5 @@
 import {isNull} from '../index';
+import getArguments from './helpers/getArguments';
 
 const falsey = Object.freeze([undefined, false, 0, NaN, '']);
 
@@ -7,7 +8,7 @@ describe('isNull', () => {
     expect(isNull).toBeInstanceOf(Function);
   });
 
-  const args = arguments;
+  const args = getArguments();
 
   it('should return `true` for `null` values', () => {
     expect(isNull(null)).toBe(true);
@@ -18,7 +19,7 @@ describe('isNull', () => {
 
     const actual = falsey.map((value) => isNull(value));
 
-    expect(actual).toEqual(expected);
+    expect(actual).toStrictEqual(expected);
 
     expect(isNull(args)).toBe(false);
     expect(isNull([1, 2, 3])).toBe(false);

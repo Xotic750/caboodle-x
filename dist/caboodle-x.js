@@ -1,3 +1,15 @@
+/*!
+{
+  "copyrite": "Copyright (c) 2018-present",
+  "date": "2019-03-03T15:54:51.623Z",
+  "describe": "",
+  "description": "A collection of modern utils.",
+  "file": "caboodle-x.js",
+  "hash": "eb58a063632c44f11e5b",
+  "license": "MIT",
+  "version": "2.0.0"
+}
+*/
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -13,12 +25,15 @@
   if (typeof self !== 'undefined') {
     return self;
   }
+
   if (typeof window !== 'undefined') {
     return window;
   }
+
   if (typeof global !== 'undefined') {
     return global;
   }
+
   return Function('return this')();
 }()), function() {
 return /******/ (function(modules) { // webpackBootstrap
@@ -104,36 +119,283 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 218);
+/******/ 	return __webpack_require__(__webpack_require__.s = 111);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+ * js-logger - http://github.com/jonnyreeves/js-logger
+ * Jonny Reeves, http://jonnyreeves.co.uk/
+ * js-logger may be freely distributed under the MIT license.
+ */
+(function (global) {
+	"use strict";
 
+	// Top level module for the global, static logger instance.
+	var Logger = { };
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _methodize;
+	// For those that are at home that are keeping score.
+	Logger.VERSION = "1.6.0";
 
-var _bind2 = __webpack_require__(107);
+	// Function which handles all incoming log messages.
+	var logHandler;
 
-var _bind3 = _interopRequireDefault(_bind2);
+	// Map of ContextualLogger instances by name; used by Logger.get() to return the same named instance.
+	var contextualLoggersByNameMap = {};
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	// Polyfill for ES5's Function.bind.
+	var bind = function(scope, func) {
+		return function() {
+			return func.apply(scope, arguments);
+		};
+	};
 
-var call = Function.call; /**
-                           * @file Utility that needs description.
-                           * @copyright Copyright (c) 2018-present, Graham Fairweather
-                           * @module _methodize
-                           */
+	// Super exciting object merger-matron 9000 adding another 100 bytes to your download.
+	var merge = function () {
+		var args = arguments, target = args[0], key, i;
+		for (i = 1; i < args.length; i++) {
+			for (key in args[i]) {
+				if (!(key in target) && args[i].hasOwnProperty(key)) {
+					target[key] = args[i][key];
+				}
+			}
+		}
+		return target;
+	};
 
-function _methodize(prototypeMethod) {
-  return (0, _bind3.default)(call, prototypeMethod);
-}
+	// Helper to define a logging level object; helps with optimisation.
+	var defineLogLevel = function(value, name) {
+		return { value: value, name: name };
+	};
+
+	// Predefined logging levels.
+	Logger.TRACE = defineLogLevel(1, 'TRACE');
+	Logger.DEBUG = defineLogLevel(2, 'DEBUG');
+	Logger.INFO = defineLogLevel(3, 'INFO');
+	Logger.TIME = defineLogLevel(4, 'TIME');
+	Logger.WARN = defineLogLevel(5, 'WARN');
+	Logger.ERROR = defineLogLevel(8, 'ERROR');
+	Logger.OFF = defineLogLevel(99, 'OFF');
+
+	// Inner class which performs the bulk of the work; ContextualLogger instances can be configured independently
+	// of each other.
+	var ContextualLogger = function(defaultContext) {
+		this.context = defaultContext;
+		this.setLevel(defaultContext.filterLevel);
+		this.log = this.info;  // Convenience alias.
+	};
+
+	ContextualLogger.prototype = {
+		// Changes the current logging level for the logging instance.
+		setLevel: function (newLevel) {
+			// Ensure the supplied Level object looks valid.
+			if (newLevel && "value" in newLevel) {
+				this.context.filterLevel = newLevel;
+			}
+		},
+		
+		// Gets the current logging level for the logging instance
+		getLevel: function () {
+			return this.context.filterLevel;
+		},
+
+		// Is the logger configured to output messages at the supplied level?
+		enabledFor: function (lvl) {
+			var filterLevel = this.context.filterLevel;
+			return lvl.value >= filterLevel.value;
+		},
+
+		trace: function () {
+			this.invoke(Logger.TRACE, arguments);
+		},
+
+		debug: function () {
+			this.invoke(Logger.DEBUG, arguments);
+		},
+
+		info: function () {
+			this.invoke(Logger.INFO, arguments);
+		},
+
+		warn: function () {
+			this.invoke(Logger.WARN, arguments);
+		},
+
+		error: function () {
+			this.invoke(Logger.ERROR, arguments);
+		},
+
+		time: function (label) {
+			if (typeof label === 'string' && label.length > 0) {
+				this.invoke(Logger.TIME, [ label, 'start' ]);
+			}
+		},
+
+		timeEnd: function (label) {
+			if (typeof label === 'string' && label.length > 0) {
+				this.invoke(Logger.TIME, [ label, 'end' ]);
+			}
+		},
+
+		// Invokes the logger callback if it's not being filtered.
+		invoke: function (level, msgArgs) {
+			if (logHandler && this.enabledFor(level)) {
+				logHandler(msgArgs, merge({ level: level }, this.context));
+			}
+		}
+	};
+
+	// Protected instance which all calls to the to level `Logger` module will be routed through.
+	var globalLogger = new ContextualLogger({ filterLevel: Logger.OFF });
+
+	// Configure the global Logger instance.
+	(function() {
+		// Shortcut for optimisers.
+		var L = Logger;
+
+		L.enabledFor = bind(globalLogger, globalLogger.enabledFor);
+		L.trace = bind(globalLogger, globalLogger.trace);
+		L.debug = bind(globalLogger, globalLogger.debug);
+		L.time = bind(globalLogger, globalLogger.time);
+		L.timeEnd = bind(globalLogger, globalLogger.timeEnd);
+		L.info = bind(globalLogger, globalLogger.info);
+		L.warn = bind(globalLogger, globalLogger.warn);
+		L.error = bind(globalLogger, globalLogger.error);
+
+		// Don't forget the convenience alias!
+		L.log = L.info;
+	}());
+
+	// Set the global logging handler.  The supplied function should expect two arguments, the first being an arguments
+	// object with the supplied log messages and the second being a context object which contains a hash of stateful
+	// parameters which the logging function can consume.
+	Logger.setHandler = function (func) {
+		logHandler = func;
+	};
+
+	// Sets the global logging filter level which applies to *all* previously registered, and future Logger instances.
+	// (note that named loggers (retrieved via `Logger.get`) can be configured independently if required).
+	Logger.setLevel = function(level) {
+		// Set the globalLogger's level.
+		globalLogger.setLevel(level);
+
+		// Apply this level to all registered contextual loggers.
+		for (var key in contextualLoggersByNameMap) {
+			if (contextualLoggersByNameMap.hasOwnProperty(key)) {
+				contextualLoggersByNameMap[key].setLevel(level);
+			}
+		}
+	};
+
+	// Gets the global logging filter level
+	Logger.getLevel = function() {
+		return globalLogger.getLevel();
+	};
+
+	// Retrieve a ContextualLogger instance.  Note that named loggers automatically inherit the global logger's level,
+	// default context and log handler.
+	Logger.get = function (name) {
+		// All logger instances are cached so they can be configured ahead of use.
+		return contextualLoggersByNameMap[name] ||
+			(contextualLoggersByNameMap[name] = new ContextualLogger(merge({ name: name }, globalLogger.context)));
+	};
+
+	// CreateDefaultHandler returns a handler function which can be passed to `Logger.setHandler()` which will
+	// write to the window's console object (if present); the optional options object can be used to customise the
+	// formatter used to format each log message.
+	Logger.createDefaultHandler = function (options) {
+		options = options || {};
+
+		options.formatter = options.formatter || function defaultMessageFormatter(messages, context) {
+			// Prepend the logger's name to the log message for easy identification.
+			if (context.name) {
+				messages.unshift("[" + context.name + "]");
+			}
+		};
+
+		// Map of timestamps by timer labels used to track `#time` and `#timeEnd()` invocations in environments
+		// that don't offer a native console method.
+		var timerStartTimeByLabelMap = {};
+
+		// Support for IE8+ (and other, slightly more sane environments)
+		var invokeConsoleMethod = function (hdlr, messages) {
+			Function.prototype.apply.call(hdlr, console, messages);
+		};
+
+		// Check for the presence of a logger.
+		if (typeof console === "undefined") {
+			return function () { /* no console */ };
+		}
+
+		return function(messages, context) {
+			// Convert arguments object to Array.
+			messages = Array.prototype.slice.call(messages);
+
+			var hdlr = console.log;
+			var timerLabel;
+
+			if (context.level === Logger.TIME) {
+				timerLabel = (context.name ? '[' + context.name + '] ' : '') + messages[0];
+
+				if (messages[1] === 'start') {
+					if (console.time) {
+						console.time(timerLabel);
+					}
+					else {
+						timerStartTimeByLabelMap[timerLabel] = new Date().getTime();
+					}
+				}
+				else {
+					if (console.timeEnd) {
+						console.timeEnd(timerLabel);
+					}
+					else {
+						invokeConsoleMethod(hdlr, [ timerLabel + ': ' +
+							(new Date().getTime() - timerStartTimeByLabelMap[timerLabel]) + 'ms' ]);
+					}
+				}
+			}
+			else {
+				// Delegate through to custom warn/error loggers if present on the console.
+				if (context.level === Logger.WARN && console.warn) {
+					hdlr = console.warn;
+				} else if (context.level === Logger.ERROR && console.error) {
+					hdlr = console.error;
+				} else if (context.level === Logger.INFO && console.info) {
+					hdlr = console.info;
+				} else if (context.level === Logger.DEBUG && console.debug) {
+					hdlr = console.debug;
+				} else if (context.level === Logger.TRACE && console.trace) {
+					hdlr = console.trace;
+				}
+
+				options.formatter(messages, context);
+				invokeConsoleMethod(hdlr, messages);
+			}
+		};
+	};
+
+	// Configure and example a Default implementation which writes to the `window.console` (if present).  The
+	// `options` hash can be used to configure the default logLevel and provide a custom message formatter.
+	Logger.useDefaults = function(options) {
+		Logger.setLevel(options && options.defaultLevel || Logger.DEBUG);
+		Logger.setHandler(Logger.createDefaultHandler(options));
+	};
+
+	// Export to popular environments boilerplate.
+	if (true) {
+		!(__WEBPACK_AMD_DEFINE_FACTORY__ = (Logger),
+				__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+				(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+				__WEBPACK_AMD_DEFINE_FACTORY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	}
+	else {}
+}(this));
+
 
 /***/ }),
 /* 1 */
@@ -145,20 +407,41 @@ function _methodize(prototypeMethod) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _methodize;
 
-var _assertIs2 = __webpack_require__(46);
-
-var _assertIs3 = _interopRequireDefault(_assertIs2);
-
-var _negate2 = __webpack_require__(64);
-
-var _negate3 = _interopRequireDefault(_negate2);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
+var _bind2 = _interopRequireDefault(__webpack_require__(76));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_methodize");
+
+var call = Function.call;
+
+function _methodize(prototypeMethod) {
+  return (0, _bind2.default)(call, prototypeMethod);
+}
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _assertIs2 = _interopRequireDefault(__webpack_require__(36));
+
+var _negate2 = _interopRequireDefault(__webpack_require__(55));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * The abstract operation RequireObjectCoercible throws an error if argument
@@ -176,47 +459,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * RequireObjectCoercible(true); // true
  * RequireObjectCoercible(Symbol('foo')); // Symbol('foo')
  */
-exports.default = (0, _assertIs3.default)((0, _negate3.default)(_isNil2.default), 'Cannot call method on null or undefined'); /**
-                                                                                                                               * @file Utility that needs description.
-                                                                                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                                                               * @module requireObjectCoercible
-                                                                                                                               */
+var _default = (0, _assertIs2.default)((0, _negate2.default)(_isNil.default), 'Cannot call method on null or undefined');
 
-/***/ }),
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _toString;
-
-var _isSymbol = __webpack_require__(71);
-
-var _isSymbol2 = _interopRequireDefault(_isSymbol);
-
-var _String2 = __webpack_require__(109);
-
-var _String3 = _interopRequireDefault(_String2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toString
- */
-
-function _toString(value) {
-  if ((0, _isSymbol2.default)(value)) {
-    throw new TypeError('Cannot convert a Symbol value to a string');
-  }
-
-  return (0, _String3.default)(value);
-}
+exports.default = _default;
 
 /***/ }),
 /* 3 */
@@ -228,27 +473,50 @@ function _toString(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _toString;
 
-var _assertIs2 = __webpack_require__(46);
+var _isSymbol = _interopRequireDefault(__webpack_require__(48));
 
-var _assertIs3 = _interopRequireDefault(_assertIs2);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
+var _String2 = _interopRequireDefault(__webpack_require__(74));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _assertIsFunction
- */
+var logger = __webpack_require__(0).get("caboodle-x:_toString");
 
-exports.default = (0, _assertIs3.default)(_isFunction3.default, 'Not a function');
+function _toString(value) {
+  if ((0, _isSymbol.default)(value)) {
+    throw new TypeError('Cannot convert a Symbol value to a string');
+  }
+
+  return (0, _String2.default)(value);
+}
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _assertIs2 = _interopRequireDefault(__webpack_require__(36));
+
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_assertIsFunction");
+
+var _default = (0, _assertIs2.default)(_isFunction2.default, 'Not a function');
+
+exports.default = _default;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -275,7 +543,7 @@ module.exports = function isString(value) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -286,76 +554,33 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = _toInteger;
 
-var _isNaN2 = __webpack_require__(22);
+var _isNaN2 = _interopRequireDefault(__webpack_require__(22));
 
-var _isNaN3 = _interopRequireDefault(_isNaN2);
+var _isFinite2 = _interopRequireDefault(__webpack_require__(32));
 
-var _isFinite2 = __webpack_require__(41);
+var _toNumber2 = _interopRequireDefault(__webpack_require__(23));
 
-var _isFinite3 = _interopRequireDefault(_isFinite2);
-
-var _toNumber2 = __webpack_require__(21);
-
-var _toNumber3 = _interopRequireDefault(_toNumber2);
-
-var _sign2 = __webpack_require__(54);
-
-var _sign3 = _interopRequireDefault(_sign2);
+var _sign2 = _interopRequireDefault(__webpack_require__(65));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that creates a delayed promise.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _toInteger
- */
+var logger = __webpack_require__(0).get("caboodle-x:_toInteger");
 
 var abs = Math.abs,
     floor = Math.floor;
-function _toInteger(value) {
-  var number = (0, _toNumber3.default)(value);
 
-  if ((0, _isNaN3.default)(number)) {
+function _toInteger(value) {
+  var number = (0, _toNumber2.default)(value);
+
+  if ((0, _isNaN2.default)(number)) {
     return 0;
   }
 
-  if (number === 0 || !(0, _isFinite3.default)(number)) {
+  if (number === 0 || !(0, _isFinite2.default)(number)) {
     return number;
   }
 
-  return (0, _sign3.default)(number) * floor(abs(number));
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isNil;
-
-var _isUndefined = __webpack_require__(27);
-
-var _isUndefined2 = _interopRequireDefault(_isUndefined);
-
-var _isNull = __webpack_require__(45);
-
-var _isNull2 = _interopRequireDefault(_isNull);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNil
- */
-
-function isNil(value) {
-  return (0, _isUndefined2.default)(value) || (0, _isNull2.default)(value);
+  return (0, _sign2.default)(number) * floor(abs(number));
 }
 
 /***/ }),
@@ -368,33 +593,18 @@ function isNil(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toWholeNumber;
+exports.default = isNil;
 
-var _toInteger2 = __webpack_require__(5);
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
 
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _MAX_SAFE_INTEGER = __webpack_require__(53);
-
-var _MAX_SAFE_INTEGER2 = _interopRequireDefault(_MAX_SAFE_INTEGER);
+var _isNull = _interopRequireDefault(__webpack_require__(37));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toWholeNumber
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function toWholeNumber(value) {
-  var integer = (0, _toInteger3.default)(value);
-
-  // includes converting -0 to +0
-  if (integer <= 0) {
-    return 0;
-  }
-
-  return integer > _MAX_SAFE_INTEGER2.default ? _MAX_SAFE_INTEGER2.default : integer;
+function isNil(value) {
+  return (0, _isUndefined.default)(value) || (0, _isNull.default)(value);
 }
 
 /***/ }),
@@ -407,29 +617,89 @@ function toWholeNumber(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _stringTest;
+exports.default = isFunction;
 
-var _isRegex = __webpack_require__(40);
+var _functionToString2 = _interopRequireDefault(__webpack_require__(75));
 
-var _isRegex2 = _interopRequireDefault(_isRegex);
+var _test2 = _interopRequireDefault(__webpack_require__(18));
 
-var _stringIndexOf2 = __webpack_require__(57);
+var _attempt = _interopRequireDefault(__webpack_require__(49));
 
-var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
+var _Boolean2 = _interopRequireDefault(__webpack_require__(29));
 
-var _test2 = __webpack_require__(26);
+var _toStringTag = _interopRequireDefault(__webpack_require__(38));
 
-var _test3 = _interopRequireDefault(_test2);
+var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(50));
+
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
+
+var _normalizeSpace = _interopRequireDefault(__webpack_require__(53));
+
+var _replaceComments = _interopRequireDefault(__webpack_require__(59));
+
+var _isClassSupported = _interopRequireDefault(__webpack_require__(83));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _stringTest(string, searchValue) {
-  return (0, _isRegex2.default)(searchValue) ? (0, _test3.default)(searchValue, string) : (0, _stringIndexOf3.default)(string, searchValue) !== -1;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _stringTest
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_isFunction");
+
+var FUNC_TAG = '[object Function]';
+var GEN_TAG = '[object GeneratorFunction]';
+var ASYNC_TAG = '[object AsyncFunction]';
+var ctrRx = /^class /;
+
+var testClassString = function _testClassString(value) {
+  return (0, _test2.default)(ctrRx, (0, _normalizeSpace.default)((0, _replaceComments.default)((0, _functionToString2.default)(value), ' ')));
+};
+
+var isES6ClassFn = function _isES6ClassFn(value) {
+  var result = (0, _attempt.default)(testClassString, value);
+  return !result.threw && result.value;
+};
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @private
+ * @param {*} value - The value to check.
+ * @param {boolean} allowClass - Whether to _sift ES6 classes.
+ * @returns {boolean} Returns `true` if `value` is correctly classified,
+ * else `false`.
+ */
+
+
+var tryFuncToString = function _tryFuncToString(value, allowClass) {
+  if (_isClassSupported.default && !allowClass && isES6ClassFn(value)) {
+    return false;
+  }
+
+  return !(0, _attempt.default)(_functionToString2.default, value).threw;
+};
+/**
+ * Checks if `value` is classified as a `Function` object.
+ *
+ * @param {*} value - The value to check.
+ * @param {boolean} [allowClass=false] - Whether to _sift ES6 classes.
+ * @returns {boolean} Returns `true` if `value` is correctly classified,
+ * else `false`.
+ */
+
+
+function isFunction(value) {
+  if ((0, _isPrimitive.default)(value)) {
+    return false;
+  }
+
+  if (_isToStringTagSupported.default) {
+    return tryFuncToString(value, (0, _Boolean2.default)(arguments.length <= 1 ? undefined : arguments[1]));
+  }
+
+  if (_isClassSupported.default && !(arguments.length <= 1 ? undefined : arguments[1]) && isES6ClassFn(value)) {
+    return false;
+  }
+
+  var strTag = (0, _toStringTag.default)(value);
+  return strTag === FUNC_TAG || strTag === GEN_TAG || strTag === ASYNC_TAG;
+}
 
 /***/ }),
 /* 9 */
@@ -441,18 +711,25 @@ function _stringTest(string, searchValue) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = toWholeNumber;
 
-var _methodize2 = __webpack_require__(0);
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(66));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(String.prototype.slice); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _stringSlice
-                                                                     */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function toWholeNumber(value) {
+  var integer = (0, _toInteger2.default)(value); // includes converting -0 to +0
+
+  if (integer <= 0) {
+    return 0;
+  }
+
+  return integer > _MAX_SAFE_INTEGER.default ? _MAX_SAFE_INTEGER.default : integer;
+}
 
 /***/ }),
 /* 10 */
@@ -464,128 +741,17 @@ exports.default = (0, _methodize3.default)(String.prototype.slice); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isFunction;
+exports.default = void 0;
 
-var _functionToString2 = __webpack_require__(108);
-
-var _functionToString3 = _interopRequireDefault(_functionToString2);
-
-var _test2 = __webpack_require__(26);
-
-var _test3 = _interopRequireDefault(_test2);
-
-var _attempt = __webpack_require__(70);
-
-var _attempt2 = _interopRequireDefault(_attempt);
-
-var _Boolean2 = __webpack_require__(33);
-
-var _Boolean3 = _interopRequireDefault(_Boolean2);
-
-var _toStringTag = __webpack_require__(44);
-
-var _toStringTag2 = _interopRequireDefault(_toStringTag);
-
-var _isToStringTagSupported = __webpack_require__(69);
-
-var _isToStringTagSupported2 = _interopRequireDefault(_isToStringTagSupported);
-
-var _isPrimitive = __webpack_require__(25);
-
-var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
-
-var _normalizeSpace = __webpack_require__(66);
-
-var _normalizeSpace2 = _interopRequireDefault(_normalizeSpace);
-
-var _replaceComments = __webpack_require__(60);
-
-var _replaceComments2 = _interopRequireDefault(_replaceComments);
-
-var _isClassSupported = __webpack_require__(100);
-
-var _isClassSupported2 = _interopRequireDefault(_isClassSupported);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Determine whether a given value is a function object.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _isFunction
- */
+var logger = __webpack_require__(0).get("caboodle-x:_stringSlice");
 
-var FUNC_TAG = '[object Function]';
-var GEN_TAG = '[object GeneratorFunction]';
-var ASYNC_TAG = '[object AsyncFunction]';
-var ctrRx = /^class /;
+var _default = (0, _methodize2.default)(String.prototype.slice);
 
-var testClassString = function _testClassString(value) {
-  return (0, _test3.default)(ctrRx, (0, _normalizeSpace2.default)((0, _replaceComments2.default)((0, _functionToString3.default)(value), ' ')));
-};
-
-var isES6ClassFn = function _isES6ClassFn(value) {
-  var result = (0, _attempt2.default)(testClassString, value);
-
-  return !result.threw && result.value;
-};
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @private
- * @param {*} value - The value to check.
- * @param {boolean} allowClass - Whether to _sift ES6 classes.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- * else `false`.
- */
-var tryFuncToString = function _tryFuncToString(value, allowClass) {
-  if (_isClassSupported2.default && !allowClass && isES6ClassFn(value)) {
-    return false;
-  }
-
-  return !(0, _attempt2.default)(_functionToString3.default, value).threw;
-};
-
-/**
- * Checks if `value` is classified as a `Function` object.
- *
- * @param {*} value - The value to check.
- * @param {boolean} [allowClass=false] - Whether to _sift ES6 classes.
- * @returns {boolean} Returns `true` if `value` is correctly classified,
- * else `false`.
- * @example
- * var isFunction = require('is-function-x');
- *
- * isFunction(); // false
- * isFunction(Number.MIN_VALUE); // false
- * isFunction('abc'); // false
- * isFunction(true); // false
- * isFunction({ name: 'abc' }); // false
- * isFunction(function () {}); // true
- * isFunction(new Function ()); // true
- * isFunction(function* test1() {}); // true
- * isFunction(function test2(a, b) {}); // true
- * isFunction(async function test3() {}); // true
- * isFunction(class Test {}); // false
- * isFunction(class Test {}, true); // true
- * isFunction((x, y) => {return this;}); // true
- */
-function isFunction(value) {
-  if ((0, _isPrimitive2.default)(value)) {
-    return false;
-  }
-
-  if (_isToStringTagSupported2.default) {
-    return tryFuncToString(value, (0, _Boolean3.default)(arguments.length <= 1 ? undefined : arguments[1]));
-  }
-
-  if (_isClassSupported2.default && !(arguments.length <= 1 ? undefined : arguments[1]) && isES6ClassFn(value)) {
-    return false;
-  }
-
-  var strTag = (0, _toStringTag2.default)(value);
-  return strTag === FUNC_TAG || strTag === GEN_TAG || strTag === ASYNC_TAG;
-}
+exports.default = _default;
 
 /***/ }),
 /* 11 */
@@ -597,26 +763,20 @@ function isFunction(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isObjectLike;
+exports.default = _stringTest;
 
-var _isNull = __webpack_require__(45);
+var _isRegex = _interopRequireDefault(__webpack_require__(41));
 
-var _isNull2 = _interopRequireDefault(_isNull);
+var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(62));
 
-var _isObjectType = __webpack_require__(67);
-
-var _isObjectType2 = _interopRequireDefault(_isObjectType);
+var _test2 = _interopRequireDefault(__webpack_require__(18));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectLike
- */
+var logger = __webpack_require__(0).get("caboodle-x:_stringTest");
 
-function isObjectLike(value) {
-  return !(0, _isNull2.default)(value) && (0, _isObjectType2.default)(value);
+function _stringTest(string, searchValue) {
+  return (0, _isRegex.default)(searchValue) ? (0, _test2.default)(searchValue, string) : (0, _stringIndexOf2.default)(string, searchValue) !== -1;
 }
 
 /***/ }),
@@ -629,27 +789,18 @@ function isObjectLike(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toObject;
+exports.default = void 0;
 
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _Object2 = __webpack_require__(63);
-
-var _Object3 = _interopRequireDefault(_Object2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_call");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toObject
+ * @module _call
  */
+var _default = Function.call.bind(Function.call);
 
-function toObject(value) {
-  return (0, _Object3.default)((0, _requireObjectCoercible2.default)(value));
-}
+exports.default = _default;
 
 /***/ }),
 /* 13 */
@@ -661,18 +812,18 @@ function toObject(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
+var logger = __webpack_require__(0).get("caboodle-x:_apply");
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _apply
+ */
+var _default = Function.call.bind(Function.apply);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.replace); /**
-                                                                       * @file Utility that needs description.
-                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                       * @module _replace
-                                                                       */
+exports.default = _default;
 
 /***/ }),
 /* 14 */
@@ -684,13 +835,17 @@ exports.default = (0, _methodize3.default)(String.prototype.replace); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _apply
- */
+exports.default = void 0;
 
-exports.default = Function.call.bind(Function.apply);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_replace");
+
+var _default = (0, _methodize2.default)(String.prototype.replace);
+
+exports.default = _default;
 
 /***/ }),
 /* 15 */
@@ -702,13 +857,19 @@ exports.default = Function.call.bind(Function.apply);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _call
- */
+exports.default = toObject;
 
-exports.default = Function.call.bind(Function.call);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _Object2 = _interopRequireDefault(__webpack_require__(56));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function toObject(value) {
+  return (0, _Object2.default)((0, _requireObjectCoercible.default)(value));
+}
 
 /***/ }),
 /* 16 */
@@ -720,34 +881,18 @@ exports.default = Function.call.bind(Function.call);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _includes;
+exports.default = isObjectLike;
 
-var _find2 = __webpack_require__(49);
+var _isNull = _interopRequireDefault(__webpack_require__(37));
 
-var _find3 = _interopRequireDefault(_find2);
-
-var _sameValueZero = __webpack_require__(90);
-
-var _sameValueZero2 = _interopRequireDefault(_sameValueZero);
+var _isObjectType = _interopRequireDefault(__webpack_require__(52));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _includes
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function _includes(array, searchElement) {
-  var isSameValueZero = function _isSameValueZero(value) {
-    return (0, _sameValueZero2.default)(searchElement, value);
-  };
-
-  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
-  }
-
-  return _find3.default.apply(undefined, [array, isSameValueZero].concat(fromIndex)).includes;
+function isObjectLike(value) {
+  return !(0, _isNull.default)(value) && (0, _isObjectType.default)(value);
 }
 
 /***/ }),
@@ -760,18 +905,18 @@ function _includes(array, searchElement) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isUndefined;
 
-var _methodize2 = __webpack_require__(0);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(Array.prototype.push); /**
-                                                                   * @file Utility that needs description.
-                                                                   * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                   * @module _push
-                                                                   */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isUndefined
+ */
+function isUndefined(value) {
+  return typeof value === 'undefined';
+}
 
 /***/ }),
 /* 18 */
@@ -783,29 +928,17 @@ exports.default = (0, _methodize3.default)(Array.prototype.push); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isArrayLike;
+exports.default = void 0;
 
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-var _isWholeNumber = __webpack_require__(37);
-
-var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function isArrayLike(value) {
-  return !(0, _isNil2.default)(value) && (0, _isWholeNumber2.default)(value.length) && !(0, _isFunction3.default)(value);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isArrayLike
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_test");
+
+var _default = (0, _methodize2.default)(RegExp.prototype.test);
+
+exports.default = _default;
 
 /***/ }),
 /* 19 */
@@ -817,40 +950,21 @@ function isArrayLike(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _any;
+exports.default = isPrimitive;
 
-var _fromIndex2 = __webpack_require__(95);
+var _isFunctionType = _interopRequireDefault(__webpack_require__(51));
 
-var _fromIndex3 = _interopRequireDefault(_fromIndex2);
+var _isNull = _interopRequireDefault(__webpack_require__(37));
 
-var _toObject = __webpack_require__(12);
-
-var _toObject2 = _interopRequireDefault(_toObject);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+var _isObjectType = _interopRequireDefault(__webpack_require__(52));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _any(array, callback) {
-  var object = (0, _toObject2.default)(array);
-  var length = (0, _toWholeNumber2.default)(object.length);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-  if (length) {
-    for (var index = (0, _fromIndex3.default)(object, arguments.length <= 2 ? undefined : arguments[2]); index < length; index += 1) {
-      if (callback(object[index], index, object)) {
-        return true;
-      }
-    }
-  }
-
-  return false;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _any
-   */
+function isPrimitive(value) {
+  return (0, _isNull.default)(value) || !(0, _isFunctionType.default)(value) && !(0, _isObjectType.default)(value);
+}
 
 /***/ }),
 /* 20 */
@@ -862,29 +976,17 @@ function _any(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _all;
+exports.default = void 0;
 
-var _any2 = __webpack_require__(19);
-
-var _any3 = _interopRequireDefault(_any2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _all(array, callback) {
-  var iteratee = function _iteratee() {
-    callback.apply(undefined, arguments);
-  };
+var logger = __webpack_require__(0).get("caboodle-x:_slice");
 
-  for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    rest[_key - 2] = arguments[_key];
-  }
+var _default = (0, _methodize2.default)(Array.prototype.slice);
 
-  _any3.default.apply(undefined, [array, iteratee].concat(rest));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _all
-   */
+exports.default = _default;
 
 /***/ }),
 /* 21 */
@@ -896,100 +998,18 @@ function _all(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _toNumber;
+exports.default = requireCoercibleToString;
 
-var _Number2 = __webpack_require__(59);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
-var _Number3 = _interopRequireDefault(_Number2);
-
-var _toPrimitive = __webpack_require__(58);
-
-var _toPrimitive2 = _interopRequireDefault(_toPrimitive);
-
-var _trim2 = __webpack_require__(42);
-
-var _trim3 = _interopRequireDefault(_trim2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _test2 = __webpack_require__(26);
-
-var _test3 = _interopRequireDefault(_test2);
-
-var _isBinary = __webpack_require__(98);
-
-var _isBinary2 = _interopRequireDefault(_isBinary);
-
-var _isOctal = __webpack_require__(96);
-
-var _isOctal2 = _interopRequireDefault(_isOctal);
-
-var _isStringType = __webpack_require__(38);
-
-var _isStringType2 = _interopRequireDefault(_isStringType);
-
-var _isSymbolType = __webpack_require__(32);
-
-var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
-
-var _parseInt2 = __webpack_require__(56);
-
-var _parseInt3 = _interopRequireDefault(_parseInt2);
-
-var _NaN2 = __webpack_require__(55);
-
-var _NaN3 = _interopRequireDefault(_NaN2);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var nonWSregex = new RegExp('[\x85\u180E\u200B\uFFFE]', 'g'); /**
-                                                               * @file Utility that needs description.
-                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                               * @module _toNumber
-                                                               */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var hasNonWS = function _hasNonWS(value) {
-  return (0, _test3.default)(nonWSregex, value);
-};
-
-var invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
-var isInvalidHexLiteral = function _isInvalidHexLiteral(value) {
-  return (0, _test3.default)(invalidHexLiteral, value);
-};
-
-var dropPrefix = function _dropPrefix(value) {
-  return (0, _stringSlice3.default)(value, 2);
-};
-
-function _toNumber(argument) {
-  var value = (0, _toPrimitive2.default)(argument, Number);
-
-  if ((0, _isSymbolType2.default)(value)) {
-    throw new TypeError('Cannot convert a Symbol value to a number');
-  }
-
-  if ((0, _isStringType2.default)(value)) {
-    if ((0, _isBinary2.default)(value)) {
-      return _toNumber((0, _parseInt3.default)(dropPrefix(value), 2));
-    }
-
-    if ((0, _isOctal2.default)(value)) {
-      return _toNumber((0, _parseInt3.default)(dropPrefix(value), 8));
-    }
-
-    if (hasNonWS(value) || isInvalidHexLiteral(value)) {
-      return _NaN3.default;
-    }
-
-    var trimmed = (0, _trim3.default)(value);
-    if (trimmed !== value) {
-      return _toNumber(trimmed);
-    }
-  }
-
-  return (0, _Number3.default)(value);
+function requireCoercibleToString(value) {
+  return (0, _toString2.default)((0, _requireObjectCoercible.default)(value));
 }
 
 /***/ }),
@@ -1003,13 +1023,16 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = _isNaN;
+
+var logger = __webpack_require__(0).get("caboodle-x:_isNaN");
+
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _isNaN
  */
-
 function _isNaN(value) {
+  /* eslint-disable-next-line no-self-compare */
   return value !== value;
 }
 
@@ -1023,26 +1046,78 @@ function _isNaN(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = requireCoercibleToString;
+exports.default = _toNumber;
 
-var _toString2 = __webpack_require__(2);
+var _Number2 = _interopRequireDefault(__webpack_require__(60));
 
-var _toString3 = _interopRequireDefault(_toString2);
+var _toPrimitive = _interopRequireDefault(__webpack_require__(61));
 
-var _requireObjectCoercible = __webpack_require__(1);
+var _trim2 = _interopRequireDefault(__webpack_require__(40));
 
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _test2 = _interopRequireDefault(__webpack_require__(18));
+
+var _isBinary = _interopRequireDefault(__webpack_require__(85));
+
+var _isOctal = _interopRequireDefault(__webpack_require__(87));
+
+var _isStringType = _interopRequireDefault(__webpack_require__(43));
+
+var _isSymbolType = _interopRequireDefault(__webpack_require__(30));
+
+var _parseInt2 = _interopRequireDefault(__webpack_require__(63));
+
+var _NaN2 = _interopRequireDefault(__webpack_require__(64));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module requireCoercibleToString
- */
+var logger = __webpack_require__(0).get("caboodle-x:_toNumber");
 
-function requireCoercibleToString(value) {
-  return (0, _toString3.default)((0, _requireObjectCoercible2.default)(value));
+var nonWSregex = new RegExp("[\x85\u180E\u200B\uFFFE]", 'g');
+
+var hasNonWS = function _hasNonWS(value) {
+  return (0, _test2.default)(nonWSregex, value);
+};
+
+var invalidHexLiteral = /^[-+]0x[0-9a-f]+$/i;
+
+var isInvalidHexLiteral = function _isInvalidHexLiteral(value) {
+  return (0, _test2.default)(invalidHexLiteral, value);
+};
+
+var dropPrefix = function _dropPrefix(value) {
+  return (0, _stringSlice2.default)(value, 2);
+};
+
+function _toNumber(argument) {
+  var value = (0, _toPrimitive.default)(argument, Number);
+
+  if ((0, _isSymbolType.default)(value)) {
+    throw new TypeError('Cannot convert a Symbol value to a number');
+  }
+
+  if ((0, _isStringType.default)(value)) {
+    if ((0, _isBinary.default)(value)) {
+      return _toNumber((0, _parseInt2.default)(dropPrefix(value), 2));
+    }
+
+    if ((0, _isOctal.default)(value)) {
+      return _toNumber((0, _parseInt2.default)(dropPrefix(value), 8));
+    }
+
+    if (hasNonWS(value) || isInvalidHexLiteral(value)) {
+      return _NaN2.default;
+    }
+
+    var trimmed = (0, _trim2.default)(value);
+
+    if (trimmed !== value) {
+      return _toNumber(trimmed);
+    }
+  }
+
+  return (0, _Number2.default)(value);
 }
 
 /***/ }),
@@ -1055,18 +1130,25 @@ function requireCoercibleToString(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _all;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _any2 = _interopRequireDefault(__webpack_require__(25));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.slice); /**
-                                                                    * @file Utility that needs description.
-                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                    * @module _slice
-                                                                    */
+var logger = __webpack_require__(0).get("caboodle-x:_all");
+
+function _all(array, callback) {
+  var iteratee = function _iteratee() {
+    callback.apply(void 0, arguments);
+  };
+
+  for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    rest[_key - 2] = arguments[_key];
+  }
+
+  _any2.default.apply(void 0, [array, iteratee].concat(rest));
+}
 
 /***/ }),
 /* 25 */
@@ -1078,29 +1160,32 @@ exports.default = (0, _methodize3.default)(Array.prototype.slice); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isPrimitive;
+exports.default = _any;
 
-var _isFunctionType = __webpack_require__(68);
+var _fromIndex2 = _interopRequireDefault(__webpack_require__(88));
 
-var _isFunctionType2 = _interopRequireDefault(_isFunctionType);
+var _toObject = _interopRequireDefault(__webpack_require__(15));
 
-var _isNull = __webpack_require__(45);
-
-var _isNull2 = _interopRequireDefault(_isNull);
-
-var _isObjectType = __webpack_require__(67);
-
-var _isObjectType2 = _interopRequireDefault(_isObjectType);
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function isPrimitive(value) {
-  return (0, _isNull2.default)(value) || !(0, _isFunctionType2.default)(value) && !(0, _isObjectType2.default)(value);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isPrimitive
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_any");
+
+function _any(array, callback) {
+  var object = (0, _toObject.default)(array);
+  var length = (0, _toWholeNumber.default)(object.length);
+
+  if (length) {
+    for (var index = (0, _fromIndex2.default)(object, arguments.length <= 2 ? undefined : arguments[2]); index < length; index += 1) {
+      if (callback(object[index], index, object)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
 
 /***/ }),
 /* 26 */
@@ -1112,18 +1197,21 @@ function isPrimitive(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isArrayLike;
 
-var _methodize2 = __webpack_require__(0);
+var _isNil = _interopRequireDefault(__webpack_require__(7));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+var _isWholeNumber = _interopRequireDefault(__webpack_require__(44));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(RegExp.prototype.test); /**
-                                                                    * @file Utility that needs description.
-                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                    * @module _test
-                                                                    */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isArrayLike(value) {
+  return !(0, _isNil.default)(value) && (0, _isWholeNumber.default)(value.length) && !(0, _isFunction2.default)(value);
+}
 
 /***/ }),
 /* 27 */
@@ -1135,16 +1223,17 @@ exports.default = (0, _methodize3.default)(RegExp.prototype.test); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUndefined;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUndefined
- */
+exports.default = void 0;
 
-function isUndefined(value) {
-  return typeof value === 'undefined';
-}
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_push");
+
+var _default = (0, _methodize2.default)(Array.prototype.push);
+
+exports.default = _default;
 
 /***/ }),
 /* 28 */
@@ -1156,18 +1245,27 @@ function isUndefined(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _includes;
 
-var _methodize2 = __webpack_require__(0);
+var _find2 = _interopRequireDefault(__webpack_require__(70));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _sameValueZero = _interopRequireDefault(__webpack_require__(92));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.join); /**
-                                                                   * @file Utility that needs description.
-                                                                   * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                   * @module _join
-                                                                   */
+var logger = __webpack_require__(0).get("caboodle-x:_includes");
+
+function _includes(array, searchElement) {
+  var isSameValueZero = function _isSameValueZero(value) {
+    return (0, _sameValueZero.default)(searchElement, value);
+  };
+
+  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  return _find2.default.apply(void 0, [array, isSameValueZero].concat(fromIndex)).includes;
+}
 
 /***/ }),
 /* 29 */
@@ -1179,18 +1277,17 @@ exports.default = (0, _methodize3.default)(Array.prototype.join); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
+var logger = __webpack_require__(0).get("caboodle-x:_Boolean");
 
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.charAt); /**
-                                                                      * @file Utility that needs description.
-                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                      * @module _charAt
-                                                                      */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Boolean
+ */
+var _default = true.constructor;
+exports.default = _default;
 
 /***/ }),
 /* 30 */
@@ -1202,15 +1299,19 @@ exports.default = (0, _methodize3.default)(String.prototype.charAt); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isNumberType;
+exports.default = isSymbolType;
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNumberType
+ * @module isSymbolType
  */
-
-function isNumberType(value) {
-  return typeof value === 'number';
+function isSymbolType(value) {
+  return _typeof(value) === 'symbol';
 }
 
 /***/ }),
@@ -1225,43 +1326,27 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = build;
 
-var _assign = __webpack_require__(106);
+var _assign = _interopRequireDefault(__webpack_require__(77));
 
-var _assign2 = _interopRequireDefault(_assign);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
-var _toString2 = __webpack_require__(2);
+var _indexOf2 = _interopRequireDefault(__webpack_require__(119));
 
-var _toString3 = _interopRequireDefault(_toString2);
+var _toLowerCase2 = _interopRequireDefault(__webpack_require__(58));
 
-var _indexOf2 = __webpack_require__(213);
+var _fromCharCode2 = _interopRequireDefault(__webpack_require__(120));
 
-var _indexOf3 = _interopRequireDefault(_indexOf2);
+var _map2 = _interopRequireDefault(__webpack_require__(81));
 
-var _toLowerCase2 = __webpack_require__(61);
+var _reduce2 = _interopRequireDefault(__webpack_require__(57));
 
-var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
 
-var _fromCharCode2 = __webpack_require__(212);
-
-var _fromCharCode3 = _interopRequireDefault(_fromCharCode2);
-
-var _map2 = __webpack_require__(102);
-
-var _map3 = _interopRequireDefault(_map2);
-
-var _reduce2 = __webpack_require__(62);
-
-var _reduce3 = _interopRequireDefault(_reduce2);
-
-var _slice2 = __webpack_require__(24);
-
-var _slice3 = _interopRequireDefault(_slice2);
-
-var _defineProperties2 = __webpack_require__(211);
-
-var _defineProperties3 = _interopRequireDefault(_defineProperties2);
+var _defineProperties2 = _interopRequireDefault(__webpack_require__(121));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_whitespace");
 
 /**
  * A record of a white space character.
@@ -1540,38 +1625,34 @@ var list = [{
   es2017: true,
   es2018: true,
   html: false
-}]; /**
-     * @file List of ECMAScript white space characters.
-     * @copyright Copyright (c) 2018-present, Graham Fairweather
-     * @module _whitespace
-     */
-
+}];
 var types = ['html', 'es5', 'es2015', 'es2016', 'es2017', 'es2018'];
 var last = types.length - 1;
 
 function build(type) {
-  var index = (0, _indexOf3.default)(types, (0, _toLowerCase3.default)((0, _toString3.default)(type)));
+  var index = (0, _indexOf2.default)(types, (0, _toLowerCase2.default)((0, _toString2.default)(type)));
   var prop = index === -1 ? types[last] : types[index];
+
   var iteratee = function _iteratee(string, record) {
-    return record[prop] ? string + (0, _fromCharCode3.default)(record.code) : string;
+    return record[prop] ? string + (0, _fromCharCode2.default)(record.code) : string;
   };
 
-  return (0, _reduce3.default)(list, iteratee, '');
+  return (0, _reduce2.default)(list, iteratee, '');
 }
 
 var copier = function _copier(record) {
-  return (0, _assign2.default)({}, record);
+  return (0, _assign.default)({}, record);
 };
 
-(0, _defineProperties3.default)(build, {
+(0, _defineProperties2.default)(build, {
   types: {
     get: function get() {
-      return (0, _slice3.default)(types);
+      return (0, _slice2.default)(types);
     }
   },
   list: {
     get: function get() {
-      return (0, _map3.default)(list, copier);
+      return (0, _map2.default)(list, copier);
     }
   }
 });
@@ -1586,18 +1667,26 @@ var copier = function _copier(record) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _isFinite;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _isNaN2 = _interopRequireDefault(__webpack_require__(22));
 
-exports.default = isSymbolType;
+var _Infinity2 = _interopRequireDefault(__webpack_require__(122));
+
+var _isNumberType = _interopRequireDefault(__webpack_require__(33));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_isFinite");
+
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSymbolType
+ * This method determines whether the passed value is a finite number.
+ *
+ * @param {*} number - The value to be tested for finiteness.
+ * @returns {boolean} A Boolean indicating whether or not the given value is a finite number.
  */
-
-function isSymbolType(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'symbol';
+function _isFinite(number) {
+  return (0, _isNumberType.default)(number) && !(0, _isNaN2.default)(number) && number !== _Infinity2.default && number !== -_Infinity2.default;
 }
 
 /***/ }),
@@ -1610,13 +1699,18 @@ function isSymbolType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isNumberType;
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Boolean
+ * @module isNumberType
  */
-
-exports.default = true.constructor;
+function isNumberType(value) {
+  return typeof value === 'number';
+}
 
 /***/ }),
 /* 34 */
@@ -1628,55 +1722,17 @@ exports.default = true.constructor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toPropertyKey;
+exports.default = void 0;
 
-var _isSymbolSupported = __webpack_require__(43);
-
-var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
-
-var _isSymbolType = __webpack_require__(32);
-
-var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
-
-var _toPrimitive = __webpack_require__(58);
-
-var _toPrimitive2 = _interopRequireDefault(_toPrimitive);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * This method Converts argument to a value that can be used as a property key.
- *
- * @param {*} argument - The argument to onvert to a property key.
- * @throws {TypeError} If argument is not a symbol and is not coercible to a string.
- * @returns {string|symbol} The converted argument.
- * @example
- * var toPropertyKey = require('to-property-key-x');
- *
- * toPropertyKey(); // 'undefined'
- * toPropertyKey(1); // '1'
- * toPropertyKey(true); // 'true'
- *
- * var symbol = Symbol('a');
- * toPropertyKey(symbol); // symbol
- *
- * toPropertyKey(Object.create(null)); // TypeError
- */
-/**
- * @file Converts argument to a value that can be used as a property key.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toPropertyKey
- */
+var logger = __webpack_require__(0).get("caboodle-x:_charAt");
 
-function toPropertyKey(argument) {
-  var key = (0, _toPrimitive2.default)(argument, String);
+var _default = (0, _methodize2.default)(String.prototype.charAt);
 
-  return _isSymbolSupported2.default && (0, _isSymbolType2.default)(key) ? key : (0, _toString3.default)(key);
-}
+exports.default = _default;
 
 /***/ }),
 /* 35 */
@@ -1688,18 +1744,17 @@ function toPropertyKey(argument) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(String.prototype.toUpperCase); /**
-                                                                           * @file Utility that needs description.
-                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                           * @module _toUpperCase
-                                                                           */
+var logger = __webpack_require__(0).get("caboodle-x:_join");
+
+var _default = (0, _methodize2.default)(Array.prototype.join);
+
+exports.default = _default;
 
 /***/ }),
 /* 36 */
@@ -1711,24 +1766,33 @@ exports.default = (0, _methodize3.default)(String.prototype.toUpperCase); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _assertIs;
 
-var _assertIs2 = __webpack_require__(46);
+var _call2 = _interopRequireDefault(__webpack_require__(12));
 
-var _assertIs3 = _interopRequireDefault(_assertIs2);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
+var _isNil = _interopRequireDefault(__webpack_require__(7));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module assertIsObject
- */
+var logger = __webpack_require__(0).get("caboodle-x:_assertIs");
 
-exports.default = (0, _assertIs3.default)(_isObjectLike2.default, 'Not an object');
+var toMessage = function _toMessage(message, fallback) {
+  return (0, _isNil.default)(message) ? fallback : (0, _toString2.default)(message);
+};
+
+function _assertIs(predicate, defaultMessage) {
+  var defMsg = toMessage(defaultMessage, 'Not a valid value');
+  return function assertIsBound(value, customMessage) {
+    /* eslint-disable-next-line babel/no-invalid-this */
+    if ((0, _call2.default)(predicate, this, value)) {
+      return value;
+    }
+
+    throw new TypeError(toMessage(customMessage, defMsg));
+  };
+}
 
 /***/ }),
 /* 37 */
@@ -1740,21 +1804,18 @@ exports.default = (0, _assertIs3.default)(_isObjectLike2.default, 'Not an object
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isWholeNumber;
+exports.default = isNull;
 
-var _isSafeInteger = __webpack_require__(51);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function isWholeNumber(value) {
-  return (0, _isSafeInteger2.default)(value) && value >= 0;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isWholeNumber
-   */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isNull
+ */
+function isNull(value) {
+  return value === null;
+}
 
 /***/ }),
 /* 38 */
@@ -1766,16 +1827,24 @@ function isWholeNumber(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringType;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringType
- */
+exports.default = void 0;
 
-function isStringType(value) {
-  return typeof value === 'string';
-}
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * The `toStringTag` method returns "[object type]", where type is the
+ * object type.
+ *
+ * @param {*} value - The object of which to get the object type string.
+ * @returns {string} The object type string.
+ */
+var _default = (0, _methodize2.default)(Object.prototype.toString);
+
+exports.default = _default;
 
 /***/ }),
 /* 39 */
@@ -1787,18 +1856,17 @@ function isStringType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _isSymbolType = _interopRequireDefault(__webpack_require__(30));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Object.prototype.hasOwnProperty); /**
-                                                                              * @file Utility that needs description.
-                                                                              * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                              * @module _hasOwnProperty
-                                                                              */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var _default = typeof Symbol === 'function' && (0, _isSymbolType.default)(Symbol('x'));
+
+exports.default = _default;
 
 /***/ }),
 /* 40 */
@@ -1810,71 +1878,18 @@ exports.default = (0, _methodize3.default)(Object.prototype.hasOwnProperty); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isRegex;
+exports.default = _trim;
 
-var _toStringTag = __webpack_require__(44);
+var _trimLeft2 = _interopRequireDefault(__webpack_require__(54));
 
-var _toStringTag2 = _interopRequireDefault(_toStringTag);
-
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-var _isToStringTagSupported = __webpack_require__(69);
-
-var _isToStringTagSupported2 = _interopRequireDefault(_isToStringTagSupported);
-
-var _hasOwnProperty2 = __webpack_require__(39);
-
-var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
-
-var _exec2 = __webpack_require__(97);
-
-var _exec3 = _interopRequireDefault(_exec2);
-
-var _getOwnPropertyDescriptor2 = __webpack_require__(209);
-
-var _getOwnPropertyDescriptor3 = _interopRequireDefault(_getOwnPropertyDescriptor2);
+var _trimRight2 = _interopRequireDefault(__webpack_require__(82));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Is this value a JS regex?
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isRegex
- */
+var logger = __webpack_require__(0).get("caboodle-x:_trim");
 
-var regexClass = '[object RegExp]';
-
-var tryRegexExecCall = function _tryRegexExecCall(value, descriptor) {
-  /* istanbul ignore next */
-  try {
-    value.lastIndex = 0;
-
-    (0, _exec3.default)(value);
-    return true;
-  } catch (e) {
-    return false;
-  } finally {
-    if (descriptor.writable) {
-      value.lastIndex = descriptor.value;
-    }
-  }
-};
-
-function isRegex(value) {
-  if (!(0, _isObjectLike2.default)(value)) {
-    return false;
-  }
-
-  /* istanbul ignore next */
-  if (!_isToStringTagSupported2.default) {
-    return (0, _toStringTag2.default)(value) === regexClass;
-  }
-
-  var descriptor = (0, _getOwnPropertyDescriptor3.default)(value, 'lastIndex');
-
-  return descriptor && (0, _hasOwnProperty3.default)(descriptor, 'value') ? tryRegexExecCall(value, descriptor) : false;
+function _trim(string) {
+  return (0, _trimRight2.default)((0, _trimLeft2.default)(string));
 }
 
 /***/ }),
@@ -1887,48 +1902,55 @@ function isRegex(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _isFinite;
+exports.default = isRegex;
 
-var _isNaN2 = __webpack_require__(22);
+var _toStringTag = _interopRequireDefault(__webpack_require__(38));
 
-var _isNaN3 = _interopRequireDefault(_isNaN2);
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
 
-var _Infinity2 = __webpack_require__(210);
+var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(50));
 
-var _Infinity3 = _interopRequireDefault(_Infinity2);
+var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(42));
 
-var _isNumberType = __webpack_require__(30);
+var _exec2 = _interopRequireDefault(__webpack_require__(86));
 
-var _isNumberType2 = _interopRequireDefault(_isNumberType);
+var _getOwnPropertyDescriptor2 = _interopRequireDefault(__webpack_require__(123));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * This method determines whether the passed value is a finite number.
- *
- * @param {*} number - The value to be tested for finiteness.
- * @returns {boolean} A Boolean indicating whether or not the given value is a finite number.
- * @example
- * var numIsFinite = require('is-finite-x');
- *
- * numIsFinite(Infinity);  // false
- * numIsFinite(NaN);       // false
- * numIsFinite(-Infinity); // false
- *
- * numIsFinite(0);         // true
- * numIsFinite(2e64);      // true
- *
- * numIsFinite('0');       // false, would've been true with
- *                         // global isFinite('0')
- * numIsFinite(null);      // false, would've been true with
- */
-function _isFinite(number) {
-  return (0, _isNumberType2.default)(number) && !(0, _isNaN3.default)(number) && number !== _Infinity3.default && number !== -_Infinity3.default;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _isFinite
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var regexClass = '[object RegExp]';
+
+var tryRegexExecCall = function _tryRegexExecCall(value, descriptor) {
+  /* istanbul ignore next */
+  try {
+    value.lastIndex = 0;
+    (0, _exec2.default)(value);
+    return true;
+  } catch (e) {
+    return false;
+  } finally {
+    if (descriptor.writable) {
+      value.lastIndex = descriptor.value;
+    }
+  }
+};
+
+function isRegex(value) {
+  if (!(0, _isObjectLike.default)(value)) {
+    return false;
+  }
+  /* istanbul ignore next */
+
+
+  if (!_isToStringTagSupported.default) {
+    return (0, _toStringTag.default)(value) === regexClass;
+  }
+
+  var descriptor = (0, _getOwnPropertyDescriptor2.default)(value, 'lastIndex');
+  return descriptor && (0, _hasOwnProperty2.default)(descriptor, 'value') ? tryRegexExecCall(value, descriptor) : false;
+}
 
 /***/ }),
 /* 42 */
@@ -1940,27 +1962,17 @@ function _isFinite(number) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trim;
+exports.default = void 0;
 
-var _trimLeft2 = __webpack_require__(65);
-
-var _trimLeft3 = _interopRequireDefault(_trimLeft2);
-
-var _trimRight2 = __webpack_require__(101);
-
-var _trimRight3 = _interopRequireDefault(_trimRight2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trim
- */
+var logger = __webpack_require__(0).get("caboodle-x:_hasOwnProperty");
 
-function _trim(string) {
-  return (0, _trimRight3.default)((0, _trimLeft3.default)(string));
-}
+var _default = (0, _methodize2.default)(Object.prototype.hasOwnProperty);
+
+exports.default = _default;
 
 /***/ }),
 /* 43 */
@@ -1972,23 +1984,18 @@ function _trim(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isStringType;
 
-var _isSymbolType = __webpack_require__(32);
-
-var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = typeof Symbol === 'function' && (0, _isSymbolType2.default)(Symbol('x')); /**
-                                                                                             * @file Tests if ES6 Symbol is supported.
-                                                                                             * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                             * @module isSymbolSupported
-                                                                                             */
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
- * Indicates if `Symbol`exists and creates the correct type.
- * `true`, if it exists and creates the correct type, otherwise `false`.
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isStringType
  */
+function isStringType(value) {
+  return typeof value === 'string';
+}
 
 /***/ }),
 /* 44 */
@@ -2000,25 +2007,17 @@ exports.default = typeof Symbol === 'function' && (0, _isSymbolType2.default)(Sy
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isWholeNumber;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _isSafeInteger = _interopRequireDefault(__webpack_require__(68));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * The `toStringTag` method returns "[object type]", where type is the
- * object type.
- *
- * @param {*} value - The object of which to get the object type string.
- * @returns {string} The object type string.
- */
-exports.default = (0, _methodize3.default)(Object.prototype.toString); /**
-                                                                        * @file Get an object's ES6 @@toStringTag.
-                                                                        * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                        * @module toStringTag
-                                                                        */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isWholeNumber(value) {
+  return (0, _isSafeInteger.default)(value) && value >= 0;
+}
 
 /***/ }),
 /* 45 */
@@ -2030,16 +2029,19 @@ exports.default = (0, _methodize3.default)(Object.prototype.toString); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isNull;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNull
- */
+exports.default = void 0;
 
-function isNull(value) {
-  return value === null;
-}
+var _assertIs2 = _interopRequireDefault(__webpack_require__(36));
+
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var _default = (0, _assertIs2.default)(_isObjectLike.default, 'Not an object');
+
+exports.default = _default;
 
 /***/ }),
 /* 46 */
@@ -2051,41 +2053,17 @@ function isNull(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _assertIs;
+exports.default = void 0;
 
-var _call2 = __webpack_require__(15);
-
-var _call3 = _interopRequireDefault(_call2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var toMessage = function _toMessage(message, fallback) {
-  return (0, _isNil2.default)(message) ? fallback : (0, _toString3.default)(message);
-}; /**
-    * @file Utility that needs description.
-    * @copyright Copyright (c) 2018-present, Graham Fairweather
-    * @module _assertIs
-    */
+var logger = __webpack_require__(0).get("caboodle-x:_toUpperCase");
 
-function _assertIs(predicate, defaultMessage) {
-  var defMsg = toMessage(defaultMessage, 'Not a valid value');
+var _default = (0, _methodize2.default)(String.prototype.toUpperCase);
 
-  return function assertIsBound(value, customMessage) {
-    if ((0, _call3.default)(predicate, this, value)) {
-      return value;
-    }
-
-    throw new TypeError(toMessage(customMessage, defMsg));
-  };
-}
+exports.default = _default;
 
 /***/ }),
 /* 47 */
@@ -2097,43 +2075,30 @@ function _assertIs(predicate, defaultMessage) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _sift;
+exports.default = toPropertyKey;
 
-var _any2 = __webpack_require__(19);
+var _isSymbolSupported = _interopRequireDefault(__webpack_require__(39));
 
-var _any3 = _interopRequireDefault(_any2);
+var _isSymbolType = _interopRequireDefault(__webpack_require__(30));
 
-var _push2 = __webpack_require__(17);
+var _toPrimitive = _interopRequireDefault(__webpack_require__(61));
 
-var _push3 = _interopRequireDefault(_push2);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _sift
+ * This method Converts argument to a value that can be used as a property key.
+ *
+ * @param {*} argument - The argument to convert to a property key.
+ * @throws {TypeError} If argument is not a symbol and is not coercible to a string.
+ * @returns {string|Symbol} The converted argument.
  */
-
-function _sift(array, callback) {
-  var result = [];
-  var iteratee = function _iteratee(value) {
-    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-      args[_key2 - 1] = arguments[_key2];
-    }
-
-    if (callback.apply(undefined, [value].concat(args))) {
-      (0, _push3.default)(result, value);
-    }
-  };
-
-  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
-  }
-
-  _any3.default.apply(undefined, [array, iteratee].concat(fromIndex));
-
-  return result;
+function toPropertyKey(argument) {
+  var key = (0, _toPrimitive.default)(argument, String);
+  return _isSymbolSupported.default && (0, _isSymbolType.default)(key) ? key : (0, _toString2.default)(key);
 }
 
 /***/ }),
@@ -2143,44 +2108,40 @@ function _sift(array, callback) {
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _getAt;
+var toStr = Object.prototype.toString;
+var hasSymbols = __webpack_require__(114)();
 
-var _isString = __webpack_require__(4);
+if (hasSymbols) {
+	var symToStr = Symbol.prototype.toString;
+	var symStringRegex = /^Symbol\(.*\)$/;
+	var isSymbolObject = function isRealSymbolObject(value) {
+		if (typeof value.valueOf() !== 'symbol') {
+			return false;
+		}
+		return symStringRegex.test(symToStr.call(value));
+	};
 
-var _isString2 = _interopRequireDefault(_isString);
+	module.exports = function isSymbol(value) {
+		if (typeof value === 'symbol') {
+			return true;
+		}
+		if (toStr.call(value) !== '[object Symbol]') {
+			return false;
+		}
+		try {
+			return isSymbolObject(value);
+		} catch (e) {
+			return false;
+		}
+	};
+} else {
 
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _isArrayLike = __webpack_require__(18);
-
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
-
-var _charAt2 = __webpack_require__(29);
-
-var _charAt3 = _interopRequireDefault(_charAt2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getAt
- */
-
-function _getAt(array) {
-  if (!(0, _isArrayLike2.default)(array)) {
-    return void 0;
-  }
-
-  var index = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toInteger3.default)(arguments.length <= 1 ? undefined : arguments[1]) : 0;
-
-  return (0, _isString2.default)(array) ? (0, _charAt3.default)(array, index) : array[index];
+	module.exports = function isSymbol(value) {
+		// this environment does not support Symbols.
+		return  false && false;
+	};
 }
+
 
 /***/ }),
 /* 49 */
@@ -2192,45 +2153,42 @@ function _getAt(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _find;
+exports.default = attempt;
 
-var _any2 = __webpack_require__(19);
-
-var _any3 = _interopRequireDefault(_any2);
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _find(array, callback) {
-  var result = {
-    includes: false,
-    index: -1,
-    value: void 0
-  };
+var logger = __webpack_require__(0).get("caboodle-x");
 
-  var predicate = function _predicate(value, index, object) {
-    var found = callback(value, index, object);
-
-    if (found) {
-      result.includes = true;
-      result.index = index;
-      result.value = value;
+/**
+ * This method attempts to invoke the function, returning either the result or
+ * the caught error object. Any additional arguments are provided to the
+ * function when it's invoked.
+ *
+ * @param {Function} fn - The function to attempt.
+ * @param {...*} [rest] - The arguments to invoke the function with.
+ * @returns {Object} Returns an object of the result.
+ */
+function attempt(fn) {
+  try {
+    for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      rest[_key - 1] = arguments[_key];
     }
 
-    return found;
-  };
+    return {
+      threw: false,
 
-  for (var _len = arguments.length, fromIndex = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
+      /* eslint-disable-next-line babel/no-invalid-this */
+      value: (0, _apply2.default)(fn, this, rest)
+    };
+  } catch (e) {
+    return {
+      threw: true,
+      value: e
+    };
   }
-
-  _any3.default.apply(undefined, [array, predicate].concat(fromIndex));
-
-  return result;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _find
-   */
+}
 
 /***/ }),
 /* 50 */
@@ -2242,43 +2200,27 @@ function _find(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _bound;
+exports.default = void 0;
 
-var _apply2 = __webpack_require__(14);
+var _isSymbolSupported = _interopRequireDefault(__webpack_require__(39));
 
-var _apply3 = _interopRequireDefault(_apply2);
-
-var _argsToArray2 = __webpack_require__(203);
-
-var _argsToArray3 = _interopRequireDefault(_argsToArray2);
-
-var _createArgList2 = __webpack_require__(202);
-
-var _createArgList3 = _interopRequireDefault(_createArgList2);
-
-var _create2 = __webpack_require__(201);
-
-var _create3 = _interopRequireDefault(_create2);
-
-var _Function2 = __webpack_require__(200);
-
-var _Function3 = _interopRequireDefault(_Function2);
+var _isSymbolType = _interopRequireDefault(__webpack_require__(30));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _bound(binder, name, prototype, length) {
-  var bound = (0, _Function3.default)('binder', '_apply', '_argsToArray', 'return function bound' + String(name) + '(' + String((0, _createArgList3.default)(length)) + '){ return _apply(binder,this,_argsToArray(arguments)); }')(binder, _apply3.default, _argsToArray3.default);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-  if (prototype) {
-    bound.prototype = (0, _create3.default)(prototype);
-  }
+var logger = __webpack_require__(0).get("caboodle-x");
 
-  return bound;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _bound
-   */
+/**
+ * Indicates if `Symbol.toStringTag`exists and is the correct type.
+ * `true`, if it exists and is the correct type, otherwise `false`.
+ *
+ * @type boolean
+ */
+var _default = _isSymbolSupported.default && _typeof((0, _isSymbolType.default)(Symbol.toStringTag));
+
+exports.default = _default;
 
 /***/ }),
 /* 51 */
@@ -2290,26 +2232,17 @@ function _bound(binder, name, prototype, length) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSafeInteger;
+exports.default = isFunctionType;
 
-var _isInteger = __webpack_require__(94);
-
-var _isInteger2 = _interopRequireDefault(_isInteger);
-
-var _MAX_SAFE_INTEGER = __webpack_require__(53);
-
-var _MAX_SAFE_INTEGER2 = _interopRequireDefault(_MAX_SAFE_INTEGER);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSafeInteger
+ * @module isFunctionType
  */
-
-function isSafeInteger(value) {
-  return (0, _isInteger2.default)(value) && value >= -_MAX_SAFE_INTEGER2.default && value <= _MAX_SAFE_INTEGER2.default;
+function isFunctionType(value) {
+  return typeof value === 'function';
 }
 
 /***/ }),
@@ -2322,36 +2255,20 @@ function isSafeInteger(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _accumulate;
+exports.default = isObjectType;
 
-var _all2 = __webpack_require__(20);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-var _all3 = _interopRequireDefault(_all2);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _accumulate(array, callback, initialValue) {
-  var accumulator = initialValue;
-  var iteratee = function _iteratee() {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    accumulator = callback.apply(undefined, [accumulator].concat(args));
-  };
-
-  for (var _len = arguments.length, rest = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-    rest[_key - 3] = arguments[_key];
-  }
-
-  _all3.default.apply(undefined, [array, iteratee].concat(rest));
-
-  return accumulator;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _accumulate
-   */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isObjectType
+ */
+function isObjectType(value) {
+  return _typeof(value) === 'object';
+}
 
 /***/ }),
 /* 53 */
@@ -2363,13 +2280,28 @@ function _accumulate(array, callback, initialValue) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module MAX_SAFE_INTEGER
- */
+exports.default = normalizeSpace;
 
-exports.default = 9007199254740991;
+var _normalizeSpace2 = _interopRequireDefault(__webpack_require__(116));
+
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * This method strips leading and trailing white-space from a string,
+ * replaces sequences of whitespace characters by a single space,
+ * and returns the resulting string.
+ *
+ * @param {string} string - The string to be normalized.
+ * @throws {TypeError} If string is null or undefined or not coercible.
+ * @returns {string} The normalized string.
+ */
+function normalizeSpace(string) {
+  return (0, _normalizeSpace2.default)((0, _requireCoercibleToString.default)(string));
+}
 
 /***/ }),
 /* 54 */
@@ -2381,52 +2313,22 @@ exports.default = 9007199254740991;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _sign;
+exports.default = _trimLeft;
 
-var _toNumber2 = __webpack_require__(21);
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
 
-var _toNumber3 = _interopRequireDefault(_toNumber2);
-
-var _isNaN2 = __webpack_require__(22);
-
-var _isNaN3 = _interopRequireDefault(_isNaN2);
+var _whitespace2 = _interopRequireDefault(__webpack_require__(31));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * This method returns the sign of a number, indicating whether the number is positive,
- * negative or zero.
- *
- * @param {*} x - A number.
- * @returns {number} A number representing the sign of the given argument. If the argument
- * is a positive number, negative number, positive zero or negative zero, the function will
- * return 1, -1, 0 or -0 respectively. Otherwise, NaN is returned.
- * @example
- * var mathSign = require('math-sign-x').sign2018;
- *
- * mathSign(3);     //  1
- * mathSign(-3);    // -1
- * mathSign('-3');  // -1
- * mathSign(0);     //  0
- * mathSign(-0);    // -0
- * mathSign(NaN);   // NaN
- * mathSign('foo'); // NaN
- * mathSign();      // NaN
- */
-/**
- * @file Shim for Math.sign.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sign
- */
+var logger = __webpack_require__(0).get("caboodle-x:_trimLeft");
 
-function _sign(x) {
-  var n = (0, _toNumber3.default)(x);
+var PRE = '^[';
+var POST = ']+';
+var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
 
-  if (n === 0 || (0, _isNaN3.default)(n)) {
-    return n;
-  }
-
-  return n > 0 ? 1 : -1;
+function _trimLeft(string) {
+  return (0, _replace2.default)(string, whiteSpace, '');
 }
 
 /***/ }),
@@ -2439,13 +2341,24 @@ function _sign(x) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Parses a string argument and returns an integer of the specified radix.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _NaN
- */
+exports.default = _negate;
 
-exports.default = 0 / 0;
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_negate");
+
+function _negate(predicate) {
+  return function boundNegate() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    /* eslint-disable-next-line babel/no-invalid-this */
+    return !(0, _apply2.default)(predicate, this, args);
+  };
+}
 
 /***/ }),
 /* 56 */
@@ -2457,43 +2370,313 @@ exports.default = 0 / 0;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _parseInt;
+exports.default = void 0;
 
-var _toString2 = __webpack_require__(2);
+var logger = __webpack_require__(0).get("caboodle-x:_Object");
 
-var _toString3 = _interopRequireDefault(_toString2);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Object
+ */
+var _default = {}.constructor;
+exports.default = _default;
 
-var _trimLeft2 = __webpack_require__(65);
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
 
-var _trimLeft3 = _interopRequireDefault(_trimLeft2);
+"use strict";
 
-var _Number2 = __webpack_require__(59);
 
-var _Number3 = _interopRequireDefault(_Number2);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
-var _charAt2 = __webpack_require__(29);
-
-var _charAt3 = _interopRequireDefault(_charAt2);
-
-var _test2 = __webpack_require__(26);
-
-var _test3 = _interopRequireDefault(_test2);
-
-var _NaN2 = __webpack_require__(55);
-
-var _NaN3 = _interopRequireDefault(_NaN2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x:_reduce");
+
+var _default = (0, _methodize2.default)(Array.prototype.reduce);
+
+exports.default = _default;
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_toLowerCase");
+
+var _default = (0, _methodize2.default)(String.prototype.toLowerCase);
+
+exports.default = _default;
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = replaceComments;
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
+
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
 /**
- * @file Parses a string argument and returns an integer of the specified radix.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _parseInt
+ * This method replaces comments in a string.
+ *
+ * @param {string} string - The string to be stripped.
+ * @param {string} [replacement] - The string to be used as a replacement.
+ * @throws {TypeError} If string is null or undefined or not coercible.
+ * @throws {TypeError} If replacement is not coercible.
+ * @returns {string} The new string with the comments replaced.
  */
+
+function replaceComments(string) {
+  return (0, _replace2.default)((0, _requireCoercibleToString.default)(string), STRIP_COMMENTS, (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toString2.default)(arguments.length <= 1 ? undefined : arguments[1]) : '');
+}
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var logger = __webpack_require__(0).get("caboodle-x:_Number");
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Number
+ */
+var _default = 0 .constructor;
+exports.default = _default;
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = toPrimitive;
+
+var _isDateObject = _interopRequireDefault(__webpack_require__(84));
+
+var _isSymbol = _interopRequireDefault(__webpack_require__(48));
+
+var _call2 = _interopRequireDefault(__webpack_require__(12));
+
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
+
+var _isSymbolSupported = _interopRequireDefault(__webpack_require__(39));
+
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var symToPrimitive = _isSymbolSupported.default && Symbol.toPrimitive;
+var symValueOf = _isSymbolSupported.default && Symbol.prototype.valueOf;
+var toStringOrder = ['toString', 'valueOf'];
+var toNumberOrder = ['valueOf', 'toString'];
+var orderLength = 2;
+
+var ordinaryToPrimitive = function _ordinaryToPrimitive(O, hint) {
+  (0, _requireObjectCoercible.default)(O);
+
+  if (hint !== 'number' && hint !== 'string') {
+    throw new TypeError('hint must be "string" or "number"');
+  }
+
+  var methodNames = hint === 'string' ? toStringOrder : toNumberOrder;
+  var method;
+  var result;
+
+  for (var i = 0; i < orderLength; i += 1) {
+    method = O[methodNames[i]];
+
+    if ((0, _isFunction2.default)(method)) {
+      result = (0, _call2.default)(method, O);
+
+      if ((0, _isPrimitive.default)(result)) {
+        return result;
+      }
+    }
+  }
+
+  throw new TypeError('No default value');
+};
+
+var getMethod = function _getMethod(O, P) {
+  var func = O[P];
+
+  if (!(0, _isNil.default)(func)) {
+    if (!(0, _isFunction2.default)(func)) {
+      throw new TypeError("".concat(func, " returned for property ").concat(P, " of object ").concat(O, " is not a function"));
+    }
+
+    return func;
+  }
+  /* eslint-disable-next-line no-void */
+
+
+  return void 0;
+}; // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
+
+/**
+ * This method converts a JavaScript object to a primitive value.
+ * Note: When toPrimitive is called with no hint, then it generally behaves as
+ * if the hint were Number. However, objects may over-ride this behaviour by
+ * defining a @@toPrimitive method. Of the objects defined in this specification
+ * only Date objects (see 20.3.4.45) and Symbol objects (see 19.4.3.4) over-ride
+ * the default ToPrimitive behaviour. Date objects treat no hint as if the hint
+ * were String.
+ *
+ * @param {*} input - The input to convert.
+ * @param {constructor} [preferredType] - The preferred type (String or Number).
+ * @throws {TypeError} If unable to convert input to a primitive.
+ * @returns {string|number} The converted input as a primitive.
+ */
+
+
+function toPrimitive(input) {
+  if ((0, _isPrimitive.default)(input)) {
+    return input;
+  }
+
+  var hint = 'default';
+
+  if (arguments.length <= 1 ? 0 : arguments.length - 1) {
+    if ((arguments.length <= 1 ? undefined : arguments[1]) === String) {
+      hint = 'string';
+    } else if ((arguments.length <= 1 ? undefined : arguments[1]) === Number) {
+      hint = 'number';
+    }
+  }
+
+  var exoticToPrim;
+
+  if (_isSymbolSupported.default) {
+    if (symToPrimitive) {
+      exoticToPrim = getMethod(input, symToPrimitive);
+    } else if ((0, _isSymbol.default)(input)) {
+      exoticToPrim = symValueOf;
+    }
+  }
+
+  if (!(0, _isUndefined.default)(exoticToPrim)) {
+    var result = (0, _call2.default)(exoticToPrim, input, hint);
+
+    if ((0, _isPrimitive.default)(result)) {
+      return result;
+    }
+
+    throw new TypeError('unable to convert exotic object to primitive');
+  }
+
+  if (hint === 'default' && ((0, _isDateObject.default)(input) || (0, _isSymbol.default)(input))) {
+    hint = 'string';
+  }
+
+  return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
+}
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_stringIndexOf");
+
+var _default = (0, _methodize2.default)(String.prototype.indexOf);
+
+exports.default = _default;
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _parseInt;
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _trimLeft2 = _interopRequireDefault(__webpack_require__(54));
+
+var _Number2 = _interopRequireDefault(__webpack_require__(60));
+
+var _charAt2 = _interopRequireDefault(__webpack_require__(34));
+
+var _test2 = _interopRequireDefault(__webpack_require__(18));
+
+var _NaN2 = _interopRequireDefault(__webpack_require__(64));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_parseInt");
 
 var parse = parseInt;
 var hexPattern = /^[-+]?0x/i;
-
 /**
  * This method parses a string argument and returns an integer of the specified
  * radix (the base in mathematical numeral systems).
@@ -2510,352 +2693,17 @@ var hexPattern = /^[-+]?0x/i;
  * @throws {TypeError} If target is a Symbol or is not coercible.
  * @returns {number} An integer number parsed from the given string. If the first
  *  character cannot be converted to a number, NaN is returned.
- * @example
- * var $parseInt = require('parse-int-x').parseInt2018;
- *
- * // The following examples all return 15
- * $parseInt(' 0xF', 16);
- * $parseInt(' F', 16);
- * $parseInt('17', 8);
- * $parseInt(021, 8);
- * $parseInt('015', 10);   // $parseInt(015, 10); will return 15
- * $parseInt(15.99, 10);
- * $parseInt('15,123', 10);
- * $parseInt('FXX123', 16);
- * $parseInt('1111', 2);
- * $parseInt('15 * 3', 10);
- * $parseInt('15e2', 10);
- * $parseInt('15px', 10);
- * $parseInt('12', 13);
- *
- * //The following examples all return NaN:
- * $parseInt('Hello', 8); // Not a number at all
- * $parseInt('546', 2);   // Digits are not valid for binary representations
  */
+
 function _parseInt(string, radix) {
-  var str = (0, _trimLeft3.default)((0, _toString3.default)(string));
+  var str = (0, _trimLeft2.default)((0, _toString2.default)(string));
 
-  if ((0, _charAt3.default)(str, 0) === '\u180E') {
-    return _NaN3.default;
+  if ((0, _charAt2.default)(str, 0) === "\u180E") {
+    return _NaN2.default;
   }
 
-  return parse(str, (0, _Number3.default)(radix) || ((0, _test3.default)(hexPattern, str) ? 16 : 10));
+  return parse(str, (0, _Number2.default)(radix) || ((0, _test2.default)(hexPattern, str) ? 16 : 10));
 }
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.indexOf); /**
-                                                                       * @file Utility that needs description.
-                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                       * @module _stringIndexOf
-                                                                       */
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = toPrimitive;
-
-var _isDateObject = __webpack_require__(99);
-
-var _isDateObject2 = _interopRequireDefault(_isDateObject);
-
-var _isSymbol = __webpack_require__(71);
-
-var _isSymbol2 = _interopRequireDefault(_isSymbol);
-
-var _call2 = __webpack_require__(15);
-
-var _call3 = _interopRequireDefault(_call2);
-
-var _isPrimitive = __webpack_require__(25);
-
-var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
-
-var _isSymbolSupported = __webpack_require__(43);
-
-var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-var _isUndefined = __webpack_require__(27);
-
-var _isUndefined2 = _interopRequireDefault(_isUndefined);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var symToPrimitive = _isSymbolSupported2.default && Symbol.toPrimitive; /**
-                                                                         * @file Converts a JavaScript object to a primitive value.
-                                                                         * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                         * @module toNumber
-                                                                         */
-
-var symValueOf = _isSymbolSupported2.default && Symbol.prototype.valueOf;
-var toStringOrder = ['toString', 'valueOf'];
-var toNumberOrder = ['valueOf', 'toString'];
-var orderLength = 2;
-
-var ordinaryToPrimitive = function _ordinaryToPrimitive(O, hint) {
-  (0, _requireObjectCoercible2.default)(O);
-  if (hint !== 'number' && hint !== 'string') {
-    throw new TypeError('hint must be "string" or "number"');
-  }
-
-  var methodNames = hint === 'string' ? toStringOrder : toNumberOrder;
-  var method = void 0;
-  var result = void 0;
-  for (var i = 0; i < orderLength; i += 1) {
-    method = O[methodNames[i]];
-    if ((0, _isFunction3.default)(method)) {
-      result = (0, _call3.default)(method, O);
-      if ((0, _isPrimitive2.default)(result)) {
-        return result;
-      }
-    }
-  }
-
-  throw new TypeError('No default value');
-};
-
-var getMethod = function _getMethod(O, P) {
-  var func = O[P];
-  if (!(0, _isNil2.default)(func)) {
-    if (!(0, _isFunction3.default)(func)) {
-      throw new TypeError(String(func) + ' returned for property ' + String(P) + ' of object ' + String(O) + ' is not a function');
-    }
-
-    return func;
-  }
-
-  return void 0;
-};
-
-// http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
-
-/**
- * This method converts a JavaScript object to a primitive value.
- * Note: When toPrimitive is called with no hint, then it generally behaves as
- * if the hint were Number. However, objects may over-ride this behaviour by
- * defining a @@toPrimitive method. Of the objects defined in this specification
- * only Date objects (see 20.3.4.45) and Symbol objects (see 19.4.3.4) over-ride
- * the default ToPrimitive behaviour. Date objects treat no hint as if the hint
- * were String.
- *
- * @param {*} input - The input to convert.
- * @param {constructor} [preferredType] - The preferred type (String or Number).
- * @throws {TypeError} If unable to convert input to a primitive.
- * @returns {string|number} The converted input as a primitive.
- * @example
- * var toPrimitive = require('to-primitive-x');
- *
- * var date = new Date(0);
- * toPrimitive(date)); // Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
- * toPrimitive(date, String)); // Thu Jan 01 1970 01:00:00 GMT+0100 (CET)
- * toPrimitive(date, Number)); // 0
- */
-function toPrimitive(input) {
-  if ((0, _isPrimitive2.default)(input)) {
-    return input;
-  }
-
-  var hint = 'default';
-  if (arguments.length <= 1 ? 0 : arguments.length - 1) {
-    if ((arguments.length <= 1 ? undefined : arguments[1]) === String) {
-      hint = 'string';
-    } else if ((arguments.length <= 1 ? undefined : arguments[1]) === Number) {
-      hint = 'number';
-    }
-  }
-
-  var exoticToPrim = void 0;
-  if (_isSymbolSupported2.default) {
-    if (symToPrimitive) {
-      exoticToPrim = getMethod(input, symToPrimitive);
-    } else if ((0, _isSymbol2.default)(input)) {
-      exoticToPrim = symValueOf;
-    }
-  }
-
-  if (!(0, _isUndefined2.default)(exoticToPrim)) {
-    var result = (0, _call3.default)(exoticToPrim, input, hint);
-    if ((0, _isPrimitive2.default)(result)) {
-      return result;
-    }
-
-    throw new TypeError('unable to convert exotic object to primitive');
-  }
-
-  if (hint === 'default' && ((0, _isDateObject2.default)(input) || (0, _isSymbol2.default)(input))) {
-    hint = 'string';
-  }
-
-  return ordinaryToPrimitive(input, hint === 'default' ? 'number' : hint);
-}
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Number
- */
-
-exports.default = 0 .constructor;
-
-/***/ }),
-/* 60 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = replaceComments;
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _replace2 = __webpack_require__(13);
-
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _requireCoercibleToString = __webpack_require__(23);
-
-var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/gm;
-
-/**
- * This method replaces comments in a string.
- *
- * @param {string} string - The string to be stripped.
- * @param {string} [replacement] - The string to be used as a replacement.
- * @throws {TypeError} If string is null or undefined or not coercible.
- * @throws {TypeError} If replacement is not coercible.
- * @returns {string} The new string with the comments replaced.
- * @example
- * var replaceComments = require('replace-comments-x');
- *
- * replaceComments(test;/* test * /, ''), // 'test;'
- * replaceComments(test; // test, ''), // 'test;'
- */
-/**
- * @file Replace the comments in a string.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module replaceComments
- */
-
-function replaceComments(string) {
-  return (0, _replace3.default)((0, _requireCoercibleToString2.default)(string), STRIP_COMMENTS, (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toString3.default)(arguments.length <= 1 ? undefined : arguments[1]) : '');
-}
-
-/***/ }),
-/* 61 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.toLowerCase); /**
-                                                                           * @file Utility that needs description.
-                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                           * @module _toLowerCase
-                                                                           */
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(Array.prototype.reduce); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _reduce
-                                                                     */
-
-/***/ }),
-/* 63 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Object
- */
-
-exports.default = {}.constructor;
 
 /***/ }),
 /* 64 */
@@ -2867,27 +2715,18 @@ exports.default = {}.constructor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _negate;
+exports.default = void 0;
 
-var _apply2 = __webpack_require__(14);
+var logger = __webpack_require__(0).get("caboodle-x:_NaN");
 
-var _apply3 = _interopRequireDefault(_apply2);
+/**
+ * @file Parses a string argument and returns an integer of the specified radix.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _NaN
+ */
+var _default = 0 / 0;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _negate(predicate) {
-  return function boundNegate() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    return !(0, _apply3.default)(predicate, this, args);
-  };
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _negate
-   */
+exports.default = _default;
 
 /***/ }),
 /* 65 */
@@ -2899,30 +2738,33 @@ function _negate(predicate) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trimLeft;
+exports.default = _sign;
 
-var _replace2 = __webpack_require__(13);
+var _toNumber2 = _interopRequireDefault(__webpack_require__(23));
 
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _whitespace2 = __webpack_require__(31);
-
-var _whitespace3 = _interopRequireDefault(_whitespace2);
+var _isNaN2 = _interopRequireDefault(__webpack_require__(22));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x:_sign");
+
 /**
- * @file List of ECMAScript white space characters.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trimLeft
+ * This method returns the sign of a number, indicating whether the number is positive,
+ * negative or zero.
+ *
+ * @param {*} x - A number.
+ * @returns {number} A number representing the sign of the given argument. If the argument
+ * is a positive number, negative number, positive zero or negative zero, the function will
+ * return 1, -1, 0 or -0 respectively. Otherwise, NaN is returned.
  */
+function _sign(x) {
+  var n = (0, _toNumber2.default)(x);
 
-var PRE = '^[';
-var POST = ']+';
-var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
+  if (n === 0 || (0, _isNaN2.default)(n)) {
+    return n;
+  }
 
-function _trimLeft(string) {
-  return (0, _replace3.default)(string, whiteSpace, '');
+  return n > 0 ? 1 : -1;
 }
 
 /***/ }),
@@ -2935,40 +2777,17 @@ function _trimLeft(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = normalizeSpace;
+exports.default = void 0;
 
-var _normalizeSpace2 = __webpack_require__(216);
-
-var _normalizeSpace3 = _interopRequireDefault(_normalizeSpace2);
-
-var _requireCoercibleToString = __webpack_require__(23);
-
-var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
- * This method strips leading and trailing white-space from a string,
- * replaces sequences of whitespace characters by a single space,
- * and returns the resulting string.
- *
- * @param {string} string - The string to be normalized.
- * @throws {TypeError} If string is null or undefined or not coercible.
- * @returns {string} The normalized string.
- * @example
- * var normalizeSpace = require('normalize-space-x');
- *
- * normalizeSpace(' \t\na \t\nb \t\n') === 'a b'; // true
- */
-/**
- * @file Trims and replaces sequences of whitespace characters by a single space.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module normalizeSpace
+ * @module MAX_SAFE_INTEGER
  */
-
-function normalizeSpace(string) {
-  return (0, _normalizeSpace3.default)((0, _requireCoercibleToString2.default)(string));
-}
+var _default = 9007199254740991;
+exports.default = _default;
 
 /***/ }),
 /* 67 */
@@ -2980,18 +2799,32 @@ function normalizeSpace(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _accumulate;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _all2 = _interopRequireDefault(__webpack_require__(24));
 
-exports.default = isObjectType;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectType
- */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function isObjectType(value) {
-  return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object';
+var logger = __webpack_require__(0).get("caboodle-x:_accumulate");
+
+function _accumulate(array, callback, initialValue) {
+  var accumulator = initialValue;
+
+  var iteratee = function _iteratee() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    accumulator = callback.apply(void 0, [accumulator].concat(args));
+  };
+
+  for (var _len = arguments.length, rest = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    rest[_key - 3] = arguments[_key];
+  }
+
+  _all2.default.apply(void 0, [array, iteratee].concat(rest));
+
+  return accumulator;
 }
 
 /***/ }),
@@ -3004,15 +2837,18 @@ function isObjectType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isFunctionType;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isFunctionType
- */
+exports.default = isSafeInteger;
 
-function isFunctionType(value) {
-  return typeof value === 'function';
+var _isInteger = _interopRequireDefault(__webpack_require__(89));
+
+var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(66));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isSafeInteger(value) {
+  return (0, _isInteger.default)(value) && value >= -_MAX_SAFE_INTEGER.default && value <= _MAX_SAFE_INTEGER.default;
 }
 
 /***/ }),
@@ -3025,30 +2861,31 @@ function isFunctionType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _bound;
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /**
-                                                                                                                                                                                                                                                                               * @file Tests if ES6 @@toStringTag is supported.
-                                                                                                                                                                                                                                                                               * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                                                                                                                                                                                                               * @module isToStringTagSupported
-                                                                                                                                                                                                                                                                               */
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
 
-var _isSymbolSupported = __webpack_require__(43);
+var _argsToArray2 = _interopRequireDefault(__webpack_require__(129));
 
-var _isSymbolSupported2 = _interopRequireDefault(_isSymbolSupported);
+var _createArgList2 = _interopRequireDefault(__webpack_require__(130));
 
-var _isSymbolType = __webpack_require__(32);
+var _create2 = _interopRequireDefault(__webpack_require__(131));
 
-var _isSymbolType2 = _interopRequireDefault(_isSymbolType);
+var _Function2 = _interopRequireDefault(__webpack_require__(132));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Indicates if `Symbol.toStringTag`exists and is the correct type.
- * `true`, if it exists and is the correct type, otherwise `false`.
- *
- * @type boolean
- */
-exports.default = _isSymbolSupported2.default && _typeof((0, _isSymbolType2.default)(Symbol.toStringTag));
+var logger = __webpack_require__(0).get("caboodle-x:_bound");
+
+function _bound(binder, name, prototype, length) {
+  var bound = (0, _Function2.default)('binder', '_apply', '_argsToArray', "return function bound".concat(name, "(").concat((0, _createArgList2.default)(length), "){ return _apply(binder,this,_argsToArray(arguments)); }"))(binder, _apply2.default, _argsToArray2.default);
+
+  if (prototype) {
+    bound.prototype = (0, _create2.default)(prototype);
+  }
+
+  return bound;
+}
 
 /***/ }),
 /* 70 */
@@ -3060,78 +2897,43 @@ exports.default = _isSymbolSupported2.default && _typeof((0, _isSymbolType2.defa
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = attempt;
+exports.default = _find;
 
-var _apply2 = __webpack_require__(14);
-
-var _apply3 = _interopRequireDefault(_apply2);
+var _any2 = _interopRequireDefault(__webpack_require__(25));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * This method attempts to invoke the function, returning either the result or
- * the caught error object. Any additional arguments are provided to the
- * function when it's invoked.
- *
- * @param {Function} fn - The function to attempt.
- * @param {...*} [rest] - The arguments to invoke the function with.
- * @returns {Object} Returns an object of the result.
- * @example
- * var attempt = require('attempt-x');
- *
- * function thrower() {
- *   throw new Error('Threw');
- * }
- *
- * attempt(thrower, 1, 2);
- * // {
- * //   threw: true,
- * //   value: // Error('Threw') object
- * // }
- *
- * function sumArgs(a, b) {
- *   return a + b;
- * }
- *
- * attempt(sumArgs, 1, 2);
- * // {
- * //   threw: false,
- * //   value: 3
- * // }
- *
- * var thisArg = [];
- * function pusher(a, b) {
- *   return this.push(a, b);
- * }
- *
- * attempt.call(thisArg, pusher, 1, 2);
- * // {
- * //   threw: false,
- * //   value: 2
- * // }
- * // thisArg => [1, 2];
- */
-function attempt(fn) {
-  try {
-    for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      rest[_key - 1] = arguments[_key];
+var logger = __webpack_require__(0).get("caboodle-x:_find");
+
+function _find(array, callback) {
+  var result = {
+    includes: false,
+    index: -1,
+
+    /* eslint-disable-next-line no-void */
+    value: void 0
+  };
+
+  var predicate = function _predicate(value, index, object) {
+    var found = callback(value, index, object);
+
+    if (found) {
+      result.includes = true;
+      result.index = index;
+      result.value = value;
     }
 
-    return {
-      threw: false,
-      value: (0, _apply3.default)(fn, this, rest)
-    };
-  } catch (e) {
-    return {
-      threw: true,
-      value: e
-    };
+    return found;
+  };
+
+  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
   }
-} /**
-   * @file Invokes function, returning an object of the results.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module attempt
-   */
+
+  _any2.default.apply(void 0, [array, predicate].concat(fromIndex));
+
+  return result;
+}
 
 /***/ }),
 /* 71 */
@@ -3140,32 +2942,32 @@ function attempt(fn) {
 "use strict";
 
 
-var toStr = Object.prototype.toString;
-var hasSymbols = typeof Symbol === 'function' && typeof Symbol() === 'symbol';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _getAt;
 
-if (hasSymbols) {
-	var symToStr = Symbol.prototype.toString;
-	var symStringRegex = /^Symbol\(.*\)$/;
-	var isSymbolObject = function isSymbolObject(value) {
-		if (typeof value.valueOf() !== 'symbol') { return false; }
-		return symStringRegex.test(symToStr.call(value));
-	};
-	module.exports = function isSymbol(value) {
-		if (typeof value === 'symbol') { return true; }
-		if (toStr.call(value) !== '[object Symbol]') { return false; }
-		try {
-			return isSymbolObject(value);
-		} catch (e) {
-			return false;
-		}
-	};
-} else {
-	module.exports = function isSymbol(value) {
-		// this environment does not support Symbols.
-		return false;
-	};
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
+
+var _charAt2 = _interopRequireDefault(__webpack_require__(34));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_getAt");
+
+function _getAt(array) {
+  if (!(0, _isArrayLike.default)(array)) {
+    /* eslint-disable-next-line no-void */
+    return void 0;
+  }
+
+  var index = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toInteger2.default)(arguments.length <= 1 ? undefined : arguments[1]) : 0;
+  return (0, _isString.default)(array) ? (0, _charAt2.default)(array, index) : array[index];
 }
-
 
 /***/ }),
 /* 72 */
@@ -3177,34 +2979,63 @@ if (hasSymbols) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubTrue;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubTrue
- */
+exports.default = _sift;
 
-function stubTrue() {
-  return true;
+var _any2 = _interopRequireDefault(__webpack_require__(25));
+
+var _push2 = _interopRequireDefault(__webpack_require__(27));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_sift");
+
+function _sift(array, callback) {
+  var result = [];
+
+  var iteratee = function _iteratee(value) {
+    for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    if (callback.apply(void 0, [value].concat(args))) {
+      (0, _push2.default)(result, value);
+    }
+  };
+
+  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  _any2.default.apply(void 0, [array, iteratee].concat(fromIndex));
+
+  return result;
 }
 
 /***/ }),
 /* 73 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
+var g;
 
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _RegExp
- */
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || new Function("return this")();
+} catch (e) {
+	// This works if the window reference is available
+	if (typeof window === "object") g = window;
+}
 
-exports.default = /(?:)/.constructor;
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
 
 /***/ }),
 /* 74 */
@@ -3216,18 +3047,17 @@ exports.default = /(?:)/.constructor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
+var logger = __webpack_require__(0).get("caboodle-x:_String");
 
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.search); /**
-                                                                      * @file Utility that needs description.
-                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                      * @module _search
-                                                                      */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _String
+ */
+var _default = ''.constructor;
+exports.default = _default;
 
 /***/ }),
 /* 75 */
@@ -3239,214 +3069,17 @@ exports.default = (0, _methodize3.default)(String.prototype.search); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toDecimalFormString;
+exports.default = void 0;
 
-var _Number2 = __webpack_require__(59);
-
-var _Number3 = _interopRequireDefault(_Number2);
-
-var _charAt2 = __webpack_require__(29);
-
-var _charAt3 = _interopRequireDefault(_charAt2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _replace2 = __webpack_require__(13);
-
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _stringIndexOf2 = __webpack_require__(57);
-
-var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
-
-var _join2 = __webpack_require__(28);
-
-var _join3 = _interopRequireDefault(_join2);
-
-var _search2 = __webpack_require__(74);
-
-var _search3 = _interopRequireDefault(_search2);
-
-var _test2 = __webpack_require__(26);
-
-var _test3 = _interopRequireDefault(_test2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var EMPTY_STRING = ''; /**
-                        * @file Convert a base-10 or scientific E-notation value to a decimal form string.
-                        * @copyright Copyright (c) 2018-present, Graham Fairweather
-                        * @module numberToDecimalString
-                        */
+var logger = __webpack_require__(0).get("caboodle-x:_functionToString");
 
-var DECIMAL_MARK = '.';
-var HYPHEN_MINUS = '-';
-var ZERO_SYMBOL = '0';
-var MINUS_ZERO_SYMBOL = HYPHEN_MINUS + ZERO_SYMBOL;
-var ERROR_MSG = 'not a valid base 10 numeric value';
-var validPattern = /^-?(?:(?:\d|[1-9]\d*)(?:\.\d+)?)(?:e[+-]?\d+)?$/i;
-var expPattern = /e/i;
+var _default = (0, _methodize2.default)(Function.prototype.toString);
 
-/**
- * This method converts a base-10 or scientific E-notation value to
- * a decimal form string. Javascript's IEE 754 double-precision numbers
- * give the same precision as `number.toString()`.
- *
- * @param {number|string} value - The value to be converted.
- * @throws {TypeError} If value is not a valid format.
- * @throws {TypeError} If value is a Symbol or not coercible.
- * @returns {string} The value converted to a decimal form string.
- * @example
- * var toDecimalFormString = require('number-to-decimal-form-string-x');
- *
- * toDecimalFormString(Number.MIN_SAFE_INTEGER); // '-9007199254740991'
- * toDecimalFormString(-0); // '-0'
- *
- * var number = 0.00000000001;
- * number.toString(); // '1e-11'
- * toDecimalFormString(number); // '0.00000000001'
- *
- * number = 88259496234518.57;
- * number.toString(); '88259496234518.56'
- * toDecimalFormString(number); // '88259496234518.56'
- *
- * toDecimalFormString(Math.PI); // '3.141592653589793'
- * toDecimalFormString(Number.MAX_SAFE_INTEGER); // '9007199254740991'
- *
- * toDecimalFormString('0e+0'); // '0'
- * toDecimalFormString('1e-11'); // '0.00000000001'
- * toDecimalFormString('4.062e-3'); // '0.004062'
- * toDecimalFormString('4.461824e+2'); // '446.1824'
- *
- * toDecimalFormString(NaN); // TypeError
- * toDecimalFormString(' 0'); // TypeError
- * toDecimalFormString('0 '); // TypeError
- * toDecimalFormString('0.'); // TypeError
- * toDecimalFormString('.0'); // TypeError
- * toDecimalFormString('0x1'); // TypeError
- * toDecimalFormString('0o1'); // TypeError
- * toDecimalFormString('0b1'); // TypeError
- * toDecimalFormString('4.062 e-3'); // TypeError
- * toDecimalFormString('9 007 199 254 740 991'); // TypeError
- * toDecimalFormString('9,007,199,254,740,991'); // TypeError
- *
- * toDecimalFormString(Symbol('0')); // TypeError
- * toDecimalFormString(Object.create(null)); // TypeError
- */
-function toDecimalFormString(value) {
-  var workingValue = value;
-
-  // Minus zero?
-  if (workingValue === 0 && 1 / workingValue < 0) {
-    workingValue = MINUS_ZERO_SYMBOL;
-  } else {
-    workingValue = (0, _toString3.default)(workingValue);
-    if (!(0, _test3.default)(validPattern, workingValue)) {
-      throw new TypeError(ERROR_MSG);
-    }
-  }
-
-  // Determine sign.
-  var sign = void 0;
-  if ((0, _charAt3.default)(workingValue, 0) === HYPHEN_MINUS) {
-    workingValue = (0, _stringSlice3.default)(workingValue, 1);
-    sign = -1;
-  } else {
-    sign = 1;
-  }
-
-  // Decimal point?
-  var pointIndex = (0, _stringIndexOf3.default)(workingValue, DECIMAL_MARK);
-  if (pointIndex > -1) {
-    workingValue = (0, _replace3.default)(workingValue, DECIMAL_MARK, EMPTY_STRING);
-  }
-
-  var exponentIndex = pointIndex;
-  // Exponential form?
-  var index = (0, _search3.default)(workingValue, expPattern);
-  if (index > 0) {
-    // Determine exponent.
-    if (exponentIndex < 0) {
-      exponentIndex = index;
-    }
-
-    exponentIndex += (0, _Number3.default)((0, _stringSlice3.default)(workingValue, index + 1));
-    workingValue = (0, _stringSlice3.default)(workingValue, 0, index);
-  } else if (exponentIndex < 0) {
-    // Integer.
-    exponentIndex = workingValue.length;
-  }
-
-  var leadingZeroIndex = workingValue.length;
-  // Determine leading zeros.
-  index = 0;
-  while (index < leadingZeroIndex && (0, _charAt3.default)(workingValue, index) === ZERO_SYMBOL) {
-    index += 1;
-  }
-
-  var coefficient = void 0;
-  var exponent = void 0;
-  if (index === leadingZeroIndex) {
-    // Zero.
-    exponent = 0;
-    coefficient = [0];
-  } else {
-    // Determine trailing zeros.
-    if (leadingZeroIndex > 0) {
-      do {
-        leadingZeroIndex -= 1;
-      } while ((0, _charAt3.default)(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
-    }
-
-    exponent = exponentIndex - index - 1;
-    coefficient = [];
-    coefficient.length = leadingZeroIndex + 1;
-
-    // Convert string to array of digits without leading/trailing zeros.
-    var position = 0;
-    while (index <= leadingZeroIndex) {
-      coefficient[position] = (0, _Number3.default)((0, _charAt3.default)(workingValue, index));
-      position += 1;
-      index += 1;
-    }
-  }
-
-  var decimalForm = (0, _join3.default)(coefficient, EMPTY_STRING);
-  var decimalFormLength = decimalForm.length;
-
-  if (exponent < 0) {
-    exponent += 1;
-    while (exponent) {
-      decimalForm = ZERO_SYMBOL + decimalForm;
-      exponent += 1;
-    }
-
-    decimalForm = ZERO_SYMBOL + DECIMAL_MARK + decimalForm;
-  } else if (exponent > 0) {
-    exponent += 1;
-    if (exponent > decimalFormLength) {
-      exponent -= decimalFormLength;
-      while (exponent) {
-        decimalForm += ZERO_SYMBOL;
-        exponent -= 1;
-      }
-    } else if (exponent < decimalFormLength) {
-      decimalForm = (0, _stringSlice3.default)(decimalForm, 0, exponent) + DECIMAL_MARK + (0, _stringSlice3.default)(decimalForm, exponent);
-    }
-
-    // Exponent is zero.
-  } else if (decimalFormLength > 1) {
-    decimalForm = (0, _charAt3.default)(decimalForm, 0) + DECIMAL_MARK + (0, _stringSlice3.default)(decimalForm, 1);
-  }
-
-  return sign < 0 ? HYPHEN_MINUS + decimalForm : decimalForm;
-}
+exports.default = _default;
 
 /***/ }),
 /* 76 */
@@ -3458,37 +3091,18 @@ function toDecimalFormString(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _uniq;
+exports.default = void 0;
 
-var _includes2 = __webpack_require__(16);
+var logger = __webpack_require__(0).get("caboodle-x:_bind");
 
-var _includes3 = _interopRequireDefault(_includes2);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _bind
+ */
+var _default = Function.call.bind(Function.bind);
 
-var _push2 = __webpack_require__(17);
-
-var _push3 = _interopRequireDefault(_push2);
-
-var _reduce2 = __webpack_require__(62);
-
-var _reduce3 = _interopRequireDefault(_reduce2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var callback = function _callback(accumulator, currentValue) {
-  if (!(0, _includes3.default)(accumulator, currentValue)) {
-    (0, _push3.default)(accumulator, currentValue);
-  }
-
-  return accumulator;
-}; /**
-    * @file Utility that needs description.
-    * @copyright Copyright (c) 2018-present, Graham Fairweather
-    * @module _uniq
-    */
-
-function _uniq(array) {
-  return (0, _reduce3.default)(array, callback, []);
-}
+exports.default = _default;
 
 /***/ }),
 /* 77 */
@@ -3500,17 +3114,82 @@ function _uniq(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = assign;
 
-var _Boolean = __webpack_require__(33);
+var _isFunctionType = _interopRequireDefault(__webpack_require__(51));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_Boolean).default;
-  }
-});
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+var _toObject = _interopRequireDefault(__webpack_require__(15));
+
+var _stubArray = _interopRequireDefault(__webpack_require__(78));
+
+var _concat2 = _interopRequireDefault(__webpack_require__(117));
+
+var _filter2 = _interopRequireDefault(__webpack_require__(79));
+
+var _reduce2 = _interopRequireDefault(__webpack_require__(57));
+
+var _keys2 = _interopRequireDefault(__webpack_require__(80));
+
+var _propertyIsEnumerable2 = _interopRequireDefault(__webpack_require__(118));
+
+var _Object2 = _interopRequireDefault(__webpack_require__(56));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/* istanbul ignore next */
+var getOwnPropertySymbols = (0, _isFunctionType.default)(_Object2.default.getOwnPropertySymbols) ? _Object2.default.getOwnPropertySymbols : _stubArray.default;
+
+var getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(target) {
+  var isEnumerable = function _isEnumerable(symbol) {
+    return (0, _propertyIsEnumerable2.default)(target, symbol);
+  };
+
+  return (0, _filter2.default)(getOwnPropertySymbols(target), isEnumerable);
+};
+
+var reducer = function _reducer(tgt, source) {
+  if ((0, _isNil.default)(source)) {
+    return tgt;
+  }
+
+  var object = (0, _Object2.default)(source);
+
+  var assigner = function _assigner(tar, key) {
+    tar[key] = object[key];
+    return tar;
+  };
+
+  return (0, _reduce2.default)((0, _concat2.default)((0, _keys2.default)(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
+};
+/**
+ * This method is used to copy the values of all enumerable own properties from
+ * one or more source objects to a target object. It will return the target object.
+ *
+ * @param {*} target - The target object.
+ * @param {Array} rest - The rest of the arguments array.
+ * @param {...*} [rest.source] - The source object(s).
+ * @throws {TypeError} If target is null or undefined.
+ * @returns {Object} The target object.
+ * @example
+ * var assign = require('object-assign-x');
+ *
+ * var obj = { a: 1 };
+ * var copy = assign({}, obj);
+ * console.log(copy); // { a: 1 }
+ */
+
+
+function assign(target) {
+  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    rest[_key - 1] = arguments[_key];
+  }
+
+  return (0, _reduce2.default)(rest, reducer, (0, _toObject.default)(target));
+}
 
 /***/ }),
 /* 78 */
@@ -3522,33 +3201,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSpaced;
+exports.default = stubArray;
 
-var _isString = __webpack_require__(4);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var _isString2 = _interopRequireDefault(_isString);
-
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
-
-var _whitespace2 = __webpack_require__(31);
-
-var _whitespace3 = _interopRequireDefault(_whitespace2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var PRE = '['; /**
-                * @file Utility that needs description.
-                * @copyright Copyright (c) 2018-present, Graham Fairweather
-                * @module isSpaced
-                */
-
-var POST = ']';
-var containsSpace = new RegExp(PRE + (0, _whitespace3.default)('html') + POST);
-
-function isSpaced(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, containsSpace);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module stubArray
+ */
+function stubArray() {
+  return [];
 }
 
 /***/ }),
@@ -3561,16 +3224,17 @@ function isSpaced(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isBooleanType;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isBooleanType
- */
+exports.default = void 0;
 
-function isBooleanType(value) {
-  return typeof value === 'boolean';
-}
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_filter");
+
+var _default = (0, _methodize2.default)(Array.prototype.filter);
+
+exports.default = _default;
 
 /***/ }),
 /* 80 */
@@ -3582,84 +3246,17 @@ function isBooleanType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = padStart;
+exports.default = void 0;
 
-var _requireCoercibleToString = __webpack_require__(23);
-
-var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
-
-var _isUndefined = __webpack_require__(27);
-
-var _isUndefined2 = _interopRequireDefault(_isUndefined);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_keys");
 
 /**
- * This method pads the current string with another string (repeated, if needed)
- * so that the resulting string reaches the given length. The padding is applied
- * from the start (left) of the current string.
- *
- * @param {string} string - The string to pad.
- * @throws {TypeError} If target is null or undefined.
- * @param {number} targetLength - The length of the resulting string once the
- *  current string has been padded. If the value is lower than the current
- *  string's length, the current string will be returned as is.
- * @param {Array} rest - The rest of the arguments array.
- * @param {string} [rest.padString] - The string to pad the current string with. If
- *  this string is too long to stay within the target length, it will be
- *  truncated and the left-most part will be applied. The default value for this
- *  parameter is " " (U+0020).
- * @returns {string} A String of the specified length with the pad string
- *  applied from the start.
- * @example
- * var padStart = require('string-pad-start-x');
- *
- * padStart('a', 3, 'b'); // 'bba'
- * padStart('a', 3); // '  a'
- * padStart('a', 2, 'bc'); // 'ba'
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _keys
  */
-function padStart(string, targetLength) {
-  var str = (0, _toString3.default)((0, _requireCoercibleToString2.default)(string));
-  var stringLength = (0, _toWholeNumber2.default)(str.length);
-  var fillString = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : void 0;
-
-  var filler = (0, _isUndefined2.default)(fillString) ? '' : (0, _toString3.default)(fillString);
-  if (filler === '') {
-    filler = ' ';
-  }
-
-  var intMaxLength = (0, _toWholeNumber2.default)(targetLength);
-  if (intMaxLength <= stringLength) {
-    return str;
-  }
-
-  var fillLen = intMaxLength - stringLength;
-  while (filler.length < fillLen) {
-    var fLen = filler.length;
-    var remainingCodeUnits = fillLen - fLen;
-    filler += fLen > remainingCodeUnits ? (0, _stringSlice3.default)(filler, 0, remainingCodeUnits) : filler;
-  }
-
-  var truncatedStringFiller = filler.length > fillLen ? (0, _stringSlice3.default)(filler, 0, fillLen) : filler;
-
-  return truncatedStringFiller + str;
-} /**
-   * @file Pads a string with another string (repeated, if needed).
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module padStart
-   */
+var _default = Object.keys;
+exports.default = _default;
 
 /***/ }),
 /* 81 */
@@ -3671,41 +3268,17 @@ function padStart(string, targetLength) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = modulo;
-/**
- * @file modulo - floored division implementation.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toStringTag
- */
+exports.default = void 0;
 
-var floor = Math.floor;
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
-/**
- * The notation “x modulo y” (y must be finite and nonzero) computes a value k
- * of the same sign as y (or zero) such that abs(k) < abs(y) and x-k = q × y
- * for some integer q.
- *
- * Donald Knuth described floored division where the quotient is defined by
- * the floor function q = ⌊a/n⌋ and thus according to equation the remainder
- * would have the same sign as the divisor. Due to the floor function, the
- * quotient is always rounded downwards, even if it is already negative.
- *
- * @param {number} dividend - The integer to find the remainder of.
- * @param {number} divisor - The integer to divide by.
- * @returns {number} The integer remainder.
- * @see {@link http://www.ecma-international.org/ecma-262/6.0/#sec-algorithm-conventions}
- * @see {@link https://en.wikipedia.org/wiki/Modulo_operation}
- * @example
- * var modulo = require('modulo-x');
- * modulo(1, 0x1000000); // 1
- * modulo(-1, 0x1000000); // 16777215 (2^24-1)
- */
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function modulo(dividend, divisor) {
-  var remain = dividend % divisor;
+var logger = __webpack_require__(0).get("caboodle-x:_map");
 
-  return floor(remain >= 0 ? remain : remain + divisor);
-}
+var _default = (0, _methodize2.default)(Array.prototype.map);
+
+exports.default = _default;
 
 /***/ }),
 /* 82 */
@@ -3717,60 +3290,22 @@ function modulo(dividend, divisor) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = toUint24;
+exports.default = _trimRight;
 
-var _toNumber2 = __webpack_require__(21);
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
 
-var _toNumber3 = _interopRequireDefault(_toNumber2);
-
-var _modulo = __webpack_require__(81);
-
-var _modulo2 = _interopRequireDefault(_modulo);
-
-var _sign2 = __webpack_require__(54);
-
-var _sign3 = _interopRequireDefault(_sign2);
-
-var _isFinite2 = __webpack_require__(41);
-
-var _isFinite3 = _interopRequireDefault(_isFinite2);
+var _whitespace2 = _interopRequireDefault(__webpack_require__(31));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Converts a value to Uint24.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toUint24
- */
+var logger = __webpack_require__(0).get("caboodle-x:_trimRight");
 
-var floor = Math.floor,
-    abs = Math.abs;
+var PRE = '[';
+var POST = ']+$';
+var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
 
-/**
- * The abstract operation ToUint24 converts argument to one of 2^24 integer
- * values in the range 0 through 2^24-1, inclusive.
- *
- * @param {number} argument - The argument to convert to one of 2^24 integers.
- * @returns {number} Integer value, 0 through 2^24-1, inclusive.
- * @example
- * var toUint24 = require('to-uint-24-x');
- * toUint24(1); // 1
- * toUint24(-1); // 16777215 (2^24-1)
- */
-
-function toUint24(argument) {
-  // Let number be ? ToNumber(argument).
-  var number = (0, _toNumber3.default)(argument);
-
-  // If number is NaN, +0, -0, +∞, or -∞, return +0.
-  if (number === 0 || !(0, _isFinite3.default)(number)) {
-    return 0;
-  }
-
-  // Let int be the mathematical value that is the same sign as number and
-  // whose magnitude is floor(abs(number)).
-  // Let int24bit be int modulo 2^24.
-  return (0, _modulo2.default)((0, _sign3.default)(number) * floor(abs(number)), 0x1000000);
+function _trimRight(string) {
+  return (0, _replace2.default)(string, whiteSpace, '');
 }
 
 /***/ }),
@@ -3783,690 +3318,21 @@ function toUint24(argument) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _attempt = _interopRequireDefault(__webpack_require__(49));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Number.prototype.toString); /**
-                                                                        * @file Utility that needs description.
-                                                                        * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                        * @module _numberToString
-                                                                        */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/* eslint-disable-next-line no-new-func */
+var _default = !(0, _attempt.default)(Function('"use strict"; return class My {};')).threw;
+
+exports.default = _default;
 
 /***/ }),
 /* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(String.prototype.match); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _match
-                                                                     */
-
-/***/ }),
-/* 85 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = surround;
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function surround(string, wrapper) {
-  var wrap = (0, _toString3.default)(wrapper);
-
-  return wrap + (0, _toString3.default)(string) + wrap;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module surround
-   */
-
-/***/ }),
-/* 86 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = nilifyIs;
-
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _call2 = __webpack_require__(15);
-
-var _call3 = _interopRequireDefault(_call2);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function nilifyIs(predicate) {
-  (0, _assertIsFunction3.default)(predicate);
-
-  return function nilifiedBound(value) {
-    for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-      rest[_key - 1] = arguments[_key];
-    }
-
-    return (0, _isNil2.default)(value) || _call3.default.apply(undefined, [predicate, this, value].concat(rest));
-  };
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module nilifyIs
-   */
-
-/***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = defineValidatorProperty;
-
-var _isUndefined = __webpack_require__(27);
-
-var _isUndefined2 = _interopRequireDefault(_isUndefined);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-var _assertIs = __webpack_require__(93);
-
-var _assertIs2 = _interopRequireDefault(_assertIs);
-
-var _assertIsObjectLike = __webpack_require__(36);
-
-var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
-
-var _hasOwnProperty = __webpack_require__(39);
-
-var _hasOwnProperty2 = _interopRequireDefault(_hasOwnProperty);
-
-var _nilifyIs = __webpack_require__(86);
-
-var _nilifyIs2 = _interopRequireDefault(_nilifyIs);
-
-var _surround = __webpack_require__(85);
-
-var _surround2 = _interopRequireDefault(_surround);
-
-var _Boolean2 = __webpack_require__(33);
-
-var _Boolean3 = _interopRequireDefault(_Boolean2);
-
-var _defineProperty2 = __webpack_require__(190);
-
-var _defineProperty3 = _interopRequireDefault(_defineProperty2);
-
-var _Object2 = __webpack_require__(63);
-
-var _Object3 = _interopRequireDefault(_Object2);
-
-var _apply2 = __webpack_require__(14);
-
-var _apply3 = _interopRequireDefault(_apply2);
-
-var _call2 = __webpack_require__(15);
-
-var _call3 = _interopRequireDefault(_call2);
-
-var _toPropertyKey = __webpack_require__(34);
-
-var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var MSG1 = 'Not a valid initial value for '; /**
-                                              * @file Utility that needs description.
-                                              * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                              * @module defineValidatorProperty
-                                              */
-
-var MSG2 = 'Not a valid value for  ';
-
-var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
-  var descriptor = {};
-
-  if ((0, _hasOwnProperty2.default)(desc, 'enumerable')) {
-    descriptor.enumerable = (0, _Boolean3.default)(desc.enumerable);
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'configurable')) {
-    descriptor.configurable = (0, _Boolean3.default)(desc.configurable);
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'nilable')) {
-    descriptor.nilable = (0, _Boolean3.default)(desc.nilable);
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'validator')) {
-    if (!(0, _isUndefined2.default)(desc.validator) && !(0, _isFunction3.default)(desc.validator)) {
-      throw new TypeError('validator must be a function');
-    }
-
-    descriptor.validator = desc.validator;
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'value')) {
-    descriptor.value = desc.value;
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'writable')) {
-    descriptor.writable = (0, _Boolean3.default)(desc.writable);
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'get')) {
-    if (!(0, _isUndefined2.default)(desc.get) && !(0, _isFunction3.default)(desc.get)) {
-      throw new TypeError('getter must be a function');
-    }
-
-    descriptor.get = desc.get;
-  }
-
-  if ((0, _hasOwnProperty2.default)(desc, 'set')) {
-    if (!(0, _isUndefined2.default)(desc.set) && !(0, _isFunction3.default)(desc.set)) {
-      throw new TypeError('setter must be a function');
-    }
-
-    descriptor.set = desc.set;
-  }
-
-  if (((0, _hasOwnProperty2.default)(descriptor, 'get') || (0, _hasOwnProperty2.default)(descriptor, 'set')) && ((0, _hasOwnProperty2.default)(descriptor, 'value') || (0, _hasOwnProperty2.default)(descriptor, 'writable'))) {
-    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
-  }
-
-  return descriptor;
-};
-
-function defineValidatorProperty(object, property, descriptor) {
-  (0, _assertIsObjectLike2.default)(object);
-
-  var prop = (0, _toPropertyKey2.default)(property);
-  var props = toPropertyDescriptor((0, _Object3.default)(descriptor), defineValidatorProperty);
-  var isValidInitialValue = props.nilable && props.validator ? (0, _nilifyIs2.default)(props.validator) : props.validator;
-  var quotedProperty = (0, _surround2.default)(prop, '"');
-
-  if (isValidInitialValue) {
-    (0, _assertIs2.default)(isValidInitialValue, MSG1 + quotedProperty)(props.value);
-  }
-
-  var isValidValue = props.validator && (0, _assertIs2.default)(props.validator, MSG2 + quotedProperty);
-
-  var validatorDesctiptor = {
-    configurable: props.configurable,
-    enumerable: props.enumerable
-  };
-
-  if (props.get) {
-    validatorDesctiptor.get = function get() {
-      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-        args[_key] = arguments[_key];
-      }
-
-      return (0, _apply3.default)(props.get, this, args);
-    };
-  } else if (isValidValue && (0, _hasOwnProperty2.default)(props, 'value')) {
-    validatorDesctiptor.get = function get() {
-      return props.value;
-    };
-  }
-
-  if (props.set) {
-    validatorDesctiptor.set = function set(newValue) {
-      return (0, _call3.default)(props.set, this, newValue);
-    };
-  } else if ((0, _hasOwnProperty2.default)(props, 'value')) {
-    if (isValidValue && props.writable) {
-      validatorDesctiptor.set = function set(newValue) {
-        props.value = isValidValue(newValue);
-
-        return props.value;
-      };
-    } else {
-      validatorDesctiptor.value = props.value;
-      if ((0, _hasOwnProperty2.default)(props, 'writable')) {
-        validatorDesctiptor.writable = props.writable;
-      }
-    }
-  }
-
-  return (0, _defineProperty3.default)(object, prop, validatorDesctiptor);
-}
-
-/***/ }),
-/* 88 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _last;
-
-var _getAt2 = __webpack_require__(48);
-
-var _getAt3 = _interopRequireDefault(_getAt2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _last(array) {
-  return (0, _getAt3.default)(array, array.length - 1);
-} /**
-   * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _last
-   */
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = sameValue;
-
-var _isNaN2 = __webpack_require__(22);
-
-var _isNaN3 = _interopRequireDefault(_isNaN2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This method is the comparison abstract operation SameValue(x, y), where x
- * and y are ECMAScript language values, produces true or false.
- *
- * @param {*} value1 - The first value to compare.
- * @param {*} value2 - The second value to compare.
- * @returns {boolean} A Boolean indicating whether or not the two arguments are
- *  the same value.
- * @example
- * var sameValue = require('same-value-x');
- *
- * sameValue(1, 1); // true
- * sameValue(true, true); // true
- * sameValue(NaN, NaN); // true
- * sameValue(true, false); // false
- * sameValue(0, -0); // false
- */
-function sameValue(value1, value2) {
-  if (value1 === 0 && value2 === 0) {
-    return 1 / value1 === 1 / value2;
-  }
-
-  return value1 === value2 || (0, _isNaN3.default)(value1) && (0, _isNaN3.default)(value2);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module sameValue
-   */
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = sameValueZero;
-
-var _sameValue = __webpack_require__(89);
-
-var _sameValue2 = _interopRequireDefault(_sameValue);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function sameValueZero(x, y) {
-  return x === y || (0, _sameValue2.default)(x, y);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module sameValueZero
-   */
-
-/***/ }),
-/* 91 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = constant;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module constant
- */
-
-function constant(value) {
-  return function boundConstant() {
-    return value;
-  };
-}
-
-/***/ }),
-/* 92 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = clamp;
-
-var _clamp2 = __webpack_require__(193);
-
-var _clamp3 = _interopRequireDefault(_clamp2);
-
-var _toNumber2 = __webpack_require__(21);
-
-var _toNumber3 = _interopRequireDefault(_toNumber2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * This method clamps a number to min and max limits inclusive.
- *
- * @param {number} value - The number to be clamped.
- * @param {Array} rest - The remaining arguments array.
- * @param {number} [rest.min=0] - The minimum number.
- * @param {number} rest.max - The maximum number.
- * @throws {RangeError} If min > max.
- * @returns {number} The clamped number.
- * @example
- *
- * clamp(-10, -5, 5); // -5
- * clamp(10, -5, 5); // 5
- */
-/**
- * @file Utility that clamps a number to min and max limits inclusive.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module clamp
- */
-
-function clamp(value) {
-  var number = (0, _toNumber3.default)(value);
-  var restLength = arguments.length <= 1 ? 0 : arguments.length - 1;
-
-  if (restLength < 1) {
-    return number;
-  }
-
-  var min = (0, _toNumber3.default)(arguments.length <= 1 ? undefined : arguments[1]);
-  var max = (0, _toNumber3.default)(arguments.length <= 2 ? undefined : arguments[2]);
-  if (restLength < 2) {
-    max = min;
-    min = 0;
-  }
-
-  if (min > max) {
-    throw new RangeError('"min" > "max"');
-  }
-
-  return (0, _clamp3.default)(number, min, max);
-}
-
-/***/ }),
-/* 93 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = assertIs;
-
-var _assertIs2 = __webpack_require__(46);
-
-var _assertIs3 = _interopRequireDefault(_assertIs2);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module assertIs
- */
-
-function assertIs(predicate, defaultMessage) {
-  if (!(0, _isFunction3.default)(predicate)) {
-    throw new TypeError('Predicate must be a function');
-  }
-
-  return (0, _assertIs3.default)(predicate, defaultMessage);
-}
-
-/***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isInteger;
-
-var _isNumberType = __webpack_require__(30);
-
-var _isNumberType2 = _interopRequireDefault(_isNumberType);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isInteger
- */
-
-function isInteger(value) {
-  return (0, _isNumberType2.default)(value) && (0, _toInteger3.default)(value) === value;
-}
-
-/***/ }),
-/* 95 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = _fromIndex;
-
-var _isArrayLike = __webpack_require__(18);
-
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
-
-var _toObject = __webpack_require__(12);
-
-var _toObject2 = _interopRequireDefault(_toObject);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _fromIndex
- */
-
-var max = Math.max;
-function _fromIndex(array, fromIndex) {
-  var object = (0, _toObject2.default)(array);
-  if (!(0, _isArrayLike2.default)(object)) {
-    return 0;
-  }
-
-  var index = (0, _toInteger3.default)(fromIndex);
-
-  return index >= 0 ? index : max(0, (0, _toWholeNumber2.default)(object.length) + index);
-}
-
-/***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isOctal;
-
-var _isString = __webpack_require__(4);
-
-var _isString2 = _interopRequireDefault(_isString);
-
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isOctal
- */
-
-var octalPattern = /^0o[0-7]+$/i;
-
-function isOctal(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, octalPattern);
-}
-
-/***/ }),
-/* 97 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(RegExp.prototype.exec); /**
-                                                                    * @file Utility that needs description.
-                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                    * @module _exec
-                                                                    */
-
-/***/ }),
-/* 98 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isBinary;
-
-var _isString = __webpack_require__(4);
-
-var _isString2 = _interopRequireDefault(_isString);
-
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isBinary
- */
-
-var binaryPattern = /^0b[01]+$/i;
-
-function isBinary(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, binaryPattern);
-}
-
-/***/ }),
-/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4493,6 +3359,554 @@ module.exports = function isDateObject(value) {
 
 
 /***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isBinary;
+
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var binaryPattern = /^0b[01]+$/i;
+
+function isBinary(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, binaryPattern);
+}
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_exec");
+
+var _default = (0, _methodize2.default)(RegExp.prototype.exec);
+
+exports.default = _default;
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isOctal;
+
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var octalPattern = /^0o[0-7]+$/i;
+
+function isOctal(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, octalPattern);
+}
+
+/***/ }),
+/* 88 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _fromIndex;
+
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
+
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
+
+var _toObject = _interopRequireDefault(__webpack_require__(15));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_fromIndex");
+
+var max = Math.max;
+
+function _fromIndex(array, fromIndex) {
+  var object = (0, _toObject.default)(array);
+
+  if (!(0, _isArrayLike.default)(object)) {
+    return 0;
+  }
+
+  var index = (0, _toInteger2.default)(fromIndex);
+  return index >= 0 ? index : max(0, (0, _toWholeNumber.default)(object.length) + index);
+}
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isInteger;
+
+var _isNumberType = _interopRequireDefault(__webpack_require__(33));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+var _isFinite2 = _interopRequireDefault(__webpack_require__(32));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isInteger(value) {
+  return (0, _isNumberType.default)(value) && (0, _isFinite2.default)(value) && (0, _toInteger2.default)(value) === value;
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = assertIs;
+
+var _assertIs2 = _interopRequireDefault(__webpack_require__(36));
+
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function assertIs(predicate, defaultMessage) {
+  if (!(0, _isFunction2.default)(predicate)) {
+    throw new TypeError('Predicate must be a function');
+  }
+
+  return (0, _assertIs2.default)(predicate, defaultMessage);
+}
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = clamp;
+
+var _clamp2 = _interopRequireDefault(__webpack_require__(139));
+
+var _toNumber2 = _interopRequireDefault(__webpack_require__(23));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * This method clamps a number to min and max limits inclusive.
+ *
+ * @param {number} value - The number to be clamped.
+ * @param {Array} rest - The remaining arguments array.
+ * @param {number} [rest.min=0] - The minimum number.
+ * @param {number} rest.max - The maximum number.
+ * @throws {RangeError} If min > max.
+ * @returns {number} The clamped number.
+ */
+function clamp(value) {
+  var number = (0, _toNumber2.default)(value);
+  var restLength = arguments.length <= 1 ? 0 : arguments.length - 1;
+
+  if (restLength < 1) {
+    return number;
+  }
+
+  var min = (0, _toNumber2.default)(arguments.length <= 1 ? undefined : arguments[1]);
+  var max = (0, _toNumber2.default)(arguments.length <= 2 ? undefined : arguments[2]);
+
+  if (restLength < 2) {
+    max = min;
+    min = 0;
+  }
+
+  if (min > max) {
+    throw new RangeError('"min" > "max"');
+  }
+
+  return (0, _clamp2.default)(number, min, max);
+}
+
+/***/ }),
+/* 92 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = sameValueZero;
+
+var _sameValue = _interopRequireDefault(__webpack_require__(93));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function sameValueZero(x, y) {
+  return x === y || (0, _sameValue.default)(x, y);
+}
+
+/***/ }),
+/* 93 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = sameValue;
+
+var _isNaN2 = _interopRequireDefault(__webpack_require__(22));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * This method is the comparison abstract operation SameValue(x, y), where x
+ * and y are ECMAScript language values, produces true or false.
+ *
+ * @param {*} value1 - The first value to compare.
+ * @param {*} value2 - The second value to compare.
+ */
+function sameValue(value1, value2) {
+  if (value1 === 0 && value2 === 0) {
+    return 1 / value1 === 1 / value2;
+  }
+
+  return value1 === value2 || (0, _isNaN2.default)(value1) && (0, _isNaN2.default)(value2);
+}
+
+/***/ }),
+/* 94 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = _last;
+
+var _getAt2 = _interopRequireDefault(__webpack_require__(71));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_last");
+
+function _last(array) {
+  return (0, _getAt2.default)(array, array.length - 1);
+}
+
+/***/ }),
+/* 95 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = defineValidatorProperty;
+
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
+
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+var _assertIs = _interopRequireDefault(__webpack_require__(90));
+
+var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(45));
+
+var _hasOwnProperty = _interopRequireDefault(__webpack_require__(42));
+
+var _nilifyIs = _interopRequireDefault(__webpack_require__(96));
+
+var _surround = _interopRequireDefault(__webpack_require__(97));
+
+var _Boolean2 = _interopRequireDefault(__webpack_require__(29));
+
+var _defineProperty2 = _interopRequireDefault(__webpack_require__(143));
+
+var _Object2 = _interopRequireDefault(__webpack_require__(56));
+
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
+
+var _call2 = _interopRequireDefault(__webpack_require__(12));
+
+var _toPropertyKey = _interopRequireDefault(__webpack_require__(47));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var MSG1 = 'Not a valid initial value for ';
+var MSG2 = 'Not a valid value for  ';
+
+var toPropertyDescriptor = function _toPropertyDescriptor(desc) {
+  var descriptor = {};
+
+  if ((0, _hasOwnProperty.default)(desc, 'enumerable')) {
+    descriptor.enumerable = (0, _Boolean2.default)(desc.enumerable);
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'configurable')) {
+    descriptor.configurable = (0, _Boolean2.default)(desc.configurable);
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'nilable')) {
+    descriptor.nilable = (0, _Boolean2.default)(desc.nilable);
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'validator')) {
+    if (!(0, _isUndefined.default)(desc.validator) && !(0, _isFunction2.default)(desc.validator)) {
+      throw new TypeError('validator must be a function');
+    }
+
+    descriptor.validator = desc.validator;
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'value')) {
+    descriptor.value = desc.value;
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'writable')) {
+    descriptor.writable = (0, _Boolean2.default)(desc.writable);
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'get')) {
+    if (!(0, _isUndefined.default)(desc.get) && !(0, _isFunction2.default)(desc.get)) {
+      throw new TypeError('getter must be a function');
+    }
+
+    descriptor.get = desc.get;
+  }
+
+  if ((0, _hasOwnProperty.default)(desc, 'set')) {
+    if (!(0, _isUndefined.default)(desc.set) && !(0, _isFunction2.default)(desc.set)) {
+      throw new TypeError('setter must be a function');
+    }
+
+    descriptor.set = desc.set;
+  }
+
+  if (((0, _hasOwnProperty.default)(descriptor, 'get') || (0, _hasOwnProperty.default)(descriptor, 'set')) && ((0, _hasOwnProperty.default)(descriptor, 'value') || (0, _hasOwnProperty.default)(descriptor, 'writable'))) {
+    throw new TypeError('Invalid property descriptor. Cannot both specify accessors and a value or writable attribute');
+  }
+
+  return descriptor;
+};
+
+function defineValidatorProperty(object, property, descriptor) {
+  (0, _assertIsObjectLike.default)(object);
+  var prop = (0, _toPropertyKey.default)(property);
+  var props = toPropertyDescriptor((0, _Object2.default)(descriptor), defineValidatorProperty);
+  var isValidInitialValue = props.nilable && props.validator ? (0, _nilifyIs.default)(props.validator) : props.validator;
+  var quotedProperty = (0, _surround.default)(prop, '"');
+
+  if (isValidInitialValue) {
+    (0, _assertIs.default)(isValidInitialValue, MSG1 + quotedProperty)(props.value);
+  }
+
+  var isValidValue = props.validator && (0, _assertIs.default)(props.validator, MSG2 + quotedProperty);
+  var validatorDesctiptor = {
+    configurable: props.configurable,
+    enumerable: props.enumerable
+  };
+
+  if (props.get) {
+    validatorDesctiptor.get = function get() {
+      for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      return (0, _apply2.default)(props.get, this, args);
+    };
+  } else if (isValidValue && (0, _hasOwnProperty.default)(props, 'value')) {
+    validatorDesctiptor.get = function get() {
+      return props.value;
+    };
+  }
+
+  if (props.set) {
+    validatorDesctiptor.set = function set(newValue) {
+      return (0, _call2.default)(props.set, this, newValue);
+    };
+  } else if ((0, _hasOwnProperty.default)(props, 'value')) {
+    if (isValidValue && props.writable) {
+      validatorDesctiptor.set = function set(newValue) {
+        props.value = isValidValue(newValue);
+        return props.value;
+      };
+    } else {
+      validatorDesctiptor.value = props.value;
+
+      if ((0, _hasOwnProperty.default)(props, 'writable')) {
+        validatorDesctiptor.writable = props.writable;
+      }
+    }
+  }
+
+  return (0, _defineProperty2.default)(object, prop, validatorDesctiptor);
+}
+
+/***/ }),
+/* 96 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = nilifyIs;
+
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+
+var _call2 = _interopRequireDefault(__webpack_require__(12));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function nilifyIs(predicate) {
+  (0, _assertIsFunction2.default)(predicate);
+  return function nilifiedBound(value) {
+    for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      rest[_key - 1] = arguments[_key];
+    }
+
+    /* eslint-disable-next-line babel/no-invalid-this */
+    return (0, _isNil.default)(value) || _call2.default.apply(void 0, [predicate, this, value].concat(rest));
+  };
+}
+
+/***/ }),
+/* 97 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = surround;
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function surround(string, wrapper) {
+  var wrap = (0, _toString2.default)(wrapper);
+  return wrap + (0, _toString2.default)(string) + wrap;
+}
+
+/***/ }),
+/* 98 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_match");
+
+var _default = (0, _methodize2.default)(String.prototype.match);
+
+exports.default = _default;
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_numberToString");
+
+var _default = (0, _methodize2.default)(Number.prototype.toString);
+
+exports.default = _default;
+
+/***/ }),
 /* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4502,19 +3916,43 @@ module.exports = function isDateObject(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = toUint24;
 
-var _attempt = __webpack_require__(70);
+var _toNumber2 = _interopRequireDefault(__webpack_require__(23));
 
-var _attempt2 = _interopRequireDefault(_attempt);
+var _modulo = _interopRequireDefault(__webpack_require__(101));
+
+var _sign2 = _interopRequireDefault(__webpack_require__(65));
+
+var _isFinite2 = _interopRequireDefault(__webpack_require__(32));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// eslint-disable-next-line no-new-func
-exports.default = !(0, _attempt2.default)(Function('"use strict"; return class My {};')).threw; /**
-                                                                                                 * @file Determine whether a given value is a function object.
-                                                                                                 * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                                 * @module isClassSupported
-                                                                                                 */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var floor = Math.floor,
+    abs = Math.abs;
+/**
+ * The abstract operation ToUint24 converts argument to one of 2^24 integer
+ * values in the range 0 through 2^24-1, inclusive.
+ *
+ * @param {number} argument - The argument to convert to one of 2^24 integers.
+ * @returns {number} Integer value, 0 through 2^24-1, inclusive.
+ */
+
+function toUint24(argument) {
+  // Let number be ? ToNumber(argument).
+  var number = (0, _toNumber2.default)(argument); // If number is NaN, +0, -0, +∞, or -∞, return +0.
+
+  if (number === 0 || !(0, _isFinite2.default)(number)) {
+    return 0;
+  } // Let int be the mathematical value that is the same sign as number and
+  // whose magnitude is floor(abs(number)).
+  // Let int24bit be int modulo 2^24.
+
+
+  return (0, _modulo.default)((0, _sign2.default)(number) * floor(abs(number)), 0x1000000);
+}
 
 /***/ }),
 /* 101 */
@@ -4526,30 +3964,36 @@ exports.default = !(0, _attempt2.default)(Function('"use strict"; return class M
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trimRight;
+exports.default = modulo;
 
-var _replace2 = __webpack_require__(13);
-
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _whitespace2 = __webpack_require__(31);
-
-var _whitespace3 = _interopRequireDefault(_whitespace2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
- * @file List of ECMAScript white space characters.
+ * @file modulo - floored division implementation.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trimRight
+ * @module toStringTag
+ */
+var floor = Math.floor;
+/**
+ * The notation “x modulo y” (y must be finite and nonzero) computes a value k
+ * of the same sign as y (or zero) such that abs(k) < abs(y) and x-k = q × y
+ * for some integer q.
+ *
+ * Donald Knuth described floored division where the quotient is defined by
+ * the floor function q = ⌊a/n⌋ and thus according to equation the remainder
+ * would have the same sign as the divisor. Due to the floor function, the
+ * quotient is always rounded downwards, even if it is already negative.
+ *
+ * @param {number} dividend - The integer to find the remainder of.
+ * @param {number} divisor - The integer to divide by.
+ * @returns {number} The integer remainder.
+ * @see http://www.ecma-international.org/ecma-262/6.0/#sec-algorithm-conventions
+ * @see https://en.wikipedia.org/wiki/Modulo_operation
  */
 
-var PRE = '[';
-var POST = ']+$';
-var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
-
-function _trimRight(string) {
-  return (0, _replace3.default)(string, whiteSpace, '');
+function modulo(dividend, divisor) {
+  var remain = dividend % divisor;
+  return floor(remain >= 0 ? remain : remain + divisor);
 }
 
 /***/ }),
@@ -4562,18 +4006,69 @@ function _trimRight(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = padStart;
 
-var _methodize2 = __webpack_require__(0);
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
+
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
+
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.map); /**
-                                                                  * @file Utility that needs description.
-                                                                  * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                  * @module _map
-                                                                  */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * This method pads the current string with another string (repeated, if needed)
+ * so that the resulting string reaches the given length. The padding is applied
+ * from the start (left) of the current string.
+ *
+ * @param {string} string - The string to pad.
+ * @throws {TypeError} If target is null or undefined.
+ * @param {number} targetLength - The length of the resulting string once the
+ *  current string has been padded. If the value is lower than the current
+ *  string's length, the current string will be returned as is.
+ * @param {Array} rest - The rest of the arguments array.
+ * @param {string} [rest.padString] - The string to pad the current string with. If
+ *  this string is too long to stay within the target length, it will be
+ *  truncated and the left-most part will be applied. The default value for this
+ *  parameter is " " (U+0020).
+ * @returns {string} A String of the specified length with the pad string
+ *  applied from the start.
+ */
+function padStart(string, targetLength) {
+  var str = (0, _toString2.default)((0, _requireCoercibleToString.default)(string));
+  var stringLength = (0, _toWholeNumber.default)(str.length);
+  /* eslint-disable-next-line no-void */
+
+  var fillString = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : void 0;
+  var filler = (0, _isUndefined.default)(fillString) ? '' : (0, _toString2.default)(fillString);
+
+  if (filler === '') {
+    filler = ' ';
+  }
+
+  var intMaxLength = (0, _toWholeNumber.default)(targetLength);
+
+  if (intMaxLength <= stringLength) {
+    return str;
+  }
+
+  var fillLen = intMaxLength - stringLength;
+
+  while (filler.length < fillLen) {
+    var fLen = filler.length;
+    var remainingCodeUnits = fillLen - fLen;
+    filler += fLen > remainingCodeUnits ? (0, _stringSlice2.default)(filler, 0, remainingCodeUnits) : filler;
+  }
+
+  var truncatedStringFiller = filler.length > fillLen ? (0, _stringSlice2.default)(filler, 0, fillLen) : filler;
+  return truncatedStringFiller + str;
+}
 
 /***/ }),
 /* 103 */
@@ -4585,13 +4080,18 @@ exports.default = (0, _methodize3.default)(Array.prototype.map); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isBooleanType;
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _keys
+ * @module isBooleanType
  */
-
-exports.default = Object.keys;
+function isBooleanType(value) {
+  return typeof value === 'boolean';
+}
 
 /***/ }),
 /* 104 */
@@ -4603,18 +4103,25 @@ exports.default = Object.keys;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isSpaced;
 
-var _methodize2 = __webpack_require__(0);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
+
+var _whitespace2 = _interopRequireDefault(__webpack_require__(31));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.filter); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _filter
-                                                                     */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var PRE = '[';
+var POST = ']';
+var containsSpace = new RegExp(PRE + (0, _whitespace2.default)('html') + POST);
+
+function isSpaced(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, containsSpace);
+}
 
 /***/ }),
 /* 105 */
@@ -4626,16 +4133,18 @@ exports.default = (0, _methodize3.default)(Array.prototype.filter); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubArray;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubArray
- */
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _Boolean.default;
+  }
+});
 
-function stubArray() {
-  return [];
-}
+var _Boolean = _interopRequireDefault(__webpack_require__(29));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 106 */
@@ -4647,105 +4156,28 @@ function stubArray() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = assign;
+exports.default = _uniq;
 
-var _isFunctionType = __webpack_require__(68);
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
 
-var _isFunctionType2 = _interopRequireDefault(_isFunctionType);
+var _push2 = _interopRequireDefault(__webpack_require__(27));
 
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-var _toObject = __webpack_require__(12);
-
-var _toObject2 = _interopRequireDefault(_toObject);
-
-var _stubArray = __webpack_require__(105);
-
-var _stubArray2 = _interopRequireDefault(_stubArray);
-
-var _concat2 = __webpack_require__(215);
-
-var _concat3 = _interopRequireDefault(_concat2);
-
-var _filter2 = __webpack_require__(104);
-
-var _filter3 = _interopRequireDefault(_filter2);
-
-var _reduce2 = __webpack_require__(62);
-
-var _reduce3 = _interopRequireDefault(_reduce2);
-
-var _keys2 = __webpack_require__(103);
-
-var _keys3 = _interopRequireDefault(_keys2);
-
-var _propertyIsEnumerable2 = __webpack_require__(214);
-
-var _propertyIsEnumerable3 = _interopRequireDefault(_propertyIsEnumerable2);
-
-var _Object2 = __webpack_require__(63);
-
-var _Object3 = _interopRequireDefault(_Object2);
+var _reduce2 = _interopRequireDefault(__webpack_require__(57));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/* istanbul ignore next */
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module assign
- */
+var logger = __webpack_require__(0).get("caboodle-x:_uniq");
 
-var getOwnPropertySymbols = (0, _isFunctionType2.default)(_Object3.default.getOwnPropertySymbols) ? _Object3.default.getOwnPropertySymbols : _stubArray2.default;
-
-var getOwnEnumerablePropertySymbols = function _getOwnEnumerablePropertySymbols(target) {
-  var isEnumerable = function _isEnumerable(symbol) {
-    return (0, _propertyIsEnumerable3.default)(target, symbol);
-  };
-
-  return (0, _filter3.default)(getOwnPropertySymbols(target), isEnumerable);
-};
-
-var reducer = function _reducer(tgt, source) {
-  if ((0, _isNil2.default)(source)) {
-    return tgt;
+var callback = function _callback(accumulator, currentValue) {
+  if (!(0, _includes2.default)(accumulator, currentValue)) {
+    (0, _push2.default)(accumulator, currentValue);
   }
 
-  var object = (0, _Object3.default)(source);
-  var assigner = function _assigner(tar, key) {
-    tar[key] = object[key];
-
-    return tar;
-  };
-
-  return (0, _reduce3.default)((0, _concat3.default)((0, _keys3.default)(object), getOwnEnumerablePropertySymbols(object)), assigner, tgt);
+  return accumulator;
 };
 
-/**
- * This method is used to copy the values of all enumerable own properties from
- * one or more source objects to a target object. It will return the target object.
- *
- * @param {*} target - The target object.
- * @param {Array} rest - The rest of the arguments array.
- * @param {...*} [rest.source] - The source object(s).
- * @throws {TypeError} If target is null or undefined.
- * @returns {Object} The target object.
- * @example
- * var assign = require('object-assign-x');
- *
- * var obj = { a: 1 };
- * var copy = assign({}, obj);
- * console.log(copy); // { a: 1 }
- */
-
-function assign(target) {
-  for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    rest[_key - 1] = arguments[_key];
-  }
-
-  return (0, _reduce3.default)(rest, reducer, (0, _toObject2.default)(target));
+function _uniq(array) {
+  return (0, _reduce2.default)(array, callback, []);
 }
 
 /***/ }),
@@ -4758,13 +4190,164 @@ function assign(target) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = toDecimalFormString;
+
+var _Number2 = _interopRequireDefault(__webpack_require__(60));
+
+var _charAt2 = _interopRequireDefault(__webpack_require__(34));
+
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
+
+var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(62));
+
+var _join2 = _interopRequireDefault(__webpack_require__(35));
+
+var _search2 = _interopRequireDefault(__webpack_require__(108));
+
+var _test2 = _interopRequireDefault(__webpack_require__(18));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var EMPTY_STRING = '';
+var DECIMAL_MARK = '.';
+var HYPHEN_MINUS = '-';
+var ZERO_SYMBOL = '0';
+var MINUS_ZERO_SYMBOL = HYPHEN_MINUS + ZERO_SYMBOL;
+var ERROR_MSG = 'not a valid base 10 numeric value';
+var validPattern = /^-?(?:(?:\d|[1-9]\d*)(?:\.\d+)?)(?:e[+-]?\d+)?$/i;
+var expPattern = /e/i;
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _bind
+ * This method converts a base-10 or scientific E-notation value to
+ * a decimal form string. Javascript's IEE 754 double-precision numbers
+ * give the same precision as `number.toString()`.
+ *
+ * @param {number|string} value - The value to be converted.
+ * @throws {TypeError} If value is not a valid format.
+ * @throws {TypeError} If value is a Symbol or not coercible.
+ * @returns {string} The value converted to a decimal form string.
  */
 
-exports.default = Function.call.bind(Function.bind);
+function toDecimalFormString(value) {
+  var workingValue = value; // Minus zero?
+
+  if (workingValue === 0 && 1 / workingValue < 0) {
+    workingValue = MINUS_ZERO_SYMBOL;
+  } else {
+    workingValue = (0, _toString2.default)(workingValue);
+
+    if (!(0, _test2.default)(validPattern, workingValue)) {
+      throw new TypeError(ERROR_MSG);
+    }
+  } // Determine sign.
+
+
+  var sign;
+
+  if ((0, _charAt2.default)(workingValue, 0) === HYPHEN_MINUS) {
+    workingValue = (0, _stringSlice2.default)(workingValue, 1);
+    sign = -1;
+  } else {
+    sign = 1;
+  } // Decimal point?
+
+
+  var pointIndex = (0, _stringIndexOf2.default)(workingValue, DECIMAL_MARK);
+
+  if (pointIndex > -1) {
+    workingValue = (0, _replace2.default)(workingValue, DECIMAL_MARK, EMPTY_STRING);
+  }
+
+  var exponentIndex = pointIndex; // Exponential form?
+
+  var index = (0, _search2.default)(workingValue, expPattern);
+
+  if (index > 0) {
+    // Determine exponent.
+    if (exponentIndex < 0) {
+      exponentIndex = index;
+    }
+
+    exponentIndex += (0, _Number2.default)((0, _stringSlice2.default)(workingValue, index + 1));
+    workingValue = (0, _stringSlice2.default)(workingValue, 0, index);
+  } else if (exponentIndex < 0) {
+    // Integer.
+    exponentIndex = workingValue.length;
+  }
+
+  var leadingZeroIndex = workingValue.length; // Determine leading zeros.
+
+  index = 0;
+
+  while (index < leadingZeroIndex && (0, _charAt2.default)(workingValue, index) === ZERO_SYMBOL) {
+    index += 1;
+  }
+
+  var coefficient;
+  var exponent;
+
+  if (index === leadingZeroIndex) {
+    // Zero.
+    exponent = 0;
+    coefficient = [0];
+  } else {
+    // Determine trailing zeros.
+    if (leadingZeroIndex > 0) {
+      do {
+        leadingZeroIndex -= 1;
+      } while ((0, _charAt2.default)(workingValue, leadingZeroIndex) === ZERO_SYMBOL && leadingZeroIndex > 0);
+    }
+
+    exponent = exponentIndex - index - 1;
+    coefficient = [];
+    coefficient.length = leadingZeroIndex + 1; // Convert string to array of digits without leading/trailing zeros.
+
+    var position = 0;
+
+    while (index <= leadingZeroIndex) {
+      coefficient[position] = (0, _Number2.default)((0, _charAt2.default)(workingValue, index));
+      position += 1;
+      index += 1;
+    }
+  }
+
+  var decimalForm = (0, _join2.default)(coefficient, EMPTY_STRING);
+  var decimalFormLength = decimalForm.length;
+
+  if (exponent < 0) {
+    exponent += 1;
+
+    while (exponent) {
+      decimalForm = ZERO_SYMBOL + decimalForm;
+      exponent += 1;
+    }
+
+    decimalForm = ZERO_SYMBOL + DECIMAL_MARK + decimalForm;
+  } else if (exponent > 0) {
+    exponent += 1;
+
+    if (exponent > decimalFormLength) {
+      exponent -= decimalFormLength;
+
+      while (exponent) {
+        decimalForm += ZERO_SYMBOL;
+        exponent -= 1;
+      }
+    } else if (exponent < decimalFormLength) {
+      decimalForm = (0, _stringSlice2.default)(decimalForm, 0, exponent) + DECIMAL_MARK + (0, _stringSlice2.default)(decimalForm, exponent);
+    } // Exponent is zero.
+
+  } else if (decimalFormLength > 1) {
+    decimalForm = (0, _charAt2.default)(decimalForm, 0) + DECIMAL_MARK + (0, _stringSlice2.default)(decimalForm, 1);
+  }
+
+  return sign < 0 ? HYPHEN_MINUS + decimalForm : decimalForm;
+}
 
 /***/ }),
 /* 108 */
@@ -4776,18 +4359,17 @@ exports.default = Function.call.bind(Function.bind);
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Function.prototype.toString); /**
-                                                                          * @file Utility that needs description.
-                                                                          * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                          * @module _functionToString
-                                                                          */
+var logger = __webpack_require__(0).get("caboodle-x:_search");
+
+var _default = (0, _methodize2.default)(String.prototype.search);
+
+exports.default = _default;
 
 /***/ }),
 /* 109 */
@@ -4799,13 +4381,17 @@ exports.default = (0, _methodize3.default)(Function.prototype.toString); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
+
+var logger = __webpack_require__(0).get("caboodle-x:_RegExp");
+
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _String
+ * @module _RegExp
  */
-
-exports.default = ''.constructor;
+var _default = /(?:)/.constructor;
+exports.default = _default;
 
 /***/ }),
 /* 110 */
@@ -4817,94 +4403,25 @@ exports.default = ''.constructor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = uniq;
+exports.default = stubTrue;
 
-var _uniq2 = __webpack_require__(76);
-
-var _uniq3 = _interopRequireDefault(_uniq2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module uniq
+ * @module stubTrue
  */
-
-function uniq(array) {
-  return (0, _uniq3.default)((0, _requireObjectCoercible2.default)(array));
+function stubTrue() {
+  return true;
 }
 
 /***/ }),
 /* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
+module.exports = __webpack_require__(112);
 
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = union;
-
-var _accumulate2 = __webpack_require__(52);
-
-var _accumulate3 = _interopRequireDefault(_accumulate2);
-
-var _includes2 = __webpack_require__(16);
-
-var _includes3 = _interopRequireDefault(_includes2);
-
-var _push2 = __webpack_require__(17);
-
-var _push3 = _interopRequireDefault(_push2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Creates an array of unique values, in order, from all given arrays.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module union
- */
-
-var addNotIncluded = function _addNotIncluded(accumulator, value) {
-  if (!(0, _includes3.default)(accumulator, value)) {
-    (0, _push3.default)(accumulator, value);
-  }
-
-  return accumulator;
-};
-
-var reduceArgs = function _reduceArgs(accumulator, array) {
-  return (0, _accumulate3.default)((0, _requireObjectCoercible2.default)(array), addNotIncluded, accumulator);
-};
-
-/**
- * This method creates an array of unique values, in order, from all given
- * arrays using SameValueZero for equality comparisons.
- *
- * @param {Array.<Array>} [arrays] - The arrays to inspect.
- * @returns {Array} Returns the new array of combined values.
- * @example
- * var union = require('array-union-x');
- *
- * union([2], [1, 2]); // => [2, 1]
- */
-function union() {
-  for (var _len = arguments.length, arrays = Array(_len), _key = 0; _key < _len; _key++) {
-    arrays[_key] = arguments[_key];
-  }
-
-  return (0, _accumulate3.default)(arrays, reduceArgs, []);
-}
 
 /***/ }),
 /* 112 */
@@ -4916,17 +4433,1074 @@ function union() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _toString = __webpack_require__(2);
-
-Object.defineProperty(exports, 'default', {
+Object.defineProperty(exports, "accumulate", {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_toString).default;
+    return _accumulate.default;
+  }
+});
+Object.defineProperty(exports, "all", {
+  enumerable: true,
+  get: function get() {
+    return _all.default;
+  }
+});
+Object.defineProperty(exports, "any", {
+  enumerable: true,
+  get: function get() {
+    return _any.default;
+  }
+});
+Object.defineProperty(exports, "apply", {
+  enumerable: true,
+  get: function get() {
+    return _apply.default;
+  }
+});
+Object.defineProperty(exports, "arity", {
+  enumerable: true,
+  get: function get() {
+    return _arity.default;
+  }
+});
+Object.defineProperty(exports, "assign", {
+  enumerable: true,
+  get: function get() {
+    return _assign.default;
+  }
+});
+Object.defineProperty(exports, "assertIsFunction", {
+  enumerable: true,
+  get: function get() {
+    return _assertIsFunction.default;
+  }
+});
+Object.defineProperty(exports, "assertIsObject", {
+  enumerable: true,
+  get: function get() {
+    return _assertIsObjectLike.default;
+  }
+});
+Object.defineProperty(exports, "assertIs", {
+  enumerable: true,
+  get: function get() {
+    return _assertIs.default;
+  }
+});
+Object.defineProperty(exports, "attempt", {
+  enumerable: true,
+  get: function get() {
+    return _attempt.default;
+  }
+});
+Object.defineProperty(exports, "bind", {
+  enumerable: true,
+  get: function get() {
+    return _bind.default;
+  }
+});
+Object.defineProperty(exports, "call", {
+  enumerable: true,
+  get: function get() {
+    return _call.default;
+  }
+});
+Object.defineProperty(exports, "callFunctionOrIdentity", {
+  enumerable: true,
+  get: function get() {
+    return _callFunctionOrIdentity.default;
+  }
+});
+Object.defineProperty(exports, "capitalizeFirst", {
+  enumerable: true,
+  get: function get() {
+    return _capitalizeFirst.default;
+  }
+});
+Object.defineProperty(exports, "capitalize", {
+  enumerable: true,
+  get: function get() {
+    return _capitalize.default;
+  }
+});
+Object.defineProperty(exports, "clamp", {
+  enumerable: true,
+  get: function get() {
+    return _clamp.default;
+  }
+});
+Object.defineProperty(exports, "constant", {
+  enumerable: true,
+  get: function get() {
+    return _constant.default;
+  }
+});
+Object.defineProperty(exports, "defaultToOneOf", {
+  enumerable: true,
+  get: function get() {
+    return _defaultToOneOf.default;
+  }
+});
+Object.defineProperty(exports, "defineValidatorProperties", {
+  enumerable: true,
+  get: function get() {
+    return _defineValidatorProperties.default;
+  }
+});
+Object.defineProperty(exports, "defineValidatorProperty", {
+  enumerable: true,
+  get: function get() {
+    return _defineValidatorProperty.default;
+  }
+});
+Object.defineProperty(exports, "delayPromise", {
+  enumerable: true,
+  get: function get() {
+    return _delayPromiseX.default;
+  }
+});
+Object.defineProperty(exports, "difference", {
+  enumerable: true,
+  get: function get() {
+    return _difference.default;
+  }
+});
+Object.defineProperty(exports, "drop", {
+  enumerable: true,
+  get: function get() {
+    return _drop.default;
+  }
+});
+Object.defineProperty(exports, "find", {
+  enumerable: true,
+  get: function get() {
+    return _find.default;
+  }
+});
+Object.defineProperty(exports, "findIndex", {
+  enumerable: true,
+  get: function get() {
+    return _findIndex.default;
+  }
+});
+Object.defineProperty(exports, "getAt", {
+  enumerable: true,
+  get: function get() {
+    return _getAt.default;
+  }
+});
+Object.defineProperty(exports, "getFunctionName", {
+  enumerable: true,
+  get: function get() {
+    return _getFunctionName.default;
+  }
+});
+Object.defineProperty(exports, "hasOwnProperty", {
+  enumerable: true,
+  get: function get() {
+    return _hasOwnProperty.default;
+  }
+});
+Object.defineProperty(exports, "head", {
+  enumerable: true,
+  get: function get() {
+    return _head.default;
+  }
+});
+Object.defineProperty(exports, "identity", {
+  enumerable: true,
+  get: function get() {
+    return _identity.default;
+  }
+});
+Object.defineProperty(exports, "includes", {
+  enumerable: true,
+  get: function get() {
+    return _includes.default;
+  }
+});
+Object.defineProperty(exports, "intersection", {
+  enumerable: true,
+  get: function get() {
+    return _intersection.default;
+  }
+});
+Object.defineProperty(exports, "intToRGB", {
+  enumerable: true,
+  get: function get() {
+    return _intToRGB.default;
+  }
+});
+Object.defineProperty(exports, "isArrayLikeObject", {
+  enumerable: true,
+  get: function get() {
+    return _isArrayLikeObject.default;
+  }
+});
+Object.defineProperty(exports, "isArrayLike", {
+  enumerable: true,
+  get: function get() {
+    return _isArrayLike.default;
+  }
+});
+Object.defineProperty(exports, "isBinary", {
+  enumerable: true,
+  get: function get() {
+    return _isBinary.default;
+  }
+});
+Object.defineProperty(exports, "isBooleanType", {
+  enumerable: true,
+  get: function get() {
+    return _isBooleanType.default;
+  }
+});
+Object.defineProperty(exports, "isBoolean", {
+  enumerable: true,
+  get: function get() {
+    return _isBooleanObject.default;
+  }
+});
+Object.defineProperty(exports, "isClassSupported", {
+  enumerable: true,
+  get: function get() {
+    return _isClassSupported.default;
+  }
+});
+Object.defineProperty(exports, "isCountingNumber", {
+  enumerable: true,
+  get: function get() {
+    return _isCountingNumber.default;
+  }
+});
+Object.defineProperty(exports, "isDate", {
+  enumerable: true,
+  get: function get() {
+    return _isDateObject.default;
+  }
+});
+Object.defineProperty(exports, "isDOMNode", {
+  enumerable: true,
+  get: function get() {
+    return _isDOMNode.default;
+  }
+});
+Object.defineProperty(exports, "isError", {
+  enumerable: true,
+  get: function get() {
+    return _isError.default;
+  }
+});
+Object.defineProperty(exports, "isFalsey", {
+  enumerable: true,
+  get: function get() {
+    return _isFalsey.default;
+  }
+});
+Object.defineProperty(exports, "isFunction", {
+  enumerable: true,
+  get: function get() {
+    return _isFunction.default;
+  }
+});
+Object.defineProperty(exports, "isFunctionType", {
+  enumerable: true,
+  get: function get() {
+    return _isFunctionType.default;
+  }
+});
+Object.defineProperty(exports, "isHex", {
+  enumerable: true,
+  get: function get() {
+    return _isHex.default;
+  }
+});
+Object.defineProperty(exports, "isInteger", {
+  enumerable: true,
+  get: function get() {
+    return _isInteger.default;
+  }
+});
+Object.defineProperty(exports, "isLowerCased", {
+  enumerable: true,
+  get: function get() {
+    return _isLowerCased.default;
+  }
+});
+Object.defineProperty(exports, "isNil", {
+  enumerable: true,
+  get: function get() {
+    return _isNil.default;
+  }
+});
+Object.defineProperty(exports, "isNull", {
+  enumerable: true,
+  get: function get() {
+    return _isNull.default;
+  }
+});
+Object.defineProperty(exports, "isNumber", {
+  enumerable: true,
+  get: function get() {
+    return _isNumberObject.default;
+  }
+});
+Object.defineProperty(exports, "isNumberFinite", {
+  enumerable: true,
+  get: function get() {
+    return _isNumberFinite.default;
+  }
+});
+Object.defineProperty(exports, "isNumberNaN", {
+  enumerable: true,
+  get: function get() {
+    return _isNumberNaN.default;
+  }
+});
+Object.defineProperty(exports, "isNumberType", {
+  enumerable: true,
+  get: function get() {
+    return _isNumberType.default;
+  }
+});
+Object.defineProperty(exports, "isObjectLikeNotArray", {
+  enumerable: true,
+  get: function get() {
+    return _isObjectLikeNotArray.default;
+  }
+});
+Object.defineProperty(exports, "isObjectLike", {
+  enumerable: true,
+  get: function get() {
+    return _isObjectLike.default;
+  }
+});
+Object.defineProperty(exports, "isObjectType", {
+  enumerable: true,
+  get: function get() {
+    return _isObjectType.default;
+  }
+});
+Object.defineProperty(exports, "isOctal", {
+  enumerable: true,
+  get: function get() {
+    return _isOctal.default;
+  }
+});
+Object.defineProperty(exports, "isPopulatedString", {
+  enumerable: true,
+  get: function get() {
+    return _isPopulatedString.default;
+  }
+});
+Object.defineProperty(exports, "isPrimitive", {
+  enumerable: true,
+  get: function get() {
+    return _isPrimitive.default;
+  }
+});
+Object.defineProperty(exports, "isRegex", {
+  enumerable: true,
+  get: function get() {
+    return _isRegex.default;
+  }
+});
+Object.defineProperty(exports, "isSafeInteger", {
+  enumerable: true,
+  get: function get() {
+    return _isSafeInteger.default;
+  }
+});
+Object.defineProperty(exports, "isSearchIndex", {
+  enumerable: true,
+  get: function get() {
+    return _isSearchIndex.default;
+  }
+});
+Object.defineProperty(exports, "isSpaced", {
+  enumerable: true,
+  get: function get() {
+    return _isSpaced.default;
+  }
+});
+Object.defineProperty(exports, "isStringTypeOrInteger", {
+  enumerable: true,
+  get: function get() {
+    return _isStringTypeOrInteger.default;
+  }
+});
+Object.defineProperty(exports, "isStringTypeOrNumberType", {
+  enumerable: true,
+  get: function get() {
+    return _isStringTypeOrNumberType.default;
+  }
+});
+Object.defineProperty(exports, "isStringType", {
+  enumerable: true,
+  get: function get() {
+    return _isStringType.default;
+  }
+});
+Object.defineProperty(exports, "isString", {
+  enumerable: true,
+  get: function get() {
+    return _isString.default;
+  }
+});
+Object.defineProperty(exports, "isSurrogatePair", {
+  enumerable: true,
+  get: function get() {
+    return _isSurrogatePair.default;
+  }
+});
+Object.defineProperty(exports, "isSymbolType", {
+  enumerable: true,
+  get: function get() {
+    return _isSymbolType.default;
+  }
+});
+Object.defineProperty(exports, "isSymbol", {
+  enumerable: true,
+  get: function get() {
+    return _isSymbol.default;
+  }
+});
+Object.defineProperty(exports, "isSymbolSupported", {
+  enumerable: true,
+  get: function get() {
+    return _isSymbolSupported.default;
+  }
+});
+Object.defineProperty(exports, "isToStringTagSupported", {
+  enumerable: true,
+  get: function get() {
+    return _isToStringTagSupported.default;
+  }
+});
+Object.defineProperty(exports, "isTruthy", {
+  enumerable: true,
+  get: function get() {
+    return _isTruthy.default;
+  }
+});
+Object.defineProperty(exports, "isUndefined", {
+  enumerable: true,
+  get: function get() {
+    return _isUndefined.default;
+  }
+});
+Object.defineProperty(exports, "isUnderscored", {
+  enumerable: true,
+  get: function get() {
+    return _isUnderscored.default;
+  }
+});
+Object.defineProperty(exports, "isUniq", {
+  enumerable: true,
+  get: function get() {
+    return _isUniq.default;
+  }
+});
+Object.defineProperty(exports, "isUpperCased", {
+  enumerable: true,
+  get: function get() {
+    return _isUpperCased.default;
+  }
+});
+Object.defineProperty(exports, "isValidHtml4Id", {
+  enumerable: true,
+  get: function get() {
+    return _isValidHtml4Id.default;
+  }
+});
+Object.defineProperty(exports, "isValidHtml5Id", {
+  enumerable: true,
+  get: function get() {
+    return _isValidHtml5Id.default;
+  }
+});
+Object.defineProperty(exports, "isWhiteSpaced", {
+  enumerable: true,
+  get: function get() {
+    return _isWhiteSpaced.default;
+  }
+});
+Object.defineProperty(exports, "isWholeNumber", {
+  enumerable: true,
+  get: function get() {
+    return _isWholeNumber.default;
+  }
+});
+Object.defineProperty(exports, "kebabJoin", {
+  enumerable: true,
+  get: function get() {
+    return _kebabJoin.default;
+  }
+});
+Object.defineProperty(exports, "last", {
+  enumerable: true,
+  get: function get() {
+    return _last.default;
+  }
+});
+Object.defineProperty(exports, "methodize", {
+  enumerable: true,
+  get: function get() {
+    return _methodize.default;
+  }
+});
+Object.defineProperty(exports, "modulo", {
+  enumerable: true,
+  get: function get() {
+    return _modulo.default;
+  }
+});
+Object.defineProperty(exports, "negate", {
+  enumerable: true,
+  get: function get() {
+    return _negate.default;
+  }
+});
+Object.defineProperty(exports, "nilifyIs", {
+  enumerable: true,
+  get: function get() {
+    return _nilifyIs.default;
+  }
+});
+Object.defineProperty(exports, "normalizeSpace", {
+  enumerable: true,
+  get: function get() {
+    return _normalizeSpace.default;
+  }
+});
+Object.defineProperty(exports, "noop", {
+  enumerable: true,
+  get: function get() {
+    return _noop.default;
+  }
+});
+Object.defineProperty(exports, "numberToDecimalString", {
+  enumerable: true,
+  get: function get() {
+    return _numberToDecimalString.default;
+  }
+});
+Object.defineProperty(exports, "numberFormat", {
+  enumerable: true,
+  get: function get() {
+    return _numberFormat.default;
+  }
+});
+Object.defineProperty(exports, "parseDecimal", {
+  enumerable: true,
+  get: function get() {
+    return _parseDecimal.default;
+  }
+});
+Object.defineProperty(exports, "parseInteger", {
+  enumerable: true,
+  get: function get() {
+    return _parseInteger.default;
+  }
+});
+Object.defineProperty(exports, "partial", {
+  enumerable: true,
+  get: function get() {
+    return _partial.default;
+  }
+});
+Object.defineProperty(exports, "partialRight", {
+  enumerable: true,
+  get: function get() {
+    return _partialRight.default;
+  }
+});
+Object.defineProperty(exports, "padStart", {
+  enumerable: true,
+  get: function get() {
+    return _padStart.default;
+  }
+});
+Object.defineProperty(exports, "regexpEscape", {
+  enumerable: true,
+  get: function get() {
+    return _regexpEscape.default;
+  }
+});
+Object.defineProperty(exports, "replaceComments", {
+  enumerable: true,
+  get: function get() {
+    return _replaceComments.default;
+  }
+});
+Object.defineProperty(exports, "requireCoercibleToString", {
+  enumerable: true,
+  get: function get() {
+    return _requireCoercibleToString.default;
+  }
+});
+Object.defineProperty(exports, "requireObjectCoercible", {
+  enumerable: true,
+  get: function get() {
+    return _requireObjectCoercible.default;
+  }
+});
+Object.defineProperty(exports, "sameValue", {
+  enumerable: true,
+  get: function get() {
+    return _sameValue.default;
+  }
+});
+Object.defineProperty(exports, "sameValueZero", {
+  enumerable: true,
+  get: function get() {
+    return _sameValueZero.default;
+  }
+});
+Object.defineProperty(exports, "shuffle", {
+  enumerable: true,
+  get: function get() {
+    return _shuffle.default;
+  }
+});
+Object.defineProperty(exports, "sign", {
+  enumerable: true,
+  get: function get() {
+    return _sign.default;
+  }
+});
+Object.defineProperty(exports, "sift", {
+  enumerable: true,
+  get: function get() {
+    return _sift.default;
+  }
+});
+Object.defineProperty(exports, "stringTest", {
+  enumerable: true,
+  get: function get() {
+    return _stringTest.default;
+  }
+});
+Object.defineProperty(exports, "stubArray", {
+  enumerable: true,
+  get: function get() {
+    return _stubArray.default;
+  }
+});
+Object.defineProperty(exports, "stubFalse", {
+  enumerable: true,
+  get: function get() {
+    return _stubFalse.default;
+  }
+});
+Object.defineProperty(exports, "stubObject", {
+  enumerable: true,
+  get: function get() {
+    return _stubObject.default;
+  }
+});
+Object.defineProperty(exports, "stubString", {
+  enumerable: true,
+  get: function get() {
+    return _stubString.default;
+  }
+});
+Object.defineProperty(exports, "stubTrue", {
+  enumerable: true,
+  get: function get() {
+    return _stubTrue.default;
+  }
+});
+Object.defineProperty(exports, "squeeze", {
+  enumerable: true,
+  get: function get() {
+    return _squeeze.default;
+  }
+});
+Object.defineProperty(exports, "surround", {
+  enumerable: true,
+  get: function get() {
+    return _surround.default;
+  }
+});
+Object.defineProperty(exports, "trim", {
+  enumerable: true,
+  get: function get() {
+    return _trim.default;
+  }
+});
+Object.defineProperty(exports, "trimLeft", {
+  enumerable: true,
+  get: function get() {
+    return _trimLeft.default;
+  }
+});
+Object.defineProperty(exports, "trimRight", {
+  enumerable: true,
+  get: function get() {
+    return _trimRight.default;
+  }
+});
+Object.defineProperty(exports, "trunc", {
+  enumerable: true,
+  get: function get() {
+    return _trunc.default;
+  }
+});
+Object.defineProperty(exports, "truncate", {
+  enumerable: true,
+  get: function get() {
+    return _truncate.default;
+  }
+});
+Object.defineProperty(exports, "toBoolean", {
+  enumerable: true,
+  get: function get() {
+    return _toBoolean.default;
+  }
+});
+Object.defineProperty(exports, "toInteger", {
+  enumerable: true,
+  get: function get() {
+    return _toInteger.default;
+  }
+});
+Object.defineProperty(exports, "toNumber", {
+  enumerable: true,
+  get: function get() {
+    return _toNumber.default;
+  }
+});
+Object.defineProperty(exports, "toObject", {
+  enumerable: true,
+  get: function get() {
+    return _toObject.default;
+  }
+});
+Object.defineProperty(exports, "toPrimitive", {
+  enumerable: true,
+  get: function get() {
+    return _toPrimitive.default;
+  }
+});
+Object.defineProperty(exports, "toPropertyKey", {
+  enumerable: true,
+  get: function get() {
+    return _toPropertyKey.default;
+  }
+});
+Object.defineProperty(exports, "toString", {
+  enumerable: true,
+  get: function get() {
+    return _toString.default;
+  }
+});
+Object.defineProperty(exports, "toStringTag", {
+  enumerable: true,
+  get: function get() {
+    return _toStringTag.default;
+  }
+});
+Object.defineProperty(exports, "toUint24", {
+  enumerable: true,
+  get: function get() {
+    return _toUint.default;
+  }
+});
+Object.defineProperty(exports, "toWholeNumber", {
+  enumerable: true,
+  get: function get() {
+    return _toWholeNumber.default;
+  }
+});
+Object.defineProperty(exports, "union", {
+  enumerable: true,
+  get: function get() {
+    return _union.default;
+  }
+});
+Object.defineProperty(exports, "uniq", {
+  enumerable: true,
+  get: function get() {
+    return _uniq.default;
+  }
+});
+Object.defineProperty(exports, "MAX_SAFE_INTEGER", {
+  enumerable: true,
+  get: function get() {
+    return _MAX_SAFE_INTEGER.default;
   }
 });
 
+var _accumulate = _interopRequireDefault(__webpack_require__(113));
+
+var _all = _interopRequireDefault(__webpack_require__(124));
+
+var _any = _interopRequireDefault(__webpack_require__(125));
+
+var _apply = _interopRequireDefault(__webpack_require__(126));
+
+var _arity = _interopRequireDefault(__webpack_require__(127));
+
+var _assign = _interopRequireDefault(__webpack_require__(77));
+
+var _assertIsFunction = _interopRequireDefault(__webpack_require__(133));
+
+var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(45));
+
+var _assertIs = _interopRequireDefault(__webpack_require__(90));
+
+var _attempt = _interopRequireDefault(__webpack_require__(49));
+
+var _bind = _interopRequireDefault(__webpack_require__(134));
+
+var _call = _interopRequireDefault(__webpack_require__(135));
+
+var _callFunctionOrIdentity = _interopRequireDefault(__webpack_require__(136));
+
+var _capitalizeFirst = _interopRequireDefault(__webpack_require__(137));
+
+var _capitalize = _interopRequireDefault(__webpack_require__(138));
+
+var _clamp = _interopRequireDefault(__webpack_require__(91));
+
+var _constant = _interopRequireDefault(__webpack_require__(140));
+
+var _defaultToOneOf = _interopRequireDefault(__webpack_require__(141));
+
+var _defineValidatorProperties = _interopRequireDefault(__webpack_require__(142));
+
+var _defineValidatorProperty = _interopRequireDefault(__webpack_require__(95));
+
+var _delayPromiseX = _interopRequireDefault(__webpack_require__(144));
+
+var _difference = _interopRequireDefault(__webpack_require__(145));
+
+var _drop = _interopRequireDefault(__webpack_require__(146));
+
+var _find = _interopRequireDefault(__webpack_require__(147));
+
+var _findIndex = _interopRequireDefault(__webpack_require__(148));
+
+var _getAt = _interopRequireDefault(__webpack_require__(149));
+
+var _getFunctionName = _interopRequireDefault(__webpack_require__(150));
+
+var _hasOwnProperty = _interopRequireDefault(__webpack_require__(151));
+
+var _head = _interopRequireDefault(__webpack_require__(152));
+
+var _identity = _interopRequireDefault(__webpack_require__(154));
+
+var _includes = _interopRequireDefault(__webpack_require__(155));
+
+var _intersection = _interopRequireDefault(__webpack_require__(156));
+
+var _intToRGB = _interopRequireDefault(__webpack_require__(158));
+
+var _isArrayLikeObject = _interopRequireDefault(__webpack_require__(159));
+
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
+
+var _isBinary = _interopRequireDefault(__webpack_require__(85));
+
+var _isBooleanType = _interopRequireDefault(__webpack_require__(103));
+
+var _isBooleanObject = _interopRequireDefault(__webpack_require__(160));
+
+var _isClassSupported = _interopRequireDefault(__webpack_require__(83));
+
+var _isCountingNumber = _interopRequireDefault(__webpack_require__(161));
+
+var _isDateObject = _interopRequireDefault(__webpack_require__(84));
+
+var _isDOMNode = _interopRequireDefault(__webpack_require__(162));
+
+var _isError = _interopRequireDefault(__webpack_require__(163));
+
+var _isFalsey = _interopRequireDefault(__webpack_require__(165));
+
+var _isFunction = _interopRequireDefault(__webpack_require__(166));
+
+var _isFunctionType = _interopRequireDefault(__webpack_require__(51));
+
+var _isHex = _interopRequireDefault(__webpack_require__(167));
+
+var _isInteger = _interopRequireDefault(__webpack_require__(89));
+
+var _isLowerCased = _interopRequireDefault(__webpack_require__(168));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+var _isNull = _interopRequireDefault(__webpack_require__(37));
+
+var _isNumberObject = _interopRequireDefault(__webpack_require__(169));
+
+var _isNumberFinite = _interopRequireDefault(__webpack_require__(170));
+
+var _isNumberNaN = _interopRequireDefault(__webpack_require__(171));
+
+var _isNumberType = _interopRequireDefault(__webpack_require__(33));
+
+var _isObjectLikeNotArray = _interopRequireDefault(__webpack_require__(172));
+
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
+
+var _isObjectType = _interopRequireDefault(__webpack_require__(52));
+
+var _isOctal = _interopRequireDefault(__webpack_require__(87));
+
+var _isPopulatedString = _interopRequireDefault(__webpack_require__(174));
+
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
+
+var _isRegex = _interopRequireDefault(__webpack_require__(41));
+
+var _isSafeInteger = _interopRequireDefault(__webpack_require__(68));
+
+var _isSearchIndex = _interopRequireDefault(__webpack_require__(175));
+
+var _isSpaced = _interopRequireDefault(__webpack_require__(104));
+
+var _isStringTypeOrInteger = _interopRequireDefault(__webpack_require__(176));
+
+var _isStringTypeOrNumberType = _interopRequireDefault(__webpack_require__(177));
+
+var _isStringType = _interopRequireDefault(__webpack_require__(43));
+
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _isSurrogatePair = _interopRequireDefault(__webpack_require__(178));
+
+var _isSymbolType = _interopRequireDefault(__webpack_require__(30));
+
+var _isSymbol = _interopRequireDefault(__webpack_require__(48));
+
+var _isSymbolSupported = _interopRequireDefault(__webpack_require__(39));
+
+var _isToStringTagSupported = _interopRequireDefault(__webpack_require__(50));
+
+var _isTruthy = _interopRequireDefault(__webpack_require__(180));
+
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
+
+var _isUnderscored = _interopRequireDefault(__webpack_require__(181));
+
+var _isUniq = _interopRequireDefault(__webpack_require__(182));
+
+var _isUpperCased = _interopRequireDefault(__webpack_require__(183));
+
+var _isValidHtml4Id = _interopRequireDefault(__webpack_require__(184));
+
+var _isValidHtml5Id = _interopRequireDefault(__webpack_require__(185));
+
+var _isWhiteSpaced = _interopRequireDefault(__webpack_require__(186));
+
+var _isWholeNumber = _interopRequireDefault(__webpack_require__(44));
+
+var _kebabJoin = _interopRequireDefault(__webpack_require__(187));
+
+var _last = _interopRequireDefault(__webpack_require__(188));
+
+var _methodize = _interopRequireDefault(__webpack_require__(189));
+
+var _modulo = _interopRequireDefault(__webpack_require__(101));
+
+var _negate = _interopRequireDefault(__webpack_require__(190));
+
+var _nilifyIs = _interopRequireDefault(__webpack_require__(96));
+
+var _normalizeSpace = _interopRequireDefault(__webpack_require__(53));
+
+var _noop = _interopRequireDefault(__webpack_require__(191));
+
+var _numberToDecimalString = _interopRequireDefault(__webpack_require__(107));
+
+var _numberFormat = _interopRequireDefault(__webpack_require__(192));
+
+var _parseDecimal = _interopRequireDefault(__webpack_require__(195));
+
+var _parseInteger = _interopRequireDefault(__webpack_require__(196));
+
+var _partial = _interopRequireDefault(__webpack_require__(197));
+
+var _partialRight = _interopRequireDefault(__webpack_require__(199));
+
+var _padStart = _interopRequireDefault(__webpack_require__(102));
+
+var _regexpEscape = _interopRequireDefault(__webpack_require__(201));
+
+var _replaceComments = _interopRequireDefault(__webpack_require__(59));
+
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _sameValue = _interopRequireDefault(__webpack_require__(93));
+
+var _sameValueZero = _interopRequireDefault(__webpack_require__(92));
+
+var _shuffle = _interopRequireDefault(__webpack_require__(202));
+
+var _sign = _interopRequireDefault(__webpack_require__(203));
+
+var _sift = _interopRequireDefault(__webpack_require__(204));
+
+var _stringTest = _interopRequireDefault(__webpack_require__(205));
+
+var _stubArray = _interopRequireDefault(__webpack_require__(78));
+
+var _stubFalse = _interopRequireDefault(__webpack_require__(206));
+
+var _stubObject = _interopRequireDefault(__webpack_require__(207));
+
+var _stubString = _interopRequireDefault(__webpack_require__(208));
+
+var _stubTrue = _interopRequireDefault(__webpack_require__(110));
+
+var _squeeze = _interopRequireDefault(__webpack_require__(209));
+
+var _surround = _interopRequireDefault(__webpack_require__(97));
+
+var _trim = _interopRequireDefault(__webpack_require__(211));
+
+var _trimLeft = _interopRequireDefault(__webpack_require__(212));
+
+var _trimRight = _interopRequireDefault(__webpack_require__(213));
+
+var _trunc = _interopRequireDefault(__webpack_require__(214));
+
+var _truncate = _interopRequireDefault(__webpack_require__(216));
+
+var _toBoolean = _interopRequireDefault(__webpack_require__(105));
+
+var _toInteger = _interopRequireDefault(__webpack_require__(218));
+
+var _toNumber = _interopRequireDefault(__webpack_require__(219));
+
+var _toObject = _interopRequireDefault(__webpack_require__(15));
+
+var _toPrimitive = _interopRequireDefault(__webpack_require__(61));
+
+var _toPropertyKey = _interopRequireDefault(__webpack_require__(47));
+
+var _toString = _interopRequireDefault(__webpack_require__(220));
+
+var _toStringTag = _interopRequireDefault(__webpack_require__(38));
+
+var _toUint = _interopRequireDefault(__webpack_require__(100));
+
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
+
+var _union = _interopRequireDefault(__webpack_require__(221));
+
+var _uniq = _interopRequireDefault(__webpack_require__(222));
+
+var _MAX_SAFE_INTEGER = _interopRequireDefault(__webpack_require__(66));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 113 */
@@ -4938,39 +5512,58 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = accumulate;
 
-var _toNumber = __webpack_require__(21);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toNumber).default;
-  }
-});
+var _toObject = _interopRequireDefault(__webpack_require__(15));
+
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
+
+var _accumulate2 = _interopRequireDefault(__webpack_require__(67));
+
+var _fromIndex2 = _interopRequireDefault(__webpack_require__(88));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function accumulate(array, callback) {
+  var object = (0, _toObject.default)(array);
+  var length = (0, _toWholeNumber.default)(object.length);
+
+  for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    rest[_key - 2] = arguments[_key];
+  }
+
+  if (!rest.length && length < 1) {
+    throw new TypeError('accumulate of empty array with no initial value');
+  }
+
+  var start = (0, _fromIndex2.default)(object, rest[1]);
+  return (0, _accumulate2.default)(object, (0, _assertIsFunction2.default)(callback), (rest.length ? rest : object)[start], rest.length ? start : start + 1);
+}
 
 /***/ }),
 /* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(global) {
 
+var origSymbol = global.Symbol;
+var hasSymbolSham = __webpack_require__(115);
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+module.exports = function hasNativeSymbols() {
+	if (typeof origSymbol !== 'function') { return false; }
+	if (typeof Symbol !== 'function') { return false; }
+	if (typeof origSymbol('foo') !== 'symbol') { return false; }
+	if (typeof Symbol('bar') !== 'symbol') { return false; }
 
-var _toInteger = __webpack_require__(5);
+	return hasSymbolSham();
+};
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toInteger).default;
-  }
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(73)))
 
 /***/ }),
 /* 115 */
@@ -4979,21 +5572,47 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+/* eslint complexity: [2, 17], max-statements: [2, 33] */
+module.exports = function hasSymbols() {
+	if (typeof Symbol !== 'function' || typeof Object.getOwnPropertySymbols !== 'function') { return false; }
+	if (typeof Symbol.iterator === 'symbol') { return true; }
 
-var _methodize2 = __webpack_require__(0);
+	var obj = {};
+	var sym = Symbol('test');
+	var symObj = Object(sym);
+	if (typeof sym === 'string') { return false; }
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+	if (Object.prototype.toString.call(sym) !== '[object Symbol]') { return false; }
+	if (Object.prototype.toString.call(symObj) !== '[object Symbol]') { return false; }
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	// temp disabled per https://github.com/ljharb/object.assign/issues/17
+	// if (sym instanceof Symbol) { return false; }
+	// temp disabled per https://github.com/WebReflection/get-own-property-symbols/issues/4
+	// if (!(symObj instanceof Symbol)) { return false; }
 
-exports.default = (0, _methodize3.default)(String.prototype.lastIndexOf); /**
-                                                                           * @file Utility that needs description.
-                                                                           * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                           * @module _stringLastIndexOf
-                                                                           * */
+	// if (typeof Symbol.prototype.toString !== 'function') { return false; }
+	// if (String(sym) !== Symbol.prototype.toString.call(sym)) { return false; }
+
+	var symVal = 42;
+	obj[sym] = symVal;
+	for (sym in obj) { return false; } // eslint-disable-line no-restricted-syntax
+	if (typeof Object.keys === 'function' && Object.keys(obj).length !== 0) { return false; }
+
+	if (typeof Object.getOwnPropertyNames === 'function' && Object.getOwnPropertyNames(obj).length !== 0) { return false; }
+
+	var syms = Object.getOwnPropertySymbols(obj);
+	if (syms.length !== 1 || syms[0] !== sym) { return false; }
+
+	if (!Object.prototype.propertyIsEnumerable.call(obj, sym)) { return false; }
+
+	if (typeof Object.getOwnPropertyDescriptor === 'function') {
+		var descriptor = Object.getOwnPropertyDescriptor(obj, sym);
+		if (descriptor.value !== symVal || descriptor.enumerable !== true) { return false; }
+	}
+
+	return true;
+};
+
 
 /***/ }),
 /* 116 */
@@ -5005,250 +5624,24 @@ exports.default = (0, _methodize3.default)(String.prototype.lastIndexOf); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = truncate;
+exports.default = _normalizeSpace;
 
-var _isRegex = __webpack_require__(40);
+var _trim2 = _interopRequireDefault(__webpack_require__(40));
 
-var _isRegex2 = _interopRequireDefault(_isRegex);
+var _whitespace2 = _interopRequireDefault(__webpack_require__(31));
 
-var _isUndefined = __webpack_require__(27);
-
-var _isUndefined2 = _interopRequireDefault(_isUndefined);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-var _hasOwnProperty2 = __webpack_require__(39);
-
-var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
-
-var _exec2 = __webpack_require__(97);
-
-var _exec3 = _interopRequireDefault(_exec2);
-
-var _join2 = __webpack_require__(28);
-
-var _join3 = _interopRequireDefault(_join2);
-
-var _stringLastIndexOf2 = __webpack_require__(115);
-
-var _stringLastIndexOf3 = _interopRequireDefault(_stringLastIndexOf2);
-
-var _match2 = __webpack_require__(84);
-
-var _match3 = _interopRequireDefault(_match2);
-
-var _search2 = __webpack_require__(74);
-
-var _search3 = _interopRequireDefault(_search2);
-
-var _slice2 = __webpack_require__(24);
-
-var _slice3 = _interopRequireDefault(_slice2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _stringIndexOf2 = __webpack_require__(57);
-
-var _stringIndexOf3 = _interopRequireDefault(_stringIndexOf2);
-
-var _RegExp2 = __webpack_require__(73);
-
-var _RegExp3 = _interopRequireDefault(_RegExp2);
-
-var _test2 = __webpack_require__(26);
-
-var _test3 = _interopRequireDefault(_test2);
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Truncate a string to a maximum specified length.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module truncate
- */
+var logger = __webpack_require__(0).get("caboodle-x:_normalizeSpace");
 
-var G_FLAG = 'g';
-/* Used to match `RegExp` flags from their coerced string values. */
-var matchFlags = /\w*$/;
+var PRE = '[';
+var POST = ']+';
+var whiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST, 'g');
 
-/* Used to compose unicode character classes. */
-var rsAstralRange = '\\ud800-\\udfff';
-var rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23';
-var rsComboSymbolsRange = '\\u20d0-\\u20f0';
-var rsVarRange = '\\ufe0e\\ufe0f';
-
-/* Used to compose unicode capture groups. */
-var rsAstral = '[' + rsAstralRange + ']';
-var rsCombo = '[' + rsComboMarksRange + rsComboSymbolsRange + ']';
-var rsFitz = '\\ud83c[\\udffb-\\udfff]';
-var rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')';
-var rsNonAstral = '[^' + rsAstralRange + ']';
-var rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}';
-var rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]';
-var rsZWJ = '\\u200d';
-
-/* Used to compose unicode regexes. */
-var reOptMod = rsModifier + '?';
-var rsOptVar = '[' + rsVarRange + ']?';
-var rsOptJoin = '(?:' + rsZWJ + '(?:' + String((0, _join3.default)([rsNonAstral, rsRegional, rsSurrPair], '|')) + ')' + rsOptVar + reOptMod + ')*';
-
-var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = '(?:' + String((0, _join3.default)([rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral], '|')) + ')';
-
-/*
- * Used to match string symbols
- * @see https://mathiasbynens.be/notes/javascript-unicode
- */
-var reComplexSymbol = new _RegExp3.default(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, G_FLAG);
-
-/*
- * Used to detect strings with [zero-width joiners or code points from
- * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
- */
-var reHasComplexSymbol = new _RegExp3.default('[' + rsZWJ + rsAstralRange + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
-var hasComplexSymbol = function _hasComplexSymbol(string) {
-  return (0, _test3.default)(reHasComplexSymbol, string);
-};
-
-/**
- * Gets the number of symbols in `string`.
- *
- * @private
- * @param {string} string - The string to inspect.
- * @returns {number} Returns the string size.
- */
-var stringSize = function _stringSize(string) {
-  if (!string || !hasComplexSymbol(string)) {
-    return string.length;
-  }
-
-  reComplexSymbol.lastIndex = 0;
-
-  var result = 0;
-  while ((0, _test3.default)(reComplexSymbol, string)) {
-    result += 1;
-  }
-
-  return result;
-};
-
-/**
- * Truncates `string` if it's longer than the given maximum string length.
- * The last characters of the truncated string are replaced with the omission
- * string which defaults to "...".
- *
- * @param {string} string - The string to truncate.
- * @param {Object} [options] - The options object.
- * @param {number} [options.length=30] - The maximum string length.
- * @param {string} [options.omission='...'] - The string to indicate text
- * is omitted.
- * @param {RegExp|string} [options.separator] - The separator pattern to
- * truncate to.
- * @returns {string} Returns the truncated string.
- * @example
- * var truncate = require('truncate-x');
- *
- * truncate('hi-diddly-ho there, neighborino');
- * // 'hi-diddly-ho there, neighbo...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'length': 24,
- *   'separator': ' '
- * });
- * // 'hi-diddly-ho there,...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'length': 24,
- *   'separator': /,? +/
- * });
- * // 'hi-diddly-ho there...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'omission': ' [...]'
- * });
- * // 'hi-diddly-ho there, neig [...]'
- */
-function truncate(string, options) {
-  var str = (0, _toString3.default)(string);
-  var length = 30;
-  var omission = '...';
-  var separator = void 0;
-  if ((0, _isObjectLike2.default)(options)) {
-    if ((0, _hasOwnProperty3.default)(options, 'separator')) {
-      separator = (0, _isRegex2.default)(options.separator) ? options.separator : (0, _toString3.default)(options.separator);
-    }
-
-    if ((0, _hasOwnProperty3.default)(options, 'length')) {
-      length = (0, _toWholeNumber2.default)(options.length);
-    }
-
-    if ((0, _hasOwnProperty3.default)(options, 'omission')) {
-      omission = (0, _toString3.default)(options.omission);
-    }
-  }
-
-  var strLength = str.length;
-  var matchSymbols = void 0;
-  if (hasComplexSymbol(str)) {
-    matchSymbols = (0, _match3.default)(str, reComplexSymbol);
-    strLength = matchSymbols.length;
-  }
-
-  if (length >= strLength) {
-    return str;
-  }
-
-  var end = length - stringSize(omission);
-  if (end < 1) {
-    return omission;
-  }
-
-  var result = matchSymbols ? (0, _join3.default)((0, _slice3.default)(matchSymbols, 0, end), '') : (0, _stringSlice3.default)(str, 0, end);
-  if ((0, _isUndefined2.default)(separator)) {
-    return result + omission;
-  }
-
-  if (matchSymbols) {
-    end += result.length - end;
-  }
-
-  if ((0, _isRegex2.default)(separator)) {
-    if ((0, _search3.default)((0, _stringSlice3.default)(str, end), separator)) {
-      var substr = result;
-      if (!separator.global) {
-        separator = new _RegExp3.default(separator.source, (0, _toString3.default)((0, _exec3.default)(matchFlags, separator)) + G_FLAG);
-      }
-
-      separator.lastIndex = 0;
-      var newEnd = void 0;
-      var match = (0, _exec3.default)(separator, substr);
-      while (match) {
-        newEnd = match.index;
-        match = (0, _exec3.default)(separator, substr);
-      }
-
-      result = (0, _stringSlice3.default)(result, 0, (0, _isUndefined2.default)(newEnd) ? end : newEnd);
-    }
-  } else if ((0, _stringIndexOf3.default)(str, separator, end) !== end) {
-    var index = (0, _stringLastIndexOf3.default)(result, separator);
-    if (index > -1) {
-      result = (0, _stringSlice3.default)(result, 0, index);
-    }
-  }
-
-  return result + omission;
+function _normalizeSpace(string) {
+  return (0, _replace2.default)((0, _trim2.default)(string), whiteSpace, ' ');
 }
 
 /***/ }),
@@ -5261,18 +5654,17 @@ function truncate(string, options) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _trunc;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _trunc
- */
+exports.default = void 0;
 
-var ceil = Math.ceil,
-    floor = Math.floor;
-function _trunc(value) {
-  return value < 0 ? ceil(value) : floor(value);
-}
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_concat");
+
+var _default = (0, _methodize2.default)(Array.prototype.concat);
+
+exports.default = _default;
 
 /***/ }),
 /* 118 */
@@ -5284,17 +5676,17 @@ function _trunc(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = void 0;
 
-var _trunc = __webpack_require__(117);
-
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_trunc).default;
-  }
-});
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_propertyIsEnumerable");
+
+var _default = (0, _methodize2.default)(Object.prototype.propertyIsEnumerable);
+
+exports.default = _default;
 
 /***/ }),
 /* 119 */
@@ -5306,29 +5698,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trimRight;
+exports.default = void 0;
 
-var _trimRight2 = __webpack_require__(101);
-
-var _trimRight3 = _interopRequireDefault(_trimRight2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function trimRight(string) {
-  return (0, _trimRight3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
-} /**
-   * @file List of ECMAScript white space characters.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module trimRight
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_indexOf");
+
+var _default = (0, _methodize2.default)(Array.prototype.indexOf);
+
+exports.default = _default;
 
 /***/ }),
 /* 120 */
@@ -5340,29 +5720,17 @@ function trimRight(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trimLeft;
+exports.default = void 0;
 
-var _trimLeft2 = __webpack_require__(65);
+var logger = __webpack_require__(0).get("caboodle-x:_fromCharCode");
 
-var _trimLeft3 = _interopRequireDefault(_trimLeft2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function trimLeft(string) {
-  return (0, _trimLeft3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
-} /**
-   * @file List of ECMAScript white space characters.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module trimLeft
-   */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _fromCharCode
+ */
+var _default = String.fromCharCode;
+exports.default = _default;
 
 /***/ }),
 /* 121 */
@@ -5374,29 +5742,17 @@ function trimLeft(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = trim;
+exports.default = void 0;
 
-var _requireObjectCoercible = __webpack_require__(1);
+var logger = __webpack_require__(0).get("caboodle-x:_defineProperties");
 
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _trim2 = __webpack_require__(42);
-
-var _trim3 = _interopRequireDefault(_trim2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function trim(string) {
-  return (0, _trim3.default)((0, _toString3.default)((0, _requireObjectCoercible2.default)(string)));
-} /**
-   * @file List of ECMAScript white space characters.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module trim
-   */
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _defineProperties
+ */
+var _default = Object.defineProperties;
+exports.default = _default;
 
 /***/ }),
 /* 122 */
@@ -5408,27 +5764,18 @@ function trim(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _squeeze;
+exports.default = void 0;
 
-var _filter2 = __webpack_require__(104);
-
-var _filter3 = _interopRequireDefault(_filter2);
-
-var _stubTrue = __webpack_require__(72);
-
-var _stubTrue2 = _interopRequireDefault(_stubTrue);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_Infinity");
 
 /**
- * @file Utility that needs description.
+ * @file Parses a string argument and returns an integer of the specified radix.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _squeeze
+ * @module _Infinity
  */
+var _default = 1 / 0;
 
-function _squeeze(array) {
-  return (0, _filter3.default)(array, _stubTrue2.default);
-}
+exports.default = _default;
 
 /***/ }),
 /* 123 */
@@ -5440,27 +5787,17 @@ function _squeeze(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = squeeze;
+exports.default = void 0;
 
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _squeeze2 = __webpack_require__(122);
-
-var _squeeze3 = _interopRequireDefault(_squeeze2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_getOwnPropertyDescriptor");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module squeeze
+ * @module _getOwnPropertyDescriptor
  */
-
-function squeeze(array) {
-  return (0, _squeeze3.default)((0, _requireObjectCoercible2.default)(array));
-}
+var _default = Object.getOwnPropertyDescriptor;
+exports.default = _default;
 
 /***/ }),
 /* 124 */
@@ -5472,15 +5809,22 @@ function squeeze(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubString;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubString
- */
+exports.default = all;
 
-function stubString() {
-  return '';
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+var _all2 = _interopRequireDefault(__webpack_require__(24));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function all(array, callback) {
+  (0, _all2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
 }
 
 /***/ }),
@@ -5493,15 +5837,22 @@ function stubString() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubObject;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubObject
- */
+exports.default = any;
 
-function stubObject() {
-  return {};
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+var _any2 = _interopRequireDefault(__webpack_require__(25));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function any(array, callback) {
+  return (0, _any2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
 }
 
 /***/ }),
@@ -5514,15 +5865,22 @@ function stubObject() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stubFalse;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module stubFalse
- */
+exports.default = apply;
 
-function stubFalse() {
-  return false;
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function apply(fn) {
+  for (var _len = arguments.length, applyArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    applyArgs[_key - 1] = arguments[_key];
+  }
+
+  return _apply2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(applyArgs));
 }
 
 /***/ }),
@@ -5535,29 +5893,21 @@ function stubFalse() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = stringTest;
+exports.default = arity;
 
-var _isRegex = __webpack_require__(40);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _isRegex2 = _interopRequireDefault(_isRegex);
+var _arity2 = _interopRequireDefault(__webpack_require__(128));
 
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
-
-var _requireCoercibleToString = __webpack_require__(23);
-
-var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function stringTest(string, patternOrRegex) {
-  return (0, _stringTest3.default)((0, _requireCoercibleToString2.default)(string), (0, _isRegex2.default)(patternOrRegex) ? patternOrRegex : (0, _requireCoercibleToString2.default)(patternOrRegex));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module stringTest
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function arity(fn) {
+  return (0, _arity2.default)((0, _assertIsFunction2.default)(fn), (0, _toWholeNumber.default)((arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length));
+}
 
 /***/ }),
 /* 128 */
@@ -5569,34 +5919,43 @@ function stringTest(string, patternOrRegex) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = sift;
+exports.default = _arity;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
 
-var _requireObjectCoercible = __webpack_require__(1);
+var _bound2 = _interopRequireDefault(__webpack_require__(69));
 
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _sift2 = __webpack_require__(47);
-
-var _sift3 = _interopRequireDefault(_sift2);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module sift
- */
+var logger = __webpack_require__(0).get("caboodle-x:_arity");
 
-function sift(array, callback) {
-  return (0, _sift3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+function _arity(fn) {
+  var length = (arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length;
+  var bound;
+
+  var binder = function _binder() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    /* eslint-disable-next-line babel/no-invalid-this */
+    var result = (0, _apply2.default)(fn, this, (0, _slice2.default)(args, 0, length));
+    /* eslint-disable-next-line babel/no-invalid-this */
+
+    if (this instanceof bound) {
+      /* eslint-disable-next-line babel/no-invalid-this */
+      return (0, _isPrimitive.default)(result) ? this : result;
+    }
+
+    return result;
+  };
+
+  bound = (0, _bound2.default)(binder, 'Arity', fn.prototype, length);
+  return bound;
 }
 
 /***/ }),
@@ -5609,17 +5968,26 @@ function sift(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _argsToArray;
 
-var _sign = __webpack_require__(54);
+var _push2 = _interopRequireDefault(__webpack_require__(27));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_sign).default;
-  }
-});
+var _all2 = _interopRequireDefault(__webpack_require__(24));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_argsToArray");
+
+function _argsToArray(args) {
+  var array = [];
+
+  var iteratee = function _iteratee(arg) {
+    (0, _push2.default)(array, arg);
+  };
+
+  (0, _all2.default)(args, iteratee);
+  return array;
+}
 
 /***/ }),
 /* 130 */
@@ -5631,52 +5999,34 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = shuffle;
+exports.default = _createArgList;
 
-var _slice2 = __webpack_require__(24);
+var _String2 = _interopRequireDefault(__webpack_require__(74));
 
-var _slice3 = _interopRequireDefault(_slice2);
+var _join2 = _interopRequireDefault(__webpack_require__(35));
 
-var _toObject = __webpack_require__(12);
+var _push2 = _interopRequireDefault(__webpack_require__(27));
 
-var _toObject2 = _interopRequireDefault(_toObject);
+var _all2 = _interopRequireDefault(__webpack_require__(24));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Creates an array of shuffled values.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isError
- */
+var logger = __webpack_require__(0).get("caboodle-x:_createArgList");
 
-var floor = Math.floor,
-    random = Math.random;
+var PRE = '$_';
+var POST = '_$';
 
-/**
- * Creates an array of shuffled values.
- *
- * @see {@link https://en.wikipedia.org/wiki/Fisher-Yates_shuffle}
- * @param {Array|Object} array - The array to shuffle.
- * @throws {TypeError} If array is null or undefined.
- * @returns {Array} Returns the new shuffled array.
- * @example
- * var shuffle = require('shuffle-x');
- *
- * shuffle([1, 2, 3, 4]); // => [4, 1, 3, 2]
- */
+function _createArgList(length) {
+  var array = [];
 
-function shuffle(array) {
-  var arr = (0, _slice3.default)((0, _toObject2.default)(array));
-  var index = arr.length;
-  while (index > 0) {
-    var rnd = floor(random() * index);
-    index -= 1;
-    var tmp = arr[index];
-    arr[index] = arr[rnd];
-    arr[rnd] = tmp;
-  }
+  var iteratee = function _iteratee(unused, index) {
+    (0, _push2.default)(array, PRE + (0, _String2.default)(index) + POST);
+  };
 
-  return arr;
+  (0, _all2.default)({
+    length: length
+  }, iteratee);
+  return (0, _join2.default)(array, ',');
 }
 
 /***/ }),
@@ -5689,42 +6039,17 @@ function shuffle(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = regExpEscape;
+exports.default = void 0;
 
-var _replace2 = __webpack_require__(13);
-
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _requireCoercibleToString = __webpack_require__(23);
-
-var _requireCoercibleToString2 = _interopRequireDefault(_requireCoercibleToString);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_create");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module regExpEscape
+ * @module _create
  */
-
-var pattern = /[\^$\\.*+?()[\]{}|]/g;
-
-/**
- * Method to safely escape `RegExp` special tokens for use in `new RegExp`.
- *
- * @param {string} string - The string to be escaped.
- * @throws {TypeError} If string is null or undefined or not coercible.
- * @returns {string} The escaped string.
- * @example
- * var regexpEscape = require('caboodle-x/regexpEscape');
- *
- * var str = 'hello. how are you?';
- * var regex = new RegExp(regexpEscape(str), 'g');
- * String(regex); // '/hello\. how are you\?/g'
- */
-function regExpEscape(string) {
-  return (0, _replace3.default)((0, _requireCoercibleToString2.default)(string), pattern, '\\$&');
-}
+var _default = Object.create;
+exports.default = _default;
 
 /***/ }),
 /* 132 */
@@ -5736,51 +6061,19 @@ function regExpEscape(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _partialRight;
+exports.default = void 0;
 
-var _call2 = __webpack_require__(15);
+var logger = __webpack_require__(0).get("caboodle-x:_Function");
 
-var _call3 = _interopRequireDefault(_call2);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Function
+ */
+function fn() {}
 
-var _bound2 = __webpack_require__(50);
-
-var _bound3 = _interopRequireDefault(_bound2);
-
-var _isPrimitive = __webpack_require__(25);
-
-var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _partialRight(fn) {
-  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
-  }
-
-  var bound = void 0;
-
-  var binder = function _binder() {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    var result = _call3.default.apply(undefined, [fn, this].concat(args, partials));
-
-    if (this instanceof bound) {
-      return (0, _isPrimitive2.default)(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = (0, _bound3.default)(binder, 'PartialRight', fn.prototype, fn.length);
-
-  return bound;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _partialRight
-   */
+var _default = fn.constructor;
+exports.default = _default;
 
 /***/ }),
 /* 133 */
@@ -5792,31 +6085,18 @@ function _partialRight(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = partialRight;
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _assertIsFunction.default;
+  }
+});
 
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _partialRight2 = __webpack_require__(132);
-
-var _partialRight3 = _interopRequireDefault(_partialRight2);
+var _assertIsFunction = _interopRequireDefault(__webpack_require__(4));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module partialRight
- */
-
-function partialRight(fn) {
-  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
-  }
-
-  return _partialRight3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(partials));
-}
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 134 */
@@ -5828,51 +6108,23 @@ function partialRight(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _partial;
+exports.default = bind;
 
-var _call2 = __webpack_require__(15);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _call3 = _interopRequireDefault(_call2);
-
-var _bound2 = __webpack_require__(50);
-
-var _bound3 = _interopRequireDefault(_bound2);
-
-var _isPrimitive = __webpack_require__(25);
-
-var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+var _bind2 = _interopRequireDefault(__webpack_require__(76));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _partial(fn) {
-  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function bind(fn) {
+  for (var _len = arguments.length, bindArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    bindArgs[_key - 1] = arguments[_key];
   }
 
-  var bound = void 0;
-
-  var binder = function _binder() {
-    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-      args[_key2] = arguments[_key2];
-    }
-
-    var result = _call3.default.apply(undefined, [fn, this].concat(partials, args));
-
-    if (this instanceof bound) {
-      return (0, _isPrimitive2.default)(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = (0, _bound3.default)(binder, 'Partial', fn.prototype, fn.length - partials.length);
-
-  return bound;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _partial
-   */
+  return _bind2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(bindArgs));
+}
 
 /***/ }),
 /* 135 */
@@ -5884,30 +6136,22 @@ function _partial(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = partial;
+exports.default = call;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _partial2 = __webpack_require__(134);
-
-var _partial3 = _interopRequireDefault(_partial2);
+var _call2 = _interopRequireDefault(__webpack_require__(12));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module partial
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function partial(fn) {
-  for (var _len = arguments.length, partials = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    partials[_key - 1] = arguments[_key];
+function call(fn) {
+  for (var _len = arguments.length, callArgs = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    callArgs[_key - 1] = arguments[_key];
   }
 
-  return _partial3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(partials));
+  return _call2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(callArgs));
 }
 
 /***/ }),
@@ -5920,17 +6164,56 @@ function partial(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = callFunctionOrIdentity;
 
-var _parseInt = __webpack_require__(56);
+var _apply2 = _interopRequireDefault(__webpack_require__(13));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_parseInt).default;
-  }
-});
+var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(45));
+
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
+
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var requireIsObject = function _requireIsObject(value) {
+  return (0, _assertIsObjectLike.default)(value, 'CreateListFromArrayLike called on non-object');
+};
+
+var getArgsArray = function _getArgsArray(value) {
+  return (0, _isNil.default)(value) ? [] : (0, _slice2.default)(requireIsObject(value));
+};
+/**
+ * Invoke a function and return the result or return the identity argument unchanged.
+ *
+ * @param {Function|*} fnOrValue - The function to invoke or any other value.
+ * @param {Array} rest - The remaining arguments.
+ * @param {Array} [rest.argsArray=[]] - The argument(s) to use when invoking a given function.
+ * @param {*} [rest.thisArg=undefined] - The context to use when invoking a given function.
+ * @returns {*} The result of the invoked function or the identity argument unchanged.
+ */
+
+
+function callFunctionOrIdentity(fnOrValue) {
+  if ((0, _isFunction2.default)(fnOrValue)) {
+    var argsArray = getArgsArray(arguments.length <= 1 ? undefined : arguments[1]);
+    return (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 ? (0, _apply2.default)(fnOrValue, arguments.length <= 2 ? undefined : arguments[2], argsArray) : fnOrValue.apply(void 0, _toConsumableArray(argsArray));
+  }
+
+  return fnOrValue;
+}
 
 /***/ }),
 /* 137 */
@@ -5942,27 +6225,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = parseDecimal;
+exports.default = capitalizeFirst;
 
-var _parseInt2 = __webpack_require__(56);
+var _charAt2 = _interopRequireDefault(__webpack_require__(34));
 
-var _parseInt3 = _interopRequireDefault(_parseInt2);
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _toUpperCase2 = _interopRequireDefault(__webpack_require__(46));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Parse a string to a decimal value.
- *
- * @param {string} value - The string to be converted to a decimal value.
- * @returns {number} The parsed decimal value.
- */
-function parseDecimal(value) {
-  return (0, _parseInt3.default)(value, 10);
-} /**
-   * @file Utility to parse a string to a decimal value.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module parseDecimal
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function capitalizeFirst(string) {
+  var str = (0, _toString2.default)(string);
+  return (0, _toUpperCase2.default)((0, _charAt2.default)(str, 0)) + (0, _stringSlice2.default)(str, 1);
+}
 
 /***/ }),
 /* 138 */
@@ -5974,18 +6254,26 @@ function parseDecimal(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = capitalize;
 
-var _methodize2 = __webpack_require__(0);
+var _charAt2 = _interopRequireDefault(__webpack_require__(34));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _toLowerCase2 = _interopRequireDefault(__webpack_require__(58));
+
+var _toUpperCase2 = _interopRequireDefault(__webpack_require__(46));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(String.prototype.split); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _split
-                                                                     */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function capitalize(string) {
+  var str = (0, _toString2.default)(string);
+  return (0, _toUpperCase2.default)((0, _charAt2.default)(str, 0)) + (0, _toLowerCase2.default)((0, _stringSlice2.default)(str, 1));
+}
 
 /***/ }),
 /* 139 */
@@ -5997,18 +6285,26 @@ exports.default = (0, _methodize3.default)(String.prototype.split); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _clamp;
 
-var _methodize2 = __webpack_require__(0);
+var _isNaN2 = _interopRequireDefault(__webpack_require__(22));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _NaN2 = _interopRequireDefault(__webpack_require__(64));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Number.prototype.toFixed); /**
-                                                                       * @file Utility that needs description.
-                                                                       * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                       * @module _toFixed
-                                                                       */
+var logger = __webpack_require__(0).get("caboodle-x:_clamp");
+
+var max = Math.max,
+    min = Math.min;
+
+function _clamp(value, lower, upper) {
+  if ((0, _isNaN2.default)(value) || (0, _isNaN2.default)(lower) || (0, _isNaN2.default)(upper)) {
+    return _NaN2.default;
+  }
+
+  return min(max(value, lower), upper);
+}
 
 /***/ }),
 /* 140 */
@@ -6020,115 +6316,19 @@ exports.default = (0, _methodize3.default)(Number.prototype.toFixed); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = numberFormat;
+exports.default = constant;
 
-var _RegExp2 = __webpack_require__(73);
-
-var _RegExp3 = _interopRequireDefault(_RegExp2);
-
-var _toFixed2 = __webpack_require__(139);
-
-var _toFixed3 = _interopRequireDefault(_toFixed2);
-
-var _numberToString2 = __webpack_require__(83);
-
-var _numberToString3 = _interopRequireDefault(_numberToString2);
-
-var _replace2 = __webpack_require__(13);
-
-var _replace3 = _interopRequireDefault(_replace2);
-
-var _split2 = __webpack_require__(138);
-
-var _split3 = _interopRequireDefault(_split2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _join2 = __webpack_require__(28);
-
-var _join3 = _interopRequireDefault(_join2);
-
-var _isFinite2 = __webpack_require__(41);
-
-var _isFinite3 = _interopRequireDefault(_isFinite2);
-
-var _toNumber2 = __webpack_require__(21);
-
-var _toNumber3 = _interopRequireDefault(_toNumber2);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _clamp = __webpack_require__(92);
-
-var _clamp2 = _interopRequireDefault(_clamp);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _numberToDecimalString = __webpack_require__(75);
-
-var _numberToDecimalString2 = _interopRequireDefault(_numberToDecimalString);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
- * Format a given number using fixed-point notation, with user specified digit
- * counts and separators. `null` or 'undefined' can be used for optional
- * arguments to denote that the default value is to be used.
- *
- * @param {number} value - The numerical value to be formatted.
- * @param {Array} [rest] - The remaining arguments array.
- * @param {number} [rest.digits=2] - The number of digits to appear after the
- *  decimal point; this may be a value between 0 and 20, inclusive.
- * @param {number} [rest.sectionLength=3] - Length of integer part sections.
- * @param {string} [rest.sectionDelimiter=,] - Integer part section delimiter.
- * @param {string} [rest.decimalDelimiter=.] - Decimal delimiter.
- * @returns {string} The numerical value with the chosen formatting.
- * @example
- * var numberFormat = require('number-format-x');
- *
- * numberFormat(12345678.9, 3); // "12,345,678.900"
- * numberFormat(12345678.9, null, null, '.', ','); // "12.345.678,90"
- * numberFormat(123456.789, 4, 4, ' ', ':'); // "12 3456:7890"
- * numberFormat(12345678.9, 0, null, '-'); // "12-345-679"
- */
-/**
- * @file Format a number.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module numberFormat
+ * @module constant
  */
-
-function numberFormat(value) {
-  var number = (0, _toNumber3.default)(value);
-  if (!(0, _isFinite3.default)(number)) {
-    return (0, _numberToString3.default)(number);
-  }
-
-  // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
-  var digits = (arguments.length <= 1 ? 0 : arguments.length - 1) > 0 && !(0, _isNil2.default)(arguments.length <= 1 ? undefined : arguments[1]) ? (0, _clamp2.default)((0, _toInteger3.default)(arguments.length <= 1 ? undefined : arguments[1]), 0, 20) : 2;
-  // Formats a number using fixed-point notation.
-  var fixed = (0, _numberToDecimalString2.default)((0, _toFixed3.default)(number, digits));
-  if (digits > 0) {
-    var parts = (0, _split3.default)(fixed, '.');
-    parts[1] = (0, _stringSlice3.default)(String(parts[1] || '') + '00000000000000000000', 0, digits);
-    fixed = (0, _join3.default)(parts, '.');
-  }
-
-  var sectionLength = (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 && !(0, _isNil2.default)(arguments.length <= 2 ? undefined : arguments[2]) ? (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]) : 3;
-  // Formats a number (string) of fixed-point notation, with user delimiters.
-  var sectionDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 2 && !(0, _isNil2.default)(arguments.length <= 3 ? undefined : arguments[3]) ? (0, _toString3.default)(arguments.length <= 3 ? undefined : arguments[3]) : ',';
-  var decimalDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 3 && !(0, _isNil2.default)(arguments.length <= 4 ? undefined : arguments[4]) ? (0, _toString3.default)(arguments.length <= 4 ? undefined : arguments[4]) : '.';
-
-  return (0, _replace3.default)(decimalDelimiter === '.' ? fixed : (0, _replace3.default)(fixed, '.', decimalDelimiter), new _RegExp3.default('\\d(?=(\\d{' + String(sectionLength) + '})+' + (digits > 0 ? '\\D' : '$') + ')', 'g'), '$&' + String(sectionDelimiter));
+function constant(value) {
+  return function boundConstant() {
+    return value;
+  };
 }
 
 /***/ }),
@@ -6141,14 +6341,33 @@ function numberFormat(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = noop;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module noop
- */
+exports.default = defaultToOneOf;
 
-function noop() {}
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
+
+var _last2 = _interopRequireDefault(__webpack_require__(94));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * Tests if a comparate exists in a list of comparates an then returns the comparate if there
+ * is a match; otherwise returns the last comparates value or fallback value if supplied.
+ *
+ * @param {Array} [comparates=[]] - An array of values.
+ * @param {*} comparate - The value to compare against the supplied list of comparates.
+ * @param {Array} fallbackArg - The rest of the arguments array.
+ * @param {*} [fallbackArg.fallback=comparates[last]] - The returned value if no match exists.
+ * @returns {*} - The comparate upon a match; otherwise the fallback value.
+ */
+function defaultToOneOf(comparates, comparate) {
+  (0, _requireObjectCoercible.default)(comparates);
+  var fallback = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : (0, _last2.default)(comparates);
+  return (0, _includes2.default)(comparates, comparate) ? comparate : fallback;
+}
 
 /***/ }),
 /* 142 */
@@ -6160,26 +6379,34 @@ function noop() {}
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = negate;
+exports.default = defineValidatorProperties;
 
-var _negate2 = __webpack_require__(64);
+var _assertIsObjectLike = _interopRequireDefault(__webpack_require__(45));
 
-var _negate3 = _interopRequireDefault(_negate2);
+var _defineValidatorProperty = _interopRequireDefault(__webpack_require__(95));
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _toObject = _interopRequireDefault(__webpack_require__(15));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+var _all2 = _interopRequireDefault(__webpack_require__(24));
+
+var _keys2 = _interopRequireDefault(__webpack_require__(80));
+
+var _toPropertyKey = _interopRequireDefault(__webpack_require__(47));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module negate
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function negate(predicate) {
-  return (0, _negate3.default)((0, _assertIsFunction3.default)(predicate));
+function defineValidatorProperties(object, properties) {
+  (0, _assertIsObjectLike.default)(object);
+  var props = (0, _toObject.default)(properties);
+
+  var callback = function _callback(currentValue) {
+    (0, _defineValidatorProperty.default)(object, (0, _toPropertyKey.default)(currentValue), props[currentValue]);
+  };
+
+  (0, _all2.default)((0, _keys2.default)(props), callback);
+  return object;
 }
 
 /***/ }),
@@ -6192,59 +6419,37 @@ function negate(predicate) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = methodize;
+exports.default = void 0;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_defineProperty");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module methodize
+ * @module _defineProperty
  */
-
-function methodize(prototypeMethod) {
-  return (0, _methodize3.default)((0, _assertIsFunction3.default)(prototypeMethod));
-}
+var _default = Object.defineProperty;
+exports.default = _default;
 
 /***/ }),
 /* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = last;
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _last2 = __webpack_require__(88);
-
-var _last3 = _interopRequireDefault(_last2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module last
- */
-
-function last(array) {
-  return (0, _last3.default)((0, _requireObjectCoercible2.default)(array));
+/* WEBPACK VAR INJECTION */(function(global) {/*!
+{
+  "copywrite": "Copyright (c) 2018-present",
+  "date": "2018-11-25T01:39:57.865Z",
+  "describe": "",
+  "description": "Create a delayed promise.",
+  "file": "delay-promise-x.min.js",
+  "hash": "7f0b35b3798d0e3d81d4",
+  "license": "MIT",
+  "version": "1.0.0"
 }
+*/
+!function(e,t){ true?module.exports=t():undefined}(function(){"use strict";return"undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:Function("return this")()}(),function(){return function(n){var r={};function o(e){if(r[e])return r[e].exports;var t=r[e]={i:e,l:!1,exports:{}};return n[e].call(t.exports,t,t.exports,o),t.l=!0,t.exports}return o.m=n,o.c=r,o.d=function(e,t,n){o.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:n})},o.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},o.t=function(t,e){if(1&e&&(t=o(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(o.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var r in t)o.d(n,r,function(e){return t[e]}.bind(null,r));return n},o.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return o.d(t,"a",t),t},o.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},o.p="",o(o.s=0)}([function(e,t,n){"use strict";Object.defineProperty(t,"__esModule",{value:!0}),t.default=function t(e){var n=(0,f.default)((0,i.default)(e),Number.MAX_SAFE_INTEGER);if(!(arguments.length<=1)&&arguments.length-1){var r=function(e){return t(n).then((0,u.default)(e))};return Promise.resolve(arguments.length<=1?void 0:arguments[1]).then(r)}var o=function(e,t){try{setTimeout(e,n)}catch(e){t(e)}};return new Promise(o)};var u=r(n(1)),i=r(n(2)),f=r(n(4));function r(e){return e&&e.__esModule?e:{default:e}}},function(e,t){e.exports=function(e){return function(){return e}}},function(e,t,n){var r=n(3);e.exports=function(e){var t=r(e),n=t%1;return t==t?n?t-n:t:0}},function(e,t){e.exports=function(e){return e}},function(e,t,n){var r=n(5),o=n(6);e.exports=function(e,t,n){return void 0===n&&(n=t,t=void 0),void 0!==n&&(n=(n=o(n))==n?n:0),void 0!==t&&(t=(t=o(t))==t?t:0),r(o(e),t,n)}},function(e,t){e.exports=function(e,t,n){return e==e&&(void 0!==n&&(e=e<=n?e:n),void 0!==t&&(e=t<=e?e:t)),e}},function(e,t){e.exports=function(e){return e}}])});
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(73)))
 
 /***/ }),
 /* 145 */
@@ -6256,33 +6461,51 @@ function last(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = kebabJoin;
+exports.default = difference;
 
-var _toString2 = __webpack_require__(2);
+var _sift2 = _interopRequireDefault(__webpack_require__(72));
 
-var _toString3 = _interopRequireDefault(_toString2);
+var _any2 = _interopRequireDefault(__webpack_require__(25));
 
-var _map2 = __webpack_require__(102);
+var _all2 = _interopRequireDefault(__webpack_require__(24));
 
-var _map3 = _interopRequireDefault(_map2);
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
 
-var _join2 = __webpack_require__(28);
-
-var _join3 = _interopRequireDefault(_join2);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function kebabJoin() {
-  for (var _len = arguments.length, strings = Array(_len), _key = 0; _key < _len; _key++) {
-    strings[_key] = arguments[_key];
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * This method creates an array of array values not included in the other given
+ * arrays using SameValueZero for equality comparisons. The order and references
+ * of result values are determined by the first array.
+ *
+ * @param {Array} array - The array to inspect.
+ * @throws {TypeError} If array is null or undefined.
+ * @param {Array.<Array>} [excludes] - The values to exclude.
+ * @throws {TypeError} If any excludes value is null or undefined.
+ * @returns {Array} Returns the new array of filtered values.
+ */
+function difference(array) {
+  for (var _len = arguments.length, excludes = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    excludes[_key - 1] = arguments[_key];
   }
 
-  return (0, _join3.default)((0, _map3.default)(strings, _toString3.default), '-');
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module kebabJoin
-   */
+  (0, _requireObjectCoercible.default)(array);
+  (0, _all2.default)(excludes, _requireObjectCoercible.default);
+
+  var siftPredicate = function _siftPredicate(value) {
+    var includesPredicate = function _includesPredicate(exclude) {
+      return (0, _includes2.default)(exclude, value);
+    };
+
+    return !(0, _any2.default)(excludes, includesPredicate);
+  };
+
+  return (0, _sift2.default)(array, siftPredicate);
+}
 
 /***/ }),
 /* 146 */
@@ -6294,33 +6517,32 @@ function kebabJoin() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isWhiteSpaced;
+exports.default = drop;
 
-var _isString = __webpack_require__(4);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
 
-var _stringTest2 = __webpack_require__(8);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _stringTest3 = _interopRequireDefault(_stringTest2);
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
 
-var _whitespace2 = __webpack_require__(31);
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
 
-var _whitespace3 = _interopRequireDefault(_whitespace2);
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PRE = '['; /**
-                * @file Utility that needs description.
-                * @copyright Copyright (c) 2018-present, Graham Fairweather
-                * @module isWhiteSpaced
-                */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var POST = ']';
-var containsWhiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST);
+function drop(array) {
+  if (!(0, _isArrayLike.default)((0, _requireObjectCoercible.default)(array))) {
+    /* eslint-disable-next-line no-void */
+    return void 0;
+  }
 
-function isWhiteSpaced(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, containsWhiteSpace);
+  var start = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toWholeNumber.default)(arguments.length <= 1 ? undefined : arguments[1]) : 1;
+  return ((0, _isString.default)(array) ? _stringSlice2.default : _slice2.default)(array, start);
 }
 
 /***/ }),
@@ -6333,26 +6555,22 @@ function isWhiteSpaced(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isValidHtml5Id;
+exports.default = find;
 
-var _isString = __webpack_require__(4);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _isSpaced = __webpack_require__(78);
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
 
-var _isSpaced2 = _interopRequireDefault(_isSpaced);
+var _find2 = _interopRequireDefault(__webpack_require__(70));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isValidHtml5Id
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function isValidHtml5Id(string) {
-  return (0, _isString2.default)(string) && string.length > 0 && !(0, _isSpaced2.default)(string);
+function find(array, callback) {
+  return (0, _find2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2])).value;
 }
 
 /***/ }),
@@ -6365,28 +6583,22 @@ function isValidHtml5Id(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isValidHtml4Id;
+exports.default = findIndex;
 
-var _isString = __webpack_require__(4);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _stringTest2 = __webpack_require__(8);
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
 
-var _stringTest3 = _interopRequireDefault(_stringTest2);
+var _find2 = _interopRequireDefault(__webpack_require__(70));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isValidHtml4Id
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var validPattern = /^[A-Za-z][A-Za-z0-9\-_.]*$/;
-
-function isValidHtml4Id(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, validPattern);
+function findIndex(array, callback) {
+  return (0, _find2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2])).index;
 }
 
 /***/ }),
@@ -6399,29 +6611,23 @@ function isValidHtml4Id(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUpperCased;
+exports.default = getAt;
 
-var _isString = __webpack_require__(4);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _isString2 = _interopRequireDefault(_isString);
-
-var _toUpperCase2 = __webpack_require__(35);
-
-var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
+var _getAt2 = _interopRequireDefault(__webpack_require__(71));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function isUpperCased(string) {
-  return (0, _isString2.default)(string) && (0, _toUpperCase3.default)(string) === (0, _toString3.default)(string);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isUpperCased
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function getAt(array) {
+  for (var _len = arguments.length, position = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    position[_key - 1] = arguments[_key];
+  }
+
+  return _getAt2.default.apply(void 0, [(0, _requireObjectCoercible.default)(array)].concat(position));
+}
 
 /***/ }),
 /* 150 */
@@ -6433,26 +6639,74 @@ function isUpperCased(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUniq;
+exports.default = getFunctionName;
 
-var _isArrayLike = __webpack_require__(18);
+var _match2 = _interopRequireDefault(__webpack_require__(98));
 
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+var _functionToString2 = _interopRequireDefault(__webpack_require__(75));
 
-var _uniq2 = __webpack_require__(76);
+var _isFunction2 = _interopRequireDefault(__webpack_require__(8));
 
-var _uniq3 = _interopRequireDefault(_uniq2);
+var _normalizeSpace = _interopRequireDefault(__webpack_require__(53));
+
+var _replaceComments = _interopRequireDefault(__webpack_require__(59));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var ANONYMOUS = 'anonymous';
+
+function test1() {}
+
+var getName;
+
+if (test1.name === 'test1') {
+  /* eslint-disable-next-line no-new-func */
+  var createsAnonymous = Function().name === ANONYMOUS;
+
+  if (createsAnonymous) {
+    getName = function _getName(fn) {
+      return fn.name === ANONYMOUS ? '' : fn.name;
+    };
+  } else {
+    getName = function _getName(fn) {
+      return fn.name;
+    };
+  }
+} else {
+  var reName = /^(?:async )?(?:function|class) ?(?:\* )?([\w$]+)/i;
+
+  getName = function _getName(fn) {
+    var match;
+
+    try {
+      match = (0, _match2.default)((0, _normalizeSpace.default)((0, _replaceComments.default)((0, _functionToString2.default)(fn), ' ')), reName);
+
+      if (match) {
+        var name = match[1];
+        return name === ANONYMOUS ? '' : name;
+      }
+    } catch (ignore) {
+      /* ignore */
+    }
+
+    return '';
+  };
+}
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUniq
+ * This method returns the name of the function, or `undefined` if not
+ * a function.
+ *
+ * @param {Function} fn - The function to get the name of.
+ * @returns {undefined|string} The name of the function,  or `undefined` if
+ *  not a function.
  */
 
-function isUniq(array) {
-  return (0, _isArrayLike2.default)(array) && (0, _uniq3.default)(array).length === array.length;
+
+function getFunctionName(fn) {
+  /* eslint-disable-next-line no-void */
+  return (0, _isFunction2.default)(fn, true) ? getName(fn) : void 0;
 }
 
 /***/ }),
@@ -6465,26 +6719,20 @@ function isUniq(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isUnderscored;
+exports.default = hasOwnProperty;
 
-var _isString = __webpack_require__(4);
+var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(42));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
+var _toPropertyKey = _interopRequireDefault(__webpack_require__(47));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isUnderscored
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function isUnderscored(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, '_');
+function hasOwnProperty(object, property) {
+  return (0, _hasOwnProperty2.default)((0, _requireObjectCoercible.default)(object), (0, _toPropertyKey.default)(property));
 }
 
 /***/ }),
@@ -6497,17 +6745,19 @@ function isUnderscored(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = head;
 
-var _toBoolean = __webpack_require__(77);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toBoolean).default;
-  }
-});
+var _head2 = _interopRequireDefault(__webpack_require__(153));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function head(array) {
+  return (0, _head2.default)((0, _requireObjectCoercible.default)(array));
+}
 
 /***/ }),
 /* 153 */
@@ -6519,18 +6769,17 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _head;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _getAt2 = _interopRequireDefault(__webpack_require__(71));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(String.prototype.charCodeAt); /**
-                                                                          * @file Utility that needs description.
-                                                                          * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                          * @module _charCodeAt
-                                                                          */
+var logger = __webpack_require__(0).get("caboodle-x:_head");
+
+function _head(array) {
+  return (0, _getAt2.default)(array, 0);
+}
 
 /***/ }),
 /* 154 */
@@ -6542,75 +6791,17 @@ exports.default = (0, _methodize3.default)(String.prototype.charCodeAt); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSurrogatePair;
+exports.default = identity;
 
-var _isString = __webpack_require__(4);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var _isString2 = _interopRequireDefault(_isString);
-
-var _charCodeAt2 = __webpack_require__(153);
-
-var _charCodeAt3 = _interopRequireDefault(_charCodeAt2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Tests if the two character arguments combined are a valid UTF-16
- * surrogate pair.
- *
- * @param {Array} args - The arguments array.
- * @param {*} args.char1 - The character combination, or if `char2` is supplied then
- *  the first character of a suspected surrogate pair.
- * @param {*} [args.char2] - The second character of a suspected surrogate pair.
- * @returns {boolean} Returns true if the two characters create a valid
- *  'UTF-16' surrogate pair; otherwise false.
- * @example
- * var isSurrogatePair = require('is-surrogate-pair-x');
- *
- * var test1 = 'a';
- * var test2 = '𠮟';
- *
- * isSurrogatePair(test1); // false
- * isSurrogatePair(test1.charAt(0), test1.charAt(1)); // false
- * isSurrogatePair(test2); // true
- * isSurrogatePair(test2.charAt(0), test2.charAt(1)); // true
- */
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isSurrogatePair
+ * @module identity
  */
-
-function isSurrogatePair() {
-  var argsLength = arguments.length;
-
-  if (argsLength < 1) {
-    return false;
-  }
-
-  var first = void 0;
-  var second = void 0;
-  var char1 = arguments.length <= 0 ? undefined : arguments[0];
-
-  if (argsLength === 1) {
-    if ((0, _isString2.default)(char1) && char1.length === 2) {
-      first = (0, _charCodeAt3.default)(char1, 0);
-      second = (0, _charCodeAt3.default)(char1, 1);
-    } else {
-      return false;
-    }
-  } else if (argsLength > 1) {
-    var char2 = arguments.length <= 1 ? undefined : arguments[1];
-
-    if (!(0, _isString2.default)(char1) || char1.length !== 1 || !(0, _isString2.default)(char2) || char2.length !== 1) {
-      return false;
-    }
-
-    first = (0, _charCodeAt3.default)(char1, 0);
-    second = (0, _charCodeAt3.default)(char2, 0);
-  }
-
-  return first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff;
+function identity(arg) {
+  return arg;
 }
 
 /***/ }),
@@ -6623,26 +6814,20 @@ function isSurrogatePair() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringTypeOrNumberType;
+exports.default = includes;
 
-var _isStringType = __webpack_require__(38);
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
 
-var _isStringType2 = _interopRequireDefault(_isStringType);
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
 
-var _isNumberType = __webpack_require__(30);
-
-var _isNumberType2 = _interopRequireDefault(_isNumberType);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringTypeOrNumberType
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function isStringTypeOrNumberType(value) {
-  return (0, _isStringType2.default)(value) || (0, _isNumberType2.default)(value);
+function includes(array, searchElement) {
+  return (0, _includes2.default)((0, _requireObjectCoercible.default)(array), searchElement, (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
 }
 
 /***/ }),
@@ -6655,26 +6840,73 @@ function isStringTypeOrNumberType(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isStringTypeOrInteger;
+exports.default = intersection;
 
-var _isSafeInteger = __webpack_require__(51);
+var _sift2 = _interopRequireDefault(__webpack_require__(72));
 
-var _isSafeInteger2 = _interopRequireDefault(_isSafeInteger);
+var _accumulate2 = _interopRequireDefault(__webpack_require__(67));
 
-var _isStringType = __webpack_require__(38);
+var _any2 = _interopRequireDefault(__webpack_require__(25));
 
-var _isStringType2 = _interopRequireDefault(_isStringType);
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
+
+var _shift2 = _interopRequireDefault(__webpack_require__(157));
+
+var _push2 = _interopRequireDefault(__webpack_require__(27));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var isNotNil = function _isNotNil(value) {
+  return !(0, _isNil.default)(value);
+};
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isStringTypeOrInteger
+ * This method creates an array of unique values that are included in all given
+ * arrays using SameValueZero for equality comparisons. The order and references
+ * of result values are determined by the first array.
+ *
+ * @param {...Array} [arrays] - The arrays to inspect.
+ * @returns {Array} Returns the new array of intersecting values.
  */
 
-function isStringTypeOrInteger(value) {
-  return (0, _isStringType2.default)(value) || (0, _isSafeInteger2.default)(value);
+
+function intersection() {
+  var _this = this;
+
+  for (var _len = arguments.length, arrays = new Array(_len), _key = 0; _key < _len; _key++) {
+    arrays[_key] = arguments[_key];
+  }
+
+  var remaining = (0, _sift2.default)((0, _requireObjectCoercible.default)(arrays), isNotNil);
+
+  if (remaining.length < 1) {
+    return [];
+  }
+
+  return (0, _accumulate2.default)((0, _shift2.default)(remaining), function (acc, value) {
+    var _this2 = this;
+
+    _newArrowCheck(this, _this);
+
+    var isExcluded = !(0, _any2.default)(remaining, function (array) {
+      _newArrowCheck(this, _this2);
+
+      return !(0, _includes2.default)((0, _requireObjectCoercible.default)(array), value);
+    }.bind(this));
+
+    if (isExcluded && !(0, _includes2.default)(acc, value)) {
+      (0, _push2.default)(acc, value);
+    }
+
+    return acc;
+  }.bind(this), []);
 }
 
 /***/ }),
@@ -6687,21 +6919,17 @@ function isStringTypeOrInteger(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isSearchIndex;
+exports.default = void 0;
 
-var _isWholeNumber = __webpack_require__(37);
-
-var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function isSearchIndex(value) {
-  return value === -1 || (0, _isWholeNumber2.default)(value);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isReservedIdentifier
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_shift");
+
+var _default = (0, _methodize2.default)(Array.prototype.shift);
+
+exports.default = _default;
 
 /***/ }),
 /* 158 */
@@ -6713,26 +6941,31 @@ function isSearchIndex(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isPopulatedString;
+exports.default = intToRGB;
 
-var _isString = __webpack_require__(4);
+var _numberToString2 = _interopRequireDefault(__webpack_require__(99));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _toUpperCase2 = _interopRequireDefault(__webpack_require__(46));
 
-var _trim2 = __webpack_require__(42);
+var _toUint = _interopRequireDefault(__webpack_require__(100));
 
-var _trim3 = _interopRequireDefault(_trim2);
+var _padStart = _interopRequireDefault(__webpack_require__(102));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var HASH = '#';
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isPopulatedString
+ * Takes a number between 0 and 16777215 inclusive and converts it
+ * into 6 digit RGB notation.
+ *
+ * @param {number} i - Integer to be converted into 6 digit RGB.
+ * @returns {string} The RGB hexadecimal notation: "#RRGGBB".
  */
 
-function isPopulatedString(string) {
-  return (0, _isString2.default)(string) && (0, _trim3.default)(string).length > 0;
+function intToRGB(i) {
+  return HASH + (0, _toUpperCase2.default)((0, _padStart.default)((0, _numberToString2.default)((0, _toUint.default)(i), 16), 6, '0'));
 }
 
 /***/ }),
@@ -6745,462 +6978,22 @@ function isPopulatedString(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _isArray
- */
+exports.default = isArrayLikeObject;
 
-exports.default = Array.isArray;
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
+
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isArrayLikeObject(value) {
+  return (0, _isObjectLike.default)(value) && (0, _isArrayLike.default)(value);
+}
 
 /***/ }),
 /* 160 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isObjectLikeNotArray;
-
-var _isArray2 = __webpack_require__(159);
-
-var _isArray3 = _interopRequireDefault(_isArray2);
-
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isObjectLikeNotArray
- */
-
-function isObjectLikeNotArray(value) {
-  return !(0, _isArray3.default)(value) && (0, _isObjectLike2.default)(value);
-}
-
-/***/ }),
-/* 161 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _isNaN = __webpack_require__(22);
-
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNaN).default;
-  }
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ }),
-/* 162 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _isFinite = __webpack_require__(41);
-
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isFinite).default;
-  }
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ }),
-/* 163 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var numToStr = Number.prototype.toString;
-var tryNumberObject = function tryNumberObject(value) {
-	try {
-		numToStr.call(value);
-		return true;
-	} catch (e) {
-		return false;
-	}
-};
-var toStr = Object.prototype.toString;
-var numClass = '[object Number]';
-var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
-
-module.exports = function isNumberObject(value) {
-	if (typeof value === 'number') { return true; }
-	if (typeof value !== 'object') { return false; }
-	return hasToStringTag ? tryNumberObject(value) : toStr.call(value) === numClass;
-};
-
-
-/***/ }),
-/* 164 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isLowerCased;
-
-var _isString = __webpack_require__(4);
-
-var _isString2 = _interopRequireDefault(_isString);
-
-var _toLowerCase2 = __webpack_require__(61);
-
-var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function isLowerCased(string) {
-  return (0, _isString2.default)(string) && (0, _toLowerCase3.default)(string) === (0, _toString3.default)(string);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isLowerCased
-   */
-
-/***/ }),
-/* 165 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isHex;
-
-var _isString = __webpack_require__(4);
-
-var _isString2 = _interopRequireDefault(_isString);
-
-var _stringTest2 = __webpack_require__(8);
-
-var _stringTest3 = _interopRequireDefault(_stringTest2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isHex
- */
-
-var hexPattern = /^0x[0-9a-f]+$/i;
-
-function isHex(string) {
-  return (0, _isString2.default)(string) && (0, _stringTest3.default)(string, hexPattern);
-}
-
-/***/ }),
-/* 166 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _isFunction = __webpack_require__(10);
-
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isFunction).default;
-  }
-});
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/***/ }),
-/* 167 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _Boolean2 = __webpack_require__(33);
-
-var _Boolean3 = _interopRequireDefault(_Boolean2);
-
-var _negate2 = __webpack_require__(64);
-
-var _negate3 = _interopRequireDefault(_negate2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isFalsey
- */
-
-exports.default = (0, _negate3.default)(_Boolean3.default);
-
-/***/ }),
-/* 168 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getPrototypeOf
- */
-
-exports.default = Object.getPrototypeOf;
-
-/***/ }),
-/* 169 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isError;
-
-var _getPrototypeOf2 = __webpack_require__(168);
-
-var _getPrototypeOf3 = _interopRequireDefault(_getPrototypeOf2);
-
-var _toStringTag = __webpack_require__(44);
-
-var _toStringTag2 = _interopRequireDefault(_toStringTag);
-
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var testIsError = function _testIsError(value) {
-  return (0, _toStringTag2.default)(value) === '[object Error]';
-};
-
-/* istanbul ignore next */
-/**
- * @file Detect whether a value is an error.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isError
- */
-
-if (!testIsError(Error.prototype)) {
-  var errorProto = Error.prototype;
-  var testStringTag = testIsError;
-  testIsError = function _testIsError(value) {
-    return value === errorProto || testStringTag(value);
-  };
-}
-
-/**
- * Determine whether or not a given `value` is an `Error` type.
- *
- * @param {*} value - The object to be tested.
- * @returns {boolean} Returns `true` if `value` is an `Error` type,
- *  else `false`.
- * @example
- * var isError = require('is-error-x');
- *
- * isError(); // false
- * isError(Number.MIN_VALUE); // false
- * isError('abc'); // false
- * isError(new Error()); //true
- */
-function isError(value) {
-  if (!(0, _isObjectLike2.default)(value)) {
-    return false;
-  }
-
-  var object = value;
-  var maxLoop = 100;
-  while (object && maxLoop > -1) {
-    if (testIsError(object)) {
-      return true;
-    }
-
-    object = (0, _getPrototypeOf3.default)(object);
-    maxLoop -= 1;
-  }
-
-  return false;
-}
-
-/***/ }),
-/* 170 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isDOMNode;
-
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
-
-var _isBooleanType = __webpack_require__(79);
-
-var _isBooleanType2 = _interopRequireDefault(_isBooleanType);
-
-var _isNumberType = __webpack_require__(30);
-
-var _isNumberType2 = _interopRequireDefault(_isNumberType);
-
-var _Boolean2 = __webpack_require__(33);
-
-var _Boolean3 = _interopRequireDefault(_Boolean2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/* istanbul ignore next */
-/**
- * @file Tests if a value is a DOM Node.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isDOMNode
- */
-
-var doc = typeof document !== 'undefined' && document;
-var documentInheritsNode = false;
-var element = void 0;
-var hasChildNodes = void 0;
-/* istanbul ignore next */
-if (doc) {
-  try {
-    element = doc.createElement('div');
-    hasChildNodes = (0, _methodize3.default)(doc.hasChildNodes);
-    documentInheritsNode = (0, _isBooleanType2.default)(hasChildNodes(element));
-  } catch (ignore) {
-    hasChildNodes = null;
-    documentInheritsNode = false;
-  }
-}
-
-var tryAppendChild = void 0;
-/* istanbul ignore if */
-if (element && !documentInheritsNode) {
-  hasChildNodes = (0, _methodize3.default)(element.hasChildNodes);
-  var cloneNode = (0, _methodize3.default)(element.cloneNode);
-  var appendChild = (0, _methodize3.default)(element.appendChild);
-  tryAppendChild = function _tryAppendChild(value) {
-    return appendChild(cloneNode(element, false), value);
-  };
-}
-
-/**
- * This method tests if `value` is a DOM Node.
- *
- * @param {*} value - The value to test.
- * @returns {boolean} True if a DOM Node, otherwise false.
- * @example
- * var isNode = require('is-node-x');
- *
- * isNode(); // => false
- * isNode({ nodeType: 1 }); // => false
- * isNode(document); // => true
- * isNode(document.createNode('div')); // => true
- */
-function isDOMNode(value) {
-  if (hasChildNodes && value && (0, _isNumberType2.default)(value.nodeType)) {
-    if (value === doc) {
-      return true;
-    }
-
-    try {
-      return (0, _isBooleanType2.default)(hasChildNodes(value));
-    } catch (ignore) {}
-    /* ignore */
-
-
-    /* istanbul ignore if */
-    if (!documentInheritsNode) {
-      try {
-        return (0, _Boolean3.default)(tryAppendChild(value));
-      } catch (ignore) {
-        /* ignore */
-      }
-    }
-  }
-
-  return false;
-}
-
-/***/ }),
-/* 171 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = isCountingNumber;
-
-var _isWholeNumber = __webpack_require__(37);
-
-var _isWholeNumber2 = _interopRequireDefault(_isWholeNumber);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function isCountingNumber(value) {
-  return (0, _isWholeNumber2.default)(value) && value > 0;
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module isCountingNumber
-   */
-
-/***/ }),
-/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -7228,6 +7021,399 @@ module.exports = function isBoolean(value) {
 
 
 /***/ }),
+/* 161 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isCountingNumber;
+
+var _isWholeNumber = _interopRequireDefault(__webpack_require__(44));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isCountingNumber(value) {
+  return (0, _isWholeNumber.default)(value) && value > 0;
+}
+
+/***/ }),
+/* 162 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isDOMNode;
+
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
+
+var _isBooleanType = _interopRequireDefault(__webpack_require__(103));
+
+var _isNumberType = _interopRequireDefault(__webpack_require__(33));
+
+var _Boolean2 = _interopRequireDefault(__webpack_require__(29));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/* istanbul ignore next */
+var doc = typeof document !== 'undefined' && document;
+var documentInheritsNode = false;
+var element;
+var hasChildNodes;
+/* istanbul ignore next */
+
+if (doc) {
+  try {
+    element = doc.createElement('div');
+    hasChildNodes = (0, _methodize2.default)(doc.hasChildNodes);
+    documentInheritsNode = (0, _isBooleanType.default)(hasChildNodes(element));
+  } catch (ignore) {
+    hasChildNodes = null;
+    documentInheritsNode = false;
+  }
+}
+
+var tryAppendChild;
+/* istanbul ignore if */
+
+if (element && !documentInheritsNode) {
+  hasChildNodes = (0, _methodize2.default)(element.hasChildNodes);
+  var cloneNode = (0, _methodize2.default)(element.cloneNode);
+  var appendChild = (0, _methodize2.default)(element.appendChild);
+
+  tryAppendChild = function _tryAppendChild(value) {
+    return appendChild(cloneNode(element, false), value);
+  };
+}
+/**
+ * This method tests if `value` is a DOM Node.
+ *
+ * @param {*} value - The value to test.
+ * @returns {boolean} True if a DOM Node, otherwise false.
+ */
+
+
+function isDOMNode(value) {
+  if (hasChildNodes && value && (0, _isNumberType.default)(value.nodeType)) {
+    if (value === doc) {
+      return true;
+    }
+
+    try {
+      return (0, _isBooleanType.default)(hasChildNodes(value));
+    } catch (ignore) {}
+    /* ignore */
+
+    /* istanbul ignore if */
+
+
+    if (!documentInheritsNode) {
+      try {
+        return (0, _Boolean2.default)(tryAppendChild(value));
+      } catch (ignore) {
+        /* ignore */
+      }
+    }
+  }
+
+  return false;
+}
+
+/***/ }),
+/* 163 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isError;
+
+var _getPrototypeOf2 = _interopRequireDefault(__webpack_require__(164));
+
+var _toStringTag = _interopRequireDefault(__webpack_require__(38));
+
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var testIsError = function _testIsError(value) {
+  return (0, _toStringTag.default)(value) === '[object Error]';
+};
+/* istanbul ignore next */
+
+
+if (!testIsError(Error.prototype)) {
+  var errorProto = Error.prototype;
+  var testStringTag = testIsError;
+
+  testIsError = function _testIsError(value) {
+    return value === errorProto || testStringTag(value);
+  };
+}
+/**
+ * Determine whether or not a given `value` is an `Error` type.
+ *
+ * @param {*} value - The object to be tested.
+ * @returns {boolean} Returns `true` if `value` is an `Error` type,
+ *  else `false`.
+ */
+
+
+function isError(value) {
+  if (!(0, _isObjectLike.default)(value)) {
+    return false;
+  }
+
+  var object = value;
+  var maxLoop = 100;
+
+  while (object && maxLoop > -1) {
+    if (testIsError(object)) {
+      return true;
+    }
+
+    object = (0, _getPrototypeOf2.default)(object);
+    maxLoop -= 1;
+  }
+
+  return false;
+}
+
+/***/ }),
+/* 164 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var logger = __webpack_require__(0).get("caboodle-x:_getPrototypeOf");
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _getPrototypeOf
+ */
+var _default = Object.getPrototypeOf;
+exports.default = _default;
+
+/***/ }),
+/* 165 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _Boolean2 = _interopRequireDefault(__webpack_require__(29));
+
+var _negate2 = _interopRequireDefault(__webpack_require__(55));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var _default = (0, _negate2.default)(_Boolean2.default);
+
+exports.default = _default;
+
+/***/ }),
+/* 166 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _isFunction.default;
+  }
+});
+
+var _isFunction = _interopRequireDefault(__webpack_require__(8));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isHex;
+
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var hexPattern = /^0x[0-9a-f]+$/i;
+
+function isHex(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, hexPattern);
+}
+
+/***/ }),
+/* 168 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isLowerCased;
+
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _toLowerCase2 = _interopRequireDefault(__webpack_require__(58));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isLowerCased(string) {
+  return (0, _isString.default)(string) && (0, _toLowerCase2.default)(string) === (0, _toString2.default)(string);
+}
+
+/***/ }),
+/* 169 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var numToStr = Number.prototype.toString;
+var tryNumberObject = function tryNumberObject(value) {
+	try {
+		numToStr.call(value);
+		return true;
+	} catch (e) {
+		return false;
+	}
+};
+var toStr = Object.prototype.toString;
+var numClass = '[object Number]';
+var hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
+
+module.exports = function isNumberObject(value) {
+	if (typeof value === 'number') { return true; }
+	if (typeof value !== 'object') { return false; }
+	return hasToStringTag ? tryNumberObject(value) : toStr.call(value) === numClass;
+};
+
+
+/***/ }),
+/* 170 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _isFinite.default;
+  }
+});
+
+var _isFinite = _interopRequireDefault(__webpack_require__(32));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 171 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _isNaN.default;
+  }
+});
+
+var _isNaN = _interopRequireDefault(__webpack_require__(22));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 172 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = isObjectLikeNotArray;
+
+var _isArray2 = _interopRequireDefault(__webpack_require__(173));
+
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isObjectLikeNotArray(value) {
+  return !(0, _isArray2.default)(value) && (0, _isObjectLike.default)(value);
+}
+
+/***/ }),
 /* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7237,27 +7423,17 @@ module.exports = function isBoolean(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = isArrayLikeObject;
+exports.default = void 0;
 
-var _isObjectLike = __webpack_require__(11);
-
-var _isObjectLike2 = _interopRequireDefault(_isObjectLike);
-
-var _isArrayLike = __webpack_require__(18);
-
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x:_isArray");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isArrayLikeObject
+ * @module _isArray
  */
-
-function isArrayLikeObject(value) {
-  return (0, _isObjectLike2.default)(value) && (0, _isArrayLike2.default)(value);
-}
+var _default = Array.isArray;
+exports.default = _default;
 
 /***/ }),
 /* 174 */
@@ -7269,46 +7445,18 @@ function isArrayLikeObject(value) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = intToRGB;
+exports.default = isPopulatedString;
 
-var _numberToString2 = __webpack_require__(83);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _numberToString3 = _interopRequireDefault(_numberToString2);
-
-var _toUpperCase2 = __webpack_require__(35);
-
-var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
-
-var _toUint = __webpack_require__(82);
-
-var _toUint2 = _interopRequireDefault(_toUint);
-
-var _padStart = __webpack_require__(80);
-
-var _padStart2 = _interopRequireDefault(_padStart);
+var _trim2 = _interopRequireDefault(__webpack_require__(40));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Convert an integer to a RGB string.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module intToRGB
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var HASH = '#';
-
-/**
- * Takes a number between 0 and 16777215 inclusive and converts it
- * into 6 digit RGB notation.
- *
- * @param {number} i - Integer to be converted into 6 digit RGB.
- * @returns {string} The RGB hexadecimal notation: "#RRGGBB".
- * @example
- * var intToRGB = require('int-to-rgb-x');
- * intToRGB(1); // "#000001"
- */
-function intToRGB(i) {
-  return HASH + (0, _toUpperCase3.default)((0, _padStart2.default)((0, _numberToString3.default)((0, _toUint2.default)(i), 16), 6, '0'));
+function isPopulatedString(string) {
+  return (0, _isString.default)(string) && (0, _trim2.default)(string).length > 0;
 }
 
 /***/ }),
@@ -7321,18 +7469,17 @@ function intToRGB(i) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = isSearchIndex;
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _isWholeNumber = _interopRequireDefault(__webpack_require__(44));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.shift); /**
-                                                                    * @file Utility that needs description.
-                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                    * @module _shift
-                                                                    */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isSearchIndex(value) {
+  return value === -1 || (0, _isWholeNumber.default)(value);
+}
 
 /***/ }),
 /* 176 */
@@ -7344,92 +7491,18 @@ exports.default = (0, _methodize3.default)(Array.prototype.shift); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = intersection;
+exports.default = isStringTypeOrInteger;
 
-var _sift2 = __webpack_require__(47);
+var _isSafeInteger = _interopRequireDefault(__webpack_require__(68));
 
-var _sift3 = _interopRequireDefault(_sift2);
-
-var _accumulate2 = __webpack_require__(52);
-
-var _accumulate3 = _interopRequireDefault(_accumulate2);
-
-var _any2 = __webpack_require__(19);
-
-var _any3 = _interopRequireDefault(_any2);
-
-var _includes2 = __webpack_require__(16);
-
-var _includes3 = _interopRequireDefault(_includes2);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
-
-var _shift2 = __webpack_require__(175);
-
-var _shift3 = _interopRequireDefault(_shift2);
-
-var _push2 = __webpack_require__(17);
-
-var _push3 = _interopRequireDefault(_push2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _isStringType = _interopRequireDefault(__webpack_require__(43));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } } /**
-                                                                                                                                                 * @file Creates an array of unique values that are included in all given arrays.
-                                                                                                                                                 * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                                                                                 * @module intersection
-                                                                                                                                                 */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var isNotNil = function _isNotNil(value) {
-  return !(0, _isNil2.default)(value);
-};
-
-/**
- * This method creates an array of unique values that are included in all given
- * arrays using SameValueZero for equality comparisons. The order and references
- * of result values are determined by the first array.
- *
- * @param {...Array} [arrays] - The arrays to inspect.
- * @returns {Array} Returns the new array of intersecting values.
- * @example
- * var intersection = require('array-intersection-x');
- *
- * intersection([2, 1], [2, 3]); // => [2]
- */
-function intersection() {
-  var _this = this;
-
-  for (var _len = arguments.length, arrays = Array(_len), _key = 0; _key < _len; _key++) {
-    arrays[_key] = arguments[_key];
-  }
-
-  var remaining = (0, _sift3.default)((0, _requireObjectCoercible2.default)(arrays), isNotNil);
-
-  if (remaining.length < 1) {
-    return [];
-  }
-
-  return (0, _accumulate3.default)((0, _shift3.default)(remaining), function (acc, value) {
-    _newArrowCheck(this, _this);
-
-    var isExcluded = !(0, _any3.default)(remaining, function (array) {
-      _newArrowCheck(this, _this);
-
-      return !(0, _includes3.default)((0, _requireObjectCoercible2.default)(array), value);
-    }.bind(this));
-
-    if (isExcluded && !(0, _includes3.default)(acc, value)) {
-      (0, _push3.default)(acc, value);
-    }
-
-    return acc;
-  }.bind(this), []);
+function isStringTypeOrInteger(value) {
+  return (0, _isStringType.default)(value) || (0, _isSafeInteger.default)(value);
 }
 
 /***/ }),
@@ -7442,29 +7515,19 @@ function intersection() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = includes;
+exports.default = isStringTypeOrNumberType;
 
-var _includes2 = __webpack_require__(16);
+var _isStringType = _interopRequireDefault(__webpack_require__(43));
 
-var _includes3 = _interopRequireDefault(_includes2);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _isNumberType = _interopRequireDefault(__webpack_require__(33));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function includes(array, searchElement) {
-  return (0, _includes3.default)((0, _requireObjectCoercible2.default)(array), searchElement, (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module includes
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isStringTypeOrNumberType(value) {
+  return (0, _isStringType.default)(value) || (0, _isNumberType.default)(value);
+}
 
 /***/ }),
 /* 178 */
@@ -7476,15 +7539,57 @@ function includes(array, searchElement) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = identity;
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module identity
- */
+exports.default = isSurrogatePair;
 
-function identity(arg) {
-  return arg;
+var _isString = _interopRequireDefault(__webpack_require__(5));
+
+var _charCodeAt2 = _interopRequireDefault(__webpack_require__(179));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/**
+ * Tests if the two character arguments combined are a valid UTF-16
+ * surrogate pair.
+ *
+ * @param {Array} args - The arguments array.
+ * @param {*} args.char1 - The character combination, or if `char2` is supplied then
+ *  the first character of a suspected surrogate pair.
+ * @param {*} [args.char2] - The second character of a suspected surrogate pair.
+ * @returns {boolean} Returns true if the two characters create a valid
+ *  'UTF-16' surrogate pair; otherwise false.
+ */
+function isSurrogatePair() {
+  var argsLength = arguments.length;
+
+  if (argsLength < 1) {
+    return false;
+  }
+
+  var first;
+  var second;
+  var char1 = arguments.length <= 0 ? undefined : arguments[0];
+
+  if (argsLength === 1) {
+    if ((0, _isString.default)(char1) && char1.length === 2) {
+      first = (0, _charCodeAt2.default)(char1, 0);
+      second = (0, _charCodeAt2.default)(char1, 1);
+    } else {
+      return false;
+    }
+  } else if (argsLength > 1) {
+    var char2 = arguments.length <= 1 ? undefined : arguments[1];
+
+    if (!(0, _isString.default)(char1) || char1.length !== 1 || !(0, _isString.default)(char2) || char2.length !== 1) {
+      return false;
+    }
+
+    first = (0, _charCodeAt2.default)(char1, 0);
+    second = (0, _charCodeAt2.default)(char2, 0);
+  }
+
+  return first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff;
 }
 
 /***/ }),
@@ -7497,21 +7602,17 @@ function identity(arg) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _head;
+exports.default = void 0;
 
-var _getAt2 = __webpack_require__(48);
-
-var _getAt3 = _interopRequireDefault(_getAt2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _head(array) {
-  return (0, _getAt3.default)(array, 0);
-} /**
-   * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module _head
-   */
+var logger = __webpack_require__(0).get("caboodle-x:_charCodeAt");
+
+var _default = (0, _methodize2.default)(String.prototype.charCodeAt);
+
+exports.default = _default;
 
 /***/ }),
 /* 180 */
@@ -7523,27 +7624,18 @@ function _head(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = head;
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _toBoolean.default;
+  }
+});
 
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _head2 = __webpack_require__(179);
-
-var _head3 = _interopRequireDefault(_head2);
+var _toBoolean = _interopRequireDefault(__webpack_require__(105));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module head
- */
-
-function head(array) {
-  return (0, _head3.default)((0, _requireObjectCoercible2.default)(array));
-}
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 181 */
@@ -7555,29 +7647,19 @@ function head(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = hasOwnProperty;
+exports.default = isUnderscored;
 
-var _hasOwnProperty2 = __webpack_require__(39);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _hasOwnProperty3 = _interopRequireDefault(_hasOwnProperty2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toPropertyKey = __webpack_require__(34);
-
-var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function hasOwnProperty(object, property) {
-  return (0, _hasOwnProperty3.default)((0, _requireObjectCoercible2.default)(object), (0, _toPropertyKey2.default)(property));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module hasOwnProperty
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function isUnderscored(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, '_');
+}
 
 /***/ }),
 /* 182 */
@@ -7589,91 +7671,18 @@ function hasOwnProperty(object, property) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = getFunctionName;
+exports.default = isUniq;
 
-var _match2 = __webpack_require__(84);
+var _isArrayLike = _interopRequireDefault(__webpack_require__(26));
 
-var _match3 = _interopRequireDefault(_match2);
-
-var _functionToString2 = __webpack_require__(108);
-
-var _functionToString3 = _interopRequireDefault(_functionToString2);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-var _normalizeSpace = __webpack_require__(66);
-
-var _normalizeSpace2 = _interopRequireDefault(_normalizeSpace);
-
-var _replaceComments = __webpack_require__(60);
-
-var _replaceComments2 = _interopRequireDefault(_replaceComments);
+var _uniq2 = _interopRequireDefault(__webpack_require__(106));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ANONYMOUS = 'anonymous'; /**
-                              * @file Get the name of the function.
-                              * @copyright Copyright (c) 2018-present, Graham Fairweather
-                              * @module getFunctionName
-                              */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function test1() {}
-
-var getName = void 0;
-if (test1.name === 'test1') {
-  var createsAnonymous = Function().name === ANONYMOUS;
-  if (createsAnonymous) {
-    getName = function _getName(fn) {
-      return fn.name === ANONYMOUS ? '' : fn.name;
-    };
-  } else {
-    getName = function _getName(fn) {
-      return fn.name;
-    };
-  }
-} else {
-  var reName = /^(?:async )?(?:function|class) ?(?:\* )?([\w$]+)/i;
-  getName = function _getName(fn) {
-    var match = void 0;
-    try {
-      match = (0, _match3.default)((0, _normalizeSpace2.default)((0, _replaceComments2.default)((0, _functionToString3.default)(fn), ' ')), reName);
-      if (match) {
-        var name = match[1];
-        return name === ANONYMOUS ? '' : name;
-      }
-    } catch (ignore) {
-      /* ignore */
-    }
-
-    return '';
-  };
-}
-
-/**
- * This method returns the name of the function, or `undefined` if not
- * a function.
- *
- * @param {Function} fn - The function to get the name of.
- * @returns {undefined|string} The name of the function,  or `undefined` if
- *  not a function.
- * @example
- * var getFunctionName = require('get-function-name-x');
- *
- * getFunctionName(); // undefined
- * getFunctionName(Number.MIN_VALUE); // undefined
- * getFunctionName('abc'); // undefined
- * getFunctionName(true); // undefined
- * getFunctionName({ name: 'abc' }); // undefined
- * getFunctionName(function () {}); // ''
- * getFunctionName(new Function ()); // ''
- * getFunctionName(function test1() {}); // 'test1'
- * getFunctionName(function* test2() {}); // 'test2'
- * getFunctionName(class Test {}); // 'Test'
- */
-function getFunctionName(fn) {
-  return (0, _isFunction3.default)(fn, true) ? getName(fn) : void 0;
+function isUniq(array) {
+  return (0, _isArrayLike.default)(array) && (0, _uniq2.default)(array).length === array.length;
 }
 
 /***/ }),
@@ -7686,30 +7695,20 @@ function getFunctionName(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = getAt;
+exports.default = isUpperCased;
 
-var _requireObjectCoercible = __webpack_require__(1);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _toUpperCase2 = _interopRequireDefault(__webpack_require__(46));
 
-var _getAt2 = __webpack_require__(48);
-
-var _getAt3 = _interopRequireDefault(_getAt2);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module getAt
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function getAt(array) {
-  for (var _len = arguments.length, position = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    position[_key - 1] = arguments[_key];
-  }
-
-  return _getAt3.default.apply(undefined, [(0, _requireObjectCoercible2.default)(array)].concat(position));
+function isUpperCased(string) {
+  return (0, _isString.default)(string) && (0, _toUpperCase2.default)(string) === (0, _toString2.default)(string);
 }
 
 /***/ }),
@@ -7722,34 +7721,20 @@ function getAt(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = findIndex;
+exports.default = isValidHtml4Id;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _find2 = __webpack_require__(49);
-
-var _find3 = _interopRequireDefault(_find2);
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module findIndex
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function findIndex(array, callback) {
-  return (0, _find3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2])).index;
+var validPattern = /^[A-Za-z][A-Za-z0-9\-_.]*$/;
+
+function isValidHtml4Id(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, validPattern);
 }
 
 /***/ }),
@@ -7762,34 +7747,18 @@ function findIndex(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = find;
+exports.default = isValidHtml5Id;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _find2 = __webpack_require__(49);
-
-var _find3 = _interopRequireDefault(_find2);
+var _isSpaced = _interopRequireDefault(__webpack_require__(104));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module find
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function find(array, callback) {
-  return (0, _find3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2])).value;
+function isValidHtml5Id(string) {
+  return (0, _isString.default)(string) && string.length > 0 && !(0, _isSpaced.default)(string);
 }
 
 /***/ }),
@@ -7802,48 +7771,24 @@ function find(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = drop;
+exports.default = isWhiteSpaced;
 
-var _isString = __webpack_require__(4);
+var _isString = _interopRequireDefault(__webpack_require__(5));
 
-var _isString2 = _interopRequireDefault(_isString);
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
 
-var _isArrayLike = __webpack_require__(18);
-
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
-
-var _slice2 = __webpack_require__(24);
-
-var _slice3 = _interopRequireDefault(_slice2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
+var _whitespace2 = _interopRequireDefault(__webpack_require__(31));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module drop
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function drop(array) {
-  if (!(0, _isArrayLike2.default)((0, _requireObjectCoercible2.default)(array))) {
-    return void 0;
-  }
+var PRE = '[';
+var POST = ']';
+var containsWhiteSpace = new RegExp(PRE + (0, _whitespace2.default)() + POST);
 
-  var start = (arguments.length <= 1 ? 0 : arguments.length - 1) ? (0, _toWholeNumber2.default)(arguments.length <= 1 ? undefined : arguments[1]) : 1;
-
-  return ((0, _isString2.default)(array) ? _stringSlice3.default : _slice3.default)(array, start);
+function isWhiteSpaced(string) {
+  return (0, _isString.default)(string) && (0, _stringTest2.default)(string, containsWhiteSpace);
 }
 
 /***/ }),
@@ -7856,67 +7801,25 @@ function drop(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = difference;
+exports.default = kebabJoin;
 
-var _sift2 = __webpack_require__(47);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
-var _sift3 = _interopRequireDefault(_sift2);
+var _map2 = _interopRequireDefault(__webpack_require__(81));
 
-var _any2 = __webpack_require__(19);
-
-var _any3 = _interopRequireDefault(_any2);
-
-var _all2 = __webpack_require__(20);
-
-var _all3 = _interopRequireDefault(_all2);
-
-var _includes2 = __webpack_require__(16);
-
-var _includes3 = _interopRequireDefault(_includes2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _join2 = _interopRequireDefault(__webpack_require__(35));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * This method creates an array of array values not included in the other given
- * arrays using SameValueZero for equality comparisons. The order and references
- * of result values are determined by the first array.
- *
- * @param {Array} array - The array to inspect.
- * @throws {TypeError} If array is null or undefined.
- * @param {Array.<Array>} [excludes] - The values to exclude.
- * @throws {TypeError} If any excludes value is null or undefined.
- * @returns {Array} Returns the new array of filtered values.
- * @example
- * var difference = require('array-difference-x');
- *
- * difference([2, 1], [2, 3]); // => [1]
- */
-function difference(array) {
-  for (var _len = arguments.length, excludes = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    excludes[_key - 1] = arguments[_key];
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function kebabJoin() {
+  for (var _len = arguments.length, strings = new Array(_len), _key = 0; _key < _len; _key++) {
+    strings[_key] = arguments[_key];
   }
 
-  (0, _requireObjectCoercible2.default)(array);
-  (0, _all3.default)(excludes, _requireObjectCoercible2.default);
-
-  var siftPredicate = function _siftPredicate(value) {
-    var includesPredicate = function _includesPredicate(exclude) {
-      return (0, _includes3.default)(exclude, value);
-    };
-
-    return !(0, _any3.default)(excludes, includesPredicate);
-  };
-
-  return (0, _sift3.default)(array, siftPredicate);
-} /**
-   * @file Creates an array of array values not included in the other given arrays.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module difference
-   */
+  return (0, _join2.default)((0, _map2.default)(strings, _toString2.default), '-');
+}
 
 /***/ }),
 /* 188 */
@@ -7928,13 +7831,19 @@ function difference(array) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _setTimeout
- */
+exports.default = last;
 
-exports.default = setTimeout;
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _last2 = _interopRequireDefault(__webpack_require__(94));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function last(array) {
+  return (0, _last2.default)((0, _requireObjectCoercible.default)(array));
+}
 
 /***/ }),
 /* 189 */
@@ -7946,55 +7855,19 @@ exports.default = setTimeout;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = delayPromise;
+exports.default = methodize;
 
-var _setTimeout2 = __webpack_require__(188);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
-var _setTimeout3 = _interopRequireDefault(_setTimeout2);
-
-var _constant = __webpack_require__(91);
-
-var _constant2 = _interopRequireDefault(_constant);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * Create a delayed promise.
- *
- * @param {number|string} milliseconds - The number of milliseconds to delay by.
- * @param {*} [value] - The value to be resolved with.
- * @returns {Promise} The delayed promise.
- */
-function delayPromise(milliseconds) {
-  var ms = (0, _toWholeNumber2.default)(milliseconds);
+var logger = __webpack_require__(0).get("caboodle-x");
 
-  if (arguments.length <= 1 ? 0 : arguments.length - 1) {
-    var valueExecutor = function _valueExecutor(arg) {
-      return delayPromise(ms).then((0, _constant2.default)(arg));
-    };
-
-    return Promise.resolve(arguments.length <= 1 ? undefined : arguments[1]).then(valueExecutor);
-  }
-
-  var timeoutExecutor = function _timeoutExecutor(resolve, reject) {
-    /* istanbul ignore next */
-    try {
-      (0, _setTimeout3.default)(resolve, ms);
-    } catch (error) {
-      reject(error);
-    }
-  };
-
-  return new Promise(timeoutExecutor);
-} /**
-   * @file Utility that creates a delayed promise.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module delayPromise
-   */
+function methodize(prototypeMethod) {
+  return (0, _methodize2.default)((0, _assertIsFunction2.default)(prototypeMethod));
+}
 
 /***/ }),
 /* 190 */
@@ -8006,13 +7879,19 @@ function delayPromise(milliseconds) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _defineProperty
- */
+exports.default = negate;
 
-exports.default = Object.defineProperty;
+var _negate2 = _interopRequireDefault(__webpack_require__(55));
+
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function negate(predicate) {
+  return (0, _negate2.default)((0, _assertIsFunction2.default)(predicate));
+}
 
 /***/ }),
 /* 191 */
@@ -8024,52 +7903,16 @@ exports.default = Object.defineProperty;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = defineValidatorProperties;
+exports.default = noop;
 
-var _assertIsObjectLike = __webpack_require__(36);
-
-var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
-
-var _defineValidatorProperty = __webpack_require__(87);
-
-var _defineValidatorProperty2 = _interopRequireDefault(_defineValidatorProperty);
-
-var _toObject = __webpack_require__(12);
-
-var _toObject2 = _interopRequireDefault(_toObject);
-
-var _all2 = __webpack_require__(20);
-
-var _all3 = _interopRequireDefault(_all2);
-
-var _keys2 = __webpack_require__(103);
-
-var _keys3 = _interopRequireDefault(_keys2);
-
-var _toPropertyKey = __webpack_require__(34);
-
-var _toPropertyKey2 = _interopRequireDefault(_toPropertyKey);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module defineValidatorProperties
+ * @module noop
  */
-
-function defineValidatorProperties(object, properties) {
-  (0, _assertIsObjectLike2.default)(object);
-
-  var props = (0, _toObject2.default)(properties);
-  var callback = function _callback(currentValue) {
-    (0, _defineValidatorProperty2.default)(object, (0, _toPropertyKey2.default)(currentValue), props[currentValue]);
-  };
-
-  (0, _all3.default)((0, _keys3.default)(props), callback);
-
-  return object;
-}
+function noop() {}
 
 /***/ }),
 /* 192 */
@@ -8081,43 +7924,78 @@ function defineValidatorProperties(object, properties) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = defaultToOneOf;
+exports.default = numberFormat;
 
-var _includes2 = __webpack_require__(16);
+var _RegExp2 = _interopRequireDefault(__webpack_require__(109));
 
-var _includes3 = _interopRequireDefault(_includes2);
+var _toFixed2 = _interopRequireDefault(__webpack_require__(193));
 
-var _last2 = __webpack_require__(88);
+var _numberToString2 = _interopRequireDefault(__webpack_require__(99));
 
-var _last3 = _interopRequireDefault(_last2);
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
 
-var _requireObjectCoercible = __webpack_require__(1);
+var _split2 = _interopRequireDefault(__webpack_require__(194));
 
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _join2 = _interopRequireDefault(__webpack_require__(35));
+
+var _isFinite2 = _interopRequireDefault(__webpack_require__(32));
+
+var _toNumber2 = _interopRequireDefault(__webpack_require__(23));
+
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
+
+var _clamp = _interopRequireDefault(__webpack_require__(91));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+var _numberToDecimalString = _interopRequireDefault(__webpack_require__(107));
+
+var _isNil = _interopRequireDefault(__webpack_require__(7));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
- * Tests if a comparate exists in a list of comparates an then returns the comparate if there
- * is a match; otherwise returns the last comparates value or fallback value if supplied.
+ * Format a given number using fixed-point notation, with user specified digit
+ * counts and separators. `null` or 'undefined' can be used for optional
+ * arguments to denote that the default value is to be used.
  *
- * @param {Array|} [comparates=[]] - An array of values.
- * @param {*} comparate - The value to compare against the supplied list of comparates.
- * @param {Array} fallbackArg - The rest of the arguments array.
- * @param {*} [fallbackArg.fallback=comparates[last]] - The returned value if no match exists.
- * @returns {*} - The comparate upon a match; otherwise the fallback value.
+ * @param {number} value - The numerical value to be formatted.
+ * @param {Array} [rest] - The remaining arguments array.
+ * @param {number} [rest.digits=2] - The number of digits to appear after the
+ *  decimal point; this may be a value between 0 and 20, inclusive.
+ * @param {number} [rest.sectionLength=3] - Length of integer part sections.
+ * @param {string} [rest.sectionDelimiter=,] - Integer part section delimiter.
+ * @param {string} [rest.decimalDelimiter=.] - Decimal delimiter.
+ * @returns {string} The numerical value with the chosen formatting.
  */
-function defaultToOneOf(comparates, comparate) {
-  (0, _requireObjectCoercible2.default)(comparates);
+function numberFormat(value) {
+  var number = (0, _toNumber2.default)(value);
 
-  var fallback = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : (0, _last3.default)(comparates);
+  if (!(0, _isFinite2.default)(number)) {
+    return (0, _numberToString2.default)(number);
+  } // 'digits' must be >= 0 or <= 20 otherwise a RangeError is thrown by Number#_toFixed.
 
-  return (0, _includes3.default)(comparates, comparate) ? comparate : fallback;
-} /**
-   * @file Utility to set a default value from an array.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module defaultToOneOf
-   */
+
+  var digits = (arguments.length <= 1 ? 0 : arguments.length - 1) > 0 && !(0, _isNil.default)(arguments.length <= 1 ? undefined : arguments[1]) ? (0, _clamp.default)((0, _toInteger2.default)(arguments.length <= 1 ? undefined : arguments[1]), 0, 20) : 2; // Formats a number using fixed-point notation.
+
+  var fixed = (0, _numberToDecimalString.default)((0, _toFixed2.default)(number, digits));
+
+  if (digits > 0) {
+    var parts = (0, _split2.default)(fixed, '.');
+    parts[1] = (0, _stringSlice2.default)("".concat(parts[1] || '', "00000000000000000000"), 0, digits);
+    fixed = (0, _join2.default)(parts, '.');
+  }
+
+  var sectionLength = (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 && !(0, _isNil.default)(arguments.length <= 2 ? undefined : arguments[2]) ? (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]) : 3; // Formats a number (string) of fixed-point notation, with user delimiters.
+
+  var sectionDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 2 && !(0, _isNil.default)(arguments.length <= 3 ? undefined : arguments[3]) ? (0, _toString2.default)(arguments.length <= 3 ? undefined : arguments[3]) : ',';
+  var decimalDelimiter = (arguments.length <= 1 ? 0 : arguments.length - 1) > 3 && !(0, _isNil.default)(arguments.length <= 4 ? undefined : arguments[4]) ? (0, _toString2.default)(arguments.length <= 4 ? undefined : arguments[4]) : '.';
+  return (0, _replace2.default)(decimalDelimiter === '.' ? fixed : (0, _replace2.default)(fixed, '.', decimalDelimiter), new _RegExp2.default("\\d(?=(\\d{".concat(sectionLength, "})+").concat(digits > 0 ? '\\D' : '$', ")"), 'g'), "$&".concat(sectionDelimiter));
+}
 
 /***/ }),
 /* 193 */
@@ -8129,33 +8007,17 @@ function defaultToOneOf(comparates, comparate) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _clamp;
+exports.default = void 0;
 
-var _isNaN2 = __webpack_require__(22);
-
-var _isNaN3 = _interopRequireDefault(_isNaN2);
-
-var _NaN2 = __webpack_require__(55);
-
-var _NaN3 = _interopRequireDefault(_NaN2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _clamp
- */
+var logger = __webpack_require__(0).get("caboodle-x:_toFixed");
 
-var max = Math.max,
-    min = Math.min;
-function _clamp(value, lower, upper) {
-  if ((0, _isNaN3.default)(value) || (0, _isNaN3.default)(lower) || (0, _isNaN3.default)(upper)) {
-    return _NaN3.default;
-  }
+var _default = (0, _methodize2.default)(Number.prototype.toFixed);
 
-  return min(max(value, lower), upper);
-}
+exports.default = _default;
 
 /***/ }),
 /* 194 */
@@ -8167,39 +8029,17 @@ function _clamp(value, lower, upper) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = capitalize;
+exports.default = void 0;
 
-var _charAt2 = __webpack_require__(29);
-
-var _charAt3 = _interopRequireDefault(_charAt2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _toLowerCase2 = __webpack_require__(61);
-
-var _toLowerCase3 = _interopRequireDefault(_toLowerCase2);
-
-var _toUpperCase2 = __webpack_require__(35);
-
-var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function capitalize(string) {
-  var str = (0, _toString3.default)(string);
+var logger = __webpack_require__(0).get("caboodle-x:_split");
 
-  return (0, _toUpperCase3.default)((0, _charAt3.default)(str, 0)) + (0, _toLowerCase3.default)((0, _stringSlice3.default)(str, 1));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module capitalize
-   */
+var _default = (0, _methodize2.default)(String.prototype.split);
+
+exports.default = _default;
 
 /***/ }),
 /* 195 */
@@ -8211,36 +8051,22 @@ function capitalize(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = capitalizeFirst;
+exports.default = parseDecimal;
 
-var _charAt2 = __webpack_require__(29);
-
-var _charAt3 = _interopRequireDefault(_charAt2);
-
-var _stringSlice2 = __webpack_require__(9);
-
-var _stringSlice3 = _interopRequireDefault(_stringSlice2);
-
-var _toString2 = __webpack_require__(2);
-
-var _toString3 = _interopRequireDefault(_toString2);
-
-var _toUpperCase2 = __webpack_require__(35);
-
-var _toUpperCase3 = _interopRequireDefault(_toUpperCase2);
+var _parseInt2 = _interopRequireDefault(__webpack_require__(63));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module capitalizeFirst
+ * Parse a string to a decimal value.
+ *
+ * @param {string} value - The string to be converted to a decimal value.
+ * @returns {number} The parsed decimal value.
  */
-
-function capitalizeFirst(string) {
-  var str = (0, _toString3.default)(string);
-
-  return (0, _toUpperCase3.default)((0, _charAt3.default)(str, 0)) + (0, _stringSlice3.default)(str, 1);
+function parseDecimal(value) {
+  return (0, _parseInt2.default)(value, 10);
 }
 
 /***/ }),
@@ -8253,62 +8079,18 @@ function capitalizeFirst(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = callFunctionOrIdentity;
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _parseInt.default;
+  }
+});
 
-var _apply2 = __webpack_require__(14);
-
-var _apply3 = _interopRequireDefault(_apply2);
-
-var _assertIsObjectLike = __webpack_require__(36);
-
-var _assertIsObjectLike2 = _interopRequireDefault(_assertIsObjectLike);
-
-var _isFunction2 = __webpack_require__(10);
-
-var _isFunction3 = _interopRequireDefault(_isFunction2);
-
-var _slice2 = __webpack_require__(24);
-
-var _slice3 = _interopRequireDefault(_slice2);
-
-var _isNil = __webpack_require__(6);
-
-var _isNil2 = _interopRequireDefault(_isNil);
+var _parseInt = _interopRequireDefault(__webpack_require__(63));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } } /**
-                                                                                                                                                                                                     * @file Utility to invoke a function and return the result or return the identity argument unchanged.
-                                                                                                                                                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                                                                                                                                     * @module callFunctionOrIdentity
-                                                                                                                                                                                                     */
-
-var requireIsObject = function _requireIsObject(value) {
-  return (0, _assertIsObjectLike2.default)(value, 'CreateListFromArrayLike called on non-object');
-};
-
-var getArgsArray = function _getArgsArray(value) {
-  return (0, _isNil2.default)(value) ? [] : (0, _slice3.default)(requireIsObject(value));
-};
-
-/**
- * Invoke a function and return the result or return the identity argument unchanged.
- *
- * @param {Function|*} fnOrValue - The function to invoke or any other value.
- * @param {Array} rest - The remaining arguments.
- * @param {Array} [rest.argsArray=[]] - The argument(s) to use when invoking a given function.
- * @param {*} [rest.thisArg=undefined] - The context to use when invoking a given function.
- * @returns {*} The result of the invoked function or the identity argument unchanged.
- */
-function callFunctionOrIdentity(fnOrValue) {
-  if ((0, _isFunction3.default)(fnOrValue)) {
-    var argsArray = getArgsArray(arguments.length <= 1 ? undefined : arguments[1]);
-
-    return (arguments.length <= 1 ? 0 : arguments.length - 1) > 1 ? (0, _apply3.default)(fnOrValue, arguments.length <= 2 ? undefined : arguments[2], argsArray) : fnOrValue.apply(undefined, _toConsumableArray(argsArray));
-  }
-
-  return fnOrValue;
-}
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 197 */
@@ -8320,30 +8102,22 @@ function callFunctionOrIdentity(fnOrValue) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = call;
+exports.default = partial;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _call2 = __webpack_require__(15);
-
-var _call3 = _interopRequireDefault(_call2);
+var _partial2 = _interopRequireDefault(__webpack_require__(198));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module call
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function call(fn) {
-  for (var _len = arguments.length, callArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    callArgs[_key - 1] = arguments[_key];
+function partial(fn) {
+  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
   }
 
-  return _call3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(callArgs));
+  return _partial2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(partials));
 }
 
 /***/ }),
@@ -8356,30 +8130,45 @@ function call(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = bind;
+exports.default = _partial;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _call2 = _interopRequireDefault(__webpack_require__(12));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+var _bound2 = _interopRequireDefault(__webpack_require__(69));
 
-var _bind2 = __webpack_require__(107);
-
-var _bind3 = _interopRequireDefault(_bind2);
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module bind
- */
+var logger = __webpack_require__(0).get("caboodle-x:_partial");
 
-function bind(fn) {
-  for (var _len = arguments.length, bindArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    bindArgs[_key - 1] = arguments[_key];
+function _partial(fn) {
+  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
   }
 
-  return _bind3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(bindArgs));
+  var bound;
+
+  var binder = function _binder() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    /* eslint-disable-next-line babel/no-invalid-this */
+    var result = _call2.default.apply(void 0, [fn, this].concat(partials, args));
+    /* eslint-disable-next-line babel/no-invalid-this */
+
+
+    if (this instanceof bound) {
+      /* eslint-disable-next-line babel/no-invalid-this */
+      return (0, _isPrimitive.default)(result) ? this : result;
+    }
+
+    return result;
+  };
+
+  bound = (0, _bound2.default)(binder, 'Partial', fn.prototype, fn.length - partials.length);
+  return bound;
 }
 
 /***/ }),
@@ -8392,17 +8181,23 @@ function bind(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = partialRight;
 
-var _assertIsFunction = __webpack_require__(3);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-Object.defineProperty(exports, 'default', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_assertIsFunction).default;
-  }
-});
+var _partialRight2 = _interopRequireDefault(__webpack_require__(200));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function partialRight(fn) {
+  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
+  }
+
+  return _partialRight2.default.apply(void 0, [(0, _assertIsFunction2.default)(fn)].concat(partials));
+}
 
 /***/ }),
 /* 200 */
@@ -8414,15 +8209,46 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Function
- */
+exports.default = _partialRight;
 
-function fn() {}
+var _call2 = _interopRequireDefault(__webpack_require__(12));
 
-exports.default = fn.constructor;
+var _bound2 = _interopRequireDefault(__webpack_require__(69));
+
+var _isPrimitive = _interopRequireDefault(__webpack_require__(19));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_partialRight");
+
+function _partialRight(fn) {
+  for (var _len = arguments.length, partials = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    partials[_key - 1] = arguments[_key];
+  }
+
+  var bound;
+
+  var binder = function _binder() {
+    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+      args[_key2] = arguments[_key2];
+    }
+
+    /* eslint-disable-next-line babel/no-invalid-this */
+    var result = _call2.default.apply(void 0, [fn, this].concat(args, partials));
+    /* eslint-disable-next-line babel/no-invalid-this */
+
+
+    if (this instanceof bound) {
+      /* eslint-disable-next-line babel/no-invalid-this */
+      return (0, _isPrimitive.default)(result) ? this : result;
+    }
+
+    return result;
+  };
+
+  bound = (0, _bound2.default)(binder, 'PartialRight', fn.prototype, fn.length);
+  return bound;
+}
 
 /***/ }),
 /* 201 */
@@ -8434,13 +8260,28 @@ exports.default = fn.constructor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = regExpEscape;
+
+var _replace2 = _interopRequireDefault(__webpack_require__(14));
+
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var pattern = /[\^$\\.*+?()[\]{}|]/g;
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _create
+ * Method to safely escape `RegExp` special tokens for use in `new RegExp`.
+ *
+ * @param {string} string - The string to be escaped.
+ * @throws {TypeError} If string is null or undefined or not coercible.
+ * @returns {string} The escaped string.
  */
 
-exports.default = Object.create;
+function regExpEscape(string) {
+  return (0, _replace2.default)((0, _requireCoercibleToString.default)(string), pattern, '\\$&');
+}
 
 /***/ }),
 /* 202 */
@@ -8452,44 +8293,40 @@ exports.default = Object.create;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _createArgList;
+exports.default = shuffle;
 
-var _String2 = __webpack_require__(109);
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
 
-var _String3 = _interopRequireDefault(_String2);
-
-var _join2 = __webpack_require__(28);
-
-var _join3 = _interopRequireDefault(_join2);
-
-var _push2 = __webpack_require__(17);
-
-var _push3 = _interopRequireDefault(_push2);
-
-var _all2 = __webpack_require__(20);
-
-var _all3 = _interopRequireDefault(_all2);
+var _toObject = _interopRequireDefault(__webpack_require__(15));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var floor = Math.floor,
+    random = Math.random;
 /**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _createArgList
+ * Creates an array of shuffled values.
+ *
+ * @see https://en.wikipedia.org/wiki/Fisher-Yates_shuffle
+ * @param {Array|Object} array - The array to shuffle.
+ * @throws {TypeError} If array is null or undefined.
+ * @returns {Array} Returns the new shuffled array.
  */
 
-var PRE = '$_';
-var POST = '_$';
+function shuffle(array) {
+  var arr = (0, _slice2.default)((0, _toObject.default)(array));
+  var index = arr.length;
 
-function _createArgList(length) {
-  var array = [];
-  var iteratee = function _iteratee(unused, index) {
-    (0, _push3.default)(array, PRE + (0, _String3.default)(index) + POST);
-  };
+  while (index > 0) {
+    var rnd = floor(random() * index);
+    index -= 1;
+    var tmp = arr[index];
+    arr[index] = arr[rnd];
+    arr[rnd] = tmp;
+  }
 
-  (0, _all3.default)({ length: length }, iteratee);
-
-  return (0, _join3.default)(array, ',');
+  return arr;
 }
 
 /***/ }),
@@ -8502,34 +8339,18 @@ function _createArgList(length) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _argsToArray;
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _sign.default;
+  }
+});
 
-var _push2 = __webpack_require__(17);
-
-var _push3 = _interopRequireDefault(_push2);
-
-var _all2 = __webpack_require__(20);
-
-var _all3 = _interopRequireDefault(_all2);
+var _sign = _interopRequireDefault(__webpack_require__(65));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _argsToArray
- */
-
-function _argsToArray(args) {
-  var array = [];
-  var iteratee = function _iteratee(arg) {
-    (0, _push3.default)(array, arg);
-  };
-
-  (0, _all3.default)(args, iteratee);
-
-  return array;
-}
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 204 */
@@ -8541,53 +8362,22 @@ function _argsToArray(args) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _arity;
+exports.default = sift;
 
-var _apply2 = __webpack_require__(14);
+var _assertIsFunction2 = _interopRequireDefault(__webpack_require__(4));
 
-var _apply3 = _interopRequireDefault(_apply2);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
 
-var _slice2 = __webpack_require__(24);
+var _sift2 = _interopRequireDefault(__webpack_require__(72));
 
-var _slice3 = _interopRequireDefault(_slice2);
-
-var _bound2 = __webpack_require__(50);
-
-var _bound3 = _interopRequireDefault(_bound2);
-
-var _isPrimitive = __webpack_require__(25);
-
-var _isPrimitive2 = _interopRequireDefault(_isPrimitive);
+var _toInteger2 = _interopRequireDefault(__webpack_require__(6));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _arity
- */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-function _arity(fn) {
-  var length = (arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length;
-  var bound = void 0;
-
-  var binder = function _binder() {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    var result = (0, _apply3.default)(fn, this, (0, _slice3.default)(args, 0, length));
-
-    if (this instanceof bound) {
-      return (0, _isPrimitive2.default)(result) ? this : result;
-    }
-
-    return result;
-  };
-
-  bound = (0, _bound3.default)(binder, 'Arity', fn.prototype, length);
-
-  return bound;
+function sift(array, callback) {
+  return (0, _sift2.default)((0, _requireObjectCoercible.default)(array), (0, _assertIsFunction2.default)(callback), (0, _toInteger2.default)(arguments.length <= 2 ? undefined : arguments[2]));
 }
 
 /***/ }),
@@ -8600,29 +8390,21 @@ function _arity(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = arity;
+exports.default = stringTest;
 
-var _assertIsFunction2 = __webpack_require__(3);
+var _isRegex = _interopRequireDefault(__webpack_require__(41));
 
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
+var _stringTest2 = _interopRequireDefault(__webpack_require__(11));
 
-var _arity2 = __webpack_require__(204);
-
-var _arity3 = _interopRequireDefault(_arity2);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
+var _requireCoercibleToString = _interopRequireDefault(__webpack_require__(21));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function arity(fn) {
-  return (0, _arity3.default)((0, _assertIsFunction3.default)(fn), (0, _toWholeNumber2.default)((arguments.length <= 1 ? 0 : arguments.length - 1) ? arguments.length <= 1 ? undefined : arguments[1] : fn.length));
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module arity
-   */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function stringTest(string, patternOrRegex) {
+  return (0, _stringTest2.default)((0, _requireCoercibleToString.default)(string), (0, _isRegex.default)(patternOrRegex) ? patternOrRegex : (0, _requireCoercibleToString.default)(patternOrRegex));
+}
 
 /***/ }),
 /* 206 */
@@ -8634,30 +8416,17 @@ function arity(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = apply;
+exports.default = stubFalse;
 
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _apply2 = __webpack_require__(14);
-
-var _apply3 = _interopRequireDefault(_apply2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module apply
+ * @module stubFalse
  */
-
-function apply(fn) {
-  for (var _len = arguments.length, applyArgs = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    applyArgs[_key - 1] = arguments[_key];
-  }
-
-  return _apply3.default.apply(undefined, [(0, _assertIsFunction3.default)(fn)].concat(applyArgs));
+function stubFalse() {
+  return false;
 }
 
 /***/ }),
@@ -8670,34 +8439,17 @@ function apply(fn) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = any;
+exports.default = stubObject;
 
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _any2 = __webpack_require__(19);
-
-var _any3 = _interopRequireDefault(_any2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module any
+ * @module stubObject
  */
-
-function any(array, callback) {
-  return (0, _any3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+function stubObject() {
+  return {};
 }
 
 /***/ }),
@@ -8710,34 +8462,17 @@ function any(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = all;
+exports.default = stubString;
 
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-var _requireObjectCoercible2 = _interopRequireDefault(_requireObjectCoercible);
-
-var _toInteger2 = __webpack_require__(5);
-
-var _toInteger3 = _interopRequireDefault(_toInteger2);
-
-var _all2 = __webpack_require__(20);
-
-var _all3 = _interopRequireDefault(_all2);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module all
+ * @module stubString
  */
-
-function all(array, callback) {
-  (0, _all3.default)((0, _requireObjectCoercible2.default)(array), (0, _assertIsFunction3.default)(callback), (0, _toInteger3.default)(arguments.length <= 2 ? undefined : arguments[2]));
+function stubString() {
+  return '';
 }
 
 /***/ }),
@@ -8750,13 +8485,19 @@ function all(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getOwnPropertyDescriptor
- */
+exports.default = squeeze;
 
-exports.default = Object.getOwnPropertyDescriptor;
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _squeeze2 = _interopRequireDefault(__webpack_require__(210));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function squeeze(array) {
+  return (0, _squeeze2.default)((0, _requireObjectCoercible.default)(array));
+}
 
 /***/ }),
 /* 210 */
@@ -8768,13 +8509,19 @@ exports.default = Object.getOwnPropertyDescriptor;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Parses a string argument and returns an integer of the specified radix.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _Infinity
- */
+exports.default = _squeeze;
 
-exports.default = 1 / 0;
+var _filter2 = _interopRequireDefault(__webpack_require__(79));
+
+var _stubTrue = _interopRequireDefault(__webpack_require__(110));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x:_squeeze");
+
+function _squeeze(array) {
+  return (0, _filter2.default)(array, _stubTrue.default);
+}
 
 /***/ }),
 /* 211 */
@@ -8786,13 +8533,21 @@ exports.default = 1 / 0;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _defineProperties
- */
+exports.default = trim;
 
-exports.default = Object.defineProperties;
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _trim2 = _interopRequireDefault(__webpack_require__(40));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function trim(string) {
+  return (0, _trim2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
+}
 
 /***/ }),
 /* 212 */
@@ -8804,13 +8559,21 @@ exports.default = Object.defineProperties;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _fromCharCode
- */
+exports.default = trimLeft;
 
-exports.default = String.fromCharCode;
+var _trimLeft2 = _interopRequireDefault(__webpack_require__(54));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function trimLeft(string) {
+  return (0, _trimLeft2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
+}
 
 /***/ }),
 /* 213 */
@@ -8822,18 +8585,21 @@ exports.default = String.fromCharCode;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = trimRight;
 
-var _methodize2 = __webpack_require__(0);
+var _trimRight2 = _interopRequireDefault(__webpack_require__(82));
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Array.prototype.indexOf); /**
-                                                                      * @file Utility that needs description.
-                                                                      * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                      * @module _indexOf
-                                                                      */
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function trimRight(string) {
+  return (0, _trimRight2.default)((0, _toString2.default)((0, _requireObjectCoercible.default)(string)));
+}
 
 /***/ }),
 /* 214 */
@@ -8845,18 +8611,18 @@ exports.default = (0, _methodize3.default)(Array.prototype.indexOf); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _trunc.default;
+  }
+});
 
-var _methodize2 = __webpack_require__(0);
-
-var _methodize3 = _interopRequireDefault(_methodize2);
+var _trunc = _interopRequireDefault(__webpack_require__(215));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = (0, _methodize3.default)(Object.prototype.propertyIsEnumerable); /**
-                                                                                    * @file Utility that needs description.
-                                                                                    * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                                    * @module _propertyIsEnumerable
-                                                                                    */
+var logger = __webpack_require__(0).get("caboodle-x");
 
 /***/ }),
 /* 215 */
@@ -8868,18 +8634,21 @@ exports.default = (0, _methodize3.default)(Object.prototype.propertyIsEnumerable
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.default = _trunc;
 
-var _methodize2 = __webpack_require__(0);
+var logger = __webpack_require__(0).get("caboodle-x:_trunc");
 
-var _methodize3 = _interopRequireDefault(_methodize2);
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _trunc
+ */
+var ceil = Math.ceil,
+    floor = Math.floor;
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-exports.default = (0, _methodize3.default)(Array.prototype.concat); /**
-                                                                     * @file Utility that needs description.
-                                                                     * @copyright Copyright (c) 2018-present, Graham Fairweather
-                                                                     * @module _concat
-                                                                     */
+function _trunc(value) {
+  return value < 0 ? ceil(value) : floor(value);
+}
 
 /***/ }),
 /* 216 */
@@ -8891,33 +8660,202 @@ exports.default = (0, _methodize3.default)(Array.prototype.concat); /**
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = _normalizeSpace;
+exports.default = truncate;
 
-var _trim2 = __webpack_require__(42);
+var _isRegex = _interopRequireDefault(__webpack_require__(41));
 
-var _trim3 = _interopRequireDefault(_trim2);
+var _isUndefined = _interopRequireDefault(__webpack_require__(17));
 
-var _whitespace2 = __webpack_require__(31);
+var _toWholeNumber = _interopRequireDefault(__webpack_require__(9));
 
-var _whitespace3 = _interopRequireDefault(_whitespace2);
+var _toString2 = _interopRequireDefault(__webpack_require__(3));
 
-var _replace2 = __webpack_require__(13);
+var _isObjectLike = _interopRequireDefault(__webpack_require__(16));
 
-var _replace3 = _interopRequireDefault(_replace2);
+var _hasOwnProperty2 = _interopRequireDefault(__webpack_require__(42));
+
+var _exec2 = _interopRequireDefault(__webpack_require__(86));
+
+var _join2 = _interopRequireDefault(__webpack_require__(35));
+
+var _stringLastIndexOf2 = _interopRequireDefault(__webpack_require__(217));
+
+var _match2 = _interopRequireDefault(__webpack_require__(98));
+
+var _search2 = _interopRequireDefault(__webpack_require__(108));
+
+var _slice2 = _interopRequireDefault(__webpack_require__(20));
+
+var _stringSlice2 = _interopRequireDefault(__webpack_require__(10));
+
+var _stringIndexOf2 = _interopRequireDefault(__webpack_require__(62));
+
+var _RegExp2 = _interopRequireDefault(__webpack_require__(109));
+
+var _test2 = _interopRequireDefault(__webpack_require__(18));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var PRE = '['; /**
-                * @file Trims and replaces sequences of whitespace characters by a single space.
-                * @copyright Copyright (c) 2018-present, Graham Fairweather
-                * @module _normalizeSpace
-                */
+var logger = __webpack_require__(0).get("caboodle-x");
 
-var POST = ']+';
-var whiteSpace = new RegExp(PRE + (0, _whitespace3.default)() + POST, 'g');
+var G_FLAG = 'g';
+/* Used to match `RegExp` flags from their coerced string values. */
 
-function _normalizeSpace(string) {
-  return (0, _replace3.default)((0, _trim3.default)(string), whiteSpace, ' ');
+var matchFlags = /\w*$/;
+/* Used to compose unicode character classes. */
+
+var rsAstralRange = "\\ud800-\\udfff";
+var rsComboMarksRange = "\\u0300-\\u036f\\ufe20-\\ufe23";
+var rsComboSymbolsRange = "\\u20d0-\\u20f0";
+var rsVarRange = "\\ufe0e\\ufe0f";
+/* Used to compose unicode capture groups. */
+
+var rsAstral = "[".concat(rsAstralRange, "]");
+var rsCombo = "[".concat(rsComboMarksRange).concat(rsComboSymbolsRange, "]");
+var rsFitz = "\\ud83c[\\udffb-\\udfff]";
+var rsModifier = "(?:".concat(rsCombo, "|").concat(rsFitz, ")");
+var rsNonAstral = "[^".concat(rsAstralRange, "]");
+var rsRegional = "(?:\\ud83c[\\udde6-\\uddff]){2}";
+var rsSurrPair = "[\\ud800-\\udbff][\\udc00-\\udfff]";
+var rsZWJ = "\\u200d";
+/* Used to compose unicode regexes. */
+
+var reOptMod = "".concat(rsModifier, "?");
+var rsOptVar = "[".concat(rsVarRange, "]?");
+var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat((0, _join2.default)([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
+var rsSeq = rsOptVar + reOptMod + rsOptJoin;
+var rsSymbol = "(?:".concat((0, _join2.default)(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
+/*
+ * Used to match string symbols
+ * @see https://mathiasbynens.be/notes/javascript-unicode
+ */
+
+var reComplexSymbol = new _RegExp2.default("".concat(rsFitz, "(?=").concat(rsFitz, ")|").concat(rsSymbol).concat(rsSeq), G_FLAG);
+/*
+ * Used to detect strings with [zero-width joiners or code points from
+ * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
+ */
+
+var reHasComplexSymbol = new _RegExp2.default("[".concat(rsZWJ).concat(rsAstralRange).concat(rsComboMarksRange).concat(rsComboSymbolsRange).concat(rsVarRange, "]"));
+
+var hasComplexSymbol = function _hasComplexSymbol(string) {
+  return (0, _test2.default)(reHasComplexSymbol, string);
+};
+/**
+ * Gets the number of symbols in `string`.
+ *
+ * @private
+ * @param {string} string - The string to inspect.
+ * @returns {number} Returns the string size.
+ */
+
+
+var stringSize = function _stringSize(string) {
+  if (!string || !hasComplexSymbol(string)) {
+    return string.length;
+  }
+
+  reComplexSymbol.lastIndex = 0;
+  var result = 0;
+
+  while ((0, _test2.default)(reComplexSymbol, string)) {
+    result += 1;
+  }
+
+  return result;
+};
+/**
+ * Truncates `string` if it's longer than the given maximum string length.
+ * The last characters of the truncated string are replaced with the omission
+ * string which defaults to "...".
+ *
+ * @param {string} string - The string to truncate.
+ * @param {Object} [options] - The options object.
+ * @param {number} [options.length=30] - The maximum string length.
+ * @param {string} [options.omission='...'] - The string to indicate text
+ * is omitted.
+ * @param {RegExp|string} [options.separator] - The separator pattern to
+ * truncate to.
+ * @returns {string} Returns the truncated string.
+ */
+
+
+function truncate(string, options) {
+  var str = (0, _toString2.default)(string);
+  var length = 30;
+  var omission = '...';
+  var separator;
+
+  if ((0, _isObjectLike.default)(options)) {
+    if ((0, _hasOwnProperty2.default)(options, 'separator')) {
+      separator = (0, _isRegex.default)(options.separator) ? options.separator : (0, _toString2.default)(options.separator);
+    }
+
+    if ((0, _hasOwnProperty2.default)(options, 'length')) {
+      length = (0, _toWholeNumber.default)(options.length);
+    }
+
+    if ((0, _hasOwnProperty2.default)(options, 'omission')) {
+      omission = (0, _toString2.default)(options.omission);
+    }
+  }
+
+  var strLength = str.length;
+  var matchSymbols;
+
+  if (hasComplexSymbol(str)) {
+    matchSymbols = (0, _match2.default)(str, reComplexSymbol);
+    strLength = matchSymbols.length;
+  }
+
+  if (length >= strLength) {
+    return str;
+  }
+
+  var end = length - stringSize(omission);
+
+  if (end < 1) {
+    return omission;
+  }
+
+  var result = matchSymbols ? (0, _join2.default)((0, _slice2.default)(matchSymbols, 0, end), '') : (0, _stringSlice2.default)(str, 0, end);
+
+  if ((0, _isUndefined.default)(separator)) {
+    return result + omission;
+  }
+
+  if (matchSymbols) {
+    end += result.length - end;
+  }
+
+  if ((0, _isRegex.default)(separator)) {
+    if ((0, _search2.default)((0, _stringSlice2.default)(str, end), separator)) {
+      var substr = result;
+
+      if (!separator.global) {
+        separator = new _RegExp2.default(separator.source, (0, _toString2.default)((0, _exec2.default)(matchFlags, separator)) + G_FLAG);
+      }
+
+      separator.lastIndex = 0;
+      var newEnd;
+      var match = (0, _exec2.default)(separator, substr);
+
+      while (match) {
+        newEnd = match.index;
+        match = (0, _exec2.default)(separator, substr);
+      }
+
+      result = (0, _stringSlice2.default)(result, 0, (0, _isUndefined.default)(newEnd) ? end : newEnd);
+    }
+  } else if ((0, _stringIndexOf2.default)(str, separator, end) !== end) {
+    var index = (0, _stringLastIndexOf2.default)(result, separator);
+
+    if (index > -1) {
+      result = (0, _stringSlice2.default)(result, 0, index);
+    }
+  }
+
+  return result + omission;
 }
 
 /***/ }),
@@ -8930,50 +8868,17 @@ function _normalizeSpace(string) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = accumulate;
+exports.default = void 0;
 
-var _assertIsFunction2 = __webpack_require__(3);
-
-var _assertIsFunction3 = _interopRequireDefault(_assertIsFunction2);
-
-var _toObject = __webpack_require__(12);
-
-var _toObject2 = _interopRequireDefault(_toObject);
-
-var _toWholeNumber = __webpack_require__(7);
-
-var _toWholeNumber2 = _interopRequireDefault(_toWholeNumber);
-
-var _accumulate2 = __webpack_require__(52);
-
-var _accumulate3 = _interopRequireDefault(_accumulate2);
-
-var _fromIndex2 = __webpack_require__(95);
-
-var _fromIndex3 = _interopRequireDefault(_fromIndex2);
+var _methodize2 = _interopRequireDefault(__webpack_require__(1));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function accumulate(array, callback) {
-  var object = (0, _toObject2.default)(array);
-  var length = (0, _toWholeNumber2.default)(object.length);
+var logger = __webpack_require__(0).get("caboodle-x:_stringLastIndexOf");
 
-  for (var _len = arguments.length, rest = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    rest[_key - 2] = arguments[_key];
-  }
+var _default = (0, _methodize2.default)(String.prototype.lastIndexOf);
 
-  if (!rest.length && length < 1) {
-    throw new TypeError('accumulate of empty array with no initial value');
-  }
-
-  var start = (0, _fromIndex3.default)(object, rest[1]);
-
-  return (0, _accumulate3.default)(object, (0, _assertIsFunction3.default)(callback), (rest.length ? rest : object)[start], rest.length ? start : start + 1);
-} /**
-   * @file Utility that needs description.
-   * @copyright Copyright (c) 2018-present, Graham Fairweather
-   * @module accumulate
-   */
+exports.default = _default;
 
 /***/ }),
 /* 218 */
@@ -8985,1205 +8890,140 @@ function accumulate(array, callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-
-var _accumulate = __webpack_require__(217);
-
-Object.defineProperty(exports, 'accumulate', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_accumulate).default;
-  }
-});
-
-var _all = __webpack_require__(208);
-
-Object.defineProperty(exports, 'all', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_all).default;
-  }
-});
-
-var _any = __webpack_require__(207);
-
-Object.defineProperty(exports, 'any', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_any).default;
-  }
-});
-
-var _apply = __webpack_require__(206);
-
-Object.defineProperty(exports, 'apply', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_apply).default;
-  }
-});
-
-var _arity = __webpack_require__(205);
-
-Object.defineProperty(exports, 'arity', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_arity).default;
-  }
-});
-
-var _assign = __webpack_require__(106);
-
-Object.defineProperty(exports, 'assign', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_assign).default;
-  }
-});
-
-var _assertIsFunction = __webpack_require__(199);
-
-Object.defineProperty(exports, 'assertIsFunction', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_assertIsFunction).default;
-  }
-});
-
-var _assertIsObjectLike = __webpack_require__(36);
-
-Object.defineProperty(exports, 'assertIsObject', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_assertIsObjectLike).default;
-  }
-});
-
-var _assertIs = __webpack_require__(93);
-
-Object.defineProperty(exports, 'assertIs', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_assertIs).default;
-  }
-});
-
-var _attempt = __webpack_require__(70);
-
-Object.defineProperty(exports, 'attempt', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_attempt).default;
-  }
-});
-
-var _bind = __webpack_require__(198);
-
-Object.defineProperty(exports, 'bind', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_bind).default;
-  }
-});
-
-var _call = __webpack_require__(197);
-
-Object.defineProperty(exports, 'call', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_call).default;
-  }
-});
-
-var _callFunctionOrIdentity = __webpack_require__(196);
-
-Object.defineProperty(exports, 'callFunctionOrIdentity', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_callFunctionOrIdentity).default;
-  }
-});
-
-var _capitalizeFirst = __webpack_require__(195);
-
-Object.defineProperty(exports, 'capitalizeFirst', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_capitalizeFirst).default;
-  }
-});
-
-var _capitalize = __webpack_require__(194);
-
-Object.defineProperty(exports, 'capitalize', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_capitalize).default;
-  }
-});
-
-var _clamp = __webpack_require__(92);
-
-Object.defineProperty(exports, 'clamp', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_clamp).default;
-  }
-});
-
-var _constant = __webpack_require__(91);
-
-Object.defineProperty(exports, 'constant', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_constant).default;
-  }
-});
-
-var _defaultToOneOf = __webpack_require__(192);
-
-Object.defineProperty(exports, 'defaultToOneOf', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_defaultToOneOf).default;
-  }
-});
-
-var _defineValidatorProperties = __webpack_require__(191);
-
-Object.defineProperty(exports, 'defineValidatorProperties', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_defineValidatorProperties).default;
-  }
-});
-
-var _defineValidatorProperty = __webpack_require__(87);
-
-Object.defineProperty(exports, 'defineValidatorProperty', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_defineValidatorProperty).default;
-  }
-});
-
-var _delayPromise = __webpack_require__(189);
-
-Object.defineProperty(exports, 'delayPromise', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_delayPromise).default;
-  }
-});
-
-var _difference = __webpack_require__(187);
-
-Object.defineProperty(exports, 'difference', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_difference).default;
-  }
-});
-
-var _drop = __webpack_require__(186);
-
-Object.defineProperty(exports, 'drop', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_drop).default;
-  }
-});
-
-var _find = __webpack_require__(185);
-
-Object.defineProperty(exports, 'find', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_find).default;
-  }
-});
-
-var _findIndex = __webpack_require__(184);
-
-Object.defineProperty(exports, 'findIndex', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_findIndex).default;
-  }
-});
-
-var _getAt = __webpack_require__(183);
-
-Object.defineProperty(exports, 'getAt', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_getAt).default;
-  }
-});
-
-var _getFunctionName = __webpack_require__(182);
-
-Object.defineProperty(exports, 'getFunctionName', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_getFunctionName).default;
-  }
-});
-
-var _hasOwnProperty = __webpack_require__(181);
-
-Object.defineProperty(exports, 'hasOwnProperty', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_hasOwnProperty).default;
-  }
-});
-
-var _head = __webpack_require__(180);
-
-Object.defineProperty(exports, 'head', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_head).default;
-  }
-});
-
-var _identity = __webpack_require__(178);
-
-Object.defineProperty(exports, 'identity', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_identity).default;
-  }
-});
-
-var _includes = __webpack_require__(177);
-
-Object.defineProperty(exports, 'includes', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_includes).default;
-  }
-});
-
-var _intersection = __webpack_require__(176);
-
-Object.defineProperty(exports, 'intersection', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_intersection).default;
-  }
-});
-
-var _intToRGB = __webpack_require__(174);
-
-Object.defineProperty(exports, 'intToRGB', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_intToRGB).default;
-  }
-});
-
-var _isArrayLikeObject = __webpack_require__(173);
-
-Object.defineProperty(exports, 'isArrayLikeObject', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isArrayLikeObject).default;
-  }
-});
-
-var _isArrayLike = __webpack_require__(18);
-
-Object.defineProperty(exports, 'isArrayLike', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isArrayLike).default;
-  }
-});
-
-var _isBinary = __webpack_require__(98);
-
-Object.defineProperty(exports, 'isBinary', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isBinary).default;
-  }
-});
-
-var _isBooleanType = __webpack_require__(79);
-
-Object.defineProperty(exports, 'isBooleanType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isBooleanType).default;
-  }
-});
-
-var _isBooleanObject = __webpack_require__(172);
-
-Object.defineProperty(exports, 'isBoolean', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isBooleanObject).default;
-  }
-});
-
-var _isClassSupported = __webpack_require__(100);
-
-Object.defineProperty(exports, 'isClassSupported', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isClassSupported).default;
-  }
-});
-
-var _isCountingNumber = __webpack_require__(171);
-
-Object.defineProperty(exports, 'isCountingNumber', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isCountingNumber).default;
-  }
-});
-
-var _isDateObject = __webpack_require__(99);
-
-Object.defineProperty(exports, 'isDate', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isDateObject).default;
-  }
-});
-
-var _isDOMNode = __webpack_require__(170);
-
-Object.defineProperty(exports, 'isDOMNode', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isDOMNode).default;
-  }
-});
-
-var _isError = __webpack_require__(169);
-
-Object.defineProperty(exports, 'isError', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isError).default;
-  }
-});
-
-var _isFalsey = __webpack_require__(167);
-
-Object.defineProperty(exports, 'isFalsey', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isFalsey).default;
-  }
-});
-
-var _isFunction = __webpack_require__(166);
-
-Object.defineProperty(exports, 'isFunction', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isFunction).default;
-  }
-});
-
-var _isFunctionType = __webpack_require__(68);
-
-Object.defineProperty(exports, 'isFunctionType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isFunctionType).default;
-  }
-});
-
-var _isHex = __webpack_require__(165);
-
-Object.defineProperty(exports, 'isHex', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isHex).default;
-  }
-});
-
-var _isInteger = __webpack_require__(94);
-
-Object.defineProperty(exports, 'isInteger', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isInteger).default;
-  }
-});
-
-var _isLowerCased = __webpack_require__(164);
-
-Object.defineProperty(exports, 'isLowerCased', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isLowerCased).default;
-  }
-});
-
-var _isNil = __webpack_require__(6);
-
-Object.defineProperty(exports, 'isNil', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNil).default;
-  }
-});
-
-var _isNull = __webpack_require__(45);
-
-Object.defineProperty(exports, 'isNull', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNull).default;
-  }
-});
-
-var _isNumberObject = __webpack_require__(163);
-
-Object.defineProperty(exports, 'isNumber', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNumberObject).default;
-  }
-});
-
-var _isNumberFinite = __webpack_require__(162);
-
-Object.defineProperty(exports, 'isNumberFinite', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNumberFinite).default;
-  }
-});
-
-var _isNumberNaN = __webpack_require__(161);
-
-Object.defineProperty(exports, 'isNumberNaN', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNumberNaN).default;
-  }
-});
-
-var _isNumberType = __webpack_require__(30);
-
-Object.defineProperty(exports, 'isNumberType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isNumberType).default;
-  }
-});
-
-var _isObjectLikeNotArray = __webpack_require__(160);
-
-Object.defineProperty(exports, 'isObjectLikeNotArray', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isObjectLikeNotArray).default;
-  }
-});
-
-var _isObjectLike = __webpack_require__(11);
-
-Object.defineProperty(exports, 'isObjectLike', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isObjectLike).default;
-  }
-});
-
-var _isObjectType = __webpack_require__(67);
-
-Object.defineProperty(exports, 'isObjectType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isObjectType).default;
-  }
-});
-
-var _isOctal = __webpack_require__(96);
-
-Object.defineProperty(exports, 'isOctal', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isOctal).default;
-  }
-});
-
-var _isPopulatedString = __webpack_require__(158);
-
-Object.defineProperty(exports, 'isPopulatedString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isPopulatedString).default;
-  }
-});
-
-var _isPrimitive = __webpack_require__(25);
-
-Object.defineProperty(exports, 'isPrimitive', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isPrimitive).default;
-  }
-});
-
-var _isRegex = __webpack_require__(40);
-
-Object.defineProperty(exports, 'isRegex', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isRegex).default;
-  }
-});
-
-var _isSafeInteger = __webpack_require__(51);
-
-Object.defineProperty(exports, 'isSafeInteger', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSafeInteger).default;
-  }
-});
-
-var _isSearchIndex = __webpack_require__(157);
-
-Object.defineProperty(exports, 'isSearchIndex', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSearchIndex).default;
-  }
-});
-
-var _isSpaced = __webpack_require__(78);
-
-Object.defineProperty(exports, 'isSpaced', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSpaced).default;
-  }
-});
-
-var _isStringTypeOrInteger = __webpack_require__(156);
-
-Object.defineProperty(exports, 'isStringTypeOrInteger', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isStringTypeOrInteger).default;
-  }
-});
-
-var _isStringTypeOrNumberType = __webpack_require__(155);
-
-Object.defineProperty(exports, 'isStringTypeOrNumberType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isStringTypeOrNumberType).default;
-  }
-});
-
-var _isStringType = __webpack_require__(38);
-
-Object.defineProperty(exports, 'isStringType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isStringType).default;
-  }
-});
-
-var _isString = __webpack_require__(4);
-
-Object.defineProperty(exports, 'isString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isString).default;
-  }
-});
-
-var _isSurrogatePair = __webpack_require__(154);
-
-Object.defineProperty(exports, 'isSurrogatePair', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSurrogatePair).default;
-  }
-});
-
-var _isSymbolType = __webpack_require__(32);
-
-Object.defineProperty(exports, 'isSymbolType', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSymbolType).default;
-  }
-});
-
-var _isSymbol = __webpack_require__(71);
-
-Object.defineProperty(exports, 'isSymbol', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSymbol).default;
-  }
-});
-
-var _isSymbolSupported = __webpack_require__(43);
-
-Object.defineProperty(exports, 'isSymbolSupported', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isSymbolSupported).default;
-  }
-});
-
-var _isToStringTagSupported = __webpack_require__(69);
-
-Object.defineProperty(exports, 'isToStringTagSupported', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isToStringTagSupported).default;
-  }
-});
-
-var _isTruthy = __webpack_require__(152);
-
-Object.defineProperty(exports, 'isTruthy', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isTruthy).default;
-  }
-});
-
-var _isUndefined = __webpack_require__(27);
-
-Object.defineProperty(exports, 'isUndefined', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isUndefined).default;
-  }
-});
-
-var _isUnderscored = __webpack_require__(151);
-
-Object.defineProperty(exports, 'isUnderscored', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isUnderscored).default;
-  }
-});
-
-var _isUniq = __webpack_require__(150);
-
-Object.defineProperty(exports, 'isUniq', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isUniq).default;
-  }
-});
-
-var _isUpperCased = __webpack_require__(149);
-
-Object.defineProperty(exports, 'isUpperCased', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isUpperCased).default;
-  }
-});
-
-var _isValidHtml4Id = __webpack_require__(148);
-
-Object.defineProperty(exports, 'isValidHtml4Id', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isValidHtml4Id).default;
-  }
-});
-
-var _isValidHtml5Id = __webpack_require__(147);
-
-Object.defineProperty(exports, 'isValidHtml5Id', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isValidHtml5Id).default;
-  }
-});
-
-var _isWhiteSpaced = __webpack_require__(146);
-
-Object.defineProperty(exports, 'isWhiteSpaced', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isWhiteSpaced).default;
-  }
-});
-
-var _isWholeNumber = __webpack_require__(37);
-
-Object.defineProperty(exports, 'isWholeNumber', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_isWholeNumber).default;
-  }
-});
-
-var _kebabJoin = __webpack_require__(145);
-
-Object.defineProperty(exports, 'kebabJoin', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_kebabJoin).default;
-  }
-});
-
-var _last = __webpack_require__(144);
-
-Object.defineProperty(exports, 'last', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_last).default;
-  }
-});
-
-var _methodize = __webpack_require__(143);
-
-Object.defineProperty(exports, 'methodize', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_methodize).default;
-  }
-});
-
-var _modulo = __webpack_require__(81);
-
-Object.defineProperty(exports, 'modulo', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_modulo).default;
-  }
-});
-
-var _negate = __webpack_require__(142);
-
-Object.defineProperty(exports, 'negate', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_negate).default;
-  }
-});
-
-var _nilifyIs = __webpack_require__(86);
-
-Object.defineProperty(exports, 'nilifyIs', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_nilifyIs).default;
-  }
-});
-
-var _normalizeSpace = __webpack_require__(66);
-
-Object.defineProperty(exports, 'normalizeSpace', {
+Object.defineProperty(exports, "default", {
   enumerable: true,
   get: function get() {
-    return _interopRequireDefault(_normalizeSpace).default;
+    return _toInteger.default;
   }
 });
 
-var _noop = __webpack_require__(141);
-
-Object.defineProperty(exports, 'noop', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_noop).default;
-  }
-});
-
-var _numberToDecimalString = __webpack_require__(75);
-
-Object.defineProperty(exports, 'numberToDecimalString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_numberToDecimalString).default;
-  }
-});
-
-var _numberFormat = __webpack_require__(140);
-
-Object.defineProperty(exports, 'numberFormat', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_numberFormat).default;
-  }
-});
-
-var _parseDecimal = __webpack_require__(137);
-
-Object.defineProperty(exports, 'parseDecimal', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_parseDecimal).default;
-  }
-});
-
-var _parseInteger = __webpack_require__(136);
-
-Object.defineProperty(exports, 'parseInteger', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_parseInteger).default;
-  }
-});
-
-var _partial = __webpack_require__(135);
-
-Object.defineProperty(exports, 'partial', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_partial).default;
-  }
-});
-
-var _partialRight = __webpack_require__(133);
-
-Object.defineProperty(exports, 'partialRight', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_partialRight).default;
-  }
-});
-
-var _padStart = __webpack_require__(80);
-
-Object.defineProperty(exports, 'padStart', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_padStart).default;
-  }
-});
-
-var _regexpEscape = __webpack_require__(131);
-
-Object.defineProperty(exports, 'regexpEscape', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_regexpEscape).default;
-  }
-});
-
-var _replaceComments = __webpack_require__(60);
-
-Object.defineProperty(exports, 'replaceComments', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_replaceComments).default;
-  }
-});
-
-var _requireCoercibleToString = __webpack_require__(23);
-
-Object.defineProperty(exports, 'requireCoercibleToString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_requireCoercibleToString).default;
-  }
-});
-
-var _requireObjectCoercible = __webpack_require__(1);
-
-Object.defineProperty(exports, 'requireObjectCoercible', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_requireObjectCoercible).default;
-  }
-});
-
-var _sameValue = __webpack_require__(89);
-
-Object.defineProperty(exports, 'sameValue', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_sameValue).default;
-  }
-});
-
-var _sameValueZero = __webpack_require__(90);
-
-Object.defineProperty(exports, 'sameValueZero', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_sameValueZero).default;
-  }
-});
-
-var _shuffle = __webpack_require__(130);
-
-Object.defineProperty(exports, 'shuffle', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_shuffle).default;
-  }
-});
-
-var _sign = __webpack_require__(129);
-
-Object.defineProperty(exports, 'sign', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_sign).default;
-  }
-});
-
-var _sift = __webpack_require__(128);
-
-Object.defineProperty(exports, 'sift', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_sift).default;
-  }
-});
-
-var _stringTest = __webpack_require__(127);
-
-Object.defineProperty(exports, 'stringTest', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stringTest).default;
-  }
-});
-
-var _stubArray = __webpack_require__(105);
-
-Object.defineProperty(exports, 'stubArray', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stubArray).default;
-  }
-});
-
-var _stubFalse = __webpack_require__(126);
-
-Object.defineProperty(exports, 'stubFalse', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stubFalse).default;
-  }
-});
-
-var _stubObject = __webpack_require__(125);
-
-Object.defineProperty(exports, 'stubObject', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stubObject).default;
-  }
-});
-
-var _stubString = __webpack_require__(124);
-
-Object.defineProperty(exports, 'stubString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stubString).default;
-  }
-});
-
-var _stubTrue = __webpack_require__(72);
-
-Object.defineProperty(exports, 'stubTrue', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_stubTrue).default;
-  }
-});
-
-var _squeeze = __webpack_require__(123);
-
-Object.defineProperty(exports, 'squeeze', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_squeeze).default;
-  }
-});
-
-var _surround = __webpack_require__(85);
-
-Object.defineProperty(exports, 'surround', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_surround).default;
-  }
-});
-
-var _trim = __webpack_require__(121);
-
-Object.defineProperty(exports, 'trim', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_trim).default;
-  }
-});
-
-var _trimLeft = __webpack_require__(120);
-
-Object.defineProperty(exports, 'trimLeft', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_trimLeft).default;
-  }
-});
-
-var _trimRight = __webpack_require__(119);
-
-Object.defineProperty(exports, 'trimRight', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_trimRight).default;
-  }
-});
-
-var _trunc = __webpack_require__(118);
-
-Object.defineProperty(exports, 'trunc', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_trunc).default;
-  }
-});
-
-var _truncate = __webpack_require__(116);
-
-Object.defineProperty(exports, 'truncate', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_truncate).default;
-  }
-});
-
-var _toBoolean = __webpack_require__(77);
-
-Object.defineProperty(exports, 'toBoolean', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toBoolean).default;
-  }
-});
-
-var _toInteger = __webpack_require__(114);
-
-Object.defineProperty(exports, 'toInteger', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toInteger).default;
-  }
-});
-
-var _toNumber = __webpack_require__(113);
-
-Object.defineProperty(exports, 'toNumber', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toNumber).default;
-  }
-});
-
-var _toObject = __webpack_require__(12);
-
-Object.defineProperty(exports, 'toObject', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toObject).default;
-  }
-});
-
-var _toPrimitive = __webpack_require__(58);
-
-Object.defineProperty(exports, 'toPrimitive', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toPrimitive).default;
-  }
-});
-
-var _toPropertyKey = __webpack_require__(34);
-
-Object.defineProperty(exports, 'toPropertyKey', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toPropertyKey).default;
-  }
-});
-
-var _toString = __webpack_require__(112);
-
-Object.defineProperty(exports, 'toString', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toString).default;
-  }
-});
-
-var _toStringTag = __webpack_require__(44);
-
-Object.defineProperty(exports, 'toStringTag', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toStringTag).default;
-  }
-});
-
-var _toUint = __webpack_require__(82);
-
-Object.defineProperty(exports, 'toUint24', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toUint).default;
-  }
-});
-
-var _toWholeNumber = __webpack_require__(7);
-
-Object.defineProperty(exports, 'toWholeNumber', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_toWholeNumber).default;
-  }
-});
-
-var _union = __webpack_require__(111);
-
-Object.defineProperty(exports, 'union', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_union).default;
-  }
-});
-
-var _uniq = __webpack_require__(110);
-
-Object.defineProperty(exports, 'uniq', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_uniq).default;
-  }
-});
-
-var _MAX_SAFE_INTEGER = __webpack_require__(53);
-
-Object.defineProperty(exports, 'MAX_SAFE_INTEGER', {
-  enumerable: true,
-  get: function get() {
-    return _interopRequireDefault(_MAX_SAFE_INTEGER).default;
-  }
-});
+var _toInteger = _interopRequireDefault(__webpack_require__(6));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 219 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _toNumber.default;
+  }
+});
+
+var _toNumber = _interopRequireDefault(__webpack_require__(23));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 220 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "default", {
+  enumerable: true,
+  get: function get() {
+    return _toString.default;
+  }
+});
+
+var _toString = _interopRequireDefault(__webpack_require__(3));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+/***/ }),
+/* 221 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = union;
+
+var _accumulate2 = _interopRequireDefault(__webpack_require__(67));
+
+var _includes2 = _interopRequireDefault(__webpack_require__(28));
+
+var _push2 = _interopRequireDefault(__webpack_require__(27));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+var addNotIncluded = function _addNotIncluded(accumulator, value) {
+  if (!(0, _includes2.default)(accumulator, value)) {
+    (0, _push2.default)(accumulator, value);
+  }
+
+  return accumulator;
+};
+
+var reduceArgs = function _reduceArgs(accumulator, array) {
+  return (0, _accumulate2.default)((0, _requireObjectCoercible.default)(array), addNotIncluded, accumulator);
+};
+/**
+ * This method creates an array of unique values, in order, from all given
+ * arrays using SameValueZero for equality comparisons.
+ *
+ * @param {Array.<Array>} [arrays] - The arrays to inspect.
+ * @returns {Array} Returns the new array of combined values.
+ */
+
+
+function union() {
+  for (var _len = arguments.length, arrays = new Array(_len), _key = 0; _key < _len; _key++) {
+    arrays[_key] = arguments[_key];
+  }
+
+  return (0, _accumulate2.default)(arrays, reduceArgs, []);
+}
+
+/***/ }),
+/* 222 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = uniq;
+
+var _uniq2 = _interopRequireDefault(__webpack_require__(106));
+
+var _requireObjectCoercible = _interopRequireDefault(__webpack_require__(2));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var logger = __webpack_require__(0).get("caboodle-x");
+
+function uniq(array) {
+  return (0, _uniq2.default)((0, _requireObjectCoercible.default)(array));
+}
 
 /***/ })
 /******/ ]);

@@ -1,7 +1,6 @@
 import {toNumber} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -64,10 +63,7 @@ describe('toNumber', () => {
 
   describe('toNumber', () => {
     it('coersion', () => {
-      expect(Number.isNaN(toNumber(undefined))).toBe(
-        true,
-        'undefined coerces to NaN',
-      );
+      expect(Number.isNaN(toNumber(undefined))).toBe(true, 'undefined coerces to NaN');
       expect(toNumber(null)).toBe(0, 'null coerces to +0');
       expect(toNumber(false)).toBe(0, 'false coerces to +0');
       expect(toNumber(true)).toBe(1, 'true coerces to 1');
@@ -78,20 +74,12 @@ describe('toNumber', () => {
       expect(Number.isNaN(toNumber(NaN))).toBe(true, 'NaN returns itself');
 
       [0, -0, 42, Infinity, -Infinity].forEach((num) => {
-        expect(Object.is(toNumber(num), num)).toBe(
-          true,
-          `${num} returns itself`,
-        );
+        expect(Object.is(toNumber(num), num)).toBe(true, `${num} returns itself`);
       });
 
-      ['foo', '0', '4a', '2.0', 'Infinity', '-Infinity'].forEach(
-        (numString) => {
-          expect(Object.is(toNumber(numString), Number(numString))).toBe(
-            true,
-            `"${numString}" coerces to ${Number(numString)}`,
-          );
-        },
-      );
+      ['foo', '0', '4a', '2.0', 'Infinity', '-Infinity'].forEach((numString) => {
+        expect(Object.is(toNumber(numString), Number(numString))).toBe(true, `"${numString}" coerces to ${Number(numString)}`);
+      });
     });
 
     it('objects', () => {
@@ -175,29 +163,17 @@ describe('toNumber', () => {
 
     it('signed hex numbers', () => {
       expect(Number.isNaN(toNumber('-0xF'))).toBe(true, '-0xF is NaN');
-      expect(Number.isNaN(toNumber(' -0xF '))).toBe(
-        true,
-        'space-padded -0xF is NaN',
-      );
+      expect(Number.isNaN(toNumber(' -0xF '))).toBe(true, 'space-padded -0xF is NaN');
       expect(Number.isNaN(toNumber('+0xF'))).toBe(true, '+0xF is NaN');
-      expect(Number.isNaN(toNumber(' +0xF '))).toBe(
-        true,
-        'space-padded +0xF is NaN',
-      );
+      expect(Number.isNaN(toNumber(' +0xF '))).toBe(true, 'space-padded +0xF is NaN');
     });
 
     it('trimming of whitespace and non-whitespace characters', () => {
-      expect(toNumber(whitespace + 0 + whitespace)).toBe(
-        0,
-        'whitespace is trimmed',
-      );
+      expect(toNumber(whitespace + 0 + whitespace)).toBe(0, 'whitespace is trimmed');
 
       Object.keys(nonWhitespaces).forEach((desc) => {
         const nonWS = nonWhitespaces[desc];
-        expect(Number.isNaN(toNumber(nonWS + 0 + nonWS))).toBe(
-          true,
-          `non-whitespace ${desc} not trimmed`,
-        );
+        expect(Number.isNaN(toNumber(nonWS + 0 + nonWS))).toBe(true, `non-whitespace ${desc} not trimmed`);
       });
     });
 

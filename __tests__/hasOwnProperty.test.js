@@ -1,7 +1,6 @@
 import {hasOwnProperty} from '../index';
 
-const hasSymbolSupport =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbolSupport = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const itHasSymbolSupport = hasSymbolSupport ? it : xit;
 

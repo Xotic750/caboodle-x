@@ -1,7 +1,6 @@
 import {trim} from '../index';
 
-const hasSymbol =
-  typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
+const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
 const ifSymbolIt = hasSymbol ? it : xit;
 
@@ -30,16 +29,10 @@ describe('trim', () => {
       }).toThrowErrorMatchingSnapshot();
     });
 
-    it('Basic tests', () => {
-      expect(trim(' \t\na \t\n')).toBe(
-        'a',
-        'strips whitespace off the left and right side',
-      );
+    it('basic tests', () => {
+      expect(trim(' \t\na \t\n')).toBe('a', 'strips whitespace off the left and right side');
       expect(trim('a')).toBe('a', 'noop when no whitespace');
-      expect(trim(`${allWhitespaceChars}a${allWhitespaceChars}`)).toBe(
-        'a',
-        'all expected whitespace chars are trimmed',
-      );
+      expect(trim(`${allWhitespaceChars}a${allWhitespaceChars}`)).toBe('a', 'all expected whitespace chars are trimmed');
       const zeroWidth = '\u200b';
       expect(trim(zeroWidth)).toBe(zeroWidth, 'zero width space does not trim');
     });
@@ -49,7 +42,7 @@ describe('trim', () => {
 
       const expected = values.map(String);
       const actual = values.map(trim);
-      expect(actual).toEqual(expected);
+      expect(actual).toStrictEqual(expected);
     });
 
     it('should throw for Object.create(null)', () => {

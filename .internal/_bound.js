@@ -15,9 +15,7 @@ export default function _bound(binder, name, prototype, length) {
     'binder',
     '_apply',
     '_argsToArray',
-    `return function bound${name}(${_createArgList(
-      length,
-    )}){ return _apply(binder,this,_argsToArray(arguments)); }`,
+    `return function bound${name}(${_createArgList(length)}){ return _apply(binder,this,_argsToArray(arguments)); }`,
   )(binder, _apply, _argsToArray);
 
   if (prototype) {

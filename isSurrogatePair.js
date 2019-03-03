@@ -17,16 +17,6 @@ import _charCodeAt from './.internal/_charCodeAt';
  * @param {*} [args.char2] - The second character of a suspected surrogate pair.
  * @returns {boolean} Returns true if the two characters create a valid
  *  'UTF-16' surrogate pair; otherwise false.
- * @example
- * var isSurrogatePair = require('is-surrogate-pair-x');
- *
- * var test1 = 'a';
- * var test2 = '𠮟';
- *
- * isSurrogatePair(test1); // false
- * isSurrogatePair(test1.charAt(0), test1.charAt(1)); // false
- * isSurrogatePair(test2); // true
- * isSurrogatePair(test2.charAt(0), test2.charAt(1)); // true
  */
 export default function isSurrogatePair(...args) {
   const argsLength = args.length;
@@ -49,12 +39,7 @@ export default function isSurrogatePair(...args) {
   } else if (argsLength > 1) {
     const char2 = args[1];
 
-    if (
-      !isString(char1) ||
-      char1.length !== 1 ||
-      !isString(char2) ||
-      char2.length !== 1
-    ) {
+    if (!isString(char1) || char1.length !== 1 || !isString(char2) || char2.length !== 1) {
       return false;
     }
 
@@ -62,7 +47,5 @@ export default function isSurrogatePair(...args) {
     second = _charCodeAt(char2, 0);
   }
 
-  return (
-    first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff
-  );
+  return first >= 0xd800 && first <= 0xdbff && second >= 0xdc00 && second <= 0xdfff;
 }

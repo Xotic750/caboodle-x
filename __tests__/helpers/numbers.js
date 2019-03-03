@@ -9,14 +9,4 @@ import numberConstants from './numberConstants';
 import infinities from './infinities';
 import nonNaNNumbers from './nonNaNNumbers';
 
-export default Object.freeze([
-  -1.1,
-  -1,
-  0,
-  1,
-  1.1,
-  NaN,
-  ...numberConstants,
-  ...infinities,
-  ...nonNaNNumbers,
-]);
+export default Object.freeze([-1.1, -1, 0, 1, 1.1, NaN, ...numberConstants, ...infinities, ...nonNaNNumbers]);

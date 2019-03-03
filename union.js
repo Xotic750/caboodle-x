@@ -18,11 +18,7 @@ const addNotIncluded = function _addNotIncluded(accumulator, value) {
 };
 
 const reduceArgs = function _reduceArgs(accumulator, array) {
-  return _accumulate(
-    requireObjectCoercible(array),
-    addNotIncluded,
-    accumulator,
-  );
+  return _accumulate(requireObjectCoercible(array), addNotIncluded, accumulator);
 };
 
 /**
@@ -31,10 +27,6 @@ const reduceArgs = function _reduceArgs(accumulator, array) {
  *
  * @param {Array.<Array>} [arrays] - The arrays to inspect.
  * @returns {Array} Returns the new array of combined values.
- * @example
- * var union = require('array-union-x');
- *
- * union([2], [1, 2]); // => [2, 1]
  */
 export default function union(...arrays) {
   return _accumulate(arrays, reduceArgs, []);

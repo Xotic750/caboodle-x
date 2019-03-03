@@ -14,6 +14,7 @@ const doc = typeof document !== 'undefined' && document;
 let documentInheritsNode = false;
 let element;
 let hasChildNodes;
+
 /* istanbul ignore next */
 if (doc) {
   try {
@@ -27,6 +28,7 @@ if (doc) {
 }
 
 let tryAppendChild;
+
 /* istanbul ignore if */
 if (element && !documentInheritsNode) {
   hasChildNodes = _methodize(element.hasChildNodes);
@@ -42,13 +44,6 @@ if (element && !documentInheritsNode) {
  *
  * @param {*} value - The value to test.
  * @returns {boolean} True if a DOM Node, otherwise false.
- * @example
- * var isNode = require('is-node-x');
- *
- * isNode(); // => false
- * isNode({ nodeType: 1 }); // => false
- * isNode(document); // => true
- * isNode(document.createNode('div')); // => true
  */
 export default function isDOMNode(value) {
   if (hasChildNodes && value && isNumberType(value.nodeType)) {

@@ -13,11 +13,7 @@ export default function _any(array, callback, ...fromIndex) {
   const length = toWholeNumber(object.length);
 
   if (length) {
-    for (
-      let index = _fromIndex(object, fromIndex[0]);
-      index < length;
-      index += 1
-    ) {
+    for (let index = _fromIndex(object, fromIndex[0]); index < length; index += 1) {
       if (callback(object[index], index, object)) {
         return true;
       }

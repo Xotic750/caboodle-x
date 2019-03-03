@@ -32,26 +32,26 @@ describe('union', () => {
   });
 
   it('should return an empty array with n0 arguments', () => {
-    expect(union()).toEqual([]);
+    expect(union()).toStrictEqual([]);
   });
 
   it('should remain unchanged with only 1 argument', () => {
-    expect(union([1, 2, 3])).toEqual([1, 2, 3]);
+    expect(union([1, 2, 3])).toStrictEqual([1, 2, 3]);
   });
 
   it('should return the union of the given arrays', () => {
     const actual = union([1, 3, 2], [5, 2, 1, 4], [2, 1]);
-    expect(actual).toEqual([1, 3, 2, 5, 4]);
+    expect(actual).toStrictEqual([1, 3, 2, 5, 4]);
   });
 
   it('should not flatten nested arrays', () => {
     const actual = union([1, 3, 2], [1, [5]], [2, [4]]);
-    expect(actual).toEqual([1, 3, 2, [5], [4]]);
+    expect(actual).toStrictEqual([1, 3, 2, [5], [4]]);
   });
 
   it('should work with `arguments` objects', () => {
     const array = [0];
 
-    expect(union(array, args)).toEqual([0, 1, 2, 3]);
+    expect(union(array, args)).toStrictEqual([0, 1, 2, 3]);
   });
 });

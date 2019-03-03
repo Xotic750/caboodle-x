@@ -86,6 +86,7 @@ describe('isNumberFinite', () => {
     expect(isNumberFinite(toPrimitiveThrows)).toBe(false);
   });
 
+  /* eslint-disable-next-line jest/expect-expect */
   it('should not be confused by type coercion', () => {
     nonNumbers.map(isNumberFinite).forEach(expectFalse);
   });

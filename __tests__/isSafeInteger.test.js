@@ -6,26 +6,26 @@ describe('isSafeInteger', () => {
   });
 
   it('should return true', () => {
-    isSafeInteger(0);
-    isSafeInteger(-0);
-    isSafeInteger(1);
-    isSafeInteger(-100000);
-    isSafeInteger(Number.MAX_SAFE_INTEGER);
-    isSafeInteger(Number.MIN_SAFE_INTEGER);
+    expect(isSafeInteger(0)).toBe(true);
+    expect(isSafeInteger(-0)).toBe(true);
+    expect(isSafeInteger(1)).toBe(true);
+    expect(isSafeInteger(-100000)).toBe(true);
+    expect(isSafeInteger(Number.MAX_SAFE_INTEGER)).toBe(true);
+    expect(isSafeInteger(Number.MIN_SAFE_INTEGER)).toBe(true);
   });
 
   it('should return false', () => {
-    isSafeInteger(Number.MAX_SAFE_INTEGER + 1);
-    isSafeInteger(Number.MIN_SAFE_INTEGER - 1);
-    isSafeInteger(0.1);
-    isSafeInteger(-0.1);
-    isSafeInteger(Math.PI);
-    isSafeInteger(NaN);
-    isSafeInteger(Infinity);
-    isSafeInteger(-Infinity);
-    isSafeInteger('10');
-    isSafeInteger(true);
-    isSafeInteger(false);
-    isSafeInteger([1]);
+    expect(isSafeInteger(Number.MAX_SAFE_INTEGER + 1)).toBe(false);
+    expect(isSafeInteger(Number.MIN_SAFE_INTEGER - 1)).toBe(false);
+    expect(isSafeInteger(0.1)).toBe(false);
+    expect(isSafeInteger(-0.1)).toBe(false);
+    expect(isSafeInteger(Math.PI)).toBe(false);
+    expect(isSafeInteger(NaN)).toBe(false);
+    expect(isSafeInteger(Infinity)).toBe(false);
+    expect(isSafeInteger(-Infinity)).toBe(false);
+    expect(isSafeInteger('10')).toBe(false);
+    expect(isSafeInteger(true)).toBe(false);
+    expect(isSafeInteger(false)).toBe(false);
+    expect(isSafeInteger([1])).toBe(false);
   });
 });
