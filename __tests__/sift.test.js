@@ -85,10 +85,12 @@ describe('sift', () => {
         return true;
       });
 
-      expect(passedValues).toStrictEqual(testSubject);
+      const expected = [1, undefined, 3, 4];
+
+      expect(passedValues).toStrictEqual(expected);
     });
 
-    it('should pass the right context to the sift', () => {
+    it('should pass the correct context to the sift', () => {
       const passedValues = [];
       testSubject = [1, 2, 3, 4];
 
@@ -102,10 +104,12 @@ describe('sift', () => {
         }.bind(passedValues),
       );
 
-      expect(passedValues).toStrictEqual(testSubject);
+      const expected = [1, undefined, 3, 4];
+
+      expect(passedValues).toStrictEqual(expected);
     });
 
-    it('should set the right context when given none', () => {
+    it('should set the correct context when given none', () => {
       let context;
       sift([1], function() {
         /* eslint-disable-next-line babel/no-invalid-this */
@@ -188,10 +192,18 @@ describe('sift', () => {
         return true;
       });
 
-      expect(passedValues).toStrictEqual(testObject);
+      const expected = {
+        0: 1,
+        1: undefined,
+        2: 3,
+        3: 4,
+        length: 4,
+      };
+
+      expect(passedValues).toStrictEqual(expected);
     });
 
-    it('should set the right context when given none', () => {
+    it('should set the correct context when given none', () => {
       let context;
       sift(
         createArrayLike([1]),
@@ -225,7 +237,15 @@ describe('sift', () => {
         }.bind(passedValues),
       );
 
-      expect(passedValues).toStrictEqual(testObject);
+      const expected = {
+        0: 1,
+        1: undefined,
+        2: 3,
+        3: 4,
+        length: 4,
+      };
+
+      expect(passedValues).toStrictEqual(expected);
     });
 
     it('should remove only the values for which the callBack returns false', () => {

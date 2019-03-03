@@ -11,16 +11,17 @@ const itStrict = isStrict ? it : xit;
 
 const createArrayLike = function(arr) {
   const o = {};
-  arr.forEach((e, i) => {
-    o[i] = e;
-  });
+  const {length} = arr;
+  for (let i = 0; i < length; i += 1) {
+    o[i] = arr[i];
+  }
 
-  o.length = arr.length;
+  o.length = length;
 
   return o;
 };
 
-describe('each', () => {
+describe('all', () => {
   let actual;
   let expected;
   let testSubject;
@@ -28,6 +29,7 @@ describe('each', () => {
   beforeEach(() => {
     expected = {
       0: 2,
+      1: undefined,
       2: undefined,
       3: true,
       4: 'hej',
@@ -60,7 +62,7 @@ describe('each', () => {
     }).toThrowErrorMatchingSnapshot();
   });
 
-  it('should pass the right parameters', () => {
+  it('should pass the correct parameters', () => {
     const callback = jest.fn();
     const array = ['1'];
     all(array, callback);
@@ -80,7 +82,7 @@ describe('each', () => {
     expect(i).toBe(3);
   });
 
-  it('should set the right context when given none', () => {
+  it('should set the correct context when given none', () => {
     let context;
     all([1], function() {
       /* eslint-disable-next-line babel/no-invalid-this */
@@ -129,7 +131,7 @@ describe('each', () => {
 
   it('should iterate all in an array-like object using a context', () => {
     const ts = createArrayLike(testSubject);
-    const o = {a: actual};
+    const o = {a: {}};
 
     all(
       ts,
@@ -138,7 +140,7 @@ describe('each', () => {
       }.bind(o),
     );
 
-    expect(actual).toStrictEqual(expected);
+    expect(o.a).toStrictEqual(expected);
   });
 
   describe('strings', () => {
