@@ -27,8 +27,6 @@
     "lint-fix:all": "npm run lint-fix:css & npm run lint-fix",
     "security": "npm audit",
     "security-fix": "npm run security -- fix",
-    "precommit": "npm run security && npm run lint && npm test",
-    "prepush": "npm run precommit",
     "prettier-check": "eslint --print-config . | eslint-config-prettier-check",
     "production": "npm run clean && NODE_ENV=production webpack --bail --config webpack.config.js --progress --profile --colors",
     "report": "npm run clean && NODE_ENV=production webpack --bail --config webpack.config.js --progress --profile --colors --env.report",
