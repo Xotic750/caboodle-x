@@ -10,7 +10,7 @@ export default function _find(array, callback, ...fromIndex) {
   const result = {
     includes: false,
     index: -1,
-    /* eslint-disable-next-line no-void */
+
     value: void 0,
   };
 

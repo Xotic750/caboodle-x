@@ -11,3 +11,15 @@ exports[`Collections Set size throws TypeError when accessed directly 1`] = `"Se
 exports[`Collections Set size throws TypeError when accessed directly 2`] = `"SetObject is not defined"`;
 
 exports[`Collections Set size throws TypeError when called on wrong type 1`] = `"SetObject is not defined"`;
+
+exports[`collections map size throws TypeError when accessed directly 1`] = `"MapObject is not defined"`;
+
+exports[`collections map size throws TypeError when accessed directly 2`] = `"MapObject is not defined"`;
+
+exports[`collections map size throws TypeError when called on wrong type 1`] = `"MapObject is not defined"`;
+
+exports[`collections set size throws TypeError when accessed directly 1`] = `"SetObject is not defined"`;
+
+exports[`collections set size throws TypeError when accessed directly 2`] = `"SetObject is not defined"`;
+
+exports[`collections set size throws TypeError when called on wrong type 1`] = `"SetObject is not defined"`;

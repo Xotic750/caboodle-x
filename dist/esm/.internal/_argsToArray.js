@@ -8,11 +8,9 @@ import _all from './_all';
 export default function _argsToArray(args) {
   var array = [];
 
-  var iteratee = function _iteratee(arg) {
+  _all(args, function _iteratee(arg) {
     _push(array, arg);
-  };
-
-  _all(args, iteratee);
+  });
 
   return array;
 }

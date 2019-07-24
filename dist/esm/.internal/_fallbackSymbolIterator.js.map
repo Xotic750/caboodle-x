@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/.internal/_fallbackSymbolIterator.js"],"names":[],"mappings":"AAAA;;;;;AAMA,eAAe,YAAf","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module _fallbackSymbolIterator\n */\n\nexport default '@@iterator';\n"],"file":"_fallbackSymbolIterator.js"}

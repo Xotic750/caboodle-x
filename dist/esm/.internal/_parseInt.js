@@ -3,7 +3,7 @@
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _parseInt
  */
-import _toString from './_toString';
+import toStr from '../toString';
 import _trimLeft from './_trimLeft';
 import _Number from './_Number';
 import _charAt from './_charAt';
@@ -30,7 +30,7 @@ var hexPattern = /^[-+]?0x/i;
  */
 
 export default function _parseInt(string, radix) {
-  var str = _trimLeft(_toString(string));
+  var str = _trimLeft(toStr(string));
 
   if (_charAt(str, 0) === "\u180E") {
     return _NaN;

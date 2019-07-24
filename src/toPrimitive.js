@@ -58,7 +58,6 @@ const getMethod = function _getMethod(O, P) {
     return func;
   }
 
-  /* eslint-disable-next-line no-void */
   return void 0;
 };
 

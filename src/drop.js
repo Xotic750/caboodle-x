@@ -13,7 +13,6 @@ import _stringSlice from './.internal/_stringSlice';
 
 export default function drop(array, ...fromIndex) {
   if (!isArrayLike(requireObjectCoercible(array))) {
-    /* eslint-disable-next-line no-void */
     return void 0;
   }
 

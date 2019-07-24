@@ -12,13 +12,11 @@ var POST = '_$';
 export default function _createArgList(length) {
   var array = [];
 
-  var iteratee = function _iteratee(unused, index) {
-    _push(array, PRE + _String(index) + POST);
-  };
-
   _all({
     length: length
-  }, iteratee);
+  }, function _iteratee(unused, index) {
+    _push(array, PRE + _String(index) + POST);
+  });
 
   return _join(array, ',');
 }

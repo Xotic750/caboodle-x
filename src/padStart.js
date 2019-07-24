@@ -31,7 +31,7 @@ import _stringSlice from './.internal/_stringSlice';
 export default function padStart(string, targetLength, ...rest) {
   const str = _toString(requireObjectCoercible(string));
   const stringLength = toWholeNumber(str.length);
-  /* eslint-disable-next-line no-void */
+
   const fillString = rest.length ? rest[0] : void 0;
 
   let filler = isUndefined(fillString) ? '' : _toString(fillString);

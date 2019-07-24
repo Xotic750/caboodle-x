@@ -3,8 +3,8 @@
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module _head
  */
-import _getAt from './_getAt';
+import _nth from './_nth';
 export default function _head(array) {
-  return _getAt(array, 0);
+  return _nth(array, 0);
 }
 //# sourceMappingURL=_head.js.map

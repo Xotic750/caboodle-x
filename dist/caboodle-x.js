@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2018-present",
-  "date": "2019-07-24T19:52:09.828Z",
+  "date": "2019-07-24T20:58:03.880Z",
   "describe": "",
   "description": "A collection of modern utils.",
   "file": "caboodle-x.js",
-  "hash": "3fd6af041e84b952e62c",
+  "hash": "b1a92f06f9016a6c826e",
   "license": "MIT",
   "version": "2.0.0"
 }
@@ -577,6 +577,14 @@ module.exports = identity;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+var _collectionsBase_namespaceObject = {};
+__webpack_require__.r(_collectionsBase_namespaceObject);
+__webpack_require__.d(_collectionsBase_namespaceObject, "parseIterable", function() { return parseIterable; });
+__webpack_require__.d(_collectionsBase_namespaceObject, "forEach", function() { return _collectionsBase_forEach; });
+__webpack_require__.d(_collectionsBase_namespaceObject, "has", function() { return has; });
+__webpack_require__.d(_collectionsBase_namespaceObject, "clear", function() { return _collectionsBase_clear; });
+__webpack_require__.d(_collectionsBase_namespaceObject, "de1ete", function() { return _collectionsBase_de1ete; });
+__webpack_require__.d(_collectionsBase_namespaceObject, "addSet", function() { return addSet; });
 
 // CONCATENATED MODULE: ./dist/esm/.internal/_call.js
 /**
@@ -1140,11 +1148,6 @@ function assign_assign(target) {
  * presence in the specifications.
  *
  * @type Array.<CharRecord>
- * @example
- * var whiteSpace = require('white-space-x');
- * whiteSpaces.list.foreach(function (item) {
- *   console.log(lib.description, item.code, item.string);
- * });
  */
 
 var list = [{
@@ -1761,8 +1764,6 @@ var getMethod = function _getMethod(O, P) {
 
     return func;
   }
-  /* eslint-disable-next-line no-void */
-
 
   return void 0;
 }; // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive
@@ -2797,8 +2798,6 @@ function _find(array, callback) {
   var result = {
     includes: false,
     index: -1,
-
-    /* eslint-disable-next-line no-void */
     value: void 0
   };
 
@@ -3293,7 +3292,6 @@ function difference(array) {
 
 function drop(array) {
   if (!isArrayLike(requireObjectCoercible(array))) {
-    /* eslint-disable-next-line no-void */
     return void 0;
   }
 
@@ -3341,7 +3339,6 @@ function findIndex(array, callback) {
 
 function _getAt(array) {
   if (!isArrayLike(array)) {
-    /* eslint-disable-next-line no-void */
     return void 0;
   }
 
@@ -3435,7 +3432,6 @@ if (test1.name === 'test1') {
 
 
 function getFunctionName(fn) {
-  /* eslint-disable-next-line no-void */
   return isFunction(fn, true) ? getName(fn) : void 0;
 }
 
@@ -3481,7 +3477,7 @@ function head(array) {
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module identity
  */
-function identity(arg) {
+function identity_identity(arg) {
   return arg;
 }
 
@@ -3676,8 +3672,6 @@ function padStart(string, targetLength) {
   var str = _toString(requireCoercibleToString(string));
 
   var stringLength = toWholeNumber(str.length);
-  /* eslint-disable-next-line no-void */
-
   var fillString = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : void 0;
   var filler = isUndefined(fillString) ? '' : _toString(fillString);
 
@@ -5135,6 +5129,1787 @@ function uniq(array) {
   return _uniq(requireObjectCoercible(array));
 }
 
+// CONCATENATED MODULE: ./dist/esm/.internal/_Array.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _Array
+ */
+/* harmony default export */ var _Array = ([].constructor);
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_range.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _range
+ */
+
+var _range_max = Math.max,
+    _range_ceil = Math.ceil;
+/**
+ * The base implementation of `range` and `rangeRight` which doesn't
+ * coerce arguments.
+ *
+ * @private
+ * @param {number} start - The start of the range.
+ * @param {number} end - The end of the range.
+ * @param {number} step - The value to increment or decrement by.
+ * @param {boolean} [fromRight] - Specify iterating from right to left.
+ * @returns {Array} Returns the range of numbers.
+ */
+
+function _range(start, end, step, fromRight) {
+  var index = -1;
+  var length = _range_max(_range_ceil((end - start) / (step || 1)), 0);
+  var current = start;
+
+  var result = _Array(length);
+
+  while (length) {
+    length -= 1;
+    result[fromRight ? length : index += 1] = current;
+    current += step;
+  }
+
+  return result;
+}
+
+// CONCATENATED MODULE: ./dist/esm/toFinite.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module toFinite
+ */
+
+
+
+
+var MAX_INTEGER = 1.7976931348623157e308;
+function toFinite(value) {
+  if (!value) {
+    return value === 0 ? value : 0;
+  }
+
+  var number = _toNumber(value);
+
+  if (number === _Infinity || number === -_Infinity) {
+    return _sign(number) * MAX_INTEGER;
+  }
+
+  return _isNaN(number) ? 0 : number;
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_createRange.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _createRange
+ */
+
+
+
+var getInterval = function _getInterval(from, to) {
+  return from < to ? 1 : -1;
+};
+/**
+ * Creates a `range` or `rangeRight` function.
+ *
+ * @private
+ * @param {boolean} [fromRight] - Specify iterating from right to left.
+ * @returns {Function} Returns the new range function.
+ */
+
+
+function _createRange(fromRight) {
+  return function boundRange() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    var argsLength = args.length;
+    var start = args[0],
+        end = args[1],
+        step = args[2]; // Ensure the sign of `-0` is preserved.
+
+    var from = toFinite(start);
+    var to;
+
+    if (argsLength < 2) {
+      to = from;
+      from = 0;
+    } else {
+      to = toFinite(end);
+    }
+
+    var interval = argsLength < 3 ? getInterval(from, to) : toFinite(step);
+    return _range(from, to, interval, fromRight);
+  };
+}
+
+// CONCATENATED MODULE: ./dist/esm/range.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module range
+ */
+
+
+var rangeFn = _createRange();
+/**
+ * Creates an array of numbers (positive and/or negative) progressing from
+ * `start` up to, but not including, `end`. A step of `-1` is used if a negative
+ * `start` is specified without an `end` or `step`. If `end` is not specified,
+ * it's set to `start` with `start` then set to `0`.
+ *
+ * **Note:** JavaScript follows the IEEE-754 standard for resolving
+ * floating-point values which can produce unexpected results.
+ *
+ * @param {Array} [args] - The arguments array.
+ * @param {number} [args.start=0] - The start of the range.
+ * @param {number} args.end - The end of the range.
+ * @param {number} [args.step=1] - The value to increment or decrement by.
+ * @returns {Array} Returns the range of numbers.
+ */
+
+
+function range() {
+  return rangeFn.apply(void 0, arguments);
+}
+
+// CONCATENATED MODULE: ./dist/esm/rangeRight.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module rangeRight
+ */
+
+
+var rangeRight_rangeFn = _createRange(true);
+/**
+ * This method is like `range` except that it populates values in
+ * descending order.
+ *
+ * @param {Array} [args] - The arguments array.
+ * @param {number} [args.start=0] - The start of the range.
+ * @param {number} args.end - The end of the range.
+ * @param {number} [args.step=1] - The value to increment or decrement by.
+ * @returns {Array} Returns the range of numbers.
+ */
+
+
+function rangeRight() {
+  return rangeRight_rangeFn.apply(void 0, arguments);
+}
+
+// CONCATENATED MODULE: ./dist/esm/nth.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module nth
+ */
+
+
+function nth(array) {
+  for (var _len = arguments.length, position = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    position[_key - 1] = arguments[_key];
+  }
+
+  return _nth.apply(void 0, [requireObjectCoercible(array)].concat(position));
+}
+
+// CONCATENATED MODULE: ./dist/esm/isVarName.js
+/**
+ * @file Enumerated type library.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isVarName
+ */
+
+
+
+
+
+var attemptee = function _attemptee(string) {
+  _Function(string, "var ".concat(string));
+};
+
+function isVarName(string) {
+  if (!isStringType(string) || _trim(string) !== string) {
+    return false;
+  }
+
+  return !attempt(attemptee, string).threw;
+}
+
+// CONCATENATED MODULE: ./dist/esm/isDashed.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isDashed
+ */
+
+
+function isDashed(string) {
+  return is_string_default()(string) && _stringTest(string, '-');
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_uniSlice.js
+/**
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _uniSlice
+ */
+
+
+
+function _uniSlice(arrayLike) {
+  for (var _len = arguments.length, rest = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    rest[_key - 1] = arguments[_key];
+  }
+
+  return (is_string_default()(arrayLike) ? _stringSlice : _slice).apply(void 0, [arrayLike].concat(rest));
+}
+
+// CONCATENATED MODULE: ./dist/esm/dropRight.js
+/**
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module dropRight
+ */
+
+
+
+
+
+function dropRight(array) {
+  if (!isArrayLike(requireObjectCoercible(array))) {
+    return void 0;
+  }
+
+  var stop = (arguments.length <= 1 ? 0 : arguments.length - 1) ? _toInteger(arguments.length <= 1 ? undefined : arguments[1]) : 1;
+  var args = [0];
+
+  if (stop >= array.length) {
+    _push(args, 0);
+  } else if (stop > 0) {
+    _push(args, -stop);
+  }
+
+  return _uniSlice.apply(void 0, [array].concat(args));
+}
+
+// CONCATENATED MODULE: ./dist/esm/initial.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module initial
+ */
+
+function initial(array) {
+  return dropRight(array);
+}
+
+// CONCATENATED MODULE: ./dist/esm/final.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module final
+ */
+
+function final_final(array) {
+  return drop(array);
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_es6ShimIterator.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _es6ShimIterator
+ */
+/* harmony default export */ var _es6ShimIterator = ('_es6-shim iterator_');
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_fallbackSymbolIterator.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _fallbackSymbolIterator
+ */
+/* harmony default export */ var _fallbackSymbolIterator = ('@@iterator');
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_hasRealSymbolIterator.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _hasRealSymbolIterator
+ */
+
+
+/* harmony default export */ var _hasRealSymbolIterator = (isSymbolSupported && isSymbolType(Symbol.iterator));
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_hasFakeSymbolIterator.js
+function _hasFakeSymbolIterator_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _hasFakeSymbolIterator_typeof = function _typeof(obj) { return typeof obj; }; } else { _hasFakeSymbolIterator_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _hasFakeSymbolIterator_typeof(obj); }
+
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _hasFakeSymbolIterator
+ */
+
+/* harmony default export */ var _hasFakeSymbolIterator = ((typeof Symbol === "undefined" ? "undefined" : _hasFakeSymbolIterator_typeof(Symbol)) === 'object' && isStringType(Symbol.iterator));
+
+// CONCATENATED MODULE: ./dist/esm/symbolIterator.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module symbolIterator
+ */
+
+
+
+
+
+
+/* harmony default export */ var symbolIterator = ((function _getSymIt() {
+  if (_hasRealSymbolIterator || _hasFakeSymbolIterator) {
+    return Symbol.iterator;
+  }
+
+  return isFunction(_Array.prototype[_es6ShimIterator]) ? _es6ShimIterator : _fallbackSymbolIterator;
+})());
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_freeze.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _freeze
+ */
+/* harmony default export */ var _freeze = (Object.freeze);
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_forEach.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _forEach
+ */
+
+/* harmony default export */ var _forEach = (_methodize(Array.prototype.forEach));
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_stringify.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _stringify
+ */
+/* harmony default export */ var _stringify = (JSON.stringify);
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_reverse.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _reverse
+ */
+
+/* harmony default export */ var _reverse = (_methodize(Array.prototype.reverse));
+
+// CONCATENATED MODULE: ./dist/esm/BigCounter.js
+/**
+ * @file A big counter.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module BigCounter
+ */
+
+
+
+
+var BigCounter_floor = Math.floor;
+/**
+ * Incremental integer counter. Counts from `0` to very big intergers.
+ * Javascript´s number type allows you to count in integer steps
+ * from `0` to `9007199254740991`. As of ES5, Strings can contain
+ * approximately 65000 characters and ES6 is supposed to handle
+ * the `MAX_SAFE_INTEGER` (though I don´t believe any environments supports
+ * this). This counter represents integer values as strings and can therefore
+ * count in integer steps from `0` to the maximum string length (that´s some
+ * 65000 digits). In the lower range, upto `9007199254740991`, the strings can
+ * be converted to safe Javascript integers `Number(value)` or `+value`. This
+ * counter is great for any applications that need a really big count
+ * represented as a string, (an ID string).
+ *
+ * @class
+ */
+
+function BigCounter() {
+  if (!this || !(this instanceof BigCounter)) {
+    throw new TypeError('Constructor BigCounter requires "new"');
+  }
+
+  _defineProperties(this, {
+    count: {
+      value: [0]
+    }
+  });
+}
+/**
+ * Serialise the counter´s current value.
+ *
+ * @private
+ * @this BigCounter
+ * @returns {string} A string representation of an integer.
+ */
+
+var counterToString = function _counterToString() {
+  return _join(_reverse(_slice(this.count)), '');
+};
+
+_defineProperties(BigCounter.prototype, {
+  /**
+   * Gets the counter´s current value.
+   *
+   * @function
+   * @returns {string} A string representation of an integer.
+   */
+  get: {
+    value: counterToString
+  },
+
+  /**
+   * Increments the counter´s value by `1`.
+   *
+   * @function
+   * @returns {object} The counter object.
+   */
+  next: {
+    value: function next() {
+      var clone = _slice(this.count);
+
+      this.count.length = 0;
+      var howMany = clone.length;
+      var carry = 0;
+      var index = 0;
+
+      while (index < howMany || carry) {
+        var zi = carry + (clone[index] || 0) + (index === 0);
+        this.count[this.count.length] = zi % 10;
+        carry = BigCounter_floor(zi / 10);
+        index += 1;
+      }
+
+      return this;
+    }
+  },
+
+  /**
+   * Resets the counter back to `0`.
+   *
+   * @function
+   * @returns {object} The counter object.
+   */
+  reset: {
+    value: function reset() {
+      this.count.length = 1;
+      this.count[0] = 0;
+      return this;
+    }
+  },
+
+  /**
+   * Gets the counter´s current value.
+   *
+   * @function
+   * @returns {string} A string representation of an integer.
+   */
+  toJSON: {
+    value: counterToString
+  },
+
+  /**
+   * Gets the counter´s current value.
+   *
+   * @function
+   * @returns {string} A string representation of an integer.
+   */
+  toString: {
+    value: counterToString
+  },
+
+  /**
+   * Gets the counter´s current value.
+   *
+   * @function
+   * @returns {string} A string representation of an integer.
+   */
+  valueOf: {
+    value: counterToString
+  }
+});
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_getSymbolIterator.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _getSymbolIterator
+ */
+
+
+
+
+
+
+function _getSymbolIterator(iterable) {
+  if (!isNil(iterable)) {
+    if ((_hasRealSymbolIterator || _hasFakeSymbolIterator) && iterable[symbolIterator]) {
+      return symbolIterator;
+    }
+
+    if (iterable[_es6ShimIterator]) {
+      return _es6ShimIterator;
+    }
+
+    if (iterable[_fallbackSymbolIterator]) {
+      return _fallbackSymbolIterator;
+    }
+  }
+
+  return void 0;
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_occurs.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _occurs
+ */
+
+
+function _occurs(array, value) {
+  return _find(array, function _predicate(item) {
+    return sameValueZero(value, item);
+  });
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_splice.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _splice
+ */
+
+/* harmony default export */ var _splice = (_methodize(Array.prototype.splice));
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_collectionsBase.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _collectionsBase
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * If an iterable object is passed, all of its elements will be added to the
+ * new Map/Set, null is treated as undefined.
+ *
+ * @private
+ * @param {string} kind - Either 'map' or 'set'.
+ * @param {Object} context - The Map/Set object.
+ * @param {*} iterable - Value to parsed.
+ */
+
+function parseIterable(kind, context, iterable) {
+  if (kind === 'map') {
+    _defineProperty(context, '[[value]]', {
+      value: []
+    });
+  }
+
+  _defineProperties(context, {
+    '[[changed]]': {
+      value: false
+    },
+    '[[id]]': {
+      value: new BigCounter()
+    },
+    '[[kind]]': {
+      value: kind
+    },
+    '[[key]]': {
+      value: []
+    },
+    '[[order]]': {
+      value: []
+    }
+  });
+
+  var property = _getSymbolIterator(iterable);
+
+  if (iterable && isFunction(iterable[property])) {
+    var iterator = iterable[property]();
+    var next = iterator.next();
+
+    if (kind === 'map') {
+      if (!isArrayLike(next.value) || next.value.length < 2) {
+        throw new TypeError("Iterator value ".concat(next.value, " is not an entry object"));
+      }
+    }
+
+    while (!next.done) {
+      var key = kind === 'map' ? next.value[0] : next.value;
+
+      var occurred = _occurs(assertIsObjectLike(context)['[[key]]']);
+
+      if (!occurred.includes) {
+        if (kind === 'map') {
+          _push(context['[[value]]'], next.value[1]);
+        }
+
+        _push(context['[[key]]'], key);
+
+        _push(context['[[order]]'], context['[[id]]'].get());
+
+        context['[[id]]'].next();
+      } else if (kind === 'map') {
+        // eslint-disable-next-line no-param-reassign
+        context['[[value]]'][occurred.index] = _nth(next.value, 1);
+      }
+
+      next = iterator.next();
+    }
+  } else if (isStringType(iterable)) {
+    if (kind === 'map') {
+      throw new TypeError("Iterator value ".concat(_charAt(iterable, 0), " is not an entry object"));
+    }
+
+    var _next = 0;
+
+    while (_next < iterable.length) {
+      var char1 = _charAt(iterable, _next);
+
+      var char2 = _charAt(iterable, _next + 1);
+
+      var _key = void 0;
+
+      if (isSurrogatePair(char1, char2)) {
+        _key = char1 + char2;
+        _next += 1;
+      } else {
+        _key = char1;
+      }
+
+      if (!_occurs(assertIsObjectLike(context)['[[key]]'], _key).includes) {
+        _push(context['[[key]]'], _key);
+
+        _push(context['[[order]]'], context['[[id]]'].get());
+
+        context['[[id]]'].next();
+      }
+
+      _next += 1;
+    }
+  } else if (isArrayLike(iterable)) {
+    var _next2 = 0;
+
+    while (_next2 < iterable.length) {
+      if (kind === 'map' && isPrimitive(iterable[_next2])) {
+        throw new TypeError("Iterator value ".concat(_next2.value, " is not an entry object"));
+      }
+
+      var _key2 = kind === 'map' ? iterable[_next2][0] : iterable[_next2];
+
+      var _occurred = _occurs(assertIsObjectLike(context)['[[key]]'], _key2);
+
+      if (!_occurred.includes) {
+        if (kind === 'map') {
+          _push(context['[[value]]'], iterable[_next2][1]);
+        }
+
+        _push(context['[[key]]'], _key2);
+
+        _push(context['[[order]]'], context['[[id]]'].get());
+
+        context['[[id]]'].next();
+      } else if (kind === 'map') {
+        // eslint-disable-next-line no-param-reassign
+        context['[[value]]'][_occurred.index] = _nth(iterable[_next2], 1);
+      }
+
+      _next2 += 1;
+    }
+  }
+}
+/**
+ * The base forEach method executes a provided function once per each value
+ * in the Map/Set object, in insertion order.
+ *
+ * @private
+ * @param {string} kind - Either 'map' or 'set'.
+ * @param {Object} context - The Map/Set object.
+ * @param {Function} callback - Function to execute for each element.
+ * @param {*} [thisArg] - Value to use as this when executing callback.
+ * @returns {Object} The Map/Set object.
+ */
+
+function _collectionsBase_forEach(kind, context, callback, thisArg) {
+  assertIsObjectLike(context);
+  _assertIsFunction(callback);
+  var pointers = {
+    index: 0,
+    order: context['[[order]]'][0]
+  }; // eslint-disable-next-line no-param-reassign
+
+  context['[[change]]'] = false;
+  var keyLength = context['[[key]]'].length;
+
+  while (pointers.index < keyLength) {
+    if (_hasOwnProperty(context['[[key]]'], pointers.index)) {
+      var key = context['[[key]]'][pointers.index];
+      var value = kind === 'map' ? context['[[value]]'][pointers.index] : key;
+      callback.call(thisArg, value, key, context);
+    }
+
+    if (context['[[change]]']) {
+      keyLength = context['[[key]]'].length;
+
+      _any(context['[[order]]'], function _predicate(id, count) {
+        pointers.index = count;
+        return id > pointers.order;
+      }); // eslint-disable-next-line no-param-reassign
+
+
+      context['[[change]]'] = false;
+    } else {
+      pointers.index += 1;
+    }
+
+    pointers.order = context['[[order]]'][pointers.index];
+  }
+
+  return context;
+}
+/**
+ * The base has method returns a boolean indicating whether an element with
+ * the specified key/value exists in a Map/Set object or not.
+ *
+ * @private
+ * @param {*} key - The key/value to test for presence in the Map/Set object.
+ * @returns {boolean} Returns true if an element with the specified key/value
+ *  exists in the Map/Set object; otherwise false.
+ */
+
+function has(key) {
+  return _occurs(assertIsObjectLike(this)['[[key]]'], key).includes;
+}
+/**
+ * The base clear method removes all elements from a Map/Set object.
+ *
+ * @private
+ * @param {string} kind - Either 'map' or 'set'.
+ * @param {Object} context - The Map/Set object.
+ * @returns {Object} The Map/Set object.
+ */
+
+function _collectionsBase_clear(kind, context) {
+  assertIsObjectLike(context);
+  context['[[id]]'].reset(); // eslint-disable-next-line no-param-reassign
+
+  context['[[change]]'] = true; // eslint-disable-next-line no-param-reassign
+
+  context['[[order]]'].length = 0; // eslint-disable-next-line no-param-reassign
+
+  context['[[key]]'].length = 0;
+
+  if (kind === 'map') {
+    // eslint-disable-next-line no-param-reassign
+    context['[[value]]'].length = 0;
+  }
+
+  return context;
+}
+/**
+ * The base delete method removes the specified element from a Map/Set object.
+ *
+ * @private
+ * @param {string} kind - Either 'map' or 'set'.
+ * @param {Object} context - The Map/Set object.
+ * @param {*} key - The key/value of the element to remove from Map/Set object.
+ * @returns {Object} The Map/Set object.
+ */
+
+function _collectionsBase_de1ete(kind, context, key) {
+  var occurred = _occurs(assertIsObjectLike(context)['[[key]]'], key);
+
+  if (occurred.includes) {
+    if (kind === 'map') {
+      _splice(context['[[value]]'], occurred.index, 1);
+    }
+
+    _splice(context['[[key]]'], occurred.index, 1);
+
+    _splice(context['[[order]]'], occurred.index, 1); // eslint-disable-next-line no-param-reassign
+
+
+    context['[[change]]'] = true;
+    return true;
+  }
+
+  return false;
+}
+/**
+ * The base set and add method.
+ *
+ * @private
+ * @param {string} kind - Either 'map' or 'set'.
+ * @param {Object} context - The Map/Set object.
+ * @param {*} key - The key or value of the element to add/set on the object.
+ * @param {*} value - The value of the element to add to the Map object.
+ * @returns {Object} The Map/Set object.
+ */
+
+function addSet(kind, context, key, value) {
+  var occurred = _occurs(assertIsObjectLike(context)['[[key]]'], key);
+
+  if (occurred.includes) {
+    if (kind === 'map') {
+      // eslint-disable-next-line no-param-reassign
+      context['[[value]]'][occurred.index] = value;
+    }
+  } else {
+    if (kind === 'map') {
+      _push(context['[[value]]'], value);
+    }
+
+    _push(context['[[key]]'], key);
+
+    _push(context['[[order]]'], context['[[id]]'].get());
+
+    context['[[id]]'].next(); // eslint-disable-next-line no-param-reassign
+
+    context['[[change]]'] = true;
+  }
+
+  return context;
+}
+
+// CONCATENATED MODULE: ./dist/esm/Set.js
+/**
+ * @file ES6 Set.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module Set
+ */
+
+
+
+
+
+
+/**
+ * An object is an iterator when it knows how to access items from a
+ * collection one at a time, while keeping track of its current position
+ * within that sequence. In JavaScript an iterator is an object that provides
+ * a next() method which returns the next item in the sequence. This method
+ * returns an object with two properties: Done and value. Once created,
+ * an iterator object can be used explicitly by repeatedly calling next().
+ *
+ * @private
+ * @class
+ * @param {object} context - The Set object.
+ * @param {string} iteratorKind - Values are `value`, `key` or `key+value`.
+ */
+
+var SetIt = function SetIterator(context, iteratorKind) {
+  _defineProperties(this, {
+    '[[IteratorHasMore]]': {
+      value: true,
+      writable: true
+    },
+    '[[Set]]': {
+      value: assertIsObjectLike(context)
+    },
+    '[[SetIterationKind]]': {
+      value: iteratorKind || 'value'
+    },
+    '[[SetNextIndex]]': {
+      value: 0,
+      writable: true
+    }
+  });
+};
+/**
+ * Once initialized, the next() method can be called to access key-value
+ * pairs from the object in turn.
+ *
+ * @private
+ * @function next
+ * @returns {object} Returns an object with two properties: done and value.
+ */
+
+
+_defineProperty(SetIt.prototype, 'next', {
+  value: function next() {
+    var context = assertIsObjectLike(this['[[Set]]']);
+    var index = this['[[SetNextIndex]]'];
+
+    if (this['[[IteratorHasMore]]'] && index < context['[[key]]'].length) {
+      var object = {
+        done: false
+      };
+      var value = context['[[key]]'][index];
+      object.value = this['[[SetIterationKind]]'] === 'key+value' ? [value, value] : value;
+      this['[[SetNextIndex]]'] += 1;
+      return object;
+    }
+
+    this['[[IteratorHasMore]]'] = false;
+    return {
+      done: true,
+      value: void 0
+    };
+  }
+});
+/**
+ * The @@iterator property is the same Iterator object.
+ *
+ * @private
+ * @function symIt
+ * @returns {object} This Iterator object.
+ */
+
+
+_defineProperty(SetIt.prototype, symbolIterator, {
+  value: function iterator() {
+    /* istanbul ignore next */
+    return this;
+  }
+});
+/**
+ * This method returns a new Iterator object that contains the
+ * values for each element in the Set object in insertion order.
+ *
+ * @private
+ * @this Set
+ * @returns {object} A new Iterator object.
+ */
+
+
+var setValuesIterator = function values() {
+  return new SetIt(this);
+};
+/**
+ * The Set object lets you store unique values of any type, whether primitive
+ * values or object references.
+ *
+ * @class Set
+ * @private
+ * @param {*} [iterable] - If an iterable object is passed, all of its elements
+ * will be added to the new Set, null is treated as undefined.
+ */
+
+
+function Set() {
+  if (!this || !(this instanceof Set)) {
+    throw new TypeError("Constructor Set requires 'new'");
+  }
+
+  parseIterable('set', this, arguments.length ? arguments.length <= 0 ? undefined : arguments[0] : void 0);
+}
+
+_defineProperty(Set, 'SYMBOL_ITERATOR', {
+  value: symbolIterator
+});
+
+_defineProperties(Set.prototype,
+/** @lends Set.prototype */
+{
+  /**
+   * The add() method appends a new element with a specified value to the end
+   * of a Set object.
+   *
+   * @param {*} value - Required. The value of the element to add to the Set
+   *  object.
+   * @returns {object} The Set object.
+   */
+  add: {
+    value: function add(value) {
+      return addSet('set', this, value);
+    }
+  },
+
+  /**
+   * The clear() method removes all elements from a Set object.
+   *
+   * @returns {object} The Set object.
+   */
+  clear: {
+    value: function clear() {
+      return _collectionsBase_clear('set', this);
+    }
+  },
+
+  /**
+   * The delete() method removes the specified element from a Set object.
+   *
+   * @param {*} value - The value of the element to remove from the Set object.
+   * @returns {boolean} Returns true if an element in the Set object has been
+   *  removed successfully; otherwise false.
+   */
+  delete: {
+    value: function de1ete(value) {
+      return _collectionsBase_de1ete('set', this, value);
+    }
+  },
+
+  /**
+   * The entries() method returns a new Iterator object that contains an
+   * array of [value, value] for each element in the Set object, in
+   * insertion order. For Set objects there is no key like in Map objects.
+   * However, to keep the API similar to the Map object, each entry has the
+   * same value for its key and value here, so that an array [value, value]
+   * is returned.
+   *
+   * @function
+   * @returns {object} A new Iterator object.
+   */
+  entries: {
+    value: function entries() {
+      return new SetIt(this, 'key+value');
+    }
+  },
+
+  /**
+   * The forEach() method executes a provided function once per each value
+   * in the Set object, in insertion order.
+   *
+   * @param {Function} callback - Function to execute for each element.
+   * @param {*} [thisArg] - Value to use as this when executing callback.
+   * @returns {object} The Set object.
+   */
+  forEach: {
+    value: function forEach(callback) {
+      for (var _len = arguments.length, thisArg = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        thisArg[_key - 1] = arguments[_key];
+      }
+
+      return _collectionsBase_forEach.apply(_collectionsBase_namespaceObject, ['set', this, callback].concat(thisArg));
+    }
+  },
+
+  /**
+   * The has() method returns a boolean indicating whether an element with the
+   * specified value exists in a Set object or not.
+   *
+   * @function
+   * @param {*} value - The value to test for presence in the Set object.
+   * @returns {boolean} Returns true if an element with the specified value
+   *  exists in the Set object; otherwise false.
+   */
+  has: {
+    value: has
+  },
+
+  /**
+   * The keys() method is an alias for the `values` method (for similarity
+   * with Map objects), it behaves exactly the same and returns values of Set elements.
+   *
+   * @function
+   * @returns {object} A new Iterator object.
+   */
+  keys: {
+    value: setValuesIterator
+  },
+
+  /**
+   * The value of size is an integer representing how many entries the Set
+   * object has.
+   *
+   * @name size
+   * @instance
+   * @type {number}
+   */
+  size: {
+    get: function size() {
+      if (!this || !_isArray(this['[[key]]']) || this['[[kind]]'] !== 'set') {
+        throw new ReferenceError('SetObject is not defined');
+      }
+
+      return this['[[key]]'].length;
+    }
+  },
+
+  /**
+   * The values() method returns a new Iterator object that contains the
+   * values for each element in the Set object in insertion order.
+   *
+   * @function
+   * @returns {object} A new Iterator object.
+   */
+  values: {
+    value: setValuesIterator
+  }
+});
+/**
+ * The initial value of the @@iterator property is the same function object
+ * as the initial value of the values property.
+ *
+ * @function symIt
+ * @returns {object} A new Iterator object.
+ */
+
+
+_defineProperty(Set.prototype, symbolIterator, {
+  value: setValuesIterator
+});
+
+// CONCATENATED MODULE: ./dist/esm/Map.js
+/**
+ * @file ES6 Map.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module Map
+ */
+
+
+
+
+
+
+
+/**
+ * An object is an iterator when it knows how to access items from a
+ * collection one at a time, while keeping track of its current position
+ * within that sequence. In JavaScript an iterator is an object that provides
+ * a next() method which returns the next item in the sequence. This method
+ * returns an object with two properties: Done and value. Once created,
+ * an iterator object can be used explicitly by repeatedly calling next().
+ *
+ * @private
+ * @class
+ * @param {object} context - The Map object.
+ * @param {string} iteratorKind - Values are `value`, `key` or `key+value`.
+ */
+
+var MapIt = function MapIterator(context, iteratorKind) {
+  _defineProperties(this, {
+    '[[IteratorHasMore]]': {
+      value: true,
+      writable: true
+    },
+    '[[Map]]': {
+      value: assertIsObjectLike(context)
+    },
+    '[[MapIterationKind]]': {
+      value: iteratorKind
+    },
+    '[[MapNextIndex]]': {
+      value: 0,
+      writable: true
+    }
+  });
+};
+/**
+ * Once initialized, the next() method can be called to access key-value
+ * pairs from the object in turn.
+ *
+ * @private
+ * @function next
+ * @returns {object} Returns an object with two properties: done and value.
+ */
+
+
+_defineProperty(MapIt.prototype, 'next', {
+  value: function next() {
+    var context = assertIsObjectLike(this['[[Map]]']);
+    assertIsObjectLike(context);
+    var index = this['[[MapNextIndex]]'];
+
+    if (this['[[IteratorHasMore]]'] && index < context['[[key]]'].length) {
+      var object = {
+        done: false
+      };
+      var iteratorKind = this['[[MapIterationKind]]'];
+      object.value = iteratorKind === 'key+value' ? [context['[[key]]'][index], context['[[value]]'][index]] : context["[[".concat(iteratorKind, "]]")][index];
+      this['[[MapNextIndex]]'] += 1;
+      return object;
+    }
+
+    this['[[IteratorHasMore]]'] = false;
+    return {
+      done: true,
+      value: void 0
+    };
+  }
+});
+/**
+ * The @@iterator property is the same Iterator object.
+ *
+ * @private
+ * @function symIt
+ * @returns {object} This Iterator object.
+ */
+
+
+_defineProperty(MapIt.prototype, symbolIterator, {
+  value: function iterator() {
+    /* istanbul ignore next */
+    return this;
+  }
+});
+/**
+ * The Map object is a simple key/value map. Any value (both objects and
+ * primitive values) may be used as either a key or a value.
+ *
+ * @class Map
+ * @private
+ * @param {*} [iterable] - Iterable is an Array or other iterable object whose
+ *  elements are key-value pairs (2-element Arrays). Each key-value pair is
+ *  added to the new Map, null is treated as undefined.
+ */
+
+
+function Map() {
+  if (!this || !(this instanceof Map)) {
+    throw new TypeError("Constructor Map requires 'new'");
+  }
+
+  parseIterable('map', this, arguments.length ? arguments.length <= 0 ? undefined : arguments[0] : void 0);
+}
+
+_defineProperty(Map, 'SYMBOL_ITERATOR', {
+  value: symbolIterator
+});
+
+_defineProperties(Map.prototype,
+/** @lends Map.prototype */
+{
+  /**
+   * The clear() method removes all elements from a Map object.
+   *
+   * @returns {object} The Map object.
+   */
+  clear: {
+    value: function clear() {
+      return _collectionsBase_clear('map', this);
+    }
+  },
+
+  /**
+   * The delete() method removes the specified element from a Map object.
+   *
+   * @param {*} key - The key of the element to remove from the Map object.
+   * @returns {boolean} Returns true if an element in the Map object has been
+   *  removed successfully.
+   */
+  delete: {
+    value: function de1ete(key) {
+      return _collectionsBase_de1ete('map', this, key);
+    }
+  },
+
+  /**
+   * The entries() method returns a new Iterator object that contains the
+   * [key, value] pairs for each element in the Map object in insertion order.
+   *
+   * @returns {object} A new Iterator object.
+   */
+  entries: {
+    value: function entries() {
+      return new MapIt(this, 'key+value');
+    }
+  },
+
+  /**
+   * The forEach() method executes a provided function once per each
+   * key/value pair in the Map object, in insertion order.
+   *
+   * @param {Function} callback - Function to execute for each element..
+   * @param {*} [thisArg] - Value to use as this when executing callback.
+   * @returns {object} The Map object.
+   */
+  forEach: {
+    value: function forEach(callback) {
+      for (var _len = arguments.length, thisArg = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        thisArg[_key - 1] = arguments[_key];
+      }
+
+      return _collectionsBase_forEach.apply(_collectionsBase_namespaceObject, ['map', this, callback].concat(thisArg));
+    }
+  },
+
+  /**
+   * The get() method returns a specified element from a Map object.
+   *
+   * @param {*} key - The key of the element to return from the Map object.
+   * @returns {*} Returns the element associated with the specified key or
+   *  undefined if the key can't be found in the Map object.
+   */
+  get: {
+    value: function get(key) {
+      var occurred = _occurs(assertIsObjectLike(this)['[[key]]'], key);
+
+      return occurred.includes ? this['[[value]]'][occurred.index] : void 0;
+    }
+  },
+
+  /**
+   * The has() method returns a boolean indicating whether an element with
+   * the specified key exists or not.
+   *
+   * @function
+   * @param {*} key - The key of the element to test for presence in the Map object.
+   * @returns {boolean} Returns true if an element with the specified key
+   *  exists in the Map object; otherwise false.
+   */
+  has: {
+    value: has
+  },
+
+  /**
+   * The keys() method returns a new Iterator object that contains the keys
+   * for each element in the Map object in insertion order.
+   *
+   * @returns {object} A new Iterator object.
+   */
+  keys: {
+    value: function keys() {
+      return new MapIt(this, 'key');
+    }
+  },
+
+  /**
+   * The set() method adds a new element with a specified key and value to
+   * a Map object.
+   *
+   * @param {*} key - The key of the element to add to the Map object.
+   * @param {*} value - The value of the element to add to the Map object.
+   * @returns {object} The Map object.
+   */
+  set: {
+    value: function set(key, value) {
+      return addSet('map', this, key, value);
+    }
+  },
+
+  /**
+   * The value of size is an integer representing how many entries the Map
+   * object has.
+   *
+   * @name size
+   * @instance
+   * @type {number}
+   */
+  size: {
+    get: function size() {
+      if (!this || !_isArray(this['[[key]]']) || this['[[kind]]'] !== 'map') {
+        throw new ReferenceError('MapObject is not defined');
+      }
+
+      return this['[[key]]'].length;
+    }
+  },
+
+  /**
+   * The values() method returns a new Iterator object that contains the
+   * values for each element in the Map object in insertion order.
+   *
+   * @returns {object} A new Iterator object.
+   */
+  values: {
+    value: function values() {
+      return new MapIt(this, 'value');
+    }
+  }
+});
+/**
+ * The initial value of the @@iterator property is the same function object
+ * as the initial value of the entries property.
+ *
+ * @function symIt
+ * @returns {object} A new Iterator object.
+ */
+
+
+_defineProperty(Map.prototype, symbolIterator, {
+  value: Map.prototype.entries
+});
+
+// CONCATENATED MODULE: ./dist/esm/Enum.js
+/**
+ * @file Enumerated type library.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module Enum
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var RESERVED_NAME = 'Reserved name: ';
+var reserved = new Set(['forEach', 'name', 'toJSON', 'toString', 'value', 'valueOf']);
+/* istanbul ignore next */
+
+if (_hasFakeSymbolIterator) {
+  reserved.add(symbolIterator);
+}
+/**
+ * An enumeration is a set of symbolic names (members) bound to unique, constant
+ * values. Within an enumeration, the members can be compared by identity, and
+ * the enumeration itself can be iterated over.
+ * Influenced by Python's Enum implementation.
+ *
+ * Create an enum name/value. Not usually called directly.
+ *
+ * @see {@link https://docs.python.org/3/library/enum.html}
+ * @param {Array} args - The arguments array.
+ * @param {string} args.name - The name of the enum.
+ * @param {*} args.value - The value of the enum.
+ * @returns {object} The enum.
+ */
+
+
+function Enum() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  if (args.length) {
+    var name = args[0],
+        value = args[1];
+    var key = toPropertyKey(name);
+
+    if (reserved.has(key)) {
+      throw new SyntaxError(RESERVED_NAME + key);
+    }
+
+    _defineProperties(this, {
+      name: {
+        enumerable: true,
+        value: key
+      },
+      value: {
+        enumerable: true,
+        value: value
+      }
+    });
+
+    _freeze(this);
+  }
+}
+
+_defineProperty(Enum, 'SYMBOL_ITERATOR', {
+  value: symbolIterator
+});
+
+_defineProperties(Enum.prototype, {
+  toJSON: {
+    value: function toJSON() {
+      return {
+        name: this.name,
+        value: this.value
+      };
+    }
+  },
+  toString: {
+    value: function toString() {
+      return "".concat(getFunctionName(this.constructor), ".").concat(this.name);
+    }
+  }
+});
+
+var generateNextValue = function _generateNextValue() {
+  var count = 0;
+  return {
+    next: function next(name, value) {
+      if (isSafeInteger(value)) {
+        count = value;
+      }
+
+      var result = count;
+      count += 1;
+      return result;
+    }
+  };
+};
+
+var init = function _init(CstmCtr, properties, opts) {
+  var keys = new Set();
+  var dNames = new Map();
+  var dValues = new Map();
+  var isClone;
+  var items;
+
+  if (isArrayLike(properties)) {
+    items = properties;
+  } else if (isFunction(properties) && properties.prototype instanceof Enum) {
+    isClone = true;
+    items = properties.toJSON();
+  } else {
+    throw new Error('bad args');
+  }
+
+  var iter = isFunction(opts.auto) ? opts.auto() : generateNextValue();
+  var next;
+
+  _forEach(items, function _iteratee(item) {
+    var ident;
+
+    if (isClone || isObjectLike(item)) {
+      next = iter.next(item.name, item.value);
+      ident = new CstmCtr(item.name, item.value);
+    } else {
+      next = iter.next(item);
+      ident = new CstmCtr(item, next);
+    }
+
+    var _ident = ident,
+        name = _ident.name,
+        value = _ident.value;
+
+    if (dNames.has(name)) {
+      throw new TypeError("Attempted to reuse name: ".concat(name));
+    }
+
+    dNames.set(name, ident);
+
+    if (dValues.has(value)) {
+      var oName = dValues.get(value);
+
+      if (opts.unique) {
+        throw new TypeError("Duplicate value (".concat(value, ") found: ").concat(name, " -> ").concat(oName));
+      }
+
+      ident = dNames.get(oName);
+    } else {
+      dValues.set(value, name);
+      keys.add(name);
+    }
+
+    _defineProperty(CstmCtr, name, {
+      enumerable: true,
+      value: ident
+    });
+  });
+
+  return {
+    keys: keys,
+    names: dNames,
+    values: dValues
+  };
+};
+
+var calcString = function _calcString(ctrName, names) {
+  var strArr = [];
+  names.forEach(function _itereatee(enumMember) {
+    _push(strArr, _stringify(enumMember.name));
+  });
+  return "".concat(ctrName, " { ").concat(_join(strArr, ', '), " }");
+};
+
+_defineProperties(Enum, {
+  /**
+   * Creates an enumeration collection. Primary method.
+   *
+   * @param {string} typeName - The name of the enum collection.
+   * @param {Array} properties - Initialiser array.
+   * @param {object} options - Options to determine behaviour.
+   * @returns {Function} The enumeration collection.
+   */
+  create: {
+    value: function create(typeName, properties, options) {
+      var ctrName = toPropertyKey(typeName);
+
+      if (ctrName === 'undefined' || !isVarName(ctrName)) {
+        throw new Error("Invalid enum name: ".concat(ctrName));
+      }
+
+      var opts = _Object(options);
+
+      var data;
+      /* eslint-disable-next-line no-new-func */
+
+      var CstmCtr = Function('f', '_argsToArray', "return function ".concat(ctrName, "(value){return f(this,_argsToArray(arguments))}"))(function f(context, args) {
+        if (data) {
+          if (isObjectLike(context) && context instanceof CstmCtr) {
+            throw new SyntaxError('Enum classes can’t be instantiated');
+          }
+
+          return data.names.get(data.values.get(_shift(args)));
+        }
+
+        _apply(Enum, context, args);
+
+        return context;
+      }, _argsToArray);
+      var asString;
+
+      _defineProperties(CstmCtr, {
+        forEach: {
+          value: function forEach(callback, thisArg) {
+            _forEach(data.keys, function _iteratee(key) {
+              _call(callback, thisArg, data.names.get(key));
+            });
+          }
+        },
+        toJSON: {
+          value: function toJSON() {
+            var value = [];
+            data.names.forEach(function _itereatee(enumMember) {
+              _push(value, enumMember.toJSON());
+            });
+            return value;
+          }
+        },
+        toString: {
+          value: function toString() {
+            if (isUndefined(asString)) {
+              asString = calcString(ctrName, data.names);
+            }
+
+            return asString;
+          }
+        }
+      });
+
+      _defineProperty(CstmCtr, symbolIterator, {
+        value: function iterator() {
+          var iter = data.keys[symbolIterator]();
+          return {
+            next: function next() {
+              var nxt = iter.next();
+
+              if (nxt.done) {
+                return nxt;
+              }
+
+              return {
+                done: false,
+                value: data.names.get(nxt.value)
+              };
+            }
+          };
+        }
+      });
+
+      CstmCtr.prototype = _create(Enum.prototype);
+
+      _defineProperties(CstmCtr.prototype, {
+        constructor: {
+          value: CstmCtr
+        },
+        name: {
+          value: ctrName
+        }
+      });
+
+      if (isObjectLike(opts.classMethods)) {
+        _forEach(_keys(opts.classMethods), function _iteratee(key) {
+          if (reserved.has(key)) {
+            throw new SyntaxError(RESERVED_NAME + key);
+          }
+
+          var method = opts.classMethods[key];
+
+          if (isFunction(method)) {
+            _defineProperty(CstmCtr, key, {
+              value: method
+            });
+
+            reserved.add(key);
+          }
+        });
+      }
+
+      if (isObjectLike(opts.instanceMethods)) {
+        _forEach(_keys(opts.instanceMethods), function _iteratee(key) {
+          if (reserved.has(key)) {
+            throw new SyntaxError(RESERVED_NAME + key);
+          }
+
+          var method = opts.instanceMethods[key];
+
+          if (isFunction(method)) {
+            _defineProperty(CstmCtr.prototype, key, {
+              value: method
+            });
+
+            reserved.add(key);
+          }
+        });
+      }
+
+      data = init(CstmCtr, properties, opts);
+      return _freeze(CstmCtr);
+    }
+  }
+});
+
+// CONCATENATED MODULE: ./dist/esm/castArray.js
+var castArray_this = undefined;
+
+function castArray_newArrowCheck(innerThis, boundThis) { if (innerThis !== boundThis) { throw new TypeError("Cannot instantiate an arrow function"); } }
+
+/**
+ * @file Utility that clamps a number to min and max limits inclusive.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module castArray
+ */
+
+/**
+ * Takes a single, optional argument and then performs the following logic:
+ * If an argument is supplied and is an array then it will be returned unchanged,
+ * if an argument is supplied and is not an array then it will be wrapped in a new array and returned,
+ * if no argument is supplied then a new empty array is returned.
+ *
+ * @param {Array|*} [args] - A single optional identity argument.
+ * @returns {Array} An array as described the the description logic.
+ */
+
+/* harmony default export */ var castArray = ((function () {
+  castArray_newArrowCheck(this, castArray_this);
+
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  if (!args.length) {
+    return [];
+  }
+
+  var identity = args[0];
+  return _isArray(identity) ? identity : [identity];
+}).bind(undefined));
+
 // CONCATENATED MODULE: ./dist/esm/caboodle-x.js
 /* concated harmony reexport accumulate */__webpack_require__.d(__webpack_exports__, "accumulate", function() { return accumulate; });
 /* concated harmony reexport all */__webpack_require__.d(__webpack_exports__, "all", function() { return all_all; });
@@ -5165,7 +6940,7 @@ function uniq(array) {
 /* concated harmony reexport getFunctionName */__webpack_require__.d(__webpack_exports__, "getFunctionName", function() { return getFunctionName; });
 /* concated harmony reexport hasOwnProperty */__webpack_require__.d(__webpack_exports__, "hasOwnProperty", function() { return hasOwnProperty_hasOwnProperty; });
 /* concated harmony reexport head */__webpack_require__.d(__webpack_exports__, "head", function() { return head; });
-/* concated harmony reexport identity */__webpack_require__.d(__webpack_exports__, "identity", function() { return identity; });
+/* concated harmony reexport identity */__webpack_require__.d(__webpack_exports__, "identity", function() { return identity_identity; });
 /* concated harmony reexport includes */__webpack_require__.d(__webpack_exports__, "includes", function() { return includes; });
 /* concated harmony reexport intersection */__webpack_require__.d(__webpack_exports__, "intersection", function() { return intersection; });
 /* concated harmony reexport intToRGB */__webpack_require__.d(__webpack_exports__, "intToRGB", function() { return intToRGB; });
@@ -5269,11 +7044,39 @@ function uniq(array) {
 /* concated harmony reexport union */__webpack_require__.d(__webpack_exports__, "union", function() { return union; });
 /* concated harmony reexport uniq */__webpack_require__.d(__webpack_exports__, "uniq", function() { return uniq; });
 /* concated harmony reexport MAX_SAFE_INTEGER */__webpack_require__.d(__webpack_exports__, "MAX_SAFE_INTEGER", function() { return MAX_SAFE_INTEGER; });
+/* concated harmony reexport range */__webpack_require__.d(__webpack_exports__, "range", function() { return range; });
+/* concated harmony reexport rangeRight */__webpack_require__.d(__webpack_exports__, "rangeRight", function() { return rangeRight; });
+/* concated harmony reexport nth */__webpack_require__.d(__webpack_exports__, "nth", function() { return nth; });
+/* concated harmony reexport isVarName */__webpack_require__.d(__webpack_exports__, "isVarName", function() { return isVarName; });
+/* concated harmony reexport isDashed */__webpack_require__.d(__webpack_exports__, "isDashed", function() { return isDashed; });
+/* concated harmony reexport initial */__webpack_require__.d(__webpack_exports__, "initial", function() { return initial; });
+/* concated harmony reexport final */__webpack_require__.d(__webpack_exports__, "final", function() { return final_final; });
+/* concated harmony reexport Enum */__webpack_require__.d(__webpack_exports__, "Enum", function() { return Enum; });
+/* concated harmony reexport dropRight */__webpack_require__.d(__webpack_exports__, "dropRight", function() { return dropRight; });
+/* concated harmony reexport Set */__webpack_require__.d(__webpack_exports__, "Set", function() { return Set; });
+/* concated harmony reexport Map */__webpack_require__.d(__webpack_exports__, "Map", function() { return Map; });
+/* concated harmony reexport castArray */__webpack_require__.d(__webpack_exports__, "castArray", function() { return castArray; });
+/* concated harmony reexport BigCounter */__webpack_require__.d(__webpack_exports__, "BigCounter", function() { return BigCounter; });
+/* concated harmony reexport assertIsObjectLike */__webpack_require__.d(__webpack_exports__, "assertIsObjectLike", function() { return assertIsObjectLike; });
 /**
  * @file Re-exporter.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module index
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

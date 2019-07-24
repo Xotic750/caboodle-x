@@ -136,4 +136,18 @@ export { default as toWholeNumber } from './toWholeNumber';
 export { default as union } from './union';
 export { default as uniq } from './uniq';
 export { default as MAX_SAFE_INTEGER } from './MAX_SAFE_INTEGER';
+export { default as range } from './range';
+export { default as rangeRight } from './rangeRight';
+export { default as nth } from './nth';
+export { default as isVarName } from './isVarName';
+export { default as isDashed } from './isDashed';
+export { default as initial } from './initial';
+export { default as final } from './final';
+export { default as Enum } from './Enum';
+export { default as dropRight } from './dropRight';
+export { default as Set } from './Set';
+export { default as Map } from './Map';
+export { default as castArray } from './castArray';
+export { default as BigCounter } from './BigCounter';
+export { default as assertIsObjectLike } from './assertIsObjectLike';
 //# sourceMappingURL=caboodle-x.js.map

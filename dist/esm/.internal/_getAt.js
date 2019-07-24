@@ -9,7 +9,6 @@ import isArrayLike from '../isArrayLike';
 import _charAt from './_charAt';
 export default function _getAt(array) {
   if (!isArrayLike(array)) {
-    /* eslint-disable-next-line no-void */
     return void 0;
   }
 

@@ -58,6 +58,5 @@ if (test1.name === 'test1') {
  *  not a function.
  */
 export default function getFunctionName(fn) {
-  /* eslint-disable-next-line no-void */
   return _isFunction(fn, true) ? getName(fn) : void 0;
 }

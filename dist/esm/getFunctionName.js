@@ -58,7 +58,6 @@ if (test1.name === 'test1') {
 
 
 export default function getFunctionName(fn) {
-  /* eslint-disable-next-line no-void */
   return _isFunction(fn, true) ? getName(fn) : void 0;
 }
 //# sourceMappingURL=getFunctionName.js.map

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/.internal/_stringify.js"],"names":["JSON","stringify"],"mappings":"AAAA;;;;;AAMA,eAAeA,IAAI,CAACC,SAApB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module _stringify\n */\n\nexport default JSON.stringify;\n"],"file":"_stringify.js"}

@@ -33,11 +33,6 @@ import _defineProperties from './_defineProperties';
  * presence in the specifications.
  *
  * @type Array.<CharRecord>
- * @example
- * var whiteSpace = require('white-space-x');
- * whiteSpaces.list.foreach(function (item) {
- *   console.log(lib.description, item.code, item.string);
- * });
  */
 const list = [
   {

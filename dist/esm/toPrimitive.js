@@ -58,8 +58,6 @@ var getMethod = function _getMethod(O, P) {
 
     return func;
   }
-  /* eslint-disable-next-line no-void */
-
 
   return void 0;
 }; // http://www.ecma-international.org/ecma-262/6.0/#sec-toprimitive

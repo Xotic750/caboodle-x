@@ -31,8 +31,6 @@ export default function padStart(string, targetLength) {
   var str = _toString(requireObjectCoercible(string));
 
   var stringLength = toWholeNumber(str.length);
-  /* eslint-disable-next-line no-void */
-
   var fillString = (arguments.length <= 2 ? 0 : arguments.length - 2) ? arguments.length <= 2 ? undefined : arguments[2] : void 0;
   var filler = isUndefined(fillString) ? '' : _toString(fillString);
 

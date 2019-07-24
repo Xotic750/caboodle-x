@@ -4,7 +4,7 @@
  * @module _whitespace
  */
 import assign from '../assign';
-import _toString from './_toString';
+import toStr from '../toString';
 import _indexOf from './_indexOf';
 import _toLowerCase from './_toLowerCase';
 import _fromCharCode from './_fromCharCode';
@@ -31,11 +31,6 @@ import _defineProperties from './_defineProperties';
  * presence in the specifications.
  *
  * @type Array.<CharRecord>
- * @example
- * var whiteSpace = require('white-space-x');
- * whiteSpaces.list.foreach(function (item) {
- *   console.log(lib.description, item.code, item.string);
- * });
  */
 
 var list = [{
@@ -294,15 +289,12 @@ var list = [{
 var types = ['html', 'es5', 'es2015', 'es2016', 'es2017', 'es2018'];
 var last = types.length - 1;
 export default function build(type) {
-  var index = _indexOf(types, _toLowerCase(_toString(type)));
+  var index = _indexOf(types, _toLowerCase(toStr(type)));
 
   var prop = index === -1 ? types[last] : types[index];
-
-  var iteratee = function _iteratee(string, record) {
+  return _reduce(list, function _iteratee(string, record) {
     return record[prop] ? string + _fromCharCode(record.code) : string;
-  };
-
-  return _reduce(list, iteratee, '');
+  }, '');
 }
 
 var copier = function _copier(record) {

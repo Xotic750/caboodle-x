@@ -48,6 +48,7 @@ module.exports = {
    * @see {@link https://eslint.org/docs/user-guide/configuring#configuring-rules}
    */
   rules: {
+    'no-void': 'off',
     'jsdoc/no-undefined-types': [
       'error',
       {
