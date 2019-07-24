@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`intersection should throw when array is null or undefined 1`] = `"Cannot call method on null or undefined"`;
+
+exports[`intersection should throw when array is null or undefined 2`] = `"Cannot call method on null or undefined"`;

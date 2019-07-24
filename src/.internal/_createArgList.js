@@ -14,11 +14,10 @@ const POST = '_$';
 
 export default function _createArgList(length) {
   const array = [];
-  const iteratee = function _iteratee(unused, index) {
-    _push(array, PRE + _String(index) + POST);
-  };
 
-  _all({length}, iteratee);
+  _all({length}, function _iteratee(unused, index) {
+    _push(array, PRE + _String(index) + POST);
+  });
 
   return _join(array, ',');
 }

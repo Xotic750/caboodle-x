@@ -1,5 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`assertIsObject should throw with custom message 1`] = `"Custom message"`;
+exports[`assertIsObjectLike should throw with custom message 1`] = `"Custom message"`;
 
-exports[`assertIsObject should throw with default message 1`] = `"Not an object"`;
+exports[`assertIsObjectLike should throw with default message 1`] = `"Not an object"`;

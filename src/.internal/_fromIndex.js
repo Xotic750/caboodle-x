@@ -7,7 +7,7 @@
 import isArrayLike from '../isArrayLike';
 import toWholeNumber from '../toWholeNumber';
 import toObject from '../toObject';
-import _toInteger from './_toInteger';
+import toInteger from '../toInteger';
 
 const {max} = Math;
 
@@ -18,7 +18,7 @@ export default function _fromIndex(array, fromIndex) {
     return 0;
   }
 
-  const index = _toInteger(fromIndex);
+  const index = toInteger(fromIndex);
 
   return index >= 0 ? index : max(0, toWholeNumber(object.length) + index);
 }

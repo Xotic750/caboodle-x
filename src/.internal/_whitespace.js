@@ -5,7 +5,7 @@
  */
 
 import assign from '../assign';
-import _toString from './_toString';
+import toStr from '../toString';
 import _indexOf from './_indexOf';
 import _toLowerCase from './_toLowerCase';
 import _fromCharCode from './_fromCharCode';
@@ -326,13 +326,16 @@ const types = ['html', 'es5', 'es2015', 'es2016', 'es2017', 'es2018'];
 const last = types.length - 1;
 
 export default function build(type) {
-  const index = _indexOf(types, _toLowerCase(_toString(type)));
+  const index = _indexOf(types, _toLowerCase(toStr(type)));
   const prop = index === -1 ? types[last] : types[index];
-  const iteratee = function _iteratee(string, record) {
-    return record[prop] ? string + _fromCharCode(record.code) : string;
-  };
 
-  return _reduce(list, iteratee, '');
+  return _reduce(
+    list,
+    function _iteratee(string, record) {
+      return record[prop] ? string + _fromCharCode(record.code) : string;
+    },
+    '',
+  );
 }
 
 const copier = function _copier(record) {

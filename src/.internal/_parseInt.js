@@ -4,7 +4,7 @@
  * @module _parseInt
  */
 
-import _toString from './_toString';
+import toStr from '../toString';
 import _trimLeft from './_trimLeft';
 import _Number from './_Number';
 import _charAt from './_charAt';
@@ -32,7 +32,7 @@ const hexPattern = /^[-+]?0x/i;
  *  character cannot be converted to a number, NaN is returned.
  */
 export default function _parseInt(string, radix) {
-  const str = _trimLeft(_toString(string));
+  const str = _trimLeft(toStr(string));
 
   if (_charAt(str, 0) === '\u180E') {
     return _NaN;

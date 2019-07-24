@@ -14,19 +14,21 @@ export default function _find(array, callback, ...fromIndex) {
     value: void 0,
   };
 
-  const predicate = function _predicate(value, index, object) {
-    const found = callback(value, index, object);
+  _any(
+    array,
+    function _predicate(value, index, object) {
+      const found = callback(value, index, object);
 
-    if (found) {
-      result.includes = true;
-      result.index = index;
-      result.value = value;
-    }
+      if (found) {
+        result.includes = true;
+        result.index = index;
+        result.value = value;
+      }
 
-    return found;
-  };
-
-  _any(array, predicate, ...fromIndex);
+      return found;
+    },
+    ...fromIndex,
+  );
 
   return result;
 }

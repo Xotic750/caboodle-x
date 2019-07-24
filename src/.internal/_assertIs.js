@@ -5,11 +5,11 @@
  */
 
 import _call from './_call';
-import _toString from './_toString';
+import toStr from '../toString';
 import isNil from '../isNil';
 
 const toMessage = function _toMessage(message, fallback) {
-  return isNil(message) ? fallback : _toString(message);
+  return isNil(message) ? fallback : toStr(message);
 };
 
 export default function _assertIs(predicate, defaultMessage) {

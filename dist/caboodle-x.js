@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2018-present",
-  "date": "2019-07-24T19:03:21.794Z",
+  "date": "2019-07-24T19:52:09.828Z",
   "describe": "",
   "description": "A collection of modern utils.",
   "file": "caboodle-x.js",
-  "hash": "57ff4b364f4ba8f437f4",
+  "hash": "3fd6af041e84b952e62c",
   "license": "MIT",
   "version": "2.0.0"
 }
@@ -613,6 +613,14 @@ function _toString(value) {
 
   return _String(value);
 }
+
+// CONCATENATED MODULE: ./dist/esm/toString.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module toString
+ */
+
 
 // CONCATENATED MODULE: ./dist/esm/isUndefined.js
 /**
@@ -1398,12 +1406,9 @@ function build(type) {
   var index = _indexOf(types, _toLowerCase(_toString(type)));
 
   var prop = index === -1 ? types[last] : types[index];
-
-  var iteratee = function _iteratee(string, record) {
+  return _reduce(list, function _iteratee(string, record) {
     return record[prop] ? string + _fromCharCode(record.code) : string;
-  };
-
-  return _reduce(list, iteratee, '');
+  }, '');
 }
 
 var copier = function _copier(record) {
@@ -2228,6 +2233,14 @@ function isArrayLike(value) {
   return !isNil(value) && isWholeNumber(value.length) && !isFunction(value);
 }
 
+// CONCATENATED MODULE: ./dist/esm/toInteger.js
+/**
+ * @file Utility that creates a delayed promise.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module toInteger
+ */
+
+
 // CONCATENATED MODULE: ./dist/esm/.internal/_fromIndex.js
 /**
  * @file Utility that needs description.
@@ -2247,7 +2260,6 @@ function _fromIndex(array, fromIndex) {
   }
 
   var index = _toInteger(fromIndex);
-
   return index >= 0 ? index : _fromIndex_max(0, toWholeNumber(object.length) + index);
 }
 
@@ -2283,15 +2295,13 @@ function _any(array, callback) {
  */
 
 function _all(array, callback) {
-  var iteratee = function _iteratee() {
-    callback.apply(void 0, arguments);
-  };
-
   for (var _len = arguments.length, rest = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     rest[_key - 2] = arguments[_key];
   }
 
-  _any.apply(void 0, [array, iteratee].concat(rest));
+  _any.apply(void 0, [array, function _iteratee() {
+    callback.apply(void 0, arguments);
+  }].concat(rest));
 }
 
 // CONCATENATED MODULE: ./dist/esm/.internal/_accumulate.js
@@ -2304,19 +2314,17 @@ function _all(array, callback) {
 function _accumulate(array, callback, initialValue) {
   var accumulator = initialValue;
 
-  var iteratee = function _iteratee() {
+  for (var _len = arguments.length, rest = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+    rest[_key - 3] = arguments[_key];
+  }
+
+  _all.apply(void 0, [array, function _iteratee() {
     for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
     }
 
     accumulator = callback.apply(void 0, [accumulator].concat(args));
-  };
-
-  for (var _len = arguments.length, rest = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-    rest[_key - 3] = arguments[_key];
-  }
-
-  _all.apply(void 0, [array, iteratee].concat(rest));
+  }].concat(rest));
 
   return accumulator;
 }
@@ -2413,11 +2421,9 @@ function apply(fn) {
 function _argsToArray(args) {
   var array = [];
 
-  var iteratee = function _iteratee(arg) {
+  _all(args, function _iteratee(arg) {
     _push(array, arg);
-  };
-
-  _all(args, iteratee);
+  });
 
   return array;
 }
@@ -2446,13 +2452,11 @@ var _createArgList_POST = '_$';
 function _createArgList(length) {
   var array = [];
 
-  var iteratee = function _iteratee(unused, index) {
-    _push(array, _createArgList_PRE + _String(index) + _createArgList_POST);
-  };
-
   _all({
     length: length
-  }, iteratee);
+  }, function _iteratee(unused, index) {
+    _push(array, _createArgList_PRE + _String(index) + _createArgList_POST);
+  });
 
   return _join(array, ',');
 }
@@ -2700,6 +2704,14 @@ function capitalize(string) {
   return _toUpperCase(_charAt(str, 0)) + _toLowerCase(_stringSlice(str, 1));
 }
 
+// CONCATENATED MODULE: ./dist/esm/isNumberNaN.js
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module isNumberNaN
+ */
+
+
 // CONCATENATED MODULE: ./dist/esm/.internal/_clamp.js
 /**
  * @file Utility that needs description.
@@ -2790,7 +2802,11 @@ function _find(array, callback) {
     value: void 0
   };
 
-  var predicate = function _predicate(value, index, object) {
+  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  _any.apply(void 0, [array, function _predicate(value, index, object) {
     var found = callback(value, index, object);
 
     if (found) {
@@ -2800,13 +2816,7 @@ function _find(array, callback) {
     }
 
     return found;
-  };
-
-  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
-  }
-
-  _any.apply(void 0, [array, predicate].concat(fromIndex));
+  }].concat(fromIndex));
 
   return result;
 }
@@ -2854,30 +2864,27 @@ function sameValueZero(x, y) {
 
 
 function _includes(array, searchElement) {
-  var isSameValueZero = function _isSameValueZero(value) {
-    return sameValueZero(searchElement, value);
-  };
-
   for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
     fromIndex[_key - 2] = arguments[_key];
   }
 
-  return _find.apply(void 0, [array, isSameValueZero].concat(fromIndex)).includes;
+  return _find.apply(void 0, [array, function _predicate(value) {
+    return sameValueZero(searchElement, value);
+  }].concat(fromIndex)).includes;
 }
 
-// CONCATENATED MODULE: ./dist/esm/.internal/_getAt.js
+// CONCATENATED MODULE: ./dist/esm/.internal/_nth.js
 /**
- * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module _getAt
+ * @module _nth
  */
 
 
 
 
-function _getAt(array) {
+function _nth(array) {
   if (!isArrayLike(array)) {
-    /* eslint-disable-next-line no-void */
     return void 0;
   }
 
@@ -2893,7 +2900,7 @@ function _getAt(array) {
  */
 
 function _last(array) {
-  return _getAt(array, array.length - 1);
+  return _nth(array, array.length - 1);
 }
 
 // CONCATENATED MODULE: ./dist/esm/defaultToOneOf.js
@@ -3212,7 +3219,11 @@ var delay_promise_x_esm_delayPromise = function delayPromise(milliseconds) {
 function _sift(array, callback) {
   var result = [];
 
-  var iteratee = function _iteratee(value) {
+  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+    fromIndex[_key - 2] = arguments[_key];
+  }
+
+  _any.apply(void 0, [array, function _iteratee(value) {
     for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
       args[_key2 - 1] = arguments[_key2];
     }
@@ -3220,13 +3231,7 @@ function _sift(array, callback) {
     if (callback.apply(void 0, [value].concat(args))) {
       _push(result, value);
     }
-  };
-
-  for (var _len = arguments.length, fromIndex = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-    fromIndex[_key - 2] = arguments[_key];
-  }
-
-  _any.apply(void 0, [array, iteratee].concat(fromIndex));
+  }].concat(fromIndex));
 
   return result;
 }
@@ -3322,6 +3327,26 @@ function find(array, callback) {
 
 function findIndex(array, callback) {
   return _find(requireObjectCoercible(array), _assertIsFunction(callback), _toInteger(arguments.length <= 2 ? undefined : arguments[2])).index;
+}
+
+// CONCATENATED MODULE: ./dist/esm/.internal/_getAt.js
+/**
+ * @file Utility to test if a comparate exists in a list of comparates, return comparate or supply a fallback.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _getAt
+ */
+
+
+
+
+function _getAt(array) {
+  if (!isArrayLike(array)) {
+    /* eslint-disable-next-line no-void */
+    return void 0;
+  }
+
+  var index = (arguments.length <= 1 ? 0 : arguments.length - 1) ? _toInteger(arguments.length <= 1 ? undefined : arguments[1]) : 0;
+  return is_string_default()(array) ? _charAt(array, index) : array[index];
 }
 
 // CONCATENATED MODULE: ./dist/esm/getAt.js
@@ -3435,7 +3460,7 @@ function hasOwnProperty_hasOwnProperty(object, property) {
  */
 
 function _head(array) {
-  return _getAt(array, 0);
+  return _nth(array, 0);
 }
 
 // CONCATENATED MODULE: ./dist/esm/head.js
@@ -3929,14 +3954,6 @@ var is_number_object_default = /*#__PURE__*/__webpack_require__.n(is_number_obje
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module isNumberFinite
- */
-
-
-// CONCATENATED MODULE: ./dist/esm/isNumberNaN.js
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module isNumberNaN
  */
 
 
@@ -5059,27 +5076,11 @@ function truncate(string, options) {
   return result + omission;
 }
 
-// CONCATENATED MODULE: ./dist/esm/toInteger.js
-/**
- * @file Utility that creates a delayed promise.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toInteger
- */
-
-
 // CONCATENATED MODULE: ./dist/esm/toNumber.js
 /**
  * @file Utility that needs description.
  * @copyright Copyright (c) 2018-present, Graham Fairweather
  * @module toNumber
- */
-
-
-// CONCATENATED MODULE: ./dist/esm/toString.js
-/**
- * @file Utility that needs description.
- * @copyright Copyright (c) 2018-present, Graham Fairweather
- * @module toString
  */
 
 
