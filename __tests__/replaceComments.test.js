@@ -1,4 +1,4 @@
-import {replaceComments} from '../index';
+import {replaceComments} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

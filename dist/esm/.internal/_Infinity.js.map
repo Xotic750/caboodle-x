@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/.internal/_Infinity.js"],"names":[],"mappings":"AAAA;;;;;AAMA,eAAe,IAAI,CAAnB","sourcesContent":["/**\n * @file Parses a string argument and returns an integer of the specified radix.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module _Infinity\n */\n\nexport default 1 / 0;\n"],"file":"_Infinity.js"}

@@ -1,4 +1,4 @@
-import {clamp} from '../index';
+import {clamp} from 'src/caboodle-x';
 import noop from './helpers/noop';
 
 describe('clamp', () => {

@@ -1,4 +1,4 @@
-import {isWholeNumber} from '../index';
+import {isWholeNumber} from 'src/caboodle-x';
 
 describe('isWholeNumber', () => {
   it('should be a function', () => {

@@ -1,5 +1,5 @@
+import {assertIs} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
-import {assertIs} from '../index';
 
 describe('assertIs', () => {
   it('should be a function', () => {

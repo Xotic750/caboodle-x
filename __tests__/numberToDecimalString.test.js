@@ -1,4 +1,4 @@
-import {numberToDecimalString} from '../index';
+import {numberToDecimalString} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

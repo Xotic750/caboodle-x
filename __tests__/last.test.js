@@ -1,4 +1,4 @@
-import {last} from '../index';
+import {last} from 'src/caboodle-x';
 
 describe('last', () => {
   it('should return the last element', () => {

@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/MAX_SAFE_INTEGER.js"],"names":[],"mappings":"AAAA;;;;;AAMA,eAAe,gBAAf","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module MAX_SAFE_INTEGER\n */\n\nexport default 9007199254740991;\n"],"file":"MAX_SAFE_INTEGER.js"}

@@ -1,4 +1,4 @@
-import {modulo} from '../index';
+import {modulo} from 'src/caboodle-x';
 
 describe('modulo', () => {
   it('is a function', () => {

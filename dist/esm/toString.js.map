@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/toString.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,uBAAtB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module toString\n */\n\nexport {default} from './.internal/_toString';\n"],"file":"toString.js"}

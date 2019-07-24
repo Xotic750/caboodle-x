@@ -1,4 +1,4 @@
-import {isInteger} from '../index';
+import {isInteger} from 'src/caboodle-x';
 
 describe('isInteger', () => {
   it('is a function', () => {

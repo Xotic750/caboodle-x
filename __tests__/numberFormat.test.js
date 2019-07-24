@@ -1,4 +1,4 @@
-import {numberFormat} from '../index';
+import {numberFormat} from 'src/caboodle-x';
 
 describe('numberFormat', () => {
   it('is a function', () => {

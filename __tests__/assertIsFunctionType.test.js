@@ -1,5 +1,5 @@
+import {assertIsFunction} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
-import {assertIsFunction} from '../index';
 import noop from './helpers/noop';
 
 describe('assertIsFunction', () => {

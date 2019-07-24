@@ -1,4 +1,4 @@
-import {squeeze} from '../index';
+import {squeeze} from 'src/caboodle-x';
 
 const createArrayLike = function(arr) {
   const o = {};

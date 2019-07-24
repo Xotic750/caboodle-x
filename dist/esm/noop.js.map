@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/noop.js"],"names":["noop"],"mappings":"AAAA;;;;;AAMA,eAAe,SAASA,IAAT,GAAgB,CAAE","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module noop\n */\n\nexport default function noop() {}\n"],"file":"noop.js"}

@@ -1,4 +1,4 @@
-import {includes} from '../index';
+import {includes} from 'src/caboodle-x';
 
 describe('includes', () => {
   const array = Object.freeze([1, 2, 3, 4]);

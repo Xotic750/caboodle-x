@@ -1,4 +1,4 @@
-import {capitalizeFirst} from '../index';
+import {capitalizeFirst} from 'src/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 

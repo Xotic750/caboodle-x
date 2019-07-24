@@ -1,4 +1,4 @@
-import {find} from '../index';
+import {find} from 'src/caboodle-x';
 
 const list = [5, 10, 15, 20];
 

@@ -1,0 +1,8 @@
+/**
+ * @file Utility that needs description.
+ * @copyright Copyright (c) 2018-present, Graham Fairweather
+ * @module _functionToString
+ */
+import _methodize from './_methodize';
+export default _methodize(Function.prototype.toString);
+//# sourceMappingURL=_functionToString.js.map

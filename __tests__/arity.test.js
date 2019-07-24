@@ -1,4 +1,4 @@
-import {arity} from '../index';
+import {arity} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 

@@ -1,4 +1,4 @@
-import {getFunctionName} from '../index';
+import {getFunctionName} from 'src/caboodle-x';
 
 const getFat = function getFatFunc() {
   try {

@@ -1,4 +1,4 @@
-import {partial} from '../index';
+import {partial} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 

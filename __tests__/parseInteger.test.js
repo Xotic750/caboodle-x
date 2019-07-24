@@ -1,4 +1,4 @@
-import {parseInteger} from '../index';
+import {parseInteger} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

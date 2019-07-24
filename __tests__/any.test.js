@@ -1,4 +1,4 @@
-import {any} from '../index';
+import {any} from 'src/caboodle-x';
 
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 

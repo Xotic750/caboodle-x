@@ -1,4 +1,4 @@
-import {toNumber} from '../index';
+import {toNumber} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

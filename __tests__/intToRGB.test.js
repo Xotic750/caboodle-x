@@ -1,4 +1,4 @@
-import {intToRGB} from '../index';
+import {intToRGB} from 'src/caboodle-x';
 
 describe('intToRGB', () => {
   it('is a function', () => {

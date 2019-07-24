@@ -1,4 +1,4 @@
-import {partialRight} from '../index';
+import {partialRight} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 

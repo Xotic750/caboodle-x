@@ -1,4 +1,4 @@
-import {isTruthy} from '../index';
+import {isTruthy} from 'src/caboodle-x';
 
 const coercibleObject = {
   toString() {

@@ -1,4 +1,4 @@
-import {defaultToOneOf} from '../index';
+import {defaultToOneOf} from 'src/caboodle-x';
 
 describe('defaultToOneOf', () => {
   const array = Object.freeze([1, 2, 3, 4]);

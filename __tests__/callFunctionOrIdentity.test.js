@@ -1,4 +1,4 @@
-import {callFunctionOrIdentity} from '../index';
+import {callFunctionOrIdentity} from 'src/caboodle-x';
 import objects from './helpers/objects';
 import primitives from './helpers/primitives';
 import noop from './helpers/noop';

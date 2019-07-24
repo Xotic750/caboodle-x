@@ -1,4 +1,4 @@
-import {sameValue} from '../index';
+import {sameValue} from 'src/caboodle-x';
 
 const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

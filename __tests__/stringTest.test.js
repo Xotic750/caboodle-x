@@ -1,4 +1,4 @@
-import {stringTest} from '../index';
+import {stringTest} from 'src/caboodle-x';
 
 describe('stringTest', () => {
   it('is a function', () => {

@@ -1,4 +1,4 @@
-import {isSurrogatePair} from '../index';
+import {isSurrogatePair} from 'src/caboodle-x';
 
 describe('isSurrogatePair', () => {
   describe('basic tests', () => {

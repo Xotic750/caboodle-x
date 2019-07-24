@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/stubArray.js"],"names":["stubArray"],"mappings":"AAAA;;;;;AAMA,eAAe,SAASA,SAAT,GAAqB;AAClC,SAAO,EAAP;AACD","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module stubArray\n */\n\nexport default function stubArray() {\n  return [];\n}\n"],"file":"stubArray.js"}

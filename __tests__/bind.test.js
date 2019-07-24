@@ -1,4 +1,4 @@
-import {bind} from '../index';
+import {bind} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
 import objects from './helpers/objects';
 

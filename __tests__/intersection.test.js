@@ -1,4 +1,4 @@
-import {intersection} from '../index';
+import {intersection} from 'src/caboodle-x';
 
 describe('intersection', () => {
   let LARGE_ARRAY_SIZE;

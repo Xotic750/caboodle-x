@@ -1,4 +1,4 @@
-import {isNumberNaN} from '../index';
+import {isNumberNaN} from 'src/caboodle-x';
 
 const itHasWindow = typeof window === 'undefined' ? xit : it;
 

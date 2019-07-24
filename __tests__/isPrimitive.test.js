@@ -1,4 +1,4 @@
-import {isPrimitive} from '../index';
+import {isPrimitive} from 'src/caboodle-x';
 import noop from './helpers/noop';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';

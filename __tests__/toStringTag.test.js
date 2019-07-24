@@ -1,4 +1,4 @@
-import {toStringTag} from '../index';
+import {toStringTag} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

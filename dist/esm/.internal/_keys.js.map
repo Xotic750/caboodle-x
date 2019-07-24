@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/.internal/_keys.js"],"names":["Object","keys"],"mappings":"AAAA;;;;;AAMA,eAAeA,MAAM,CAACC,IAAtB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module _keys\n */\n\nexport default Object.keys;\n"],"file":"_keys.js"}

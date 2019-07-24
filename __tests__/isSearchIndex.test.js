@@ -1,4 +1,4 @@
-import {isSearchIndex} from '../index';
+import {isSearchIndex} from 'src/caboodle-x';
 
 describe('isSearchIndex', () => {
   it('should be a function', () => {

@@ -1,5 +1,5 @@
 import identity from 'lodash/identity';
-import {delayPromise} from '../index';
+import {delayPromise} from 'src/caboodle-x';
 
 describe('delayPromise', () => {
   describe('delay', () => {

@@ -1,4 +1,4 @@
-import {toBoolean} from '../index';
+import {toBoolean} from 'src/caboodle-x';
 
 const coercibleObject = {
   toString() {

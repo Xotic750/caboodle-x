@@ -1,4 +1,4 @@
-import {union} from '../index';
+import {union} from 'src/caboodle-x';
 
 describe('union', () => {
   let args;

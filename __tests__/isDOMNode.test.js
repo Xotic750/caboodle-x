@@ -1,4 +1,4 @@
-import {isDOMNode} from '../index';
+import {isDOMNode} from 'src/caboodle-x';
 import falsey from './helpers/falsey';
 
 const itWindow = typeof window === 'undefined' ? xit : it;

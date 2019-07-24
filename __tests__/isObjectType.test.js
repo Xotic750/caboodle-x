@@ -1,9 +1,8 @@
+import {isObjectType} from 'src/caboodle-x';
 import objects from './helpers/objects';
 import truthy from './helpers/truthy';
 import numbers from './helpers/numbers';
 import strings from './helpers/strings';
-
-import {isObjectType} from '../index';
 
 describe('isObjectType', () => {
   const primitives = Object.freeze([...truthy, ...numbers, ...strings]);

@@ -1,4 +1,4 @@
-import {isNil} from '../index';
+import {isNil} from 'src/caboodle-x';
 
 describe('isNil', () => {
   it('should be a function', () => {

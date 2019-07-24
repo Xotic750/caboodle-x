@@ -1,4 +1,4 @@
-import {isNumberFinite} from '../index';
+import {isNumberFinite} from 'src/caboodle-x';
 
 const integers = [5295, -5295, -9007199254740991, 9007199254740991, 0, -0];
 const infinities = [Infinity, -Infinity];

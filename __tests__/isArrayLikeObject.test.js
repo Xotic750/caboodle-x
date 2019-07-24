@@ -1,4 +1,4 @@
-import {isArrayLikeObject} from '../index';
+import {isArrayLikeObject} from 'src/caboodle-x';
 
 const falsey = Object.freeze([false, 0, NaN, '']);
 

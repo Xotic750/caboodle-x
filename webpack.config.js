@@ -1,18 +1,17 @@
 /**
  * @file Manages the root configuration settings for webpack.
- * @module webpack/root/configuration
- * @see {@link https://webpack.js.org/} for further information.
+ * @see {@link https://webpack.js.org/} For further information.
  */
 
 const path = require('path');
 const childProcess = require('child_process');
-const {BannerPlugin, EnvironmentPlugin} = require('webpack');
+const webpack = require('webpack');
 const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
-const semver = require('semver');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const eslintFriendlyFormatter = require('eslint-friendly-formatter');
 const {BundleAnalyzerPlugin} = require('webpack-bundle-analyzer');
-const utils = require('./Libs/utils');
+const camelCase = require('lodash/camelCase');
 const PACKAGE = require('./package.json');
 
 const getGlobal = function() {
@@ -33,63 +32,78 @@ const getGlobal = function() {
   return Function('return this')();
 };
 
-const filename = 'caboodle-x';
-const library = 'Caboodle';
+const filename = PACKAGE.name.replace('@xotic750/', '');
+const library = camelCase(filename);
 const dist = path.resolve(__dirname, 'dist');
 
 /**
- * The ENVIRONMENT value.
+ * The NODE_ENV environment variable.
+ *
+ * @type {!object}
+ */
+const {NODE_ENV} = process.env;
+
+/**
+ * The production string.
+ *
  * @type {string}
  */
-const ENVIRONMENT = utils.IS_PRODUCTION ? utils.PRODUCTION : utils.DEVELOPMENT;
+const PRODUCTION = 'production';
 
 /**
- * The default exclude regex.
- * @type {RegExp}
+ * The development string.
+ *
+ * @type {string}
  */
-const DEFAULT_EXCLUDE_RX = /node_modules/;
+const DEVELOPMENT = 'development';
 
 /**
- * Shared (.js & .vue) babel-loader options.
- * @type {!Object}
- * @see {@link https://github.com/babel/babel-loader}
+ * The default include paths.
+ *
+ * @type {string}
  */
-const babelLoader = {
-  exclude: DEFAULT_EXCLUDE_RX,
-  loader: 'babel-loader',
-};
+const DEFAULT_INCLUDE = [path.resolve(__dirname, 'src'), path.resolve(__dirname, '__tests__')];
 
+/**
+ * Allows you to pass in as many environment variables as you like using --env.
+ * See {@link http://webpack.js.org/guides/environment-variables}.
+ *
+ * @param {!object} [env={}] - The env object.
+ * @returns {undefined} Default.
+ */
 module.exports = function generateConfig(env) {
   /**
-   * The date as of now.
-   * @type {string}
-   */
-  const NOW = new Date().toISOString();
-
-  /**
-   * The reference created by git describe --dirty`
+   * The reference created bu git describe --dirty`.
+   *
    * @type {string}
    * @see {@link https://git-scm.com/docs/git-describe}
    */
   const DESCRIBE = childProcess
     .spawnSync('git', ['describe', '--dirty'])
-    .stdout.toString()
+    .output[1].toString()
     .trim();
+
+  /**
+   * The date as of now.
+   *
+   * @type {string}
+   */
+  const NOW = new Date().toISOString();
 
   const base = {
     /**
      * This option controls if and how source maps are generated.
      *
-     * nosources-source-map - A SourceMap is created without the sourcesContent in it.
+     * Nosources-source-map - A SourceMap is created without the sourcesContent in it.
      * It can be used to map stack traces on the client without exposing all of the
      * source code. You can deploy the Source Map file to the web-server.
      *
-     * eval-source-map - Each module is executed with eval() and a SourceMap is added as
+     * Eval-source-map - Each module is executed with eval() and a SourceMap is added as
      * a DataUrl to the eval(). Initially it is slow, but it provides fast rebuild speed
      * and yields real files. Line numbers are correctly mapped since it gets mapped to
      * the original code. It yields the best quality SourceMaps for development.
      *
-     * source-map - A full SourceMap is emitted as a separate file. It adds a reference
+     * Source-map - A full SourceMap is emitted as a separate file. It adds a reference
      * comment to the bundle so development tools know where to find it.
      *
      * @type {string}
@@ -99,56 +113,33 @@ module.exports = function generateConfig(env) {
 
     /**
      * Define the entry points for the application.
+     *
      * @type {Array.<string>}
      * @see {@link https://webpack.js.org/concepts/entry-points/}
      */
-    entry: [path.join(__dirname, './index.js')],
+    entry: PACKAGE.module,
 
-    mode: ENVIRONMENT,
+    mode: NODE_ENV === PRODUCTION ? PRODUCTION : DEVELOPMENT,
 
+    /**
+     * In modular programming, developers break programs up into discrete chunks of functionality
+     * called a module. Each module has a smaller surface area than a full program, making verification,
+     * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
+     * boundaries, so that each module has a coherent design and a clear purpose within the overall
+     * application.
+     *
+     * Webpack supports modules written in a variety of languages and preprocessors, via loaders.
+     * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
+     * into your bundles.
+     *
+     * @type {Array.<!object>}
+     * @see {@link https://webpack.js.org/configuration/module/#module-rules}
+     */
     module: {
-      /**
-       * In modular programming, developers break programs up into discrete chunks of functionality
-       * called a module. Each module has a smaller surface area than a full program, making verification,
-       * debugging, and testing trivial. Well-written modules provide solid abstractions and encapsulation
-       * boundaries, so that each module has a coherent design and a clear purpose within the overall
-       * application.
-       *
-       * webpack supports modules written in a variety of languages and preprocessors, via loaders.
-       * Loaders describe to webpack how to process non-JavaScript modules and include these dependencies
-       * into your bundles.
-       *
-       * @type {Array.<!Object>}
-       * @see {@link https://webpack.js.org/configuration/module/#module-rules}
-       */
       rules: [
         /**
-         * Shared (.js & .vue) eslint-loader options.
-         * @type {!Object}
-         * @see {@link https://github.com/MoOx/eslint-loader}
-         */
-        {
-          enforce: 'pre',
-          exclude: DEFAULT_EXCLUDE_RX,
-          loader: 'eslint-loader',
-          options: {
-            emitError: true,
-            emitWarning: true,
-            failOnError: utils.IS_PRODUCTION,
-            failOnWarning: utils.IS_PRODUCTION,
-            // currently disabled as not working in <= v2.1.1
-            fix:
-              !utils.IS_PRODUCTION &&
-              semver.satisfies(semver.coerce(utils.getStringOption(PACKAGE, 'devDependencies.eslint-loader')), '>2.1.1'),
-            formatter: eslintFriendlyFormatter,
-            quiet: utils.IS_PRODUCTION,
-          },
-          // json does not work because of ESM import
-          test: /\.js$/,
-        },
-
-        /**
-         * Extract sourceMappingURL comments from modules and offer it to webpack
+         * Extract sourceMappingURL comments from modules and offer it to webpack.
+         *
          * @see {@link https://github.com/webpack-contrib/source-map-loader}
          */
         {
@@ -158,12 +149,34 @@ module.exports = function generateConfig(env) {
         },
 
         /**
+         * Eslint-loader options.
+         *
+         * @type {!object}
+         * @see {@link https://github.com/MoOx/eslint-loader}
+         */
+        {
+          enforce: 'pre',
+          include: DEFAULT_INCLUDE,
+          loader: 'eslint-loader',
+          options: {
+            emitError: true,
+            emitWarning: false,
+            failOnError: true,
+            failOnWarning: false,
+            formatter: eslintFriendlyFormatter,
+            quiet: true,
+          },
+          test: /\.(js|json)$/,
+        },
+
+        /**
          * This package allows transpiling JavaScript files using Babel and webpack.
-         * @type {!Object}
+         *
          * @see {@link https://webpack.js.org/loaders/babel-loader/}
          */
         {
-          ...babelLoader,
+          include: DEFAULT_INCLUDE,
+          loader: 'babel-loader',
           test: /\.js$/,
         },
       ],
@@ -184,7 +197,8 @@ module.exports = function generateConfig(env) {
     /**
      * Configuring the output configuration options tells webpack how to write the compiled
      * files to disk.
-     * @type {!Object}
+     *
+     * @type {!object}
      * @see {@link https://webpack.js.org/configuration/output/}
      */
     output: {
@@ -206,29 +220,43 @@ module.exports = function generateConfig(env) {
     plugins: [
       /**
        * Use the shorthand version.
-       * @type {!Object}
+       *
+       * @type {!object}
        * @see {@link https://webpack.js.org/plugins/environment-plugin/}
        */
-      new EnvironmentPlugin({
-        NODE_ENV: ENVIRONMENT,
+      new webpack.EnvironmentPlugin({
+        DEBUG: false, // use 'false' unless process.env.DEBUG is defined.
+        NODE_ENV: DEVELOPMENT, // use 'development' unless process.env.NODE_ENV is defined.
+      }),
+
+      /**
+       * Smaller lodash builds. We are not opting in to path feature.
+       *
+       * @type {!object}
+       * @see {@link https://github.com/lodash/lodash-webpack-plugin}
+       */
+      new LodashModuleReplacementPlugin({
+        paths: true,
       }),
 
       /**
        * Adds a banner to the top of each generated chunk.
-       * @type {!Object}
-       * @see {@link https://webpack.js.org/plugins/banner-`plugin/}
+       *
+       * @type {!object}
+       * @see {@link https://webpack.js.org/plugins/banner-plugin/}
        */
-      new BannerPlugin({
+      new webpack.BannerPlugin({
         banner: `/*!\n${JSON.stringify(
           {
-            copyrite: utils.getStringOption(PACKAGE, 'copyright'),
+            author: PACKAGE.author.name,
+            copywrite: PACKAGE.copyright,
             date: NOW,
             describe: DESCRIBE,
-            description: utils.getStringOption(PACKAGE, 'description'),
+            description: PACKAGE.description,
             file: '[file]',
             hash: '[hash]',
-            license: utils.getStringOption(PACKAGE, 'license'),
-            version: utils.getStringOption(PACKAGE, 'version'),
+            license: PACKAGE.license,
+            version: PACKAGE.version,
           },
           null,
           2,
@@ -239,21 +267,27 @@ module.exports = function generateConfig(env) {
 
     /**
      * These options change how modules are resolved.
-     * @type {!Object}
+     *
+     * @type {!object}
      * @see {@link https://webpack.js.org/configuration/resolve/}
      */
     resolve: {
       /**
        * Create aliases to import or require certain modules more easily.
-       * @type {!Object}
+       *
+       * @type {!object}
        * @see {@link https://webpack.js.org/configuration/resolve/#resolve-alias}
        */
-      alias: {},
+      alias: {
+        RootDir: path.resolve(__dirname, '.'),
+        dist: path.resolve(__dirname, './dist'),
+        src: path.resolve(__dirname, './src'),
+      },
       extensions: ['.js', '.json'],
     },
   };
 
-  const packed = merge(base, {
+  const browser = merge(base, {
     optimization: {
       minimize: false,
     },
@@ -263,7 +297,7 @@ module.exports = function generateConfig(env) {
     },
   });
 
-  const minified = merge(base, {
+  const minified = merge(browser, {
     output: {
       filename: `${filename}.min.js`,
     },
@@ -287,5 +321,5 @@ module.exports = function generateConfig(env) {
     ],
   });
 
-  return [packed, minified];
+  return [browser, minified];
 };

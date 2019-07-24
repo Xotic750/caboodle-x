@@ -1,4 +1,4 @@
-import {findIndex} from '../index';
+import {findIndex} from 'src/caboodle-x';
 
 const itHasDoc = typeof document !== 'undefined' && document ? it : xit;
 

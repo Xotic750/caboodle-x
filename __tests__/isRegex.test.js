@@ -1,4 +1,4 @@
-import {isRegex} from '../index';
+import {isRegex} from 'src/caboodle-x';
 
 const hasToStringTag = typeof Symbol === 'function' && typeof Symbol.toStringTag === 'symbol';
 

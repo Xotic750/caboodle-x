@@ -1,4 +1,4 @@
-import {toInteger} from '../index';
+import {toInteger} from 'src/caboodle-x';
 
 const uncoercibleObject = {
   toString() {

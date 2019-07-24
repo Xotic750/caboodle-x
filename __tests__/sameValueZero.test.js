@@ -1,4 +1,4 @@
-import {sameValueZero} from '../index';
+import {sameValueZero} from 'src/caboodle-x';
 import nonNullPrimitives from './helpers/nonNullPrimitives';
 import nils from './helpers/nils';
 

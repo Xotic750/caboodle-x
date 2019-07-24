@@ -1,4 +1,4 @@
-import {isUniq} from '../index';
+import {isUniq} from 'src/caboodle-x';
 
 describe('isUniq', () => {
   it('should be a function', () => {

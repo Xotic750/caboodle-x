@@ -1,4 +1,4 @@
-import {isBooleanType} from '../index';
+import {isBooleanType} from 'src/caboodle-x';
 
 describe('isBooleanType', () => {
   it('should be a function', () => {

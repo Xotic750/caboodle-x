@@ -1,4 +1,4 @@
-import {stubObject} from '../index';
+import {stubObject} from 'src/caboodle-x';
 
 describe('stubObject', () => {
   it('should be a function', () => {

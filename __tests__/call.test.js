@@ -1,4 +1,4 @@
-import {call} from '../index';
+import {call} from 'src/caboodle-x';
 import nonSymbols from './helpers/nonSymbols';
 
 describe('call', () => {

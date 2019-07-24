@@ -1,4 +1,4 @@
-import {isCountingNumber} from '../index';
+import {isCountingNumber} from 'src/caboodle-x';
 
 describe('isCountingNumber', () => {
   it('should be a function', () => {

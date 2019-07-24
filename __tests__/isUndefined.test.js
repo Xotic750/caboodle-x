@@ -1,4 +1,4 @@
-import {isUndefined} from '../index';
+import {isUndefined} from 'src/caboodle-x';
 import getArguments from './helpers/getArguments';
 
 const falsey = Object.freeze([null, false, 0, NaN, '']);

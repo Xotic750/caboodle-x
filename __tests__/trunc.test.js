@@ -1,4 +1,4 @@
-import {trunc} from '../index';
+import {trunc} from 'src/caboodle-x';
 import isPositiveZero from './helpers/isPositiveZero';
 import isNegativeZero from './helpers/isNegativeZero';
 

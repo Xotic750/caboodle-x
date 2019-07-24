@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/stubTrue.js"],"names":["stubTrue"],"mappings":"AAAA;;;;;AAMA,eAAe,SAASA,QAAT,GAAoB;AACjC,SAAO,IAAP;AACD","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module stubTrue\n */\n\nexport default function stubTrue() {\n  return true;\n}\n"],"file":"stubTrue.js"}

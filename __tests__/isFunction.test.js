@@ -1,4 +1,4 @@
-import {isFunction} from '../index';
+import {isFunction} from 'src/caboodle-x';
 
 let hasFat;
 try {

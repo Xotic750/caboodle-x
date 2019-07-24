@@ -1,4 +1,4 @@
-import {sign} from '../index';
+import {sign} from 'src/caboodle-x';
 import isPositiveZero from './helpers/isPositiveZero';
 import isNegativeZero from './helpers/isNegativeZero';
 

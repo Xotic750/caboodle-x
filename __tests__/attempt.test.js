@@ -1,4 +1,4 @@
-import {attempt} from '../index';
+import {attempt} from 'src/caboodle-x';
 
 describe('attempt', () => {
   it('is a function', () => {

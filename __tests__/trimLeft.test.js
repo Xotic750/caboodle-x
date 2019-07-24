@@ -1,4 +1,4 @@
-import {trimLeft} from '../index';
+import {trimLeft} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

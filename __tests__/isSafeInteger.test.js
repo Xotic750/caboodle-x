@@ -1,4 +1,4 @@
-import {isSafeInteger} from '../index';
+import {isSafeInteger} from 'src/caboodle-x';
 
 describe('isSafeInteger', () => {
   it('is a function', () => {

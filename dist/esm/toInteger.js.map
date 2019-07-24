@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/toInteger.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,wBAAtB","sourcesContent":["/**\n * @file Utility that creates a delayed promise.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module toInteger\n */\n\nexport {default} from './.internal/_toInteger';\n"],"file":"toInteger.js"}

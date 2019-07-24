@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/parseInteger.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,uBAAtB","sourcesContent":["/**\n * @file Utility to parse a string to a decimal value.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module parseInteger\n */\n\nexport {default} from './.internal/_parseInt';\n"],"file":"parseInteger.js"}

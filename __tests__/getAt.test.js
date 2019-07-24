@@ -1,4 +1,4 @@
-import {getAt} from '../index';
+import {getAt} from 'src/caboodle-x';
 
 describe('getAt', () => {
   it('should return the getAt element', () => {

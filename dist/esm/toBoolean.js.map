@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/toBoolean.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,sBAAtB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module toBoolean\n */\n\nexport {default} from './.internal/_Boolean';\n"],"file":"toBoolean.js"}

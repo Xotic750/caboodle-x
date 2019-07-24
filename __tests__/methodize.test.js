@@ -1,4 +1,4 @@
-import {methodize} from '../index';
+import {methodize} from 'src/caboodle-x';
 
 describe('methodize', () => {
   it('should be a function', () => {

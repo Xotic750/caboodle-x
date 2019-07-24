@@ -1,4 +1,4 @@
-import {stubArray} from '../index';
+import {stubArray} from 'src/caboodle-x';
 
 describe('stubArray', () => {
   it('should be a function', () => {

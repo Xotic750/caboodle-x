@@ -1,5 +1,5 @@
+import {assertIsObject} from 'src/caboodle-x';
 import objects from './helpers/objects';
-import {assertIsObject} from '../index';
 
 describe('assertIsObject', () => {
   it('should be a function', () => {

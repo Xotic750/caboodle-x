@@ -1,4 +1,4 @@
-import {stubFalse} from '../index';
+import {stubFalse} from 'src/caboodle-x';
 
 describe('stubFalse', () => {
   it('should be a function', () => {

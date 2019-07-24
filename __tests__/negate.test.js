@@ -1,4 +1,4 @@
-import {negate} from '../index';
+import {negate} from 'src/caboodle-x';
 
 const stubTrue = () => true;
 const isEven = (n) => n % 2 === 0;

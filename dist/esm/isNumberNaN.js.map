@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/isNumberNaN.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,oBAAtB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module isNumberNaN\n */\n\nexport {default} from './.internal/_isNaN';\n"],"file":"isNumberNaN.js"}

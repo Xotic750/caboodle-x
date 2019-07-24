@@ -1,4 +1,4 @@
-import {constant} from '../index';
+import {constant} from 'src/caboodle-x';
 
 describe('constant', () => {
   it('should be a function', () => {

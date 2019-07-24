@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../../src/.internal/_Number.js"],"names":["constructor"],"mappings":"AAAA;;;;;AAMA,eAAgB,CAAD,EAAIA,WAAnB","sourcesContent":["/**\n * @file Utility that needs description.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module _Number\n */\n\nexport default (0).constructor;\n"],"file":"_Number.js"}

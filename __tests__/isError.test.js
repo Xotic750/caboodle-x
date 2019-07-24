@@ -1,4 +1,4 @@
-import {isError} from '../index';
+import {isError} from 'src/caboodle-x';
 
 describe('isError', () => {
   it('should return `false` for non-error objects', () => {

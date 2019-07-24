@@ -1,4 +1,4 @@
-import {accumulate} from '../index';
+import {accumulate} from 'src/caboodle-x';
 
 const createArrayLike = function(arr) {
   const o = {};

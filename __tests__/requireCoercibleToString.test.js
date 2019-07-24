@@ -1,4 +1,4 @@
-import {requireCoercibleToString} from '../index';
+import {requireCoercibleToString} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

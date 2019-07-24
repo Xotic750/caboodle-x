@@ -1,4 +1,4 @@
-import {assign} from '../index';
+import {assign} from 'src/caboodle-x';
 
 const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

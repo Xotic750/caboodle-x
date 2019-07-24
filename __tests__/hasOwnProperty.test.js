@@ -1,4 +1,4 @@
-import {hasOwnProperty} from '../index';
+import {hasOwnProperty} from 'src/caboodle-x';
 
 const hasSymbolSupport = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

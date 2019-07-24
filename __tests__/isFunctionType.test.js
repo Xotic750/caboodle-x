@@ -1,5 +1,5 @@
+import {isFunctionType} from 'src/caboodle-x';
 import primitives from './helpers/primitives';
-import {isFunctionType} from '../index';
 
 describe('isFunctionType', () => {
   it('should be a function', () => {

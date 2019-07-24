@@ -1,4 +1,4 @@
-import {defineValidatorProperty} from '../index';
+import {defineValidatorProperty} from 'src/caboodle-x';
 
 const has = Object.prototype.hasOwnProperty;
 

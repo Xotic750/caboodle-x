@@ -1,4 +1,4 @@
-import {toUint24} from '../index';
+import {toUint24} from 'src/caboodle-x';
 
 describe('toUint24', () => {
   it('is a function', () => {

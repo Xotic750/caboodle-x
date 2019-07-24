@@ -1,4 +1,4 @@
-import {normalizeSpace} from '../index';
+import {normalizeSpace} from 'src/caboodle-x';
 
 const hasSymbol = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

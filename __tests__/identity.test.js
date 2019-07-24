@@ -1,4 +1,4 @@
-import {identity} from '../index';
+import {identity} from 'src/caboodle-x';
 
 describe('identity', () => {
   const array = Object.freeze([1, 2, 3, 4]);

@@ -1,4 +1,4 @@
-import {isObjectLike} from '../index';
+import {isObjectLike} from 'src/caboodle-x';
 import getArguments from './helpers/getArguments';
 
 describe('isObjectLike', () => {

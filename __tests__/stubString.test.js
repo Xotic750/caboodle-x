@@ -1,4 +1,4 @@
-import {stubString} from '../index';
+import {stubString} from 'src/caboodle-x';
 
 describe('stubString', () => {
   it('should be a function', () => {

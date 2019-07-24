@@ -1,4 +1,4 @@
-import {toPropertyKey} from '../index';
+import {toPropertyKey} from 'src/caboodle-x';
 
 const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 

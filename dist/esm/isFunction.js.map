@@ -1,0 +1,1 @@
+{"version":3,"sources":["../../src/isFunction.js"],"names":["default"],"mappings":"AAAA;;;;;AAMA,SAAQA,OAAR,QAAsB,yBAAtB","sourcesContent":["/**\n * @file Determine whether a given value is a function object.\n * @copyright Copyright (c) 2018-present, Graham Fairweather\n * @module isFunction\n */\n\nexport {default} from './.internal/_isFunction';\n"],"file":"isFunction.js"}

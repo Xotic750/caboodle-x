@@ -1,4 +1,4 @@
-import {toPrimitive} from '../index';
+import {toPrimitive} from 'src/caboodle-x';
 
 const hasSymbols = typeof Symbol === 'function' && typeof Symbol('') === 'symbol';
 
